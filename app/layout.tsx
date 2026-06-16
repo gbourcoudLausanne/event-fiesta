@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Montserrat } from "next/font/google";
+import { Cormorant_Garamond, Montserrat, DM_Serif_Display } from "next/font/google";
 import "./globals.css";
 import { I18nProvider } from "@/lib/i18n";
+import { CustomCursor } from "@/components/CustomCursor";
+import { SplashScreen } from "@/components/SplashScreen";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -18,12 +20,20 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
+const dmSerif = DM_Serif_Display({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-dm-serif",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Event Fiesta - Décoration sur mesure · Lausanne",
+  title: "Event Fiesta — Décoration sur mesure · Lausanne",
   description:
     "Décoration d'événements sur mesure à Lausanne et en Suisse romande. Anniversaires, baptêmes, baby showers, soirées à thème et plus.",
   openGraph: {
-    title: "Event Fiesta - Décoration sur mesure",
+    title: "Event Fiesta — Décoration sur mesure",
     description:
       "Décoration d'événements sur mesure à Lausanne et en Suisse romande.",
     locale: "fr_CH",
@@ -39,10 +49,14 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${cormorant.variable} ${montserrat.variable} antialiased`}
+      className={`${cormorant.variable} ${montserrat.variable} ${dmSerif.variable} antialiased`}
     >
       <body className="bg-creme text-noir font-sans min-h-screen">
-        <I18nProvider>{children}</I18nProvider>
+        <I18nProvider>
+          <SplashScreen />
+          <CustomCursor />
+          {children}
+        </I18nProvider>
       </body>
     </html>
   );

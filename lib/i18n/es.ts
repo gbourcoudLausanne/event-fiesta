@@ -7,11 +7,12 @@ export const es = {
     cta: "Pedir presupuesto",
   },
   hero: {
+    eyebrow: "Lausana · Suiza Romanda · Desde 2020",
     headline1: "Tus eventos,",
     headline2: "nuestra obra.",
     subtext:
       "Decoración personalizada para tus celebraciones en Lausana y la Suiza romanda.",
-    cta1: "Ver nuestros servicios",
+    cta1: "Descubrir nuestros servicios",
     cta2: "Pedir presupuesto",
     features: [
       { label: "Deco personalizada" },
@@ -20,42 +21,43 @@ export const es = {
     ],
   },
   services: {
+    eyebrow: "Lo que creamos",
     title: "Nuestros servicios",
     items: [
       {
         key: "anniversary",
         title: "Cumpleaños",
-        desc: "Una fiesta a tu imagen, desde el concepto hasta la decoración final.",
+        desc: "Una fiesta a tu imagen, desde el concepto hasta la decoración final. Cada cumpleaños se convierte en una experiencia inolvidable.",
       },
       {
         key: "baptism",
         title: "Bautizo",
-        desc: "Recibe al recién nacido con una decoración suave y refinada.",
+        desc: "Recibe al recién nacido con una decoración suave y refinada. Un día precioso, embellecido.",
       },
       {
         key: "babyshower",
         title: "Baby Shower",
-        desc: "Celebra la llegada del bebé con ternura y creatividad.",
+        desc: "Celebra la llegada del bebé con ternura y creatividad. Decoraciones pastel y poéticas.",
       },
       {
         key: "themed",
         title: "Fiesta temática",
-        desc: "Viaje, mascarada, retro — tu tema, nuestra expertise.",
+        desc: "Viaje, mascarada, retro — tu tema, nuestra expertise. Una inmersión total.",
       },
       {
         key: "communion",
         title: "Comunión",
-        desc: "Un día espiritual y festivo, embellecido por nuestra decoración.",
+        desc: "Un día espiritual y festivo, embellecido por nuestra decoración. Recuerdos eternos.",
       },
       {
         key: "genderreveal",
         title: "Gender Reveal",
-        desc: "El momento de la revelación, convertido en magia y recuerdo.",
+        desc: "El momento de la revelación, convertido en magia y recuerdo. Rosa o azul, siempre elegante.",
       },
       {
         key: "corporate",
         title: "Corporativo",
-        desc: "Seminarios, galas y lanzamientos con un toque de elegancia.",
+        desc: "Seminarios, galas y lanzamientos con un toque de elegancia. La excelencia al servicio de tu imagen.",
       },
     ],
   },
@@ -63,13 +65,59 @@ export const es = {
     eyebrow: "Portfolio",
     title: "Nuestras realizaciones",
     subtitle: "Una muestra de nuestras creaciones en Lausana y la Suiza romanda.",
+    filters: {
+      all: "Todo",
+      anniversary: "Cumpleaños",
+      baptism: "Bautizos",
+      babyshower: "Baby Showers",
+      themed: "Fiestas temáticas",
+      corporate: "Corporativo",
+    },
   },
   whyus: {
-    title: "Por qué elegir Event Fiesta",
+    eyebrow: "Nuestro compromiso",
+    title: "Por qué elegirnos",
+    quote:
+      "Cada evento cuenta una historia. Nosotros creamos los escenarios que la hacen inolvidable.",
     stats: [
       { value: "200+", label: "Eventos realizados" },
-      { value: "5", label: "Satisfacción del cliente" },
+      { value: "5★", label: "Satisfacción del cliente" },
       { value: "3", label: "Idiomas hablados" },
+      { value: "100%", label: "A medida" },
+    ],
+  },
+  testimonials: {
+    eyebrow: "Lo que dicen",
+    title: "Opiniones de clientes",
+    items: [
+      {
+        name: "Sophie M.",
+        location: "Lausana",
+        event: "Baby Shower",
+        text: "¡Un equipo increíble! Mi baby shower fue un verdadero cuento de hadas. Cada detalle estaba pensado, cada flor en su lugar. Lo recomiendo con los ojos cerrados.",
+        rating: 5,
+      },
+      {
+        name: "Ricardo & Laura",
+        location: "Pully",
+        event: "Cumpleaños",
+        text: "Confiamos la organización del 40 aniversario de Laura a Event Fiesta. El resultado superó todas nuestras expectativas. Un profesionalismo y creatividad notables.",
+        rating: 5,
+      },
+      {
+        name: "Amina B.",
+        location: "Renens",
+        event: "Bautizo",
+        text: "Event Fiesta transformó la sala en un paraíso de suavidad y elegancia. Mi hija Leila merecía el más bello de los bautizos. Gracias de todo corazón.",
+        rating: 5,
+      },
+      {
+        name: "Thomas V.",
+        location: "Morges",
+        event: "Corporativo",
+        text: "Para nuestra noche de fin de año, buscábamos algo único. Event Fiesta superó todas nuestras expectativas. Un servicio de cinco estrellas con ideas originales.",
+        rating: 5,
+      },
     ],
   },
   contact: {
@@ -92,6 +140,7 @@ export const es = {
       ],
       date: "Fecha del evento",
       venue: "Lugar del evento",
+      budget: "Presupuesto estimado",
       message: "Tu mensaje",
       messagePlaceholder: "Describe tu evento, tus ideas, tu visión...",
     },
@@ -106,13 +155,19 @@ export const es = {
     },
   },
   footer: {
-    tagline: "Decoración personalizada",
+    tagline: "Decoración personalizada · Lausana",
     location: "Lausana, Suiza romanda",
+    social: {
+      instagram: "https://instagram.com/eventfiesta.ch",
+      facebook: "https://facebook.com/eventfiesta",
+      pinterest: "https://pinterest.com/eventfiesta",
+    },
     links: {
       services: "Servicios",
       realisations: "Realizaciones",
       contact: "Contacto",
     },
     copyright: "© 2024 Event Fiesta. Todos los derechos reservados.",
+    legal: "Avisos legales",
   },
 };

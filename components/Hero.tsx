@@ -1,304 +1,296 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "motion/react";
+import { useState, useEffect, useRef } from "react";
+import { motion, useReducedMotion, useMotionValue, useTransform } from "motion/react";
 import Image from "next/image";
-import { PaintBrush, Key, Heart } from "@phosphor-icons/react";
+import { ParticleCanvas } from "./ParticleCanvas";
 import { useI18n } from "@/lib/i18n";
 
-const featureIcons = [PaintBrush, Key, Heart];
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const PARTICLES = [
-  { x: 8, y: 15, size: 3, delay: 0, dur: 4.5 },
-  { x: 18, y: 65, size: 2, delay: 1.2, dur: 5.5 },
-  { x: 32, y: 40, size: 4, delay: 0.6, dur: 6 },
-  { x: 45, y: 80, size: 2, delay: 2.1, dur: 4 },
-  { x: 58, y: 25, size: 3, delay: 0.4, dur: 5 },
-  { x: 70, y: 55, size: 2, delay: 1.7, dur: 6.5 },
-  { x: 80, y: 10, size: 4, delay: 3, dur: 4.5 },
-  { x: 88, y: 70, size: 2, delay: 0.9, dur: 5 },
-  { x: 25, y: 90, size: 3, delay: 2.5, dur: 5.5 },
-  { x: 62, y: 88, size: 2, delay: 1.4, dur: 4 },
-  { x: 92, y: 35, size: 3, delay: 0.7, dur: 6 },
-  { x: 50, y: 48, size: 2, delay: 3.2, dur: 4.5 },
-  { x: 12, y: 45, size: 2, delay: 1.8, dur: 5 },
-  { x: 75, y: 92, size: 3, delay: 2.8, dur: 5.5 },
-] as const;
+const FLOATING_IMAGES = [
+  {
+    src: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=500&q=80",
+    alt: "Ballons colorés pour événement",
+    pos: { top: "8%", left: "2%" },
+    width: 220, height: 280,
+    depth: 0.03,
+    rotate: -6,
+    delay: 0.4,
+  },
+  {
+    src: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=500&q=80",
+    alt: "Décoration florale élégante",
+    pos: { top: "12%", right: "2%" },
+    width: 200, height: 260,
+    depth: 0.045,
+    rotate: 5,
+    delay: 0.55,
+  },
+  {
+    src: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=500&q=80",
+    alt: "Table décorée pour réception",
+    pos: { bottom: "14%", left: "3%" },
+    width: 240, height: 180,
+    depth: 0.025,
+    rotate: 4,
+    delay: 0.65,
+  },
+  {
+    src: "https://images.unsplash.com/photo-1557800636-894a64c1696f?auto=format&fit=crop&w=500&q=80",
+    alt: "Décoration de fête",
+    pos: { bottom: "18%", right: "2%" },
+    width: 210, height: 240,
+    depth: 0.04,
+    rotate: -4,
+    delay: 0.75,
+  },
+];
 
-function AnimatedHeadline({
-  text,
-  className,
-  startDelay = 0,
-}: {
-  text: string;
-  className?: string;
-  startDelay?: number;
-}) {
+function FloatingImg({
+  src, alt, pos, width, height, depth, rotate, delay, mouseX, mouseY,
+}: typeof FLOATING_IMAGES[number] & { mouseX: ReturnType<typeof useMotionValue<number>>; mouseY: ReturnType<typeof useMotionValue<number>> }) {
+  const x = useTransform(mouseX, [-600, 600], [-depth * 600, depth * 600]);
+  const y = useTransform(mouseY, [-400, 400], [-depth * 400, depth * 400]);
+  return (
+    <motion.div
+      className="absolute hidden lg:block pointer-events-none"
+      style={{ ...pos, width, height, x, y, rotate }}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2, delay, ease }}
+        className="relative w-full h-full rounded-2xl overflow-hidden"
+        style={{ boxShadow: "0 24px 64px rgba(0,0,0,0.55)" }}
+      >
+        <Image src={src} alt={alt} fill className="object-cover" sizes="240px" />
+        <div className="absolute inset-0" style={{ background: "rgba(13,11,8,0.28)" }} />
+        <div className="absolute inset-0 rounded-2xl" style={{ border: "1px solid rgba(176,139,58,0.2)" }} />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function useTypewriter(text: string, speed = 55, startDelay = 2000) {
+  const [displayed, setDisplayed] = useState("");
+  const [done, setDone] = useState(false);
   const reduce = useReducedMotion();
-  const chars = Array.from(text);
 
+  useEffect(() => {
+    if (reduce) { setDisplayed(text); setDone(true); return; }
+    let timeout: ReturnType<typeof setTimeout>;
+    let index = 0;
+    timeout = setTimeout(() => {
+      const iv = setInterval(() => {
+        index++;
+        setDisplayed(text.slice(0, index));
+        if (index >= text.length) { clearInterval(iv); setDone(true); }
+      }, speed);
+      return () => clearInterval(iv);
+    }, startDelay);
+    return () => clearTimeout(timeout);
+  }, [text, speed, startDelay, reduce]);
+
+  return { displayed, done };
+}
+
+function WordReveal({ text, delay = 0, className }: { text: string; delay?: number; className?: string }) {
+  const reduce = useReducedMotion();
+  const words = text.split(" ");
   if (reduce) return <span className={className}>{text}</span>;
-
   return (
     <span className={className} aria-label={text}>
-      {chars.map((char, i) => (
-        <motion.span
-          key={i}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.35,
-            delay: startDelay + i * 0.038,
-            ease,
-          }}
-          style={{ display: char === " " ? "inline" : "inline-block" }}
-          aria-hidden
-        >
-          {char === " " ? " " : char}
-        </motion.span>
+      {words.map((word, i) => (
+        <span key={i} style={{ display: "inline-block", overflow: "hidden", marginRight: "0.28em" }}>
+          <motion.span
+            initial={{ y: "110%", opacity: 0, filter: "blur(8px)" }}
+            animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
+            transition={{ duration: 0.9, delay: delay + i * 0.14, ease }}
+            style={{ display: "inline-block" }}
+            aria-hidden
+          >
+            {word}
+          </motion.span>
+        </span>
       ))}
     </span>
   );
 }
 
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.85 } },
-};
-
-const itemVariants: Variants = {
-  hidden: { y: 20 },
-  visible: { y: 0, transition: { duration: 0.65, ease } },
-};
-
 export function Hero() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const sectionRef = useRef<HTMLElement>(null);
 
-  const headline1Delay = 0.2;
-  const headline2Delay = headline1Delay + Array.from(t.hero.headline1).length * 0.038 + 0.08;
+  const { displayed, done } = useTypewriter(t.hero.subtext, 48, 1400);
+
+  useEffect(() => {
+    if (reduce) return;
+    const onMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX - window.innerWidth / 2);
+      mouseY.set(e.clientY - window.innerHeight / 2);
+    };
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [reduce, mouseX, mouseY]);
 
   return (
     <section
+      ref={sectionRef}
       id="hero"
-      className="relative min-h-[100dvh] flex items-center pt-16 overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(135deg, #fdf9f5 0%, #fdf0ef 25%, #fdf9f5 50%, #fdf7ef 75%, #fdf9f5 100%)",
-        backgroundSize: "400% 400%",
-        animation: reduce ? "none" : "gradient-shift 14s ease infinite",
-      }}
+      className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden"
+      style={{ background: "#0D0B08" }}
     >
-      {/* Floating gold particles */}
-      {!reduce && (
-        <div
-          className="absolute inset-0 pointer-events-none overflow-hidden"
-          aria-hidden
+      {/* Canvas particles */}
+      <ParticleCanvas />
+
+      {/* Radial glow center */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 60% at 50% 45%, rgba(176,139,58,0.07) 0%, transparent 65%)",
+        }}
+        aria-hidden
+      />
+
+      {/* Floating parallax images */}
+      {!reduce && FLOATING_IMAGES.map((img, i) => (
+        <FloatingImg key={i} {...img} mouseX={mouseX} mouseY={mouseY} />
+      ))}
+
+      {/* Main centered content */}
+      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto pt-20 pb-28">
+
+        {/* Eyebrow */}
+        <motion.p
+          initial={reduce ? false : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3, ease }}
+          className="font-sans text-[11px] tracking-[0.28em] uppercase mb-8"
+          style={{ color: "#B08B3A" }}
         >
-          {PARTICLES.map((p, i) => (
-            <span
-              key={i}
-              className="absolute rounded-full bg-or"
-              style={{
-                width: p.size,
-                height: p.size,
-                left: `${p.x}%`,
-                top: `${p.y}%`,
-                animation: `float-particle ${p.dur}s ease-in-out ${p.delay}s infinite`,
-                opacity: 0.18,
-              }}
-            />
-          ))}
-        </div>
-      )}
+          {t.hero.eyebrow}
+        </motion.p>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 w-full py-16 lg:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-12 lg:gap-16 items-center">
-          {/* Left: text content */}
-          <motion.div
-            variants={containerVariants}
-            initial={reduce ? false : "hidden"}
-            animate="visible"
-            className="flex flex-col gap-8"
+        {/* Headline */}
+        <h1 className="font-serif font-light leading-[1.05] tracking-tight mb-6"
+          style={{ fontSize: "clamp(3.2rem, 8vw, 7rem)", color: "#FAF7F2" }}>
+          <WordReveal text={t.hero.headline1} delay={0.5} />
+          <br />
+          <span style={{ color: "#C9A84C" }}>
+            <WordReveal text={t.hero.headline2} delay={0.85} className="italic" />
+          </span>
+        </h1>
+
+        {/* Typewriter subtitle */}
+        <div className="mb-10 min-h-[2rem]">
+          <p
+            className={`font-sans font-light text-base md:text-lg leading-relaxed max-w-lg mx-auto ${!done ? "typewriter-cursor" : ""}`}
+            style={{ color: "rgba(250,247,242,0.55)" }}
           >
-            {/* Headline — letter by letter */}
-            <div className="flex flex-col">
-              <h1 className="font-serif font-light text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight text-noir">
-                <AnimatedHeadline
-                  text={t.hero.headline1}
-                  startDelay={headline1Delay}
-                />
-              </h1>
-              <h1 className="font-serif italic font-light text-5xl md:text-6xl lg:text-7xl leading-[1.1] tracking-tight text-noir pb-1">
-                <AnimatedHeadline
-                  text={t.hero.headline2}
-                  startDelay={headline2Delay}
-                />
-              </h1>
-            </div>
+            {displayed}
+          </p>
+        </div>
 
-            {/* Subtext */}
-            <motion.p
-              variants={itemVariants}
-              className="font-sans text-base md:text-lg text-[#534d49] leading-relaxed max-w-md"
-            >
-              {t.hero.subtext}
-            </motion.p>
+        {/* CTA buttons */}
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 1.9, ease }}
+          className="flex flex-col sm:flex-row gap-4 items-center"
+        >
+          <button
+            onClick={() => document.getElementById("services")?.scrollIntoView({ behavior: "smooth" })}
+            className="font-sans text-sm font-medium px-8 py-3.5 rounded-full border transition-all duration-300 cursor-pointer active:scale-[0.97] whitespace-nowrap"
+            style={{
+              borderColor: "rgba(250,247,242,0.3)",
+              color: "#FAF7F2",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "#B08B3A";
+              (e.currentTarget as HTMLButtonElement).style.color = "#C9A84C";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(250,247,242,0.3)";
+              (e.currentTarget as HTMLButtonElement).style.color = "#FAF7F2";
+            }}
+          >
+            {t.hero.cta1}
+          </button>
 
-            {/* CTAs */}
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-3"
-            >
-              <a
-                href="#services"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document
-                    .getElementById("services")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="inline-flex items-center justify-center font-sans text-sm font-medium border-2 border-noir text-noir px-7 py-3.5 rounded-full hover:bg-noir hover:text-creme transition-all duration-200 cursor-pointer active:scale-[0.98] whitespace-nowrap"
-              >
-                {t.hero.cta1}
-              </a>
-              <a
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document
-                    .getElementById("contact")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="btn-gold-shimmer inline-flex items-center justify-center font-sans text-sm font-medium bg-or text-noir px-7 py-3.5 rounded-full hover:bg-[#9a7830] transition-colors duration-200 cursor-pointer active:scale-[0.98] whitespace-nowrap"
-              >
-                {t.hero.cta2}
-              </a>
-            </motion.div>
+          <button
+            onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+            className="btn-gold-shimmer font-sans text-sm font-medium px-8 py-3.5 rounded-full cursor-pointer active:scale-[0.97] whitespace-nowrap transition-all duration-300"
+            style={{ background: "#B08B3A", color: "#0D0B08" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = "#C9A84C";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = "#B08B3A";
+            }}
+          >
+            {t.hero.cta2}
+          </button>
+        </motion.div>
 
-            {/* Features */}
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-5 pt-4 border-t border-noir/10"
-            >
-              {t.hero.features.map((f, i) => {
-                const Icon = featureIcons[i];
-                return (
-                  <div key={i} className="flex items-center gap-2.5">
-                    <Icon size={16} weight="light" className="text-or shrink-0" />
-                    <span className="font-sans text-sm text-noir/70">
-                      {f.label}
-                    </span>
-                  </div>
-                );
-              })}
-            </motion.div>
-          </motion.div>
-
-          {/* Right: image mosaic + rotating badge */}
-          <div className="relative hidden lg:block">
-            <motion.div
-              initial={reduce ? false : { opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.9, delay: 0.3, ease }}
-              className="grid grid-cols-3 grid-rows-2 gap-3 h-[520px]"
-            >
-              {/* Top left: wide */}
-              <div className="col-span-2 row-span-1 relative rounded-2xl overflow-hidden">
-                <Image
-                  src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=800&q=80"
-                  alt="Ballons colorés pour événement"
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 1280px) 40vw, 480px"
-                />
-              </div>
-              {/* Right: tall */}
-              <div className="col-span-1 row-span-2 relative rounded-2xl overflow-hidden">
-                <Image
-                  src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=400&q=80"
-                  alt="Table décorée pour réception"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1280px) 20vw, 230px"
-                />
-              </div>
-              {/* Bottom left */}
-              <div className="col-span-1 row-span-1 relative rounded-2xl overflow-hidden">
-                <Image
-                  src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=500&q=80"
-                  alt="Décoration florale élégante"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1280px) 20vw, 230px"
-                />
-              </div>
-              {/* Bottom middle */}
-              <div className="col-span-1 row-span-1 relative rounded-2xl overflow-hidden">
-                <Image
-                  src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=500&q=80"
-                  alt="Ambiance de fête"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1280px) 20vw, 230px"
-                />
-              </div>
-            </motion.div>
-
-            {/* Rotating circular badge */}
-            {!reduce && (
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
-                className="absolute -top-5 -right-5 w-[96px] h-[96px] pointer-events-none z-10"
-                aria-hidden
-              >
-                <svg viewBox="0 0 100 100" className="w-full h-full">
-                  <defs>
-                    <path
-                      id="hero-badge-path"
-                      d="M50,50 m-43,0 a43,43 0 1,1 86,0 a43,43 0 1,1 -86,0"
-                    />
-                  </defs>
-                  <circle cx="50" cy="50" r="4" fill="#B08B3A" opacity="0.8" />
-                  <text
-                    fontSize="10.5"
-                    fontFamily="Montserrat, sans-serif"
-                    letterSpacing="2.2"
-                    fill="#B08B3A"
-                  >
-                    <textPath href="#hero-badge-path">
-                      Lausanne · Suisse romande ·
-                    </textPath>
-                  </text>
-                </svg>
-              </motion.div>
-            )}
-          </div>
-
-          {/* Mobile: single hero image */}
+        {/* Rotating badge */}
+        {!reduce && (
           <motion.div
-            initial={reduce ? false : { opacity: 0 }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4, ease }}
-            className="lg:hidden relative aspect-[4/3] rounded-2xl overflow-hidden"
+            transition={{ duration: 1, delay: 3 }}
+            className="absolute right-6 md:right-16 top-1/2 -translate-y-1/2 hidden md:block"
+            aria-hidden
           >
-            <Image
-              src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=800&q=80"
-              alt="Décoration événement festive"
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 100vw"
-            />
+            <motion.svg
+              viewBox="0 0 120 120"
+              className="w-[100px] h-[100px]"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+            >
+              <defs>
+                <path
+                  id="badge-circ"
+                  d="M60,60 m-48,0 a48,48 0 1,1 96,0 a48,48 0 1,1 -96,0"
+                />
+              </defs>
+              <circle cx="60" cy="60" r="5" fill="#B08B3A" opacity="0.9" />
+              <text fontSize="10" fontFamily="Montserrat, sans-serif" letterSpacing="2.6" fill="#B08B3A">
+                <textPath href="#badge-circ">
+                  Lausanne · Suisse Romande · Since 2020 ·
+                </textPath>
+              </text>
+            </motion.svg>
           </motion.div>
-        </div>
+        )}
       </div>
 
-      {/* Subtle decorative accent */}
+      {/* Scroll indicator */}
+      {!reduce && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 3.2 }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          aria-hidden
+        >
+          <span className="font-sans text-[9px] tracking-[0.25em] uppercase" style={{ color: "rgba(176,139,58,0.6)" }}>
+            Défiler
+          </span>
+          <div className="w-px h-12 overflow-hidden relative" style={{ background: "rgba(176,139,58,0.15)" }}>
+            <div className="w-full scroll-indicator-line" style={{ background: "#B08B3A", height: "100%" }} />
+          </div>
+        </motion.div>
+      )}
+
+      {/* Bottom gradient to next section */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-px bg-noir/[0.06]"
+        className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
+        style={{ background: "linear-gradient(to bottom, transparent, #0D0B08 80%)" }}
         aria-hidden
       />
     </section>
