@@ -15,8 +15,8 @@ function StarRating({ count }: { count: number }) {
           initial={{ scale: 0, opacity: 0 }}
           whileInView={{ scale: 1, opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.3, delay: 0.6 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-          style={{ color: "#C9A84C", fontSize: 14 }}
+          transition={{ duration: 0.3, delay: 0.5 + i * 0.07, ease }}
+          style={{ color: "#C9A84C", fontSize: 13 }}
           aria-hidden
         >
           ★
@@ -26,7 +26,7 @@ function StarRating({ count }: { count: number }) {
   );
 }
 
-const AVATAR_COLORS = ["#4A3728", "#2D3B2E", "#2B3550", "#3D2B4A"];
+const AVATAR_BG = ["#E8D5CC", "#D4C9BA", "#CDDDE0", "#D9C9E0"];
 
 function Avatar({ name, index }: { name: string; index: number }) {
   const initials = name
@@ -38,9 +38,12 @@ function Avatar({ name, index }: { name: string; index: number }) {
   return (
     <div
       className="w-11 h-11 rounded-full flex items-center justify-center shrink-0"
-      style={{ background: AVATAR_COLORS[index % AVATAR_COLORS.length], border: "1px solid rgba(176,139,58,0.3)" }}
+      style={{
+        background: AVATAR_BG[index % AVATAR_BG.length],
+        border: "1px solid rgba(176,139,58,0.2)",
+      }}
     >
-      <span className="font-sans text-xs font-medium" style={{ color: "#C9A84C" }}>
+      <span className="font-sans text-xs font-medium" style={{ color: "#B08B3A" }}>
         {initials}
       </span>
     </div>
@@ -63,7 +66,9 @@ export function Testimonials() {
       const { scrollLeft: sl, scrollWidth, clientWidth } = track;
       const totalScrollable = scrollWidth - clientWidth;
       if (totalScrollable <= 0) return;
-      const idx = Math.round((sl / totalScrollable) * (t.testimonials.items.length - 1));
+      const idx = Math.round(
+        (sl / totalScrollable) * (t.testimonials.items.length - 1)
+      );
       setActiveDot(Math.max(0, Math.min(idx, t.testimonials.items.length - 1)));
     };
     track.addEventListener("scroll", onScroll, { passive: true });
@@ -86,7 +91,7 @@ export function Testimonials() {
   };
 
   return (
-    <section className="py-24 lg:py-32" style={{ background: "#0D0B08" }}>
+    <section className="py-24 lg:py-32" style={{ background: "#FEFDF8" }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
         {/* Header */}
@@ -98,17 +103,23 @@ export function Testimonials() {
           className="mb-14 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"
         >
           <div>
-            <p className="font-sans text-[11px] uppercase tracking-[0.28em] mb-2" style={{ color: "#B08B3A" }}>
+            <p
+              className="font-sans text-[11px] uppercase tracking-[0.28em] mb-2"
+              style={{ color: "#B08B3A" }}
+            >
               {t.testimonials.eyebrow}
             </p>
             <h2
               className="font-serif font-light"
-              style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", color: "#FAF7F2" }}
+              style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", color: "#1A1714" }}
             >
               {t.testimonials.title}
             </h2>
           </div>
-          <p className="font-sans text-xs" style={{ color: "rgba(250,247,242,0.3)", letterSpacing: "0.05em" }}>
+          <p
+            className="font-sans text-xs"
+            style={{ color: "rgba(45,42,38,0.32)", letterSpacing: "0.05em" }}
+          >
             Glissez pour voir plus →
           </p>
         </motion.div>
@@ -117,9 +128,7 @@ export function Testimonials() {
         <div
           ref={trackRef}
           className="no-scrollbar flex gap-5 overflow-x-auto pb-4 select-none"
-          style={{
-            cursor: isDragging ? "grabbing" : "grab",
-          }}
+          style={{ cursor: isDragging ? "grabbing" : "grab" }}
           onMouseDown={onMouseDown}
           onMouseLeave={onMouseLeave}
           onMouseUp={onMouseUp}
@@ -133,10 +142,7 @@ export function Testimonials() {
               viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.65, delay: i * 0.1, ease }}
               className="glass-card rounded-2xl p-7 flex-shrink-0 flex flex-col gap-5"
-              style={{
-                width: "clamp(300px, 80vw, 400px)",
-                borderColor: "rgba(176,139,58,0.12)",
-              }}
+              style={{ width: "clamp(300px, 80vw, 400px)" }}
             >
               {/* Stars */}
               <StarRating count={item.rating} />
@@ -145,38 +151,40 @@ export function Testimonials() {
               <div className="relative flex-1">
                 <span
                   className="absolute -top-3 -left-1 font-serif text-5xl leading-none"
-                  style={{ color: "rgba(176,139,58,0.25)" }}
+                  style={{ color: "rgba(176,139,58,0.18)" }}
                   aria-hidden
                 >
                   "
                 </span>
                 <p
                   className="font-serif font-light italic text-base lg:text-lg leading-relaxed pt-3"
-                  style={{ color: "rgba(250,247,242,0.75)" }}
+                  style={{ color: "rgba(45,42,38,0.68)" }}
                 >
                   {item.text}
                 </p>
               </div>
 
               {/* Divider */}
-              <div className="h-px" style={{ background: "rgba(176,139,58,0.15)" }} />
+              <div className="h-px" style={{ background: "rgba(176,139,58,0.12)" }} />
 
               {/* Author */}
               <div className="flex items-center gap-3">
                 <Avatar name={item.name} index={i} />
                 <div>
-                  <p className="font-sans text-sm font-medium" style={{ color: "#FAF7F2" }}>
+                  <p className="font-sans text-sm font-medium" style={{ color: "#1A1714" }}>
                     {item.name}
                   </p>
-                  <p className="font-sans text-xs" style={{ color: "rgba(250,247,242,0.38)" }}>
+                  <p
+                    className="font-sans text-xs"
+                    style={{ color: "rgba(45,42,38,0.38)" }}
+                  >
                     {item.event} · {item.location}
                   </p>
                 </div>
-                {/* Gold accent */}
                 <div className="ml-auto shrink-0">
                   <div
                     className="w-6 h-6 rounded-full flex items-center justify-center"
-                    style={{ background: "rgba(176,139,58,0.15)" }}
+                    style={{ background: "rgba(176,139,58,0.1)" }}
                   >
                     <span style={{ color: "#C9A84C", fontSize: 10 }}>✓</span>
                   </div>
@@ -185,7 +193,7 @@ export function Testimonials() {
             </motion.div>
           ))}
 
-          {/* CTA card at end */}
+          {/* CTA end card */}
           <motion.div
             initial={reduce ? false : { opacity: 0, x: 32 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -195,32 +203,40 @@ export function Testimonials() {
             style={{
               width: "clamp(260px, 60vw, 320px)",
               border: "1px dashed rgba(176,139,58,0.3)",
-              background: "rgba(176,139,58,0.04)",
+              background: "rgba(245,230,224,0.35)",
             }}
           >
             <div
               className="w-14 h-14 rounded-full flex items-center justify-center"
-              style={{ background: "rgba(176,139,58,0.12)", border: "1px solid rgba(176,139,58,0.3)" }}
+              style={{
+                background: "rgba(176,139,58,0.1)",
+                border: "1px solid rgba(176,139,58,0.25)",
+              }}
             >
               <span style={{ color: "#C9A84C", fontSize: 22 }}>★</span>
             </div>
-            <p className="font-serif font-light italic text-xl" style={{ color: "rgba(250,247,242,0.6)" }}>
+            <p
+              className="font-serif font-light italic text-xl"
+              style={{ color: "rgba(45,42,38,0.55)" }}
+            >
               Votre avis compte
             </p>
-            <p className="font-sans text-sm" style={{ color: "rgba(250,247,242,0.35)" }}>
+            <p className="font-sans text-sm" style={{ color: "rgba(45,42,38,0.35)" }}>
               Partagez votre expérience avec Event Fiesta
             </p>
             <button
-              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() =>
+                document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
+              }
               className="font-sans text-xs font-medium px-5 py-2.5 rounded-full cursor-pointer transition-colors duration-200"
-              style={{ background: "#B08B3A", color: "#0D0B08" }}
+              style={{ background: "#B08B3A", color: "#fff" }}
             >
               Nous contacter
             </button>
           </motion.div>
         </div>
 
-        {/* Dots indicator — réactifs au scroll */}
+        {/* Dots indicator */}
         <div className="flex gap-2 justify-center mt-8">
           {t.testimonials.items.map((_, i) => (
             <div
@@ -229,7 +245,8 @@ export function Testimonials() {
               style={{
                 width: i === activeDot ? 24 : 6,
                 height: 6,
-                background: i === activeDot ? "#B08B3A" : "rgba(176,139,58,0.25)",
+                background:
+                  i === activeDot ? "#B08B3A" : "rgba(176,139,58,0.22)",
                 transition: "width 0.3s ease, background 0.3s ease",
               }}
             />

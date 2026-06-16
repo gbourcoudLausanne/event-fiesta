@@ -33,15 +33,15 @@ export function Nav() {
     <header
       className="fixed top-0 left-0 right-0 z-40 transition-all duration-500"
       style={{
-        background: scrolled
-          ? "rgba(13,11,8,0.82)"
-          : "transparent",
+        background: scrolled ? "rgba(254,253,248,0.94)" : "transparent",
         backdropFilter: scrolled ? "blur(20px) saturate(1.4)" : "none",
         WebkitBackdropFilter: scrolled ? "blur(20px) saturate(1.4)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(176,139,58,0.12)" : "1px solid transparent",
+        borderBottom: scrolled
+          ? "1px solid rgba(176,139,58,0.12)"
+          : "1px solid transparent",
       }}
     >
-      {/* Scroll progress line in nav */}
+      {/* Gold progress line */}
       <motion.div
         className="absolute bottom-0 left-0 h-px origin-left"
         style={{
@@ -63,7 +63,7 @@ export function Nav() {
           <div className="flex items-baseline gap-1.5">
             <span
               className="font-sans font-medium text-lg tracking-[0.12em] uppercase leading-none transition-colors duration-300"
-              style={{ color: "#FAF7F2", letterSpacing: "0.12em" }}
+              style={{ color: "#1A1714" }}
             >
               Event
             </span>
@@ -75,8 +75,8 @@ export function Nav() {
             </span>
           </div>
           <span
-            className="font-sans text-[8px] tracking-[0.2em] uppercase mt-0.5 transition-opacity duration-300"
-            style={{ color: "rgba(250,247,242,0.3)", letterSpacing: "0.22em" }}
+            className="font-sans text-[8px] tracking-[0.2em] uppercase mt-0.5"
+            style={{ color: "rgba(45,42,38,0.3)", letterSpacing: "0.22em" }}
           >
             Décoration sur mesure
           </span>
@@ -89,12 +89,12 @@ export function Nav() {
               <button
                 onClick={() => scrollTo(href)}
                 className="nav-link font-sans text-[13px] font-light tracking-wide cursor-pointer transition-colors duration-200 pb-0.5"
-                style={{ color: "rgba(250,247,242,0.6)" }}
+                style={{ color: "rgba(45,42,38,0.52)" }}
                 onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLButtonElement).style.color = "#FAF7F2")
+                  ((e.currentTarget as HTMLButtonElement).style.color = "#1A1714")
                 }
                 onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLButtonElement).style.color = "rgba(250,247,242,0.6)")
+                  ((e.currentTarget as HTMLButtonElement).style.color = "rgba(45,42,38,0.52)")
                 }
               >
                 {label}
@@ -110,15 +110,13 @@ export function Nav() {
             {langs.map((l, i) => (
               <span key={l} className="flex items-center gap-1">
                 {i > 0 && (
-                  <span style={{ color: "rgba(250,247,242,0.15)", fontSize: 10 }}>
-                    ·
-                  </span>
+                  <span style={{ color: "rgba(45,42,38,0.18)", fontSize: 10 }}>·</span>
                 )}
                 <button
                   onClick={() => setLang(l)}
                   className="font-sans text-[11px] uppercase tracking-widest cursor-pointer transition-all duration-200 px-1 py-0.5 rounded"
                   style={{
-                    color: lang === l ? "#C9A84C" : "rgba(250,247,242,0.35)",
+                    color: lang === l ? "#B08B3A" : "rgba(45,42,38,0.32)",
                     fontWeight: lang === l ? 600 : 300,
                   }}
                   aria-label={`Langue ${l.toUpperCase()}`}
@@ -133,13 +131,13 @@ export function Nav() {
           <button
             onClick={() => scrollTo("contact")}
             className="btn-gold-shimmer font-sans text-[13px] font-medium px-5 py-2.5 rounded-full cursor-pointer whitespace-nowrap active:scale-[0.97] transition-all duration-300"
-            style={{ background: "#B08B3A", color: "#0D0B08" }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = "#C9A84C";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = "#B08B3A";
-            }}
+            style={{ background: "#B08B3A", color: "#fff" }}
+            onMouseEnter={(e) =>
+              ((e.currentTarget as HTMLButtonElement).style.background = "#C9A84C")
+            }
+            onMouseLeave={(e) =>
+              ((e.currentTarget as HTMLButtonElement).style.background = "#B08B3A")
+            }
           >
             {t.nav.cta}
           </button>
@@ -148,16 +146,12 @@ export function Nav() {
         {/* Mobile hamburger */}
         <button
           className="lg:hidden p-2 -mr-2 cursor-pointer"
-          style={{ color: "#FAF7F2" }}
+          style={{ color: "#1A1714" }}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
           aria-expanded={menuOpen}
         >
-          {menuOpen ? (
-            <X size={22} weight="light" />
-          ) : (
-            <List size={22} weight="light" />
-          )}
+          {menuOpen ? <X size={22} weight="light" /> : <List size={22} weight="light" />}
         </button>
       </nav>
 
@@ -171,8 +165,9 @@ export function Nav() {
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="lg:hidden overflow-hidden"
             style={{
-              background: "rgba(13,11,8,0.97)",
-              borderBottom: "1px solid rgba(176,139,58,0.15)",
+              background: "rgba(254,253,248,0.98)",
+              backdropFilter: "blur(20px)",
+              borderBottom: "1px solid rgba(176,139,58,0.12)",
             }}
           >
             <div className="px-6 py-6 flex flex-col gap-5">
@@ -181,7 +176,7 @@ export function Nav() {
                   key={href}
                   onClick={() => scrollTo(href)}
                   className="font-sans text-base font-light text-left cursor-pointer transition-colors duration-200"
-                  style={{ color: "rgba(250,247,242,0.7)" }}
+                  style={{ color: "rgba(45,42,38,0.65)" }}
                 >
                   {label}
                 </button>
@@ -196,7 +191,10 @@ export function Nav() {
                       key={l}
                       onClick={() => setLang(l)}
                       className="font-sans text-xs uppercase tracking-widest cursor-pointer"
-                      style={{ color: lang === l ? "#C9A84C" : "rgba(250,247,242,0.35)" }}
+                      style={{
+                        color: lang === l ? "#B08B3A" : "rgba(45,42,38,0.32)",
+                        fontWeight: lang === l ? 600 : 300,
+                      }}
                     >
                       {l}
                     </button>
@@ -205,7 +203,7 @@ export function Nav() {
                 <button
                   onClick={() => scrollTo("contact")}
                   className="btn-gold-shimmer font-sans text-sm font-medium px-5 py-2.5 rounded-full cursor-pointer"
-                  style={{ background: "#B08B3A", color: "#0D0B08" }}
+                  style={{ background: "#B08B3A", color: "#fff" }}
                 >
                   {t.nav.cta}
                 </button>

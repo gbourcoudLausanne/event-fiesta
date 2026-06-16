@@ -197,7 +197,7 @@ export function Realisations() {
   const goPrev = () => setLightboxIndex((i) => i === null ? 0 : (i - 1 + filtered.length) % filtered.length);
 
   return (
-    <section id="realisations" className="py-24 lg:py-32" style={{ background: "#F5EDE6" }}>
+    <section id="realisations" className="py-24 lg:py-32" style={{ background: "#F5E6E0" }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
         {/* Header */}

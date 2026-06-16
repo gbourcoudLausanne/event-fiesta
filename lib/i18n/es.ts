@@ -7,17 +7,17 @@ export const es = {
     cta: "Pedir presupuesto",
   },
   hero: {
-    eyebrow: "Lausana · Suiza Romanda · Desde 2020",
-    headline1: "Tus eventos,",
-    headline2: "nuestra obra.",
+    eyebrow: "Decoración a medida · Lausana",
+    headline1: "Da vida a tus",
+    headline2: "más hermosos momentos",
     subtext:
-      "Decoración personalizada para tus celebraciones en Lausana y la Suiza romanda.",
+      "Event Fiesta te acompaña en la creación de eventos únicos e inolvidables, para todos tus momentos preciosos.",
     cta1: "Descubrir nuestros servicios",
     cta2: "Pedir presupuesto",
     features: [
-      { label: "Deco personalizada" },
-      { label: "Todo incluido" },
-      { label: "Pasión y expertise" },
+      { label: "Decoraciones personalizadas" },
+      { label: "Soluciones llave en mano" },
+      { label: "Pasión & expertise" },
     ],
   },
   services: {

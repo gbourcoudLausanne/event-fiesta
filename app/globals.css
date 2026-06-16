@@ -3,12 +3,16 @@
 :root {
   --or: #B08B3A;
   --or-light: #C9A84C;
-  --or-dim: rgba(176, 139, 58, 0.15);
-  --blush: #F5E6E0;
-  --noir: #0D0B08;
-  --noir-2: #1a1410;
+  --or-dim: rgba(176, 139, 58, 0.12);
+  --blanc: #FEFDF8;
   --creme: #FAF7F2;
-  --creme-2: #F3EDE6;
+  --creme-2: #F2EBE3;
+  --blush: #F5E6E0;
+  --blush-2: #EDD5CC;
+  --brun: #2D2A26;
+  --brun-2: #5C5550;
+  --noir: #1A1714;
+  --noir-dark: #0D0B08;
   --radius-card: 16px;
 }
 
@@ -16,8 +20,11 @@
   --color-or: var(--or);
   --color-or-light: var(--or-light);
   --color-blush: var(--blush);
-  --color-noir: var(--noir);
+  --color-blush-2: var(--blush-2);
+  --color-blanc: var(--blanc);
   --color-creme: var(--creme);
+  --color-brun: var(--brun);
+  --color-noir: var(--noir);
   --font-sans: var(--font-montserrat), 'Helvetica Neue', system-ui, sans-serif;
   --font-serif: var(--font-cormorant), Georgia, serif;
   --font-display: var(--font-dm-serif), var(--font-cormorant), Georgia, serif;
@@ -27,8 +34,8 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: var(--creme);
-  color: var(--noir-2);
+  background-color: var(--blanc);
+  color: var(--brun);
   overflow-x: hidden;
 }
 
@@ -196,12 +203,13 @@ body {
   text-transform: uppercase;
 }
 
-/* ─── Glassmorphism card ────────────────────────── */
+/* ─── Glassmorphism card (light theme) ──────────── */
 .glass-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(176, 139, 58, 0.12);
+  box-shadow: 0 4px 24px rgba(45, 42, 38, 0.07);
 }
 
 /* ─── Parallax images ───────────────────────────── */
