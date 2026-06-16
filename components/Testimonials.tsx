@@ -15,8 +15,8 @@ function StarRating({ count }: { count: number }) {
           initial={{ scale: 0, opacity: 0 }}
           whileInView={{ scale: 1, opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.3, delay: 0.5 + i * 0.07, ease }}
-          style={{ color: "#C9A84C", fontSize: 13 }}
+          transition={{ duration: 0.3, delay: 0.6 + i * 0.08, ease }}
+          style={{ color: "#C9A84C", fontSize: 14 }}
           aria-hidden
         >
           ★
@@ -26,7 +26,7 @@ function StarRating({ count }: { count: number }) {
   );
 }
 
-const AVATAR_BG = ["#E8D5CC", "#D4C9BA", "#CDDDE0", "#D9C9E0"];
+const AVATAR_COLORS = ["#2A1F1A", "#1E2B1F", "#1A2135", "#281A35"];
 
 function Avatar({ name, index }: { name: string; index: number }) {
   const initials = name
@@ -39,11 +39,11 @@ function Avatar({ name, index }: { name: string; index: number }) {
     <div
       className="w-11 h-11 rounded-full flex items-center justify-center shrink-0"
       style={{
-        background: AVATAR_BG[index % AVATAR_BG.length],
-        border: "1px solid rgba(176,139,58,0.2)",
+        background: AVATAR_COLORS[index % AVATAR_COLORS.length],
+        border: "1px solid rgba(176,139,58,0.28)",
       }}
     >
-      <span className="font-sans text-xs font-medium" style={{ color: "#B08B3A" }}>
+      <span className="font-sans text-xs font-medium" style={{ color: "#C9A84C" }}>
         {initials}
       </span>
     </div>
@@ -91,7 +91,7 @@ export function Testimonials() {
   };
 
   return (
-    <section className="py-24 lg:py-32" style={{ background: "#FEFDF8" }}>
+    <section className="py-24 lg:py-32" style={{ background: "#0D0B08" }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
         {/* Header */}
@@ -111,14 +111,14 @@ export function Testimonials() {
             </p>
             <h2
               className="font-serif font-light"
-              style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", color: "#1A1714" }}
+              style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", color: "#FAF7F2" }}
             >
               {t.testimonials.title}
             </h2>
           </div>
           <p
             className="font-sans text-xs"
-            style={{ color: "rgba(45,42,38,0.32)", letterSpacing: "0.05em" }}
+            style={{ color: "rgba(250,247,242,0.28)", letterSpacing: "0.05em" }}
           >
             Glissez pour voir plus →
           </p>
@@ -144,39 +144,38 @@ export function Testimonials() {
               className="glass-card rounded-2xl p-7 flex-shrink-0 flex flex-col gap-5"
               style={{ width: "clamp(300px, 80vw, 400px)" }}
             >
-              {/* Stars */}
               <StarRating count={item.rating} />
 
-              {/* Quote */}
               <div className="relative flex-1">
                 <span
                   className="absolute -top-3 -left-1 font-serif text-5xl leading-none"
-                  style={{ color: "rgba(176,139,58,0.18)" }}
+                  style={{ color: "rgba(176,139,58,0.22)" }}
                   aria-hidden
                 >
                   "
                 </span>
                 <p
                   className="font-serif font-light italic text-base lg:text-lg leading-relaxed pt-3"
-                  style={{ color: "rgba(45,42,38,0.68)" }}
+                  style={{ color: "rgba(250,247,242,0.72)" }}
                 >
                   {item.text}
                 </p>
               </div>
 
-              {/* Divider */}
               <div className="h-px" style={{ background: "rgba(176,139,58,0.12)" }} />
 
-              {/* Author */}
               <div className="flex items-center gap-3">
                 <Avatar name={item.name} index={i} />
                 <div>
-                  <p className="font-sans text-sm font-medium" style={{ color: "#1A1714" }}>
+                  <p
+                    className="font-sans text-sm font-medium"
+                    style={{ color: "#FAF7F2" }}
+                  >
                     {item.name}
                   </p>
                   <p
                     className="font-sans text-xs"
-                    style={{ color: "rgba(45,42,38,0.38)" }}
+                    style={{ color: "rgba(250,247,242,0.36)" }}
                   >
                     {item.event} · {item.location}
                   </p>
@@ -184,7 +183,7 @@ export function Testimonials() {
                 <div className="ml-auto shrink-0">
                   <div
                     className="w-6 h-6 rounded-full flex items-center justify-center"
-                    style={{ background: "rgba(176,139,58,0.1)" }}
+                    style={{ background: "rgba(176,139,58,0.12)" }}
                   >
                     <span style={{ color: "#C9A84C", fontSize: 10 }}>✓</span>
                   </div>
@@ -202,26 +201,26 @@ export function Testimonials() {
             className="rounded-2xl p-7 flex-shrink-0 flex flex-col items-center justify-center gap-5 text-center"
             style={{
               width: "clamp(260px, 60vw, 320px)",
-              border: "1px dashed rgba(176,139,58,0.3)",
-              background: "rgba(245,230,224,0.35)",
+              border: "1px dashed rgba(176,139,58,0.28)",
+              background: "rgba(176,139,58,0.04)",
             }}
           >
             <div
               className="w-14 h-14 rounded-full flex items-center justify-center"
               style={{
                 background: "rgba(176,139,58,0.1)",
-                border: "1px solid rgba(176,139,58,0.25)",
+                border: "1px solid rgba(176,139,58,0.28)",
               }}
             >
               <span style={{ color: "#C9A84C", fontSize: 22 }}>★</span>
             </div>
             <p
               className="font-serif font-light italic text-xl"
-              style={{ color: "rgba(45,42,38,0.55)" }}
+              style={{ color: "rgba(250,247,242,0.55)" }}
             >
               Votre avis compte
             </p>
-            <p className="font-sans text-sm" style={{ color: "rgba(45,42,38,0.35)" }}>
+            <p className="font-sans text-sm" style={{ color: "rgba(250,247,242,0.32)" }}>
               Partagez votre expérience avec Event Fiesta
             </p>
             <button
@@ -229,7 +228,7 @@ export function Testimonials() {
                 document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
               }
               className="font-sans text-xs font-medium px-5 py-2.5 rounded-full cursor-pointer transition-colors duration-200"
-              style={{ background: "#B08B3A", color: "#fff" }}
+              style={{ background: "#B08B3A", color: "#080605" }}
             >
               Nous contacter
             </button>

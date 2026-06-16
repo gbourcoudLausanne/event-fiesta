@@ -24,7 +24,7 @@ export function SplashScreen() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] } }}
           className="fixed inset-0 z-[9998] flex items-center justify-center"
-          style={{ background: "#FEFDF8" }}
+          style={{ background: "#080605" }}
           aria-hidden
         >
           {/* Gold shimmer line top */}
@@ -45,7 +45,7 @@ export function SplashScreen() {
             >
               <span
                 className="font-sans font-light text-4xl tracking-[0.18em] uppercase"
-                style={{ color: "#1A1714", letterSpacing: "0.22em" }}
+                style={{ color: "#FAF7F2", letterSpacing: "0.22em" }}
               >
                 Event
               </span>
@@ -70,7 +70,7 @@ export function SplashScreen() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 1.1 }}
               className="font-sans text-[10px] tracking-[0.3em] uppercase"
-              style={{ color: "rgba(45,42,38,0.38)" }}
+              style={{ color: "rgba(250,247,242,0.35)" }}
             >
               Lausanne · Suisse Romande
             </motion.p>

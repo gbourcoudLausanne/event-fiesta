@@ -7,16 +7,16 @@ export const fr = {
     cta: "Demander un devis",
   },
   hero: {
-    eyebrow: "Décoration sur mesure · Lausanne",
-    headline1: "Donnez vie à vos",
-    headline2: "plus beaux moments",
+    eyebrow: "Lausanne · Suisse Romande · Depuis 2020",
+    headline1: "Vos événements,",
+    headline2: "notre oeuvre.",
     subtext:
-      "Event Fiesta vous accompagne dans la création d'événements uniques et inoubliables, pour tous vos moments précieux.",
+      "Décoration sur mesure pour vos célébrations à Lausanne et en Suisse romande.",
     cta1: "Découvrir nos services",
     cta2: "Demander un devis",
     features: [
-      { label: "Décorations personnalisées" },
-      { label: "Solutions clé en main" },
+      { label: "Déco personnalisée" },
+      { label: "Clé en main" },
       { label: "Passion & savoir-faire" },
     ],
   },

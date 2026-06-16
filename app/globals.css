@@ -4,15 +4,12 @@
   --or: #B08B3A;
   --or-light: #C9A84C;
   --or-dim: rgba(176, 139, 58, 0.12);
-  --blanc: #FEFDF8;
+  --encre: #080605;
+  --noir: #0D0B08;
+  --noir-2: #141210;
   --creme: #FAF7F2;
-  --creme-2: #F2EBE3;
+  --creme-2: #F3EDE6;
   --blush: #F5E6E0;
-  --blush-2: #EDD5CC;
-  --brun: #2D2A26;
-  --brun-2: #5C5550;
-  --noir: #1A1714;
-  --noir-dark: #0D0B08;
   --radius-card: 16px;
 }
 
@@ -20,11 +17,9 @@
   --color-or: var(--or);
   --color-or-light: var(--or-light);
   --color-blush: var(--blush);
-  --color-blush-2: var(--blush-2);
-  --color-blanc: var(--blanc);
-  --color-creme: var(--creme);
-  --color-brun: var(--brun);
+  --color-encre: var(--encre);
   --color-noir: var(--noir);
+  --color-creme: var(--creme);
   --font-sans: var(--font-montserrat), 'Helvetica Neue', system-ui, sans-serif;
   --font-serif: var(--font-cormorant), Georgia, serif;
   --font-display: var(--font-dm-serif), var(--font-cormorant), Georgia, serif;
@@ -34,8 +29,8 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: var(--blanc);
-  color: var(--brun);
+  background-color: var(--encre);
+  color: var(--creme);
   overflow-x: hidden;
 }
 
@@ -164,7 +159,7 @@ body {
 .field-float select {
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(13, 11, 8, 0.2);
+  border-bottom: 1px solid rgba(13, 11, 8, 0.18);
   border-radius: 0;
   padding: 20px 0 8px 0;
   font-size: 14px;
@@ -203,13 +198,12 @@ body {
   text-transform: uppercase;
 }
 
-/* ─── Glassmorphism card (light theme) ──────────── */
+/* ─── Glassmorphism card (dark theme) ───────────── */
 .glass-card {
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(20, 18, 16, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(176, 139, 58, 0.12);
-  box-shadow: 0 4px 24px rgba(45, 42, 38, 0.07);
+  border: 1px solid rgba(176, 139, 58, 0.1);
 }
 
 /* ─── Parallax images ───────────────────────────── */

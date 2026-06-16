@@ -10,14 +10,14 @@ export function CtaBanner() {
   return (
     <section
       className="relative py-28 lg:py-36 overflow-hidden"
-      style={{ background: "#F5E6E0" }}
+      style={{ background: "#0D0B08" }}
     >
-      {/* Soft gold radial glow */}
+      {/* Radial gold glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 70% 90% at 50% 50%, rgba(176,139,58,0.1) 0%, transparent 65%)",
+            "radial-gradient(ellipse 70% 90% at 50% 50%, rgba(176,139,58,0.08) 0%, transparent 65%)",
         }}
         aria-hidden
       />
@@ -30,7 +30,7 @@ export function CtaBanner() {
           style={{
             width: size,
             height: size,
-            border: `1px solid rgba(176,139,58,${0.07 + i * 0.03})`,
+            border: `1px solid rgba(176,139,58,${0.04 + i * 0.02})`,
           }}
           aria-hidden
         />
@@ -56,7 +56,7 @@ export function CtaBanner() {
           className="font-serif font-light italic leading-[1.2] mb-10"
           style={{
             fontSize: "clamp(2rem, 5vw, 3.8rem)",
-            color: "#1A1714",
+            color: "#FAF7F2",
           }}
         >
           Votre prochaine célébration
@@ -76,7 +76,7 @@ export function CtaBanner() {
               document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
             }
             className="btn-gold-shimmer font-sans text-sm font-medium px-10 py-4 rounded-full cursor-pointer active:scale-[0.97] transition-all duration-300"
-            style={{ background: "#B08B3A", color: "#fff" }}
+            style={{ background: "#B08B3A", color: "#080605" }}
             onMouseEnter={(e) =>
               ((e.currentTarget as HTMLButtonElement).style.background = "#C9A84C")
             }
@@ -90,12 +90,13 @@ export function CtaBanner() {
           <a
             href="tel:0779143855"
             className="font-sans text-sm font-light transition-colors duration-200"
-            style={{ color: "rgba(45,42,38,0.45)" }}
+            style={{ color: "rgba(250,247,242,0.38)" }}
             onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLAnchorElement).style.color = "#1A1714")
+              ((e.currentTarget as HTMLAnchorElement).style.color = "#FAF7F2")
             }
             onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(45,42,38,0.45)")
+              ((e.currentTarget as HTMLAnchorElement).style.color =
+                "rgba(250,247,242,0.38)")
             }
           >
             ou appelez-nous · 077 914 38 55
@@ -124,7 +125,7 @@ export function CtaBanner() {
               </span>
               <span
                 className="font-sans text-[10px] uppercase tracking-[0.15em]"
-                style={{ color: "rgba(45,42,38,0.4)" }}
+                style={{ color: "rgba(250,247,242,0.22)" }}
               >
                 {label}
               </span>

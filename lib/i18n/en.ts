@@ -7,16 +7,16 @@ export const en = {
     cta: "Request a quote",
   },
   hero: {
-    eyebrow: "Custom decoration · Lausanne",
-    headline1: "Bring to life your",
-    headline2: "most beautiful moments",
+    eyebrow: "Lausanne · French Switzerland · Since 2020",
+    headline1: "Your events,",
+    headline2: "our craft.",
     subtext:
-      "Event Fiesta guides you through creating unique and unforgettable events, for all your precious moments.",
+      "Custom decoration for your celebrations in Lausanne and French-speaking Switzerland.",
     cta1: "Discover our services",
     cta2: "Request a quote",
     features: [
       { label: "Custom decoration" },
-      { label: "Full-service solutions" },
+      { label: "Full-service" },
       { label: "Passion & expertise" },
     ],
   },

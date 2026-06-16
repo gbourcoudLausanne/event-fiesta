@@ -197,7 +197,7 @@ export function Realisations() {
   const goPrev = () => setLightboxIndex((i) => i === null ? 0 : (i - 1 + filtered.length) % filtered.length);
 
   return (
-    <section id="realisations" className="py-24 lg:py-32" style={{ background: "#F5E6E0" }}>
+    <section id="realisations" className="py-24 lg:py-32" style={{ background: "#080605" }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
         {/* Header */}
@@ -214,11 +214,11 @@ export function Realisations() {
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <h2
               className="font-serif font-light leading-tight"
-              style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)", color: "#0D0B08" }}
+              style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)", color: "#FAF7F2" }}
             >
               {t.realisations.title}
             </h2>
-            <p className="font-sans text-sm max-w-xs leading-relaxed lg:text-right" style={{ color: "rgba(13,11,8,0.45)" }}>
+            <p className="font-sans text-sm max-w-xs leading-relaxed lg:text-right" style={{ color: "rgba(250,247,242,0.38)" }}>
               {t.realisations.subtitle}
             </p>
           </div>
@@ -239,8 +239,8 @@ export function Realisations() {
               className="font-sans text-sm px-4 py-2 rounded-full transition-all duration-250 cursor-pointer"
               style={{
                 background: active === key ? "#B08B3A" : "transparent",
-                color: active === key ? "#0D0B08" : "rgba(13,11,8,0.5)",
-                border: active === key ? "1px solid #B08B3A" : "1px solid rgba(13,11,8,0.18)",
+                color: active === key ? "#080605" : "rgba(250,247,242,0.45)",
+                border: active === key ? "1px solid #B08B3A" : "1px solid rgba(250,247,242,0.15)",
                 fontWeight: active === key ? 500 : 300,
               }}
             >

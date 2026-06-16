@@ -17,31 +17,24 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        {/* blanc → crème */}
-        <SectionDivider from="#FEFDF8" to="#FAF7F2" variant="wave" height={48} />
+        {/* encre → crème */}
+        <SectionDivider from="#080605" to="#FAF7F2" variant="wave" height={72} />
 
         <Services />
-        {/* crème → blush */}
-        <SectionDivider from="#FAF7F2" to="#F5E6E0" variant="diagonal-inv" height={56} />
+        {/* crème → encre */}
+        <SectionDivider from="#FAF7F2" to="#080605" variant="diagonal-inv" height={56} />
 
         <Realisations />
-        {/* blush → dark */}
-        <SectionDivider from="#F5E6E0" to="#0D0B08" variant="wave-inv" height={72} />
+        {/* encre → encre (continuous dark zone) */}
 
         <WhyUs />
-        {/* dark → blanc */}
-        <SectionDivider from="#0D0B08" to="#FEFDF8" variant="wave" height={72} />
-
         <Testimonials />
-        {/* blanc → blush */}
-        <SectionDivider from="#FEFDF8" to="#F5E6E0" variant="diagonal" height={56} />
-
         <CtaBanner />
-        {/* blush → crème */}
-        <SectionDivider from="#F5E6E0" to="#FAF7F2" variant="wave-inv" height={48} />
+        {/* encre → crème */}
+        <SectionDivider from="#0D0B08" to="#FAF7F2" variant="wave" height={72} />
 
         <Contact />
-        {/* crème → dark footer */}
+        {/* crème → encre footer */}
         <SectionDivider from="#FAF7F2" to="#0D0B08" variant="diagonal" height={56} />
       </main>
       <Footer />
