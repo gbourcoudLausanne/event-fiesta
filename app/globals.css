@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+:root {
+  --or: #B08B3A;
+  --blush: #f5e0e0;
+  --noir: #1a1410;
+  --creme: #fdf9f5;
+}
+
+@theme inline {
+  --color-or: var(--or);
+  --color-blush: var(--blush);
+  --color-noir: var(--noir);
+  --color-creme: var(--creme);
+  --font-sans: var(--font-montserrat), 'Helvetica Neue', system-ui, sans-serif;
+  --font-serif: var(--font-cormorant), Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #fdf9f5;
+  color: #1a1410;
+}
+
+::selection {
+  background-color: #B08B3A;
+  color: #fdf9f5;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float-particle {
+  0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.18; }
+  33% { transform: translateY(-22px) translateX(8px); opacity: 0.48; }
+  66% { transform: translateY(-12px) translateX(-6px); opacity: 0.28; }
+}
+
+@keyframes shimmer-slide {
+  from { transform: translateX(-150%) skewX(-15deg); }
+  to { transform: translateX(300%) skewX(-15deg); }
+}
+
+.btn-gold-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.btn-gold-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  transform: translateX(-150%) skewX(-15deg);
+  pointer-events: none;
+}
+.btn-gold-shimmer:hover::after {
+  animation: shimmer-slide 0.6s ease;
+}
