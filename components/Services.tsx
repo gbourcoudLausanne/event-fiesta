@@ -646,8 +646,8 @@ function ServiceCard({
           {/* Numéro fantôme */}
           <span
             aria-hidden
-            className="pointer-events-none absolute -right-2 -top-5 select-none font-serif font-light leading-none transition-transform duration-500 group-hover:scale-110"
-            style={{ fontSize: "6.5rem", color: `${tint.dot}30` }}
+            className="pointer-events-none absolute -right-3 -top-6 select-none font-serif font-light leading-none transition-transform duration-500 group-hover:scale-110"
+            style={{ fontSize: "6rem", color: `${tint.dot}24` }}
           >
             {String(i + 1).padStart(2, "0")}
           </span>
@@ -655,20 +655,20 @@ function ServiceCard({
           <div className="relative z-10 flex h-full flex-col">
             <span className="mb-6 h-2.5 w-2.5 rounded-full" style={{ background: tint.dot }} aria-hidden />
             <h3
-              className="font-serif font-light leading-tight"
-              style={{ fontSize: "clamp(1.3rem, 2vw, 1.7rem)", color: "#2A2320" }}
+              className="font-serif leading-tight"
+              style={{ fontSize: "clamp(1.3rem, 2vw, 1.7rem)", color: "#241E1B" }}
             >
               {card.name}
             </h3>
             <p
-              className="mt-2.5 flex-1 font-sans font-light text-[13px] leading-relaxed"
-              style={{ color: "rgba(42,35,32,0.58)" }}
+              className="mt-2.5 flex-1 font-sans text-[13.5px] leading-relaxed"
+              style={{ color: "rgba(34,28,24,0.74)" }}
             >
               {card.desc}
             </p>
             <span
-              className="mt-5 inline-flex items-center gap-1.5 font-sans text-[11px] font-medium uppercase tracking-[0.16em] opacity-55 transition-opacity duration-300 group-hover:opacity-100"
-              style={{ color: "#B65572" }}
+              className="mt-5 inline-flex items-center gap-1.5 font-sans text-[11px] font-semibold uppercase tracking-[0.16em] opacity-75 transition-opacity duration-300 group-hover:opacity-100"
+              style={{ color: "#A64C6A" }}
             >
               En savoir plus
               <ArrowUpRight
