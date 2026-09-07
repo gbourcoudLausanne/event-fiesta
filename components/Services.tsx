@@ -10,6 +10,7 @@ import {
   useTransform,
   useMotionValue,
   useSpring,
+  useInView,
 } from "motion/react";
 import Link from "next/link";
 import { ArrowUpRight, ArrowRight } from "@phosphor-icons/react";
@@ -684,6 +685,20 @@ export function Services() {
   const [tab, setTab] = useState<"part" | "pro">("part");
   const [decor, setDecor] = useState(1);
 
+  // Intro au scroll : l'arche apparaît finie (5), tient un instant, puis se vide
+  // pour intriguer et inviter à cliquer.
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, { once: true, amount: 0.12 });
+  useEffect(() => {
+    if (!inView || reduce) return; // reduce : l'arche reste vide (état initial)
+    const t0 = setTimeout(() => setDecor(5), 350);
+    const t1 = setTimeout(() => setDecor(1), 2600);
+    return () => {
+      clearTimeout(t0);
+      clearTimeout(t1);
+    };
+  }, [inView, reduce]);
+
   const particuliers: Card[] = t.services.index.filter((x) =>
     PARTICULIERS_KEYS.includes(x.key),
   );
@@ -701,6 +716,7 @@ export function Services() {
 
   return (
     <section
+      ref={sectionRef}
       id="services"
       className="relative overflow-hidden py-20 lg:py-28"
       style={{ background: "#FAF7F2" }}
