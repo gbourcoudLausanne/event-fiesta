@@ -297,7 +297,7 @@ function RibbonRow({
   }, [reduce, reverse, speed]);
 
   return (
-    <div className="relative flex-1 overflow-hidden">
+    <div className="relative flex-1 min-h-0 overflow-hidden">
       <div ref={trackRef} className="flex gap-2.5 h-full will-change-transform">
         {loop.map((p, i) => (
           <div
@@ -344,11 +344,11 @@ function PhotoRibbon() {
   return (
     <div
       className="relative overflow-hidden"
-      style={{ height: "clamp(360px, 56vh, 580px)" }}
+      style={{ height: "clamp(320px, 48vh, 500px)" }}
     >
       <div className="flex flex-col gap-2.5 h-full">
-        <RibbonRow photos={even} reverse={false} speed={26} priority />
-        <RibbonRow photos={odd} reverse speed={22} />
+        <RibbonRow photos={even} reverse={false} speed={24} priority />
+        <RibbonRow photos={odd} reverse speed={21} />
       </div>
 
       {/* Fondus latéraux */}
@@ -506,10 +506,10 @@ export function Hero() {
 
         {/* ── Mobile / tablette : intro → ruban photos plein cadre → services + CTA ── */}
         <div className="lg:hidden pt-[92px] pb-14">
-          <div className="relative z-10 px-6 sm:px-8">
+          <div className="px-6 sm:px-8">
             <HeroText part="intro" />
           </div>
-          <div className="-mt-3 mb-9">
+          <div className="mt-9 mb-10">
             <PhotoRibbon />
           </div>
           <div className="px-6 sm:px-8">
