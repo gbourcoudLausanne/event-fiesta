@@ -191,7 +191,7 @@ function MarqueeColumn({
         {loop.map((p, i) => (
           <div
             key={i}
-            className="relative w-full overflow-hidden rounded-2xl"
+            className="relative w-full overflow-hidden"
             style={{
               aspectRatio: "3 / 4",
               boxShadow: "0 10px 30px -12px rgba(120,60,80,0.4)",
@@ -221,7 +221,7 @@ function MarqueeColumn({
 function PhotoWall({ columns = 3 }: { columns?: number }) {
   return (
     <div
-      className="relative h-full w-full overflow-hidden rounded-[22px] lg:rounded-[30px]"
+      className="relative h-full w-full overflow-hidden"
       style={{ boxShadow: "0 40px 90px -35px rgba(120,60,80,0.5), 0 10px 30px rgba(13,11,8,0.08)" }}
     >
       <div className="absolute inset-0 flex justify-center py-3">
@@ -249,7 +249,7 @@ function PhotoWall({ columns = 3 }: { columns?: number }) {
       />
       {/* Filet intérieur */}
       <div
-        className="absolute inset-3 lg:inset-4 rounded-[14px] pointer-events-none"
+        className="absolute inset-3 lg:inset-4 pointer-events-none"
         style={{ border: "1px solid rgba(217,98,138,0.14)" }}
         aria-hidden
       />
@@ -302,7 +302,7 @@ function RibbonRow({
         {loop.map((p, i) => (
           <div
             key={i}
-            className="relative h-full shrink-0 overflow-hidden rounded-xl"
+            className="relative h-full shrink-0 overflow-hidden"
             style={{ aspectRatio: "3 / 4", boxShadow: "0 16px 36px -16px rgba(120,60,80,0.5)" }}
           >
             <div
