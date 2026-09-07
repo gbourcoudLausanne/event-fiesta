@@ -56,6 +56,8 @@ const ARCH_CONFETTI = [
   { x: 320, s: "r", c: "#E58AA6", d: 3.9 },
 ];
 
+const DECOR_STEPS = ["Décorer l'arche", "Ajouter des ballons", "La touche florale", "Poser le panneau"];
+
 // Accents métallisés rose gold — niveau ≥ 2
 const ARCH_ACCENTS = [
   { x: 56, y: 150, r: 24 },
@@ -92,7 +94,15 @@ function Pampa({ x, y, a }: { x: number; y: number; a: number }) {
   );
 }
 
-function BalloonArch({ level }: { level: number }) {
+function BalloonArch({
+  level,
+  onStep,
+  onReset,
+}: {
+  level: number;
+  onStep: () => void;
+  onReset: () => void;
+}) {
   const reduce = useReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
@@ -142,9 +152,45 @@ function BalloonArch({ level }: { level: number }) {
       ref={wrapRef}
       className="absolute pointer-events-none hidden lg:block"
       style={{ top: "2%", right: "-7%", width: "min(42vw, 640px)", y }}
-      aria-hidden
     >
-      <motion.svg viewBox="0 0 420 420" fill="none" style={{ overflow: "visible", width: "100%" }}>
+      {/* Bouton « décorer » au centre de l'arche */}
+      <div
+        className="absolute z-10 flex flex-col items-center gap-2"
+        style={{ left: "47%", top: "56%", transform: "translate(-50%, -50%)", pointerEvents: "auto" }}
+      >
+        {level < 4 ? (
+          <button
+            type="button"
+            onClick={onStep}
+            className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[12px] font-medium px-6 py-3 rounded-full whitespace-nowrap transition-transform duration-200 hover:scale-[1.04] active:scale-[0.97] shadow-lg"
+            style={{ background: "#D9628A", color: "#FAF7F2" }}
+          >
+            {DECOR_STEPS[level - 1]}
+            <span aria-hidden>✨</span>
+          </button>
+        ) : (
+          <Link
+            href="/contact"
+            className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[12px] font-medium px-6 py-3 rounded-full whitespace-nowrap transition-transform duration-200 hover:scale-[1.04] shadow-lg"
+            style={{ background: "#D9628A", color: "#FAF7F2" }}
+          >
+            Et la vôtre ? Demander un devis
+            <ArrowUpRight size={13} weight="bold" />
+          </Link>
+        )}
+        {level > 1 && (
+          <button
+            type="button"
+            onClick={onReset}
+            className="font-sans text-[10px] uppercase tracking-[0.16em]"
+            style={{ color: "rgba(42,35,32,0.45)" }}
+          >
+            Recommencer
+          </button>
+        )}
+      </div>
+
+      <motion.svg viewBox="0 0 420 420" fill="none" style={{ overflow: "visible", width: "100%" }} aria-hidden>
         <defs>
           {GRAD_KEYS.map((k) => {
             const [a, b, c] = BALLOON_GRADS[k];
@@ -382,8 +428,6 @@ function ServiceCard({
   );
 }
 
-const DECOR_STEPS = ["Décorer l'arche", "Ajouter des ballons", "La touche florale", "Poser le panneau"];
-
 export function Services() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
@@ -421,7 +465,11 @@ export function Services() {
         }}
         aria-hidden
       />
-      <BalloonArch level={decor} />
+      <BalloonArch
+        level={decor}
+        onStep={() => setDecor((d) => Math.min(4, d + 1))}
+        onReset={() => setDecor(1)}
+      />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
         {/* En-tête */}
@@ -450,40 +498,6 @@ export function Services() {
           >
             {t.services.intro}
           </p>
-
-          {/* Décorer l'arche — mini-interaction (desktop) */}
-          <div className="mt-7 hidden lg:flex items-center gap-4">
-            {decor < 4 ? (
-              <button
-                type="button"
-                onClick={() => setDecor((d) => Math.min(4, d + 1))}
-                className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[12px] font-medium px-6 py-3 rounded-full transition-transform duration-200 hover:scale-[1.03] active:scale-[0.97]"
-                style={{ background: "#D9628A", color: "#FAF7F2" }}
-              >
-                {DECOR_STEPS[decor - 1]}
-                <span aria-hidden>✨</span>
-              </button>
-            ) : (
-              <Link
-                href="/contact"
-                className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[12px] font-medium px-6 py-3 rounded-full transition-transform duration-200 hover:scale-[1.03]"
-                style={{ background: "#D9628A", color: "#FAF7F2" }}
-              >
-                Et la vôtre ? Demander un devis
-                <ArrowUpRight size={13} weight="bold" />
-              </Link>
-            )}
-            {decor > 1 && (
-              <button
-                type="button"
-                onClick={() => setDecor(1)}
-                className="font-sans text-[11px] uppercase tracking-[0.14em] transition-colors"
-                style={{ color: "rgba(42,35,32,0.4)" }}
-              >
-                Recommencer
-              </button>
-            )}
-          </div>
         </motion.div>
 
         {/* Onglets */}
