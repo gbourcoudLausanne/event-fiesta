@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import Image from "next/image";
-import { X, ArrowLeft, ArrowRight } from "@phosphor-icons/react";
+import { X, ArrowLeft, ArrowRight, MagnifyingGlassPlus } from "@phosphor-icons/react";
 import { useI18n } from "@/lib/i18n";
 
 type Category = "all" | "anniversary" | "baptism" | "babyshower" | "themed" | "corporate" | "creation" | "goodies";
@@ -191,6 +191,8 @@ const wrap = (min: number, max: number, v: number) => {
 
 const ITEM_H = 66;
 
+const DUR = 4600;
+
 function RealisationsCarousel() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
@@ -203,7 +205,7 @@ function RealisationsCarousel() {
 
   useEffect(() => {
     if (paused || reduce || lb !== null) return;
-    const id = setInterval(() => setStep((s) => s + 1), 4200);
+    const id = setInterval(() => setStep((s) => s + 1), DUR);
     return () => clearInterval(id);
   }, [paused, reduce, lb]);
 
@@ -253,15 +255,20 @@ function RealisationsCarousel() {
         {/* Carousel */}
         <div
           className="relative flex flex-col lg:flex-row overflow-hidden"
-          style={{ boxShadow: "0 44px 100px -36px rgba(120,60,80,0.42)" }}
+          style={{
+            boxShadow: "0 44px 100px -36px rgba(120,60,80,0.4)",
+            border: "1px solid rgba(42,35,32,0.07)",
+          }}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
         >
-          {/* Rolodex de types */}
+          {/* ── Rolodex de types ── */}
           <div
-            className="relative flex items-center overflow-hidden px-6 min-h-[320px] lg:min-h-[560px] lg:w-[40%]"
+            className="relative flex items-center justify-center overflow-hidden px-6 min-h-[300px] lg:min-h-[560px] lg:w-[42%]"
             style={{ background: "#F2D4D9" }}
           >
-            <div className="absolute inset-x-0 top-0 h-20 z-10 pointer-events-none" style={{ background: "linear-gradient(#F2D4D9, rgba(242,212,217,0))" }} />
-            <div className="absolute inset-x-0 bottom-0 h-20 z-10 pointer-events-none" style={{ background: "linear-gradient(rgba(242,212,217,0), #F2D4D9)" }} />
+            <div className="absolute inset-x-0 top-0 h-24 z-10 pointer-events-none" style={{ background: "linear-gradient(#F2D4D9, rgba(242,212,217,0))" }} />
+            <div className="absolute inset-x-0 bottom-0 h-24 z-10 pointer-events-none" style={{ background: "linear-gradient(rgba(242,212,217,0), #F2D4D9)" }} />
             <div className="relative flex h-full w-full items-center justify-center">
               {CAROUSEL.map((it, i) => {
                 const wd = wrap(-(N / 2), N / 2, i - cur);
@@ -269,29 +276,53 @@ function RealisationsCarousel() {
                 return (
                   <motion.div
                     key={i}
-                    className="absolute inset-x-0 flex justify-center"
+                    className="absolute inset-x-0 flex items-center justify-center"
                     style={{ height: ITEM_H }}
                     animate={{
                       y: wd * ITEM_H,
-                      opacity: reduce ? (on ? 1 : 0) : 1 - Math.abs(wd) * 0.26,
+                      opacity: reduce ? (on ? 1 : 0) : Math.max(0, 1 - Math.abs(wd) * 0.34),
                     }}
-                    transition={reduce ? { duration: 0.2 } : { type: "spring", stiffness: 90, damping: 22 }}
+                    transition={reduce ? { duration: 0.2 } : { type: "spring", stiffness: 88, damping: 22 }}
                   >
                     <button
                       onClick={() => jump(i)}
-                      onMouseEnter={() => setPaused(true)}
-                      onMouseLeave={() => setPaused(false)}
-                      className="flex items-center justify-center gap-3 rounded-full border px-9 py-4 transition-colors duration-500 cursor-pointer"
-                      style={
-                        on
-                          ? { background: "#FAF7F2", color: "#B65572", borderColor: "#FAF7F2" }
-                          : { background: "transparent", color: "rgba(42,35,32,0.5)", borderColor: "rgba(42,35,32,0.2)" }
-                      }
+                      className="flex items-center gap-4 cursor-pointer"
+                      aria-current={on ? "true" : undefined}
                     >
-                      <span className="h-2 w-2 rounded-full shrink-0" style={{ background: on ? "#D9628A" : "rgba(42,35,32,0.3)" }} />
+                      {on ? (
+                        <span className="relative flex h-7 w-7 shrink-0 items-center justify-center">
+                          <svg viewBox="0 0 28 28" className="absolute inset-0 h-full w-full -rotate-90">
+                            <circle cx="14" cy="14" r="12.5" fill="none" stroke="rgba(42,35,32,0.16)" strokeWidth="1.4" />
+                            <circle
+                              key={cur}
+                              cx="14"
+                              cy="14"
+                              r="12.5"
+                              fill="none"
+                              stroke="#D9628A"
+                              strokeWidth="1.6"
+                              strokeLinecap="round"
+                              pathLength={1}
+                              style={{
+                                strokeDasharray: 1,
+                                strokeDashoffset: 1,
+                                animation: reduce ? "none" : `rc-ring ${DUR}ms linear forwards`,
+                                animationPlayState: paused ? "paused" : "running",
+                              }}
+                            />
+                          </svg>
+                          <span className="h-2 w-2 rounded-full" style={{ background: "#D9628A" }} />
+                        </span>
+                      ) : (
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: "rgba(42,35,32,0.28)" }} />
+                      )}
                       <span
-                        className="font-serif font-light whitespace-nowrap"
-                        style={{ fontSize: "clamp(1.05rem, 1.5vw, 1.3rem)", fontStyle: on ? "italic" : "normal" }}
+                        className="font-serif font-light whitespace-nowrap transition-colors duration-300"
+                        style={{
+                          fontSize: on ? "clamp(1.5rem, 2.4vw, 2.15rem)" : "clamp(1rem, 1.5vw, 1.2rem)",
+                          color: on ? "#B65572" : "rgba(42,35,32,0.42)",
+                          fontStyle: on ? "italic" : "normal",
+                        }}
                       >
                         {it.label}
                       </span>
@@ -302,12 +333,12 @@ function RealisationsCarousel() {
             </div>
           </div>
 
-          {/* Pile photo */}
+          {/* ── Pile photo ── */}
           <div
-            className="relative flex flex-1 items-center justify-center overflow-hidden p-8 lg:p-12 min-h-[440px] lg:min-h-[540px]"
-            style={{ background: "#E7DED7" }}
+            className="relative flex flex-1 items-center justify-center overflow-hidden p-8 lg:p-14 min-h-[440px] lg:min-h-[560px]"
+            style={{ background: "#FAF7F2" }}
           >
-            <div className="relative w-full max-w-[400px]" style={{ aspectRatio: "4 / 5" }}>
+            <div className="relative w-full max-w-[420px]" style={{ aspectRatio: "4 / 5" }}>
               {CAROUSEL.map((it, i) => {
                 const st = status(i);
                 const on = st === "active";
@@ -315,32 +346,44 @@ function RealisationsCarousel() {
                   <motion.button
                     key={i}
                     type="button"
-                    onClick={() => on && setLb(i)}
+                    onClick={() => (on ? setLb(i) : jump(i))}
                     initial={false}
                     animate={{
-                      x: on ? 0 : st === "prev" ? -92 : st === "next" ? 92 : 0,
-                      scale: on ? 1 : st === "prev" || st === "next" ? 0.86 : 0.72,
-                      opacity: on ? 1 : st === "prev" || st === "next" ? 0.32 : 0,
-                      rotate: reduce ? 0 : st === "prev" ? -3 : st === "next" ? 3 : 0,
+                      x: on ? 0 : st === "prev" ? -84 : st === "next" ? 84 : 0,
+                      scale: on ? 1 : st === "prev" || st === "next" ? 0.87 : 0.72,
+                      opacity: on ? 1 : st === "prev" || st === "next" ? 0.4 : 0,
+                      rotate: reduce ? 0 : st === "prev" ? -2.5 : st === "next" ? 2.5 : 0,
                       zIndex: on ? 20 : st === "prev" || st === "next" ? 10 : 0,
                     }}
-                    transition={reduce ? { duration: 0.25 } : { type: "spring", stiffness: 260, damping: 26, mass: 0.8 }}
-                    className="absolute inset-0 overflow-hidden"
-                    style={{ pointerEvents: on ? "auto" : "none", cursor: on ? "zoom-in" : "default", boxShadow: "0 30px 60px -24px rgba(120,60,80,0.5)" }}
-                    aria-label={on ? `Agrandir — ${it.label}` : undefined}
+                    transition={reduce ? { duration: 0.25 } : { type: "spring", stiffness: 250, damping: 26, mass: 0.85 }}
+                    className="group/ph absolute inset-0 overflow-hidden"
+                    style={{
+                      pointerEvents: st === "hidden" ? "none" : "auto",
+                      cursor: on ? "zoom-in" : "pointer",
+                      boxShadow: "0 30px 60px -24px rgba(120,60,80,0.5)",
+                    }}
+                    aria-label={on ? `Agrandir — ${it.label}` : `Voir ${it.label}`}
                   >
                     <Image
                       src={it.src}
                       alt={it.alt}
                       fill
                       className="object-cover transition-[filter] duration-700"
-                      style={{ filter: on ? "none" : "grayscale(0.7) brightness(0.82)" }}
-                      sizes="440px"
+                      style={{ filter: on ? "none" : "sepia(0.32) saturate(0.75) brightness(0.86)" }}
+                      sizes="460px"
                     />
                     <div
                       className="absolute inset-0 pointer-events-none"
                       style={{ background: "linear-gradient(180deg, rgba(13,11,8,0) 42%, rgba(13,11,8,0.78) 100%)" }}
                     />
+                    {on && (
+                      <div
+                        className="absolute inset-4 pointer-events-none"
+                        style={{ border: "1px solid rgba(250,247,242,0.28)" }}
+                        aria-hidden
+                      />
+                    )}
+
                     <AnimatePresence>
                       {on && (
                         <motion.div
@@ -350,18 +393,41 @@ function RealisationsCarousel() {
                           transition={{ duration: 0.35, ease }}
                           className="absolute inset-x-0 bottom-0 p-6 text-left"
                         >
-                          <p className="font-sans text-[10px] uppercase tracking-[0.22em] mb-1" style={{ color: "rgba(250,247,242,0.6)" }}>
+                          <p className="font-sans text-[10px] uppercase tracking-[0.22em] mb-1" style={{ color: "rgba(250,247,242,0.62)" }}>
                             {String(cur + 1).padStart(2, "0")} · {String(N).padStart(2, "0")} — {it.label}
                           </p>
-                          <p className="font-serif font-light italic text-lg" style={{ color: "#FAF7F2" }}>
+                          <p className="font-serif font-light italic text-xl" style={{ color: "#FAF7F2" }}>
                             {it.name}
                           </p>
                         </motion.div>
                       )}
                     </AnimatePresence>
+
+                    {on && (
+                      <span
+                        className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 font-sans text-[10px] font-medium uppercase tracking-[0.14em] opacity-0 transition-opacity duration-300 group-hover/ph:opacity-100"
+                        style={{ background: "rgba(250,247,242,0.94)", color: "#B65572" }}
+                      >
+                        <MagnifyingGlassPlus size={12} weight="bold" />
+                        Agrandir
+                      </span>
+                    )}
                   </motion.button>
                 );
               })}
+            </div>
+
+            {/* Puces (utile sur mobile) */}
+            <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-1.5 lg:hidden">
+              {CAROUSEL.map((c, i) => (
+                <button
+                  key={i}
+                  onClick={() => jump(i)}
+                  aria-label={c.label}
+                  className="rounded-full transition-all duration-300"
+                  style={{ width: i === cur ? 20 : 6, height: 6, background: i === cur ? "#D9628A" : "rgba(217,98,138,0.32)" }}
+                />
+              ))}
             </div>
           </div>
         </div>
