@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { MouseEvent } from "react";
 import {
   motion,
-  AnimatePresence,
   useReducedMotion,
   useScroll,
   useTransform,
+  useMotionValue,
+  useSpring,
 } from "motion/react";
 import Link from "next/link";
 import { ArrowUpRight, ArrowRight } from "@phosphor-icons/react";
@@ -158,6 +160,105 @@ function BalloonArch() {
 
 type Card = { key: string; name: string; desc: string };
 
+function ServiceCard({
+  card,
+  i,
+  tint,
+}: {
+  card: Card;
+  i: number;
+  tint: { bg: string; dot: string };
+}) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const srx = useSpring(rx, { stiffness: 200, damping: 18 });
+  const sry = useSpring(ry, { stiffness: 200, damping: 18 });
+
+  const onMove = (e: MouseEvent) => {
+    if (reduce) return;
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    ry.set(((e.clientX - r.left) / r.width - 0.5) * 8);
+    rx.set(-((e.clientY - r.top) / r.height - 0.5) * 8);
+  };
+  const onLeave = () => {
+    rx.set(0);
+    ry.set(0);
+  };
+
+  return (
+    <motion.li
+      initial={reduce ? false : { opacity: 0, y: 24, filter: "blur(6px)" }}
+      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      transition={{ duration: 0.55, delay: i * 0.07, ease }}
+      style={{ perspective: 1000 }}
+    >
+      <motion.div
+        ref={ref}
+        onMouseMove={onMove}
+        onMouseLeave={onLeave}
+        whileHover={reduce ? undefined : { boxShadow: `0 36px 70px -28px ${tint.dot}88` }}
+        style={{
+          rotateX: srx,
+          rotateY: sry,
+          transformStyle: "preserve-3d",
+          boxShadow: "0 2px 10px rgba(13,11,8,0.04)",
+        }}
+        className="group relative h-full"
+      >
+        <Link
+          href="/nos-services"
+          className="relative flex h-full flex-col overflow-hidden p-6 lg:p-8"
+          style={{
+            background: `linear-gradient(158deg, ${tint.bg} 0%, #FAF7F2 135%)`,
+            border: `1px solid ${tint.dot}3d`,
+            minHeight: 232,
+          }}
+        >
+          {/* Numéro fantôme */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -right-2 -top-5 select-none font-serif font-light leading-none transition-transform duration-500 group-hover:scale-110"
+            style={{ fontSize: "6.5rem", color: `${tint.dot}30` }}
+          >
+            {String(i + 1).padStart(2, "0")}
+          </span>
+
+          <div className="relative z-10 flex h-full flex-col">
+            <span className="mb-6 h-2.5 w-2.5 rounded-full" style={{ background: tint.dot }} aria-hidden />
+            <h3
+              className="font-serif font-light leading-tight"
+              style={{ fontSize: "clamp(1.3rem, 2vw, 1.7rem)", color: "#2A2320" }}
+            >
+              {card.name}
+            </h3>
+            <p
+              className="mt-2.5 flex-1 font-sans font-light text-[13px] leading-relaxed"
+              style={{ color: "rgba(42,35,32,0.58)" }}
+            >
+              {card.desc}
+            </p>
+            <span
+              className="mt-5 inline-flex items-center gap-1.5 font-sans text-[11px] font-medium uppercase tracking-[0.16em] opacity-55 transition-opacity duration-300 group-hover:opacity-100"
+              style={{ color: "#B65572" }}
+            >
+              En savoir plus
+              <ArrowUpRight
+                size={13}
+                weight="bold"
+                className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </span>
+          </div>
+        </Link>
+      </motion.div>
+    </motion.li>
+  );
+}
+
 export function Services() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
@@ -258,59 +359,14 @@ export function Services() {
         </div>
 
         {/* Grille dynamique */}
-        <AnimatePresence mode="wait">
-          <motion.ul
-            key={tab}
-            initial={reduce ? false : { opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
-            transition={{ duration: 0.35, ease }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4"
-          >
-            {cards.map((it, i) => {
-              const tint = TINTS[i % TINTS.length];
-              return (
-                <motion.li
-                  key={it.key}
-                  initial={reduce ? false : { opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: i * 0.05, ease }}
-                >
-                  <Link
-                    href="/nos-services"
-                    className="group relative flex h-full flex-col p-6 lg:p-7 overflow-hidden transition-all duration-300 hover:-translate-y-1"
-                    style={{ background: tint.bg, minHeight: 196, boxShadow: "0 1px 2px rgba(13,11,8,0.03)" }}
-                  >
-                    <div className="flex items-center justify-between mb-5">
-                      <span className="font-sans text-[11px] tabular-nums" style={{ color: "rgba(13,11,8,0.35)" }}>
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <span className="w-2 h-2 rounded-full" style={{ background: tint.dot }} aria-hidden />
-                    </div>
-                    <h3
-                      className="font-serif font-light text-xl lg:text-2xl leading-tight"
-                      style={{ color: "#2A2320" }}
-                    >
-                      {it.name}
-                    </h3>
-                    <p
-                      className="font-sans font-light text-[13px] leading-relaxed mt-2 flex-1"
-                      style={{ color: "rgba(42,35,32,0.55)" }}
-                    >
-                      {it.desc}
-                    </p>
-                    <ArrowUpRight
-                      size={15}
-                      weight="bold"
-                      className="mt-4 opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
-                      style={{ color: "#B65572" }}
-                    />
-                  </Link>
-                </motion.li>
-              );
-            })}
-          </motion.ul>
-        </AnimatePresence>
+        <ul
+          key={tab}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4"
+        >
+          {cards.map((it, i) => (
+            <ServiceCard key={it.key} card={it} i={i} tint={TINTS[i % TINTS.length]} />
+          ))}
+        </ul>
 
         <Link
           href="/nos-services"
