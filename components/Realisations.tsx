@@ -444,9 +444,12 @@ function RealisationsCarousel() {
 
   return (
     <section id="realisations" className="relative overflow-hidden py-16 lg:py-24" style={{ background: "#F3EDE6" }}>
-      {/* Motif animé — bouquet de ballons, au premier plan haut-gauche (desktop) */}
+      {/* Motif animé — bouquet de ballons. 1er plan par défaut ; passe en
+          arrière-plan quand une grille est déployée pour ne pas la gêner. */}
       <div
-        className="absolute pointer-events-none z-30 hidden lg:block"
+        className={`absolute pointer-events-none hidden lg:block transition-opacity duration-300 ${
+          expanded !== null ? "z-0 opacity-40" : "z-30 opacity-100"
+        }`}
         style={{ top: "0.25rem", left: "1%", width: "min(24vw, 320px)" }}
       >
         <FloatingBalloons />
