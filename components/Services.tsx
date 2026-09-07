@@ -20,6 +20,89 @@ const INDEX_IMAGES: Record<string, string> = {
   entreprise:   "/Galerie/Corporate/Corporate_1.jpg",
 };
 
+// Ballons répartis le long de l'arche (viewBox 400×400), du bas-gauche
+// jusqu'en haut puis vers le bas-droite → l'arche « se monte ».
+const ARCH_BALLOONS: { cx: number; cy: number; r: number; c: string }[] = [
+  { cx: 28, cy: 388, r: 15, c: "#F4A8B8" },
+  { cx: 17, cy: 356, r: 10, c: "#FBD5DE" },
+  { cx: 35, cy: 338, r: 17, c: "#A8CEE0" },
+  { cx: 23, cy: 308, r: 12, c: "#FAF7F2" },
+  { cx: 41, cy: 286, r: 18, c: "#F0C29A" },
+  { cx: 29, cy: 260, r: 11, c: "#F4A8B8" },
+  { cx: 46, cy: 236, r: 16, c: "#FBD5DE" },
+  { cx: 37, cy: 210, r: 13, c: "#A8CEE0" },
+  { cx: 56, cy: 186, r: 18, c: "#F4A8B8" },
+  { cx: 47, cy: 160, r: 10, c: "#FAF7F2" },
+  { cx: 67, cy: 138, r: 15, c: "#F0C29A" },
+  { cx: 60, cy: 114, r: 12, c: "#F4A8B8" },
+  { cx: 84, cy: 94, r: 17, c: "#FBD5DE" },
+  { cx: 110, cy: 66, r: 13, c: "#A8CEE0" },
+  { cx: 140, cy: 46, r: 19, c: "#F4A8B8" },
+  { cx: 172, cy: 35, r: 12, c: "#FAF7F2" },
+  { cx: 200, cy: 31, r: 17, c: "#F0C29A" },
+  { cx: 228, cy: 37, r: 14, c: "#F4A8B8" },
+  { cx: 258, cy: 49, r: 18, c: "#FBD5DE" },
+  { cx: 288, cy: 70, r: 12, c: "#A8CEE0" },
+  { cx: 312, cy: 98, r: 16, c: "#F4A8B8" },
+  { cx: 326, cy: 126, r: 13, c: "#F0C29A" },
+  { cx: 341, cy: 154, r: 18, c: "#FBD5DE" },
+  { cx: 332, cy: 182, r: 11, c: "#FAF7F2" },
+  { cx: 349, cy: 210, r: 17, c: "#F4A8B8" },
+  { cx: 340, cy: 238, r: 12, c: "#A8CEE0" },
+  { cx: 357, cy: 266, r: 18, c: "#F0C29A" },
+  { cx: 347, cy: 294, r: 13, c: "#F4A8B8" },
+  { cx: 363, cy: 322, r: 15, c: "#FBD5DE" },
+  { cx: 353, cy: 350, r: 11, c: "#FAF7F2" },
+  { cx: 369, cy: 380, r: 16, c: "#F4A8B8" },
+];
+
+function ArchDecor() {
+  const reduce = useReducedMotion();
+
+  return (
+    <motion.svg
+      className="absolute pointer-events-none hidden lg:block"
+      style={{ top: "-4%", right: "-4%", width: "min(40vw, 560px)", overflow: "visible" }}
+      viewBox="0 0 400 400"
+      fill="none"
+      aria-hidden
+      initial={reduce ? undefined : "hidden"}
+      whileInView={reduce ? undefined : "shown"}
+      viewport={{ once: true, amount: 0.35 }}
+    >
+      <motion.path
+        d="M20 400 C20 190 100 30 200 30 C300 30 380 190 380 400"
+        stroke="rgba(217,98,138,0.2)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        variants={{ hidden: { pathLength: 0 }, shown: { pathLength: 1 } }}
+        transition={{ duration: 1.4, ease }}
+      />
+      <motion.g
+        variants={{ shown: { transition: { staggerChildren: 0.035, delayChildren: 0.3 } } }}
+      >
+        {ARCH_BALLOONS.map((b, i) => (
+          <motion.circle
+            key={i}
+            cx={b.cx}
+            cy={b.cy}
+            r={b.r}
+            fill={b.c}
+            stroke="rgba(13,11,8,0.05)"
+            strokeWidth="1"
+            style={{ transformBox: "fill-box", transformOrigin: "center", opacity: 0.55 }}
+            variants={{
+              hidden: { scale: 0, opacity: 0 },
+              shown: { scale: 1, opacity: 0.55 },
+            }}
+            transition={{ type: "spring", stiffness: 280, damping: 15 }}
+          />
+        ))}
+      </motion.g>
+    </motion.svg>
+  );
+}
+
 export function Services() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
@@ -32,20 +115,8 @@ export function Services() {
       className="relative overflow-hidden py-20 lg:py-24"
       style={{ background: "#FAF7F2" }}
     >
-      {/* Arche — motif signature en filet */}
-      <svg
-        className="absolute pointer-events-none hidden lg:block"
-        style={{ top: "12%", right: "-6%", width: "min(46vw, 620px)" }}
-        viewBox="0 0 400 400"
-        fill="none"
-        aria-hidden
-      >
-        <path
-          d="M20 400 C20 190 100 30 200 30 C300 30 380 190 380 400"
-          stroke="rgba(217,98,138,0.14)"
-          strokeWidth="1.5"
-        />
-      </svg>
+      {/* Arche — motif signature qui se monte en ballons */}
+      <ArchDecor />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
         {/* Header */}
