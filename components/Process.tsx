@@ -120,12 +120,15 @@ function BalloonNumber() {
             {/* liseré sombre */}
             <g stroke="#C06985" strokeWidth="52" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.5">
               <path d="M80 108 L130 42 L130 252" />
+              <path d="M108 252 L154 252" />
               <ellipse cx="256" cy="148" rx="60" ry="100" />
             </g>
             {/* corps des chiffres */}
             <g stroke="url(#pb-foil)" strokeWidth="46" strokeLinecap="round" strokeLinejoin="round" fill="none">
               {/* 1 : drapeau + fût */}
               <path d="M80 108 L130 42 L130 252" />
+              {/* pied léger */}
+              <path d="M108 252 L154 252" strokeWidth="40" />
               {/* 0 : anneau */}
               <ellipse cx="256" cy="148" rx="60" ry="100" />
             </g>
