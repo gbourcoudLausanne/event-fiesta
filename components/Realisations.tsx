@@ -1,17 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  motion,
-  AnimatePresence,
-  useReducedMotion,
-  useMotionValue,
-  useTransform,
-  useMotionValueEvent,
-  animate,
-  type MotionValue,
-} from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { X, ArrowLeft, ArrowRight, MagnifyingGlassPlus } from "@phosphor-icons/react";
 import { useI18n } from "@/lib/i18n";
@@ -249,6 +240,11 @@ const CAROUSEL: CarouselType[] = [
   },
 ];
 
+const wrap = (min: number, max: number, v: number) => {
+  const range = max - min;
+  return ((((v - min) % range) + range) % range) + min;
+};
+
 /* ── Bouquet de ballons qui s'élève (motif animé de la section) ────────── */
 const RZ_GRADS: Record<string, [string, string, string]> = {
   rose:     ["#FCE2E9", "#F2A6B8", "#DE7C98"],
@@ -406,302 +402,6 @@ const ITEM_H = 80;
 
 const DUR = 4600;
 
-/* ── Roulette 3D des thèmes (façon sélecteur déroulant, avec inertie) ──── */
-const LABELS = CAROUSEL.map((c) => c.label);
-const WHEEL_ANGLE = 20; // degrés par cran
-const WHEEL_RADIUS = ITEM_H / (2 * Math.tan((WHEEL_ANGLE * Math.PI) / 360));
-const PX_PER_ITEM = ITEM_H;
-
-function shortestDelta(to: number, from: number, n: number) {
-  let d = (((to - from) % n) + n) % n;
-  if (d > n / 2) d -= n;
-  return d;
-}
-
-function WheelItem({
-  i,
-  label,
-  pos,
-  n,
-  onPick,
-}: {
-  i: number;
-  label: string;
-  pos: MotionValue<number>;
-  n: number;
-  onPick: () => void;
-}) {
-  const d = useTransform(pos, (p) => {
-    let x = (((i - p) % n) + n) % n;
-    if (x > n / 2) x -= n;
-    return x;
-  });
-  const rotateX = useTransform(d, (v) => -v * WHEEL_ANGLE);
-  const opacity = useTransform(d, (v) => {
-    const a = Math.abs(v);
-    return a > 3.1 ? 0 : 1 - Math.min(0.86, a * 0.32);
-  });
-  const scale = useTransform(d, (v) => Math.max(0.58, 1.34 - Math.abs(v) * 0.44));
-  const color = useTransform(
-    d,
-    [-1, 0, 1],
-    ["rgba(42,35,32,0.4)", "#B65572", "rgba(42,35,32,0.4)"],
-  );
-  const [near, setNear] = useState(false);
-  useMotionValueEvent(d, "change", (v) => setNear(Math.abs(v) < 0.5));
-
-  return (
-    <motion.div
-      className="absolute inset-x-0 flex items-center justify-center"
-      style={{
-        height: ITEM_H,
-        top: `calc(50% - ${ITEM_H / 2}px)`,
-        rotateX,
-        opacity,
-        scale,
-        z: WHEEL_RADIUS,
-        transformStyle: "preserve-3d",
-        backfaceVisibility: "hidden",
-      }}
-    >
-      <motion.button
-        type="button"
-        onClick={onPick}
-        className="font-serif font-light whitespace-nowrap px-2"
-        style={{
-          fontSize: "clamp(1.45rem, 2.3vw, 2.05rem)",
-          color,
-          fontStyle: near ? "italic" : "normal",
-        }}
-      >
-        {label}
-      </motion.button>
-    </motion.div>
-  );
-}
-
-function ThemeWheel({
-  index,
-  onSelect,
-  reduce,
-  ringKey,
-  paused,
-}: {
-  index: number;
-  onSelect: (i: number) => void;
-  reduce: boolean;
-  ringKey: number;
-  paused: boolean;
-}) {
-  const n = LABELS.length;
-  const pos = useMotionValue(0);
-  const boxRef = useRef<HTMLDivElement>(null);
-  const anim = useRef<ReturnType<typeof animate> | null>(null);
-  const internal = useRef(false);
-  const idxRef = useRef(index);
-  const onSelectRef = useRef(onSelect);
-  useEffect(() => {
-    idxRef.current = index;
-  }, [index]);
-  useEffect(() => {
-    onSelectRef.current = onSelect;
-  }, [onSelect]);
-
-  // Suit l'index contrôlé (rotation auto, clic) par le plus court chemin.
-  useEffect(() => {
-    if (reduce) return;
-    if (internal.current) {
-      internal.current = false;
-      return;
-    }
-    anim.current?.stop();
-    const base = Math.round(pos.get());
-    const baseMod = ((base % n) + n) % n;
-    let delta = index - baseMod;
-    if (delta > n / 2) delta -= n;
-    if (delta < -n / 2) delta += n;
-    anim.current = animate(pos, base + delta, {
-      type: "spring",
-      stiffness: 130,
-      damping: 22,
-    });
-  }, [index, reduce, n, pos]);
-
-  useEffect(() => {
-    const box = boxRef.current;
-    if (!box || reduce) return;
-
-    let startY = 0;
-    let startPos = 0;
-    let lastY = 0;
-    let lastT = 0;
-    let vel = 0;
-    let moved = false;
-    let active = false;
-
-    const settle = (raw: number) => {
-      const target = Math.round(raw);
-      const norm = ((target % n) + n) % n;
-      anim.current?.stop();
-      anim.current = animate(pos, target, {
-        type: "spring",
-        stiffness: 220,
-        damping: 28,
-      });
-      if (norm !== idxRef.current) {
-        internal.current = true;
-        onSelectRef.current(norm);
-      }
-    };
-
-    const onDown = (e: PointerEvent) => {
-      anim.current?.stop();
-      active = true;
-      moved = false;
-      startY = lastY = e.clientY;
-      startPos = pos.get();
-      lastT = performance.now();
-      vel = 0;
-      box.setPointerCapture(e.pointerId);
-    };
-    const onMove = (e: PointerEvent) => {
-      if (!active) return;
-      const now = performance.now();
-      const dt = now - lastT;
-      if (dt > 0) vel = (e.clientY - lastY) / dt;
-      lastY = e.clientY;
-      lastT = now;
-      const dy = e.clientY - startY;
-      if (Math.abs(dy) > 5) moved = true;
-      pos.set(startPos - dy / PX_PER_ITEM);
-    };
-    const onUp = (e: PointerEvent) => {
-      if (!active) return;
-      active = false;
-      try {
-        box.releasePointerCapture(e.pointerId);
-      } catch {}
-      const velocity = (-vel * 1000) / PX_PER_ITEM; // crans/s
-      if (Math.abs(velocity) < 0.2) {
-        settle(pos.get());
-        return;
-      }
-      anim.current?.stop();
-      anim.current = animate(pos, pos.get(), {
-        type: "inertia",
-        velocity,
-        power: 0.7,
-        timeConstant: 300,
-        restDelta: 0.02,
-        modifyTarget: (v) => Math.round(v),
-      });
-      anim.current.then(() => settle(pos.get())).catch(() => {});
-    };
-
-    let wheelT: ReturnType<typeof setTimeout> | null = null;
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      anim.current?.stop();
-      pos.set(pos.get() + (e.deltaY / PX_PER_ITEM) * 0.35);
-      if (wheelT) clearTimeout(wheelT);
-      wheelT = setTimeout(() => settle(pos.get()), 150);
-    };
-
-    const suppressClick = (e: MouseEvent) => {
-      if (moved) {
-        e.stopPropagation();
-        e.preventDefault();
-        moved = false;
-      }
-    };
-
-    box.addEventListener("pointerdown", onDown);
-    box.addEventListener("pointermove", onMove);
-    box.addEventListener("pointerup", onUp);
-    box.addEventListener("pointercancel", onUp);
-    box.addEventListener("wheel", onWheel, { passive: false });
-    box.addEventListener("click", suppressClick, true);
-    return () => {
-      box.removeEventListener("pointerdown", onDown);
-      box.removeEventListener("pointermove", onMove);
-      box.removeEventListener("pointerup", onUp);
-      box.removeEventListener("pointercancel", onUp);
-      box.removeEventListener("wheel", onWheel);
-      box.removeEventListener("click", suppressClick, true);
-      if (wheelT) clearTimeout(wheelT);
-    };
-  }, [reduce, n, pos]);
-
-  if (reduce) {
-    return (
-      <div className="relative flex h-full w-full items-center justify-center">
-        <span
-          className="font-serif font-light italic"
-          style={{ fontSize: "clamp(1.45rem, 2.3vw, 2.05rem)", color: "#B65572" }}
-        >
-          {LABELS[index]}
-        </span>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      ref={boxRef}
-      className="relative h-full w-full cursor-grab touch-none select-none active:cursor-grabbing"
-      style={{ perspective: "1200px" }}
-    >
-      {/* Cadre de sélection central */}
-      <div
-        className="pointer-events-none absolute inset-x-4 z-20"
-        style={{
-          top: `calc(50% - ${ITEM_H / 2}px)`,
-          height: ITEM_H,
-          borderTop: "1px solid rgba(42,35,32,0.14)",
-          borderBottom: "1px solid rgba(42,35,32,0.14)",
-        }}
-      />
-      {/* Anneau de progression (rotation auto) */}
-      <div
-        className="pointer-events-none absolute z-30 flex h-7 w-7 items-center justify-center"
-        style={{ left: "1rem", top: "50%", transform: "translateY(-50%)" }}
-      >
-        <svg viewBox="0 0 28 28" className="absolute inset-0 h-full w-full -rotate-90">
-          <circle cx="14" cy="14" r="12.5" fill="none" stroke="rgba(42,35,32,0.16)" strokeWidth="1.4" />
-          <circle
-            key={ringKey}
-            cx="14"
-            cy="14"
-            r="12.5"
-            fill="none"
-            stroke="#D9628A"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            pathLength={1}
-            style={{
-              strokeDasharray: 1,
-              strokeDashoffset: 1,
-              animation: `rc-ring ${DUR}ms linear forwards`,
-              animationPlayState: paused ? "paused" : "running",
-            }}
-          />
-        </svg>
-        <span className="h-2 w-2 rounded-full" style={{ background: "#D9628A" }} />
-      </div>
-      {LABELS.map((label, i) => (
-        <WheelItem
-          key={i}
-          i={i}
-          label={label}
-          pos={pos}
-          n={n}
-          onPick={() => onSelect(i)}
-        />
-      ))}
-    </div>
-  );
-}
-
 function RealisationsCarousel() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
@@ -728,8 +428,8 @@ function RealisationsCarousel() {
   }, [expanded]);
 
   const jump = (i: number) => {
-    const d = shortestDelta(i, cur, N);
-    if (d) setStep((s) => s + d);
+    const diff = (i - cur + N) % N;
+    if (diff) setStep((s) => s + diff);
   };
 
   const status = (i: number) => {
@@ -806,13 +506,68 @@ function RealisationsCarousel() {
           >
             <div className="absolute inset-x-0 top-0 h-24 z-10 pointer-events-none" style={{ background: "linear-gradient(#F2D4D9, rgba(242,212,217,0))" }} />
             <div className="absolute inset-x-0 bottom-0 h-24 z-10 pointer-events-none" style={{ background: "linear-gradient(rgba(242,212,217,0), #F2D4D9)" }} />
-            <ThemeWheel
-              index={cur}
-              onSelect={jump}
-              reduce={!!reduce}
-              ringKey={cur}
-              paused={paused}
-            />
+            <div className="relative flex h-full w-full items-center justify-center">
+              {CAROUSEL.map((it, i) => {
+                const wd = wrap(-(N / 2), N / 2, i - cur);
+                const on = i === cur;
+                return (
+                  <motion.div
+                    key={i}
+                    className="absolute inset-x-0 flex items-center justify-center"
+                    style={{ height: ITEM_H }}
+                    animate={{
+                      y: wd * ITEM_H,
+                      opacity: reduce ? (on ? 1 : 0) : Math.max(0, 1 - Math.abs(wd) * 0.34),
+                    }}
+                    transition={reduce ? { duration: 0.2 } : { type: "spring", stiffness: 88, damping: 22 }}
+                  >
+                    <button
+                      onClick={() => jump(i)}
+                      className="flex items-center gap-4 cursor-pointer"
+                      aria-current={on ? "true" : undefined}
+                    >
+                      {on ? (
+                        <span className="relative flex h-7 w-7 shrink-0 items-center justify-center">
+                          <svg viewBox="0 0 28 28" className="absolute inset-0 h-full w-full -rotate-90">
+                            <circle cx="14" cy="14" r="12.5" fill="none" stroke="rgba(42,35,32,0.16)" strokeWidth="1.4" />
+                            <circle
+                              key={cur}
+                              cx="14"
+                              cy="14"
+                              r="12.5"
+                              fill="none"
+                              stroke="#D9628A"
+                              strokeWidth="1.6"
+                              strokeLinecap="round"
+                              pathLength={1}
+                              style={{
+                                strokeDasharray: 1,
+                                strokeDashoffset: 1,
+                                animation: reduce ? "none" : `rc-ring ${DUR}ms linear forwards`,
+                                animationPlayState: paused ? "paused" : "running",
+                              }}
+                            />
+                          </svg>
+                          <span className="h-2 w-2 rounded-full" style={{ background: "#D9628A" }} />
+                        </span>
+                      ) : (
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: "rgba(42,35,32,0.28)" }} />
+                      )}
+                      <span
+                        className="font-serif font-light whitespace-nowrap transition-colors duration-300"
+                        style={{
+                          fontSize: on ? "clamp(1.9rem, 3.2vw, 2.9rem)" : "clamp(1.15rem, 1.8vw, 1.45rem)",
+                          color: on ? "#B65572" : "rgba(42,35,32,0.42)",
+                          fontStyle: on ? "italic" : "normal",
+                        }}
+                      >
+                        {it.label}
+                      </span>
+                    </button>
+                  </motion.div>
+                );
+              })}
+            </div>
 
             {/* CTA galerie — au pied de la liste des thèmes */}
             <Link
