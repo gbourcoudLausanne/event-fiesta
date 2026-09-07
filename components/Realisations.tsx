@@ -174,14 +174,63 @@ const photos = [
 const ease = [0.16, 1, 0.3, 1] as const;
 
 /* ── Carousel d'aperçu (accueil) : rolodex de types + pile photo ──────── */
-const CAROUSEL = [
-  { label: "Anniversaire",   src: "/Galerie/hero-slides/hero-slide-13.PNG", alt: "Arche ronde de ballons violet, lilas et or dans un jardin avec salon lounge", name: "Arche jardin · violet & or" },
-  { label: "Baby shower",    src: "/Galerie/hero-slides/hero-slide-2.PNG",  alt: "Arche organique de ballons rose poudré, crème et rose gold", name: "Arche rose poudré & rose gold" },
-  { label: "Gender reveal",  src: "/Galerie/Gender-Reveal/GenderReveal_1.webp", alt: "Gender reveal Oh Baby, arche dorée et fleurs", name: "Oh Baby !" },
-  { label: "Baptême",        src: "/Galerie/Baptemes/Bapteme.jpg", alt: "Arche dorée avec guirlande de ballons rose gold et pampa", name: "Arche dorée & pampa" },
-  { label: "Mariage civil",  src: "/Galerie/hero-slides/hero-slide-7.jpeg", alt: "Arche de cérémonie en bois avec voile ivoire et compositions de fleurs séchées", name: "Cérémonie · fleurs séchées" },
-  { label: "Pique-nique",    src: "/Galerie/hero-slides/hero-slide-17.webp", alt: "Pique-nique de luxe au bord de l'eau, table basse en bois et coussins", name: "Pique-nique de luxe · au bord de l'eau" },
-  { label: "Entreprise",     src: "/Galerie/hero-slides/hero-slide-3.PNG", alt: "Guirlande de ballons multicolore au-dessus d'une grazing table", name: "Soirée d'entreprise · grazing table" },
+type Shot = { src: string; alt: string; name: string };
+type CarouselType = { label: string; photos: Shot[] };
+
+const CAROUSEL: CarouselType[] = [
+  {
+    label: "Anniversaire",
+    photos: [
+      { src: "/Galerie/hero-slides/hero-slide-13.PNG", alt: "Arche ronde de ballons violet, lilas et or dans un jardin avec salon lounge", name: "Arche jardin · violet & or" },
+      { src: "/Galerie/hero-slides/hero-slide-8.PNG", alt: "Arche de ballons dégradée fuchsia, corail et crème avec sweet table", name: "Dégradé fuchsia & corail" },
+      { src: "/Galerie/hero-slides/hero-slide-9.PNG", alt: "Arche de ballons rose et blanc avec chiffre 6 et gâteau ballerine", name: "Anniversaire ballerine" },
+      { src: "/Galerie/hero-slides/hero-slide-12.JPG", alt: "Chiffre 30 lumineux et arche de ballons blanc et or en extérieur", name: "30 ans · blanc & or" },
+    ],
+  },
+  {
+    label: "Baby shower",
+    photos: [
+      { src: "/Galerie/hero-slides/hero-slide-2.PNG", alt: "Arche organique de ballons rose poudré, crème et rose gold", name: "Arche rose poudré & rose gold" },
+      { src: "/Galerie/Baptemes/122219_01.jpg", alt: "Arche ronde de ballons rose avec guirlande et pampa", name: "Arche ronde & pampa" },
+      { src: "/Galerie/hero-slides/hero-slide-5.PNG", alt: "Arche de ballons menthe, pêche et rose avec chiffre argenté", name: "Menthe & pêche" },
+    ],
+  },
+  {
+    label: "Gender reveal",
+    photos: [
+      { src: "/Galerie/Gender-Reveal/GenderReveal_1.webp", alt: "Gender reveal Oh Baby, arche dorée et fleurs", name: "Oh Baby !" },
+    ],
+  },
+  {
+    label: "Baptême",
+    photos: [
+      { src: "/Galerie/Baptemes/Bapteme.jpg", alt: "Arche dorée avec guirlande de ballons rose gold et pampa", name: "Arche dorée & pampa" },
+      { src: "/Galerie/Baptemes/Bapteme_1.jpeg", alt: "Décoration de baptême beige et or avec arche de ballons", name: "Beige & or" },
+      { src: "/Galerie/Hero/Hero_3.jpg", alt: "Installation boho en extérieur avec arche de ballons et panneaux", name: "Boho garden" },
+    ],
+  },
+  {
+    label: "Mariage civil",
+    photos: [
+      { src: "/Galerie/hero-slides/hero-slide-7.jpeg", alt: "Arche de cérémonie en bois avec voile ivoire et compositions de fleurs séchées", name: "Cérémonie · fleurs séchées" },
+      { src: "/Galerie/hero-slides/hero-slide-16.webp", alt: "Table de réception avec nappe vieux rose et compositions d'anémones", name: "Table · anémones & vieux rose" },
+      { src: "/Galerie/hero-slides/hero-slide-11.JPG", alt: "Table dressée en extérieur avec chemin de table blanc et centre floral", name: "Table dressée extérieur" },
+    ],
+  },
+  {
+    label: "Pique-nique",
+    photos: [
+      { src: "/Galerie/hero-slides/hero-slide-17.webp", alt: "Pique-nique de luxe au bord de l'eau, table basse en bois et coussins", name: "Pique-nique de luxe · au bord de l'eau" },
+    ],
+  },
+  {
+    label: "Entreprise",
+    photos: [
+      { src: "/Galerie/hero-slides/hero-slide-3.PNG", alt: "Guirlande de ballons multicolore au-dessus d'une grazing table", name: "Soirée d'entreprise · grazing table" },
+      { src: "/Galerie/Corporate/Corporate_1.jpg", alt: "Arche de ballons colorée pour un événement d'entreprise", name: "Arche colorée" },
+      { src: "/Galerie/hero-slides/hero-slide-10.PNG", alt: "Chiffres 50 noirs et bouquets de ballons or, argent et noir", name: "50 ans · noir & or" },
+    ],
+  },
 ];
 
 const wrap = (min: number, max: number, v: number) => {
@@ -198,16 +247,25 @@ function RealisationsCarousel() {
   const reduce = useReducedMotion();
   const [step, setStep] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [lb, setLb] = useState<number | null>(null);
+  const [expanded, setExpanded] = useState<number | null>(null);
+  const [lb, setLb] = useState<{ t: number; i: number } | null>(null);
 
   const N = CAROUSEL.length;
   const cur = ((step % N) + N) % N;
+  const frozen = expanded !== null || lb !== null;
 
   useEffect(() => {
-    if (paused || reduce || lb !== null) return;
+    if (paused || reduce || frozen) return;
     const id = setInterval(() => setStep((s) => s + 1), DUR);
     return () => clearInterval(id);
-  }, [paused, reduce, lb]);
+  }, [paused, reduce, frozen]);
+
+  useEffect(() => {
+    if (expanded === null) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setExpanded(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [expanded]);
 
   const jump = (i: number) => {
     const diff = (i - cur + N) % N;
@@ -342,11 +400,13 @@ function RealisationsCarousel() {
               {CAROUSEL.map((it, i) => {
                 const st = status(i);
                 const on = st === "active";
+                const cover = it.photos[0];
+                const many = it.photos.length > 1;
                 return (
                   <motion.button
                     key={i}
                     type="button"
-                    onClick={() => (on ? setLb(i) : jump(i))}
+                    onClick={() => (on ? setExpanded(cur) : jump(i))}
                     initial={false}
                     animate={{
                       x: on ? 0 : st === "prev" ? -84 : st === "next" ? 84 : 0,
@@ -359,14 +419,14 @@ function RealisationsCarousel() {
                     className="group/ph absolute inset-0 overflow-hidden"
                     style={{
                       pointerEvents: st === "hidden" ? "none" : "auto",
-                      cursor: on ? "zoom-in" : "pointer",
+                      cursor: "pointer",
                       boxShadow: "0 30px 60px -24px rgba(120,60,80,0.5)",
                     }}
-                    aria-label={on ? `Agrandir — ${it.label}` : `Voir ${it.label}`}
+                    aria-label={on ? `Voir les photos — ${it.label}` : `Aller à ${it.label}`}
                   >
                     <Image
-                      src={it.src}
-                      alt={it.alt}
+                      src={cover.src}
+                      alt={cover.alt}
                       fill
                       className="object-cover transition-[filter] duration-700"
                       style={{ filter: on ? "none" : "sepia(0.32) saturate(0.75) brightness(0.86)" }}
@@ -397,7 +457,7 @@ function RealisationsCarousel() {
                             {String(cur + 1).padStart(2, "0")} · {String(N).padStart(2, "0")} — {it.label}
                           </p>
                           <p className="font-serif font-light italic text-xl" style={{ color: "#FAF7F2" }}>
-                            {it.name}
+                            {cover.name}
                           </p>
                         </motion.div>
                       )}
@@ -409,7 +469,7 @@ function RealisationsCarousel() {
                         style={{ background: "rgba(250,247,242,0.94)", color: "#B65572" }}
                       >
                         <MagnifyingGlassPlus size={12} weight="bold" />
-                        Agrandir
+                        {many ? `${it.photos.length} photos` : "Agrandir"}
                       </span>
                     )}
                   </motion.button>
@@ -430,6 +490,86 @@ function RealisationsCarousel() {
               ))}
             </div>
           </div>
+
+          {/* ── Grille déployée d'un type ── */}
+          <AnimatePresence>
+            {expanded !== null && (
+              <motion.div
+                key="grid"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="absolute inset-0 z-30 flex flex-col p-6 lg:p-9"
+                style={{ background: "rgba(250,247,242,0.98)" }}
+              >
+                <div className="flex items-center justify-between mb-5 shrink-0">
+                  <div>
+                    <p className="font-sans text-[10px] uppercase tracking-[0.25em]" style={{ color: "#B65572" }}>
+                      {t.realisations.eyebrow}
+                    </p>
+                    <p className="font-serif font-light italic mt-0.5" style={{ fontSize: "clamp(1.4rem, 2.6vw, 2rem)", color: "#2A2320" }}>
+                      {CAROUSEL[expanded].label}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setExpanded(null)}
+                    aria-label="Fermer"
+                    className="flex h-10 w-10 items-center justify-center rounded-full transition-colors cursor-pointer"
+                    style={{ background: "rgba(42,35,32,0.06)", color: "#2A2320" }}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+
+                <div className="no-scrollbar flex-1 overflow-y-auto">
+                  <div className="columns-2 lg:columns-3 gap-3">
+                    {CAROUSEL[expanded].photos.map((p, gi) => (
+                      <motion.button
+                        key={p.src}
+                        type="button"
+                        onClick={() => setLb({ t: expanded, i: gi })}
+                        initial={reduce ? false : { opacity: 0, scale: 0.92, y: 18 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: gi * 0.06, ease }}
+                        className="group/g relative mb-3 block w-full break-inside-avoid overflow-hidden"
+                        aria-label={`Agrandir ${p.name}`}
+                      >
+                        <div className="relative w-full" style={{ aspectRatio: gi % 3 === 1 ? "4 / 5" : "3 / 4" }}>
+                          <Image
+                            src={p.src}
+                            alt={p.alt}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover/g:scale-[1.05]"
+                            sizes="(max-width: 1024px) 45vw, 30vw"
+                          />
+                          <div
+                            className="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-300 group-hover/g:opacity-100"
+                            style={{ background: "linear-gradient(180deg, rgba(13,11,8,0) 55%, rgba(13,11,8,0.6) 100%)" }}
+                          />
+                          <p
+                            className="absolute inset-x-0 bottom-0 p-3 text-left font-serif font-light italic text-[13px] opacity-0 transition-opacity duration-300 group-hover/g:opacity-100"
+                            style={{ color: "#FAF7F2" }}
+                          >
+                            {p.name}
+                          </p>
+                        </div>
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
+                <Link
+                  href="/galerie"
+                  className="group mt-4 inline-flex items-center gap-2 self-start font-sans text-[11px] font-medium uppercase tracking-[0.16em] shrink-0"
+                  style={{ color: "#B65572" }}
+                >
+                  {t.realisations.ctaAll}
+                  <ArrowRight size={12} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
+                </Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <Link
@@ -445,11 +585,11 @@ function RealisationsCarousel() {
       <AnimatePresence>
         {lb !== null && (
           <Lightbox
-            photos={CAROUSEL as unknown as typeof photos}
-            activeIndex={lb}
+            photos={CAROUSEL[lb.t].photos as unknown as typeof photos}
+            activeIndex={lb.i}
             onClose={() => setLb(null)}
-            onNext={() => setLb((v) => (v === null ? 0 : (v + 1) % N))}
-            onPrev={() => setLb((v) => (v === null ? 0 : (v - 1 + N) % N))}
+            onNext={() => setLb((v) => (v === null ? null : { ...v, i: (v.i + 1) % CAROUSEL[v.t].photos.length }))}
+            onPrev={() => setLb((v) => (v === null ? null : { ...v, i: (v.i - 1 + CAROUSEL[v.t].photos.length) % CAROUSEL[v.t].photos.length }))}
           />
         )}
       </AnimatePresence>
