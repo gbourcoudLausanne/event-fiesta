@@ -119,16 +119,16 @@ function BalloonNumber() {
            <g transform="translate(233 150) scale(0.8) translate(-209 -152)">
             {/* liseré sombre */}
             <g stroke="#C06985" strokeWidth="52" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.5">
-              <path d="M80 108 L130 42 L130 248" />
-              <path d="M102 250 L160 250" strokeWidth="18" strokeLinecap="round" />
+              <path d="M76 90 L130 38 L130 248" />
+              <path d="M96 250 L166 250" strokeWidth="18" strokeLinecap="round" />
               <ellipse cx="256" cy="148" rx="60" ry="100" />
             </g>
             {/* corps des chiffres */}
             <g stroke="url(#pb-foil)" strokeWidth="46" strokeLinecap="round" strokeLinejoin="round" fill="none">
               {/* 1 : drapeau + fût */}
-              <path d="M80 108 L130 42 L130 248" />
+              <path d="M76 90 L130 38 L130 248" />
               {/* pied */}
-              <path d="M102 250 L160 250" strokeWidth="15" strokeLinecap="round" />
+              <path d="M96 250 L166 250" strokeWidth="15" strokeLinecap="round" />
               {/* 0 : anneau */}
               <ellipse cx="256" cy="148" rx="60" ry="100" />
             </g>
