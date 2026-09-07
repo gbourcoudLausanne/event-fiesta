@@ -257,104 +257,108 @@ function PhotoWall({ columns = 3 }: { columns?: number }) {
   );
 }
 
-/* ── Ruban horizontal plein cadre (mobile) ────────────────────────────── */
-function HorizontalMarquee() {
+/* ── Une rangée de photos qui défile à l'horizontale ───────────────────── */
+function RibbonRow({
+  photos,
+  reverse,
+  speed,
+  priority,
+}: {
+  photos: { src: string; alt: string }[];
+  reverse: boolean;
+  speed: number;
+  priority?: boolean;
+}) {
   const reduce = useReducedMotion();
-  const boxRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const pos = useRef(0);
-  const loop = [...PHOTOS, ...PHOTOS];
+  const loop = [...photos, ...photos, ...photos];
 
   useEffect(() => {
-    const box = boxRef.current;
     const track = trackRef.current;
-    if (!box || !track) return;
-
-    const half = () => track.scrollWidth / 2 || 1;
-    const wrap = () => {
-      const h = half();
-      if (pos.current >= h) pos.current -= h;
-      else if (pos.current < 0) pos.current += h;
-    };
-    const apply = () => {
-      track.style.transform = `translate3d(${-pos.current}px, 0, 0)`;
-    };
-    apply();
+    if (!track || reduce) return;
+    const half = () => track.scrollWidth / 3 || 1;
+    pos.current = reverse ? half() : 0;
 
     let raf = 0;
     let last = performance.now();
-    let manualUntil = 0;
     const tick = (now: number) => {
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
-      if (!reduce && now > manualUntil) {
-        pos.current += 32 * dt;
-        wrap();
-        apply();
-      }
+      pos.current += (reverse ? -1 : 1) * speed * dt;
+      const h = half();
+      if (pos.current >= h) pos.current -= h;
+      else if (pos.current < 0) pos.current += h;
+      track.style.transform = `translate3d(${-pos.current}px, 0, 0)`;
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-
-    let tx = 0;
-    const onTouchStart = (e: TouchEvent) => {
-      tx = e.touches[0].clientX;
-      manualUntil = performance.now() + 2600;
-    };
-    const onTouchMove = (e: TouchEvent) => {
-      const x = e.touches[0].clientX;
-      pos.current += tx - x;
-      tx = x;
-      manualUntil = performance.now() + 2600;
-      wrap();
-      apply();
-    };
-    box.addEventListener("touchstart", onTouchStart, { passive: true });
-    box.addEventListener("touchmove", onTouchMove, { passive: true });
-
-    return () => {
-      cancelAnimationFrame(raf);
-      box.removeEventListener("touchstart", onTouchStart);
-      box.removeEventListener("touchmove", onTouchMove);
-    };
-  }, [reduce]);
+    return () => cancelAnimationFrame(raf);
+  }, [reduce, reverse, speed]);
 
   return (
-    <div
-      ref={boxRef}
-      className="relative overflow-hidden"
-      style={{ height: "clamp(300px, 44vh, 460px)" }}
-    >
-      <div ref={trackRef} className="flex gap-3 h-full px-4 will-change-transform">
+    <div className="relative flex-1 overflow-hidden">
+      <div ref={trackRef} className="flex gap-2.5 h-full will-change-transform">
         {loop.map((p, i) => (
           <div
             key={i}
-            className="relative h-full shrink-0 overflow-hidden rounded-2xl"
-            style={{ aspectRatio: "3 / 4", boxShadow: "0 14px 34px -14px rgba(120,60,80,0.45)" }}
+            className="relative h-full shrink-0 overflow-hidden rounded-xl"
+            style={{ aspectRatio: "3 / 4", boxShadow: "0 16px 36px -16px rgba(120,60,80,0.5)" }}
           >
-            <Image
-              src={p.src}
-              alt={i < PHOTOS.length ? p.alt : ""}
-              fill
-              priority={i === 0}
-              className="object-cover"
-              sizes="70vw"
-            />
+            <div
+              className="absolute inset-0"
+              style={
+                reduce
+                  ? undefined
+                  : {
+                      animation: `kenburns ${9 + (i % 4) * 2}s ease-in-out ${(i % 5) * -1.4}s infinite alternate`,
+                    }
+              }
+            >
+              <Image
+                src={p.src}
+                alt={i < photos.length ? p.alt : ""}
+                fill
+                priority={priority && i === 0}
+                className="object-cover"
+                sizes="60vw"
+              />
+            </div>
             <div
               className="absolute inset-0 pointer-events-none"
-              style={{ background: "linear-gradient(180deg, rgba(0,0,0,0) 72%, rgba(74,40,52,0.25) 100%)" }}
+              style={{ background: "linear-gradient(180deg, rgba(0,0,0,0) 68%, rgba(74,40,52,0.28) 100%)" }}
               aria-hidden
             />
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+/* ── Ruban photos plein cadre, 2 rangées opposées (mobile) ─────────────── */
+function PhotoRibbon() {
+  const even = PHOTOS.filter((_, i) => i % 2 === 0);
+  const odd = PHOTOS.filter((_, i) => i % 2 === 1);
+
+  return (
+    <div
+      className="relative overflow-hidden"
+      style={{ height: "clamp(360px, 56vh, 580px)" }}
+    >
+      <div className="flex flex-col gap-2.5 h-full">
+        <RibbonRow photos={even} reverse={false} speed={26} priority />
+        <RibbonRow photos={odd} reverse speed={22} />
+      </div>
+
+      {/* Fondus latéraux */}
       <div
-        className="absolute inset-y-0 left-0 w-8 pointer-events-none"
+        className="absolute inset-y-0 left-0 w-10 pointer-events-none z-10"
         style={{ background: "linear-gradient(to right, #FAF7F2, rgba(250,247,242,0))" }}
         aria-hidden
       />
       <div
-        className="absolute inset-y-0 right-0 w-8 pointer-events-none"
+        className="absolute inset-y-0 right-0 w-10 pointer-events-none z-10"
         style={{ background: "linear-gradient(to left, #FAF7F2, rgba(250,247,242,0))" }}
         aria-hidden
       />
@@ -471,6 +475,16 @@ export function Hero() {
         }}
         aria-hidden
       />
+      {/* Grain subtil */}
+      <div
+        className="absolute inset-0 pointer-events-none mix-blend-multiply"
+        style={{
+          opacity: 0.4,
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E\")",
+        }}
+        aria-hidden
+      />
 
       <div className="relative max-w-[1440px] mx-auto">
         {/* ── Desktop ── */}
@@ -492,11 +506,11 @@ export function Hero() {
 
         {/* ── Mobile / tablette : intro → ruban photos plein cadre → services + CTA ── */}
         <div className="lg:hidden pt-[92px] pb-14">
-          <div className="px-6 sm:px-8">
+          <div className="relative z-10 px-6 sm:px-8">
             <HeroText part="intro" />
           </div>
-          <div className="my-9">
-            <HorizontalMarquee />
+          <div className="-mt-3 mb-9">
+            <PhotoRibbon />
           </div>
           <div className="px-6 sm:px-8">
             <HeroText part="actions" />
