@@ -160,40 +160,6 @@ function BalloonArch() {
 
 type Card = { key: string; name: string; desc: string };
 
-/* ── Titre qui « flippe » lettre par lettre au survol de la carte (.group) ── */
-function FlipText({ text }: { text: string }) {
-  const words = text.split(" ");
-  let idx = 0;
-  return (
-    <span aria-label={text}>
-      {words.map((word, wi) => (
-        <span key={wi} className="inline-block align-bottom">
-          {Array.from(word).map((ch) => {
-            const d = idx++ * 16;
-            return (
-              <span
-                key={d}
-                aria-hidden
-                className="relative inline-block overflow-hidden align-bottom"
-                style={{ height: "1.05em" }}
-              >
-                <span
-                  className="flex flex-col transition-transform duration-[460ms] group-hover:-translate-y-1/2"
-                  style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)", transitionDelay: `${d}ms` }}
-                >
-                  <span className="block" style={{ lineHeight: "1.05em" }}>{ch}</span>
-                  <span className="block" style={{ lineHeight: "1.05em", color: "#B65572" }}>{ch}</span>
-                </span>
-              </span>
-            );
-          })}
-          {wi < words.length - 1 ? " " : null}
-        </span>
-      ))}
-    </span>
-  );
-}
-
 function ServiceCard({
   card,
   i,
@@ -264,10 +230,10 @@ function ServiceCard({
           <div className="relative z-10 flex h-full flex-col">
             <span className="mb-6 h-2.5 w-2.5 rounded-full" style={{ background: tint.dot }} aria-hidden />
             <h3
-              className="font-serif font-light"
+              className="font-serif font-light leading-tight"
               style={{ fontSize: "clamp(1.3rem, 2vw, 1.7rem)", color: "#2A2320" }}
             >
-              <FlipText text={card.name} />
+              {card.name}
             </h3>
             <p
               className="mt-2.5 flex-1 font-sans font-light text-[13px] leading-relaxed"
