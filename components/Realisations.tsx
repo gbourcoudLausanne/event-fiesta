@@ -462,7 +462,7 @@ function RealisationsCarousel() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, ease }}
-          className="lg:ml-auto lg:max-w-xl lg:text-right mb-8 lg:mb-10"
+          className="lg:ml-auto lg:max-w-xl lg:text-right mb-10 lg:mb-20"
         >
           <div className="flex items-center gap-3 mb-5 lg:justify-end">
             <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
