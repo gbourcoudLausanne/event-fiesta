@@ -74,7 +74,7 @@ function BalloonNumber() {
     >
       <svg viewBox="0 0 440 360" fill="none" style={{ width: "100%", overflow: "visible" }} aria-hidden>
         <defs>
-          <linearGradient id="pb-foil" x1="0.15" y1="0" x2="0.35" y2="1">
+          <linearGradient id="pb-foil" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="300" y2="262">
             <stop offset="0%" stopColor="#F9CEDA" />
             <stop offset="38%" stopColor="#EC9FB6" />
             <stop offset="72%" stopColor="#DA7E9B" />
@@ -119,17 +119,15 @@ function BalloonNumber() {
            <g transform="translate(209 152) scale(0.82) translate(-209 -152)">
             {/* liseré sombre */}
             <g stroke="#C06985" strokeWidth="50" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.55">
-              <path d="M88 98 L128 44" />
-              <path d="M128 44 L128 248" />
-              <path d="M96 248 L160 248" />
+              <path d="M86 100 L128 42 L128 248" />
+              <path d="M98 248 L162 248" />
               <ellipse cx="250" cy="146" rx="62" ry="100" />
             </g>
             {/* corps des chiffres */}
             <g stroke="url(#pb-foil)" strokeWidth="44" strokeLinecap="round" strokeLinejoin="round" fill="none">
               {/* 1 : drapeau + fût + pied */}
-              <path d="M88 98 L128 44" />
-              <path d="M128 44 L128 248" />
-              <path d="M96 248 L160 248" />
+              <path d="M86 100 L128 42 L128 248" />
+              <path d="M98 248 L162 248" />
               {/* 0 : anneau */}
               <ellipse cx="250" cy="146" rx="62" ry="100" />
             </g>
