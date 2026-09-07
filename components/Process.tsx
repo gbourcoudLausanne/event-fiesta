@@ -123,21 +123,9 @@ function BalloonNumber() {
               <path d="M212 42 L212 250" />
             </g>
             {/* reflet lumineux */}
-            <g stroke="#FFFFFF" strokeOpacity="0.32" strokeWidth="7" strokeLinecap="round" fill="none">
+            <g stroke="#FFFFFF" strokeOpacity="0.3" strokeWidth="7" strokeLinecap="round" fill="none">
               <path d="M190 60 L112 168" />
               <path d="M203 58 L203 238" />
-            </g>
-            {/* coutures du mylar */}
-            <g stroke="#FFFFFF" strokeOpacity="0.2" strokeWidth="1.4">
-              <line x1="193" y1="70" x2="231" y2="70" />
-              <line x1="193" y1="100" x2="231" y2="100" />
-              <line x1="193" y1="132" x2="231" y2="132" />
-              <line x1="193" y1="196" x2="231" y2="196" />
-              <line x1="193" y1="226" x2="231" y2="226" />
-              <line x1="120" y1="158" x2="120" y2="194" />
-              <line x1="150" y1="156" x2="150" y2="196" />
-              <line x1="182" y1="156" x2="182" y2="196" />
-              <line x1="222" y1="156" x2="222" y2="196" />
             </g>
            </g>
           </motion.g>
