@@ -29,32 +29,32 @@ const TILT = [-2.5, 1.5, -1.5, 2.5];
 type Blob = { x: number; y: number; r: number; c: "pink" | "white" | "cream" };
 const CLUSTER: Blob[] = [
   // rangée arrière
-  { x: 92, y: 262, r: 22, c: "cream" },
-  { x: 136, y: 254, r: 25, c: "pink" },
-  { x: 182, y: 250, r: 27, c: "white" },
-  { x: 228, y: 254, r: 25, c: "cream" },
-  { x: 272, y: 262, r: 22, c: "pink" },
+  { x: 90, y: 260, r: 26, c: "cream" },
+  { x: 136, y: 250, r: 29, c: "pink" },
+  { x: 184, y: 246, r: 31, c: "white" },
+  { x: 232, y: 250, r: 29, c: "cream" },
+  { x: 278, y: 260, r: 26, c: "pink" },
   // rangée avant
-  { x: 66, y: 304, r: 25, c: "pink" },
-  { x: 112, y: 298, r: 26, c: "white" },
-  { x: 160, y: 304, r: 28, c: "pink" },
-  { x: 210, y: 300, r: 27, c: "cream" },
-  { x: 258, y: 304, r: 25, c: "white" },
-  { x: 302, y: 300, r: 23, c: "pink" },
+  { x: 60, y: 304, r: 29, c: "pink" },
+  { x: 110, y: 298, r: 30, c: "white" },
+  { x: 162, y: 304, r: 32, c: "pink" },
+  { x: 214, y: 300, r: 31, c: "cream" },
+  { x: 266, y: 304, r: 29, c: "white" },
+  { x: 312, y: 300, r: 26, c: "pink" },
   // socle
-  { x: 130, y: 326, r: 20, c: "cream" },
-  { x: 192, y: 328, r: 22, c: "pink" },
-  { x: 250, y: 326, r: 20, c: "white" },
+  { x: 128, y: 328, r: 24, c: "cream" },
+  { x: 194, y: 330, r: 25, c: "pink" },
+  { x: 256, y: 328, r: 24, c: "white" },
 ];
 const FILLERS: [number, number, number][] = [
-  [100, 282, 8],
-  [158, 278, 9],
-  [214, 280, 8],
-  [268, 284, 8],
-  [86, 320, 8],
-  [164, 324, 9],
-  [224, 320, 8],
-  [290, 320, 7],
+  [98, 280, 10],
+  [158, 274, 11],
+  [216, 278, 10],
+  [274, 282, 10],
+  [82, 322, 10],
+  [164, 326, 11],
+  [228, 322, 10],
+  [296, 322, 9],
 ];
 
 function BalloonNumber() {
@@ -111,6 +111,7 @@ function BalloonNumber() {
               shown: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.35, ease } },
             }}
           >
+           <g transform="translate(177 150) scale(0.84) translate(-177 -150)">
             {/* liseré sombre sous la forme */}
             <g stroke="#C06985" strokeWidth="50" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.55">
               <path d="M196 48 L104 176 L250 176" />
@@ -138,6 +139,7 @@ function BalloonNumber() {
               <line x1="182" y1="156" x2="182" y2="196" />
               <line x1="222" y1="156" x2="222" y2="196" />
             </g>
+           </g>
           </motion.g>
 
           {/* Nœud ruban */}
