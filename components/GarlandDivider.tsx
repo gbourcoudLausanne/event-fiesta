@@ -17,47 +17,15 @@ function noise(n: number) {
   return rnd(s - Math.floor(s), 5);
 }
 
+const GRADS: Record<string, [string, string, string]> = {
+  rose: ["#FFF1F5", "#F5AEBE", "#D97E9A"],
+  roseDeep: ["#FBDCE4", "#E88DA8", "#BF5C7C"],
+  blue: ["#EFF7FB", "#AAD0E2", "#7AA9C1"],
+  peach: ["#FFF4E7", "#F3C6A0", "#D79A6D"],
+  cream: ["#FFFEFB", "#F5EAD9", "#DAC5AB"],
+  lav: ["#F7F1FB", "#D6C4E6", "#A98FC0"],
+};
 const GKEYS = ["rose", "blue", "peach", "roseDeep", "lav", "cream"] as const;
-type GKey = (typeof GKEYS)[number];
-
-type Palette = {
-  grads: Record<GKey, [string, string, string]>;
-  chrome: [string, string, string, string, string];
-  rosegold: [string, string, string, string, string];
-  chromeMid: string;
-  rosegoldMid: string;
-};
-
-const PALETTES: Record<string, Palette> = {
-  pastel: {
-    grads: {
-      rose: ["#FFF1F5", "#F5AEBE", "#D97E9A"],
-      roseDeep: ["#FBDCE4", "#E88DA8", "#BF5C7C"],
-      blue: ["#EFF7FB", "#AAD0E2", "#7AA9C1"],
-      peach: ["#FFF4E7", "#F3C6A0", "#D79A6D"],
-      cream: ["#FFFEFB", "#F5EAD9", "#DAC5AB"],
-      lav: ["#F7F1FB", "#D6C4E6", "#A98FC0"],
-    },
-    chrome: ["#FCEBF1", "#E6A6BC", "#FFF8FB", "#D386A2", "#AF6486"],
-    rosegold: ["#FBEEDD", "#E7B98E", "#FFF6EC", "#D89F73", "#B67F55"],
-    chromeMid: "#C77E9A",
-    rosegoldMid: "#C79066",
-  },
-  warm: {
-    grads: {
-      rose: ["#FFEEE4", "#F5B79A", "#E08D6E"], // corail
-      roseDeep: ["#FBDBD6", "#EE9C93", "#CF6C66"], // corail foncé
-      blue: ["#ECF2E3", "#BACF9F", "#8FAF74"], // vert sauge
-      peach: ["#FFF3D9", "#F3CB84", "#D6A244"], // or
-      cream: ["#FFFEFA", "#F4E8D4", "#DAC5A4"], // crème
-      lav: ["#F8E2EA", "#E1A4BB", "#BF7592"], // framboise douce
-    },
-    chrome: ["#FBE7DE", "#DF9E8E", "#FFF3EC", "#CB7C6C", "#A65C4E"],
-    rosegold: ["#FBEBD5", "#E5B073", "#FFF3E0", "#CF9450", "#AC7638"],
-    chromeMid: "#C4776A",
-    rosegoldMid: "#BE8544",
-  },
-};
 
 // Point + normale le long de la guirlande (bézier quadratique P0-P1-P2).
 function swag(t: number) {
@@ -128,13 +96,10 @@ const PAMPA_AT = [0.08, 0.24, 0.4, 0.5, 0.6, 0.76, 0.92];
 const EUCA_AT = [0.15, 0.31, 0.45, 0.55, 0.69, 0.85];
 const BERRY_AT = [0.2, 0.5, 0.8];
 
-const CONF_COLORS: Record<string, string[]> = {
-  pastel: ["#F4A8B8", "#A8CEE0", "#F0C29A", "#E3C179", "#FBD5DE", "#CDB4E0"],
-  warm: ["#F0A98E", "#BACF9F", "#F3CB84", "#E5B073", "#EFA9BE", "#E08D6E"],
-};
+const CONF_COLORS = ["#F4A8B8", "#A8CEE0", "#F0C29A", "#E3C179", "#FBD5DE", "#CDB4E0"];
 const CONFETTI = Array.from({ length: 26 }).map((_, i) => ({
   x: rnd(40 + noise(i * 3.3) * 1360, 3),
-  ci: i % 6,
+  c: CONF_COLORS[i % CONF_COLORS.length],
   shape: ["c", "r", "s"][i % 3],
   s: rnd(2 + noise(i + 7) * 2.6, 2),
   d: rnd(noise(i + 20) * 8, 3),
@@ -220,15 +185,9 @@ function Berry({ x, y }: { x: number; y: number }) {
   );
 }
 
-function BalloonShape({ b, variant }: { b: Balloon; variant: string }) {
-  const pal = PALETTES[variant];
-  const fill =
-    b.metal === 1
-      ? `url(#gd-${variant}-chrome)`
-      : b.metal === 2
-        ? `url(#gd-${variant}-rosegold)`
-        : `url(#gd-${variant}-${b.g})`;
-  const mid = b.metal === 1 ? pal.chromeMid : b.metal === 2 ? pal.rosegoldMid : pal.grads[b.g][2];
+function BalloonShape({ b }: { b: Balloon }) {
+  const fill = b.metal === 1 ? "url(#gd-chrome)" : b.metal === 2 ? "url(#gd-rosegold)" : `url(#gd-${b.g})`;
+  const mid = b.metal === 1 ? "#C77E9A" : b.metal === 2 ? "#C79066" : GRADS[b.g][2];
   // nœud orienté vers le fil (côté opposé au décalage du centre)
   const dx = -b.nside * b.nx;
   const dy = -b.nside * b.ny;
@@ -276,24 +235,11 @@ const popV: Variants = {
   }),
 };
 
-export function GarlandDivider({
-  bg = "#FAF7F2",
-  from,
-  to,
-  variant = "pastel",
-}: {
-  bg?: string;
-  from?: string;
-  to?: string;
-  variant?: "pastel" | "warm";
-}) {
+export function GarlandDivider({ bg = "#FAF7F2" }: { bg?: string }) {
   const reduce = useReducedMotion();
-  const pal = PALETTES[variant];
-  const conf = CONF_COLORS[variant];
-  const background = from && to ? `linear-gradient(${from}, ${to})` : bg;
 
   return (
-    <div style={{ background, lineHeight: 0 }} aria-hidden>
+    <div style={{ background: bg, lineHeight: 0 }} aria-hidden>
       <motion.svg
         viewBox="0 0 1440 250"
         xmlns="http://www.w3.org/2000/svg"
@@ -304,28 +250,28 @@ export function GarlandDivider({
       >
         <defs>
           {GKEYS.map((k) => {
-            const [a, b, c] = pal.grads[k];
+            const [a, b, c] = GRADS[k];
             return (
-              <radialGradient key={k} id={`gd-${variant}-${k}`} cx="34%" cy="24%" r="82%">
+              <radialGradient key={k} id={`gd-${k}`} cx="34%" cy="24%" r="82%">
                 <stop offset="0%" stopColor={a} />
                 <stop offset="50%" stopColor={b} />
                 <stop offset="100%" stopColor={c} />
               </radialGradient>
             );
           })}
-          <linearGradient id={`gd-${variant}-chrome`} x1="0" y1="0" x2="0.25" y2="1">
-            <stop offset="0%" stopColor={pal.chrome[0]} />
-            <stop offset="26%" stopColor={pal.chrome[1]} />
-            <stop offset="44%" stopColor={pal.chrome[2]} />
-            <stop offset="62%" stopColor={pal.chrome[3]} />
-            <stop offset="100%" stopColor={pal.chrome[4]} />
+          <linearGradient id="gd-chrome" x1="0" y1="0" x2="0.25" y2="1">
+            <stop offset="0%" stopColor="#FCEBF1" />
+            <stop offset="26%" stopColor="#E6A6BC" />
+            <stop offset="44%" stopColor="#FFF8FB" />
+            <stop offset="62%" stopColor="#D386A2" />
+            <stop offset="100%" stopColor="#AF6486" />
           </linearGradient>
-          <linearGradient id={`gd-${variant}-rosegold`} x1="0" y1="0" x2="0.25" y2="1">
-            <stop offset="0%" stopColor={pal.rosegold[0]} />
-            <stop offset="30%" stopColor={pal.rosegold[1]} />
-            <stop offset="46%" stopColor={pal.rosegold[2]} />
-            <stop offset="64%" stopColor={pal.rosegold[3]} />
-            <stop offset="100%" stopColor={pal.rosegold[4]} />
+          <linearGradient id="gd-rosegold" x1="0" y1="0" x2="0.25" y2="1">
+            <stop offset="0%" stopColor="#FBEEDD" />
+            <stop offset="30%" stopColor="#E7B98E" />
+            <stop offset="46%" stopColor="#FFF6EC" />
+            <stop offset="64%" stopColor="#D89F73" />
+            <stop offset="100%" stopColor="#B67F55" />
           </linearGradient>
         </defs>
 
@@ -334,25 +280,22 @@ export function GarlandDivider({
 
         {/* Confettis qui tombent */}
         {!reduce &&
-          CONFETTI.map((f, i) => {
-            const fc = conf[f.ci % conf.length];
-            return (
-              <motion.g
-                key={`c${i}`}
-                initial={{ opacity: 0 }}
-                animate={{ y: [-50, 280], rotate: [0, 260], opacity: [0, 0.75, 0.75, 0] }}
-                transition={{ repeat: Infinity, duration: f.dur, ease: "linear", delay: f.d }}
-              >
-                {f.shape === "c" ? (
-                  <circle cx={f.x} cy={0} r={f.s} fill={fc} />
-                ) : f.shape === "r" ? (
-                  <rect x={f.x - f.s * 0.6} y={-f.s * 1.6} width={f.s * 1.2} height={f.s * 3.2} rx={f.s * 0.5} fill={fc} />
-                ) : (
-                  <path d={star4(f.s * 0.9)} transform={`translate(${f.x} 0)`} fill={fc} />
-                )}
-              </motion.g>
-            );
-          })}
+          CONFETTI.map((f, i) => (
+            <motion.g
+              key={`c${i}`}
+              initial={{ opacity: 0 }}
+              animate={{ y: [-50, 280], rotate: [0, 260], opacity: [0, 0.75, 0.75, 0] }}
+              transition={{ repeat: Infinity, duration: f.dur, ease: "linear", delay: f.d }}
+            >
+              {f.shape === "c" ? (
+                <circle cx={f.x} cy={0} r={f.s} fill={f.c} />
+              ) : f.shape === "r" ? (
+                <rect x={f.x - f.s * 0.6} y={-f.s * 1.6} width={f.s * 1.2} height={f.s * 3.2} rx={f.s * 0.5} fill={f.c} />
+              ) : (
+                <path d={star4(f.s * 0.9)} transform={`translate(${f.x} 0)`} fill={f.c} />
+              )}
+            </motion.g>
+          ))}
 
         <g
           style={
@@ -392,7 +335,7 @@ export function GarlandDivider({
           {/* Ballons — rangée arrière (floue) */}
           {BACK.map((b) => (
             <motion.g key={`b${b.idx}`} custom={b.idx} variants={popV} style={{ transformOrigin: `${b.x}px ${b.y}px` }}>
-              <BalloonShape b={b} variant={variant} />
+              <BalloonShape b={b} />
             </motion.g>
           ))}
 
@@ -422,7 +365,7 @@ export function GarlandDivider({
           {/* Ballons — rangée avant */}
           {FRONT.map((b) => (
             <motion.g key={`f${b.idx}`} custom={b.idx} variants={popV} style={{ transformOrigin: `${b.x}px ${b.y}px` }}>
-              <BalloonShape b={b} variant={variant} />
+              <BalloonShape b={b} />
             </motion.g>
           ))}
 

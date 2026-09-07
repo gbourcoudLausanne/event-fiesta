@@ -5,7 +5,7 @@ import { Process } from "@/components/Process";
 import { Testimonials } from "@/components/Testimonials";
 import { CtaBanner } from "@/components/CtaBanner";
 import { FAQ } from "@/components/FAQ";
-import { GarlandDivider } from "@/components/GarlandDivider";
+import { SoftDivider } from "@/components/SectionDivider";
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
       <Hero />
 
       <Services />
-      <GarlandDivider from="#FAF7F2" to="#F3EDE6" variant="warm" />
+      <SoftDivider from="#FAF7F2" to="#F3EDE6" />
 
       <Realisations preview />
 
