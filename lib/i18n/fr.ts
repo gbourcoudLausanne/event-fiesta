@@ -153,6 +153,31 @@ export const fr = {
       },
     ],
   },
+  process: {
+    eyebrow: "Comment ça se passe",
+    title: "Votre projet en 4 étapes",
+    intro:
+      "Un accompagnement simple et personnalisé, de la première idée au jour J.",
+    cta: "Je souhaite un devis",
+    steps: [
+      {
+        title: "Parlez-nous de votre projet",
+        desc: "Thème, date, lieu, envies, budget — on écoute tout.",
+      },
+      {
+        title: "On imagine votre décoration",
+        desc: "Une proposition sur mesure, palette et croquis à l'appui.",
+      },
+      {
+        title: "Validation & organisation",
+        desc: "On cale chaque détail avec vous, sans mauvaise surprise.",
+      },
+      {
+        title: "Installation le jour J",
+        desc: "On livre, on installe, on démonte. Vous n'avez qu'à profiter.",
+      },
+    ],
+  },
   about: {
     eyebrow: "À propos",
     title: "Nées pour faire briller vos fêtes",

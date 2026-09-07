@@ -153,6 +153,31 @@ export const es = {
       },
     ],
   },
+  process: {
+    eyebrow: "Cómo funciona",
+    title: "Tu proyecto en 4 pasos",
+    intro:
+      "Un acompañamiento sencillo y personalizado, desde la primera idea hasta el gran día.",
+    cta: "Quiero un presupuesto",
+    steps: [
+      {
+        title: "Cuéntanos tu proyecto",
+        desc: "Tema, fecha, lugar, deseos, presupuesto — lo escuchamos todo.",
+      },
+      {
+        title: "Diseñamos tu decoración",
+        desc: "Una propuesta a medida, con paleta y bocetos.",
+      },
+      {
+        title: "Validación y organización",
+        desc: "Confirmamos cada detalle contigo, sin sorpresas.",
+      },
+      {
+        title: "Montaje el día del evento",
+        desc: "Entregamos, instalamos y desmontamos. Tú solo disfrutas.",
+      },
+    ],
+  },
   about: {
     eyebrow: "Nosotros",
     title: "Nacidas para hacer brillar tus fiestas",

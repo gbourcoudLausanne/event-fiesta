@@ -153,6 +153,31 @@ export const en = {
       },
     ],
   },
+  process: {
+    eyebrow: "How it works",
+    title: "Your project in 4 steps",
+    intro:
+      "Simple, personal support — from the first idea to the big day.",
+    cta: "I'd like a quote",
+    steps: [
+      {
+        title: "Tell us about your project",
+        desc: "Theme, date, venue, wishes, budget — we listen to it all.",
+      },
+      {
+        title: "We design your decoration",
+        desc: "A bespoke proposal, with palette and sketches.",
+      },
+      {
+        title: "Sign-off & planning",
+        desc: "We confirm every detail with you — no surprises.",
+      },
+      {
+        title: "Set-up on the day",
+        desc: "We deliver, install and take down. You just enjoy.",
+      },
+    ],
+  },
   about: {
     eyebrow: "About",
     title: "Born to make your parties shine",
