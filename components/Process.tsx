@@ -36,17 +36,6 @@ export function Process() {
       className="relative overflow-hidden py-20 lg:py-28"
       style={{ background: "#F3EDE6" }}
     >
-      {/* Lignes de carnet */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(rgba(217,98,138,0.06) 0 1px, transparent 1px 34px)",
-          maskImage: "linear-gradient(transparent, #000 14%, #000 86%, transparent)",
-          WebkitMaskImage: "linear-gradient(transparent, #000 14%, #000 86%, transparent)",
-        }}
-        aria-hidden
-      />
       <div
         className="absolute pointer-events-none rounded-full"
         style={{
