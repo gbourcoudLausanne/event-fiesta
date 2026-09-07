@@ -80,13 +80,14 @@ const ARCH_PAMPA = [
 ];
 
 // Brins d'eucalyptus — {x, y, angle°, scale, flip}
+// angle = direction vers laquelle file la tige (extérieur de l'arche, léger tombant)
 const ARCH_EUCA = [
-  { x: 44, y: 326, a: 214, s: 1.05, flip: false },
-  { x: 66, y: 208, a: 232, s: 0.95, flip: false },
-  { x: 104, y: 92, a: 252, s: 1, flip: false },
-  { x: 316, y: 92, a: 108, s: 1, flip: true },
-  { x: 352, y: 208, a: 128, s: 0.95, flip: true },
-  { x: 378, y: 326, a: 146, s: 1.05, flip: true },
+  { x: 42, y: 322, a: 248, s: 1.05, flip: false },
+  { x: 60, y: 196, a: 262, s: 0.95, flip: false },
+  { x: 102, y: 96, a: 274, s: 0.92, flip: false },
+  { x: 318, y: 96, a: 86, s: 0.92, flip: true },
+  { x: 360, y: 196, a: 98, s: 0.95, flip: true },
+  { x: 378, y: 322, a: 112, s: 1.05, flip: true },
 ];
 
 // Roses poudrées — posées PAR-DESSUS les ballons — {x, y, scale}
@@ -159,34 +160,36 @@ function Eucalyptus({
   s?: number;
   flip?: boolean;
 }) {
-  const leaves = 13;
+  const leaves = 12;
   const dir = flip ? -1 : 1;
   return (
     <g transform={`translate(${x} ${y}) rotate(${a}) scale(${s})`}>
+      {/* tige : bout coupé à l'ancrage (0,0), file vers l'extérieur */}
       <path
-        d={`M0 0 Q ${12 * dir} -30 ${4 * dir} -70`}
+        d={`M0 0 Q ${8 * dir} -24 ${3 * dir} -62`}
         stroke="#9DB18C"
         strokeWidth="0.9"
         fill="none"
         strokeLinecap="round"
       />
       {Array.from({ length: leaves }).map((_, k) => {
-        const t = k / (leaves - 1);
-        const ly = -2 - t * 64;
-        const stemX = t * 4 * dir;
+        const t = (k + 1) / leaves; // rien pile sur le bout coupé
+        const ly = -6 - t * 56;
+        const stemX = t * 3 * dir;
         const side = k % 2 === 0 ? 1 : -1;
-        const lr = 6.6 - t * 3.4;
-        const anchorX = stemX + side * dir * lr * 0.78;
+        const env = Math.sin(t * Math.PI); // feuillage plein au milieu, fin à la pointe
+        const lr = 3 + env * 3.8;
+        const anchorX = stemX + side * dir * lr * 0.8;
         return (
           <ellipse
             key={k}
             cx={anchorX}
             cy={ly}
             rx={lr}
-            ry={lr * 0.66}
+            ry={lr * 0.62}
             fill="url(#ba-euca)"
-            opacity={0.5 + 0.34 * Math.sin(t * Math.PI)}
-            transform={`rotate(${side * 36 * dir} ${anchorX} ${ly})`}
+            opacity={0.52 + 0.32 * env}
+            transform={`rotate(${side * 34 * dir} ${anchorX} ${ly})`}
           />
         );
       })}
