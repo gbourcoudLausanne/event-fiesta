@@ -443,7 +443,7 @@ function RealisationsCarousel() {
   };
 
   return (
-    <section id="realisations" className="relative overflow-hidden py-16 lg:py-24" style={{ background: "#F3EDE6" }}>
+    <section id="realisations" className="relative overflow-hidden pt-8 pb-16 lg:pt-10 lg:pb-24" style={{ background: "#F3EDE6" }}>
       {/* Motif animé — bouquet de ballons. 1er plan par défaut ; passe en
           arrière-plan quand une grille est déployée pour ne pas la gêner. */}
       <div
