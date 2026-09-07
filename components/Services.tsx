@@ -303,35 +303,41 @@ function ArchDecorButton({
       }}
     >
       <div
-        className="absolute flex flex-col items-center gap-2 pointer-events-auto"
-        style={{ left: "50%", top: "62%", transform: "translate(-50%, -50%)" }}
+        className="absolute flex flex-col items-center gap-1.5 pointer-events-auto"
+        style={{ left: "50%", top: "54%", transform: "translate(-50%, -50%)" }}
       >
         {level < 5 ? (
           <button
             type="button"
             onClick={onStep}
-            className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[12px] font-medium px-6 py-3 rounded-full whitespace-nowrap transition-transform duration-200 hover:scale-[1.04] active:scale-[0.97] shadow-lg cursor-pointer"
-            style={{ background: "#D9628A", color: "#FAF7F2" }}
+            className="inline-flex items-center gap-1.5 font-sans text-[10.5px] font-medium tracking-wide px-3.5 py-1.5 rounded-full whitespace-nowrap transition-colors duration-200 cursor-pointer"
+            style={{
+              background: "rgba(250,247,242,0.72)",
+              backdropFilter: "blur(4px)",
+              WebkitBackdropFilter: "blur(4px)",
+              border: "1px solid rgba(217,98,138,0.35)",
+              color: "#B65572",
+            }}
           >
             {DECOR_STEPS[level - 1]}
-            <span aria-hidden>✨</span>
+            <span aria-hidden style={{ opacity: 0.6 }}>✨</span>
           </button>
         ) : (
           <Link
             href="/contact"
-            className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[12px] font-medium px-6 py-3 rounded-full whitespace-nowrap transition-transform duration-200 hover:scale-[1.04] shadow-lg"
+            className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[11px] font-medium px-5 py-2.5 rounded-full whitespace-nowrap transition-transform duration-200 hover:scale-[1.04] shadow-md"
             style={{ background: "#D9628A", color: "#FAF7F2" }}
           >
             Et la vôtre ? Demander un devis
-            <ArrowUpRight size={13} weight="bold" />
+            <ArrowUpRight size={12} weight="bold" />
           </Link>
         )}
         {level > 1 && (
           <button
             type="button"
             onClick={onReset}
-            className="font-sans text-[10px] uppercase tracking-[0.16em] cursor-pointer"
-            style={{ color: "rgba(42,35,32,0.45)" }}
+            className="font-sans text-[9px] uppercase tracking-[0.16em] cursor-pointer transition-colors hover:text-[rgba(42,35,32,0.7)]"
+            style={{ color: "rgba(42,35,32,0.38)" }}
           >
             Recommencer
           </button>
