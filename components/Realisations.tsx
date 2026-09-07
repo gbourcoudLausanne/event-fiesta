@@ -399,9 +399,6 @@ function FloatingBalloons() {
 }
 
 const ITEM_H = 80;
-// Roulette 3D (façon molette premium)
-const WHEEL_ANGLE = 22; // degrés par cran
-const WHEEL_RADIUS = ITEM_H / (2 * Math.tan((WHEEL_ANGLE * Math.PI) / 360));
 
 const DUR = 4600;
 
@@ -509,47 +506,20 @@ function RealisationsCarousel() {
           >
             <div className="absolute inset-x-0 top-0 h-24 z-10 pointer-events-none" style={{ background: "linear-gradient(#F2D4D9, rgba(242,212,217,0))" }} />
             <div className="absolute inset-x-0 bottom-0 h-24 z-10 pointer-events-none" style={{ background: "linear-gradient(rgba(242,212,217,0), #F2D4D9)" }} />
-            <div
-              className="relative h-full w-full"
-              style={{ perspective: "1150px" }}
-            >
-              {/* Bande de sélection centrale */}
-              <div
-                className="pointer-events-none absolute inset-x-5 z-10"
-                style={{
-                  top: `calc(50% - ${ITEM_H / 2}px)`,
-                  height: ITEM_H,
-                  borderTop: "1px solid rgba(42,35,32,0.15)",
-                  borderBottom: "1px solid rgba(42,35,32,0.15)",
-                  background: "linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0))",
-                }}
-              />
+            <div className="relative flex h-full w-full items-center justify-center">
               {CAROUSEL.map((it, i) => {
                 const wd = wrap(-(N / 2), N / 2, i - cur);
                 const on = i === cur;
-                const off = Math.abs(wd);
-                const gone = off > 3.2;
                 return (
                   <motion.div
                     key={i}
                     className="absolute inset-x-0 flex items-center justify-center"
-                    style={{
-                      height: ITEM_H,
-                      top: `calc(50% - ${ITEM_H / 2}px)`,
-                      backfaceVisibility: "hidden",
-                    }}
+                    style={{ height: ITEM_H }}
                     animate={{
-                      rotateX: reduce ? 0 : -wd * WHEEL_ANGLE,
-                      z: reduce ? 0 : WHEEL_RADIUS,
-                      y: reduce ? wd * ITEM_H : 0,
-                      opacity: gone ? 0 : reduce ? (on ? 1 : 0) : 1 - Math.min(0.74, off * 0.24),
-                      filter: reduce || on ? "blur(0px)" : `blur(${Math.min(3.4, off * 1.05)}px)`,
+                      y: wd * ITEM_H,
+                      opacity: reduce ? (on ? 1 : 0) : Math.max(0, 1 - Math.abs(wd) * 0.34),
                     }}
-                    transition={
-                      reduce
-                        ? { duration: 0.2 }
-                        : { type: "spring", stiffness: 68, damping: 18, mass: 0.9 }
-                    }
+                    transition={reduce ? { duration: 0.2 } : { type: "spring", stiffness: 88, damping: 22 }}
                   >
                     <button
                       onClick={() => jump(i)}
@@ -584,12 +554,11 @@ function RealisationsCarousel() {
                         <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: "rgba(42,35,32,0.28)" }} />
                       )}
                       <span
-                        className="font-serif font-light whitespace-nowrap"
+                        className="font-serif font-light whitespace-nowrap transition-colors duration-300"
                         style={{
                           fontSize: on ? "clamp(1.9rem, 3.2vw, 2.9rem)" : "clamp(1.15rem, 1.8vw, 1.45rem)",
                           color: on ? "#B65572" : "rgba(42,35,32,0.42)",
                           fontStyle: on ? "italic" : "normal",
-                          transition: "font-size 0.4s cubic-bezier(0.16,1,0.3,1), color 0.3s ease",
                         }}
                       >
                         {it.label}
