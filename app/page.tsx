@@ -1,7 +1,6 @@
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
 import { Realisations } from "@/components/Realisations";
-import { ShowreelSection } from "@/components/ShowreelSection";
 import { Testimonials } from "@/components/Testimonials";
 import { CtaBanner } from "@/components/CtaBanner";
 import { FAQ } from "@/components/FAQ";
@@ -17,7 +16,6 @@ export default function Home() {
 
       <Realisations preview />
 
-      <ShowreelSection />
       <Testimonials />
       <CtaBanner />
       <FAQ preview />
