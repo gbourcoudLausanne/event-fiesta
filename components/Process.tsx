@@ -116,20 +116,18 @@ function BalloonNumber() {
               shown: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.35, ease } },
             }}
           >
-           <g transform="translate(235 152) scale(0.82) translate(-209 -152)">
+           <g transform="translate(233 150) scale(0.8) translate(-209 -152)">
             {/* liseré sombre */}
-            <g stroke="#C06985" strokeWidth="50" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.55">
-              <path d="M86 100 L128 42 L128 248" />
-              <path d="M98 248 L162 248" />
-              <ellipse cx="250" cy="146" rx="62" ry="100" />
+            <g stroke="#C06985" strokeWidth="52" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.5">
+              <path d="M80 108 L130 42 L130 252" />
+              <ellipse cx="256" cy="148" rx="60" ry="100" />
             </g>
             {/* corps des chiffres */}
-            <g stroke="url(#pb-foil)" strokeWidth="44" strokeLinecap="round" strokeLinejoin="round" fill="none">
-              {/* 1 : drapeau + fût + pied */}
-              <path d="M86 100 L128 42 L128 248" />
-              <path d="M98 248 L162 248" />
+            <g stroke="url(#pb-foil)" strokeWidth="46" strokeLinecap="round" strokeLinejoin="round" fill="none">
+              {/* 1 : drapeau + fût */}
+              <path d="M80 108 L130 42 L130 252" />
               {/* 0 : anneau */}
-              <ellipse cx="250" cy="146" rx="62" ry="100" />
+              <ellipse cx="256" cy="148" rx="60" ry="100" />
             </g>
            </g>
           </motion.g>
