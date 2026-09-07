@@ -21,9 +21,14 @@ const ease = [0.16, 1, 0.3, 1] as const;
 const PARTICULIERS_KEYS = ["mariage", "anniversaire", "babyshower", "genderreveal", "bapteme", "piquenique"];
 
 const TINTS = [
-  { bg: "#FBEDF0", dot: "#F4A8B8" },
-  { bg: "#ECF3F6", dot: "#A8CEE0" },
-  { bg: "#FBF1E7", dot: "#F0C29A" },
+  { bg: "#FBEDF0", dot: "#F4A8B8" }, // rose
+  { bg: "#ECF3F6", dot: "#A8CEE0" }, // bleu
+  { bg: "#FBF1E7", dot: "#F0C29A" }, // pêche
+  { bg: "#F1EFF7", dot: "#C4B3E0" }, // lilas
+  { bg: "#ECF4EE", dot: "#A8CFB4" }, // sauge
+  { bg: "#FBF3E0", dot: "#E6C878" }, // doré
+  { bg: "#FBECEC", dot: "#EAA0A0" }, // corail
+  { bg: "#EEF2F7", dot: "#9FB4CE" }, // ardoise
 ];
 
 /* ── Arche de ballons ──────────────────────────────────────────────────── */
