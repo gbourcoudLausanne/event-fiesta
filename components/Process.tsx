@@ -62,7 +62,7 @@ function BalloonNumber() {
   return (
     <motion.div
       className="absolute hidden lg:block pointer-events-none"
-      style={{ top: "-12.5rem", right: "-2%", width: "min(33vw, 400px)" }}
+      style={{ top: "-9.5rem", right: "-2%", width: "min(33vw, 400px)" }}
       initial={reduce ? undefined : "hidden"}
       whileInView={reduce ? undefined : "shown"}
       viewport={{ once: true, amount: 0.35 }}
