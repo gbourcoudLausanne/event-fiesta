@@ -26,135 +26,203 @@ const TINTS = [
 
 const TILT = [-2.5, 1.5, -1.5, 2.5];
 
-const SWATCHES = [
-  { c: "#F4A8B8", a: -8 },
-  { c: "#F0C29A", a: -22 },
-  { c: "#A8CEE0", a: -36 },
-  { c: "#E88DA8", a: -50 },
-  { c: "#C9B7E0", a: -64 },
-  { c: "#E3C179", a: -78 },
+type Blob = { x: number; y: number; r: number; c: "pink" | "white" | "cream" };
+const CLUSTER: Blob[] = [
+  // rangée arrière
+  { x: 92, y: 262, r: 22, c: "cream" },
+  { x: 136, y: 254, r: 25, c: "pink" },
+  { x: 182, y: 250, r: 27, c: "white" },
+  { x: 228, y: 254, r: 25, c: "cream" },
+  { x: 272, y: 262, r: 22, c: "pink" },
+  // rangée avant
+  { x: 66, y: 304, r: 25, c: "pink" },
+  { x: 112, y: 298, r: 26, c: "white" },
+  { x: 160, y: 304, r: 28, c: "pink" },
+  { x: 210, y: 300, r: 27, c: "cream" },
+  { x: 258, y: 304, r: 25, c: "white" },
+  { x: 302, y: 300, r: 23, c: "pink" },
+  // socle
+  { x: 130, y: 326, r: 20, c: "cream" },
+  { x: 192, y: 328, r: 22, c: "pink" },
+  { x: 250, y: 326, r: 20, c: "white" },
 ];
-const PIV = { x: 72, y: 256 };
+const FILLERS: [number, number, number][] = [
+  [100, 282, 8],
+  [158, 278, 9],
+  [214, 280, 8],
+  [268, 284, 8],
+  [86, 320, 8],
+  [164, 324, 9],
+  [224, 320, 8],
+  [290, 320, 7],
+];
 
-function StudioBoard() {
+function BalloonNumber() {
   const reduce = useReducedMotion();
-  const DOTS: [number, number][] = [
-    [122, 214],
-    [148, 112],
-    [226, 60],
-    [304, 112],
-    [330, 214],
-  ];
   return (
     <motion.div
       className="absolute hidden lg:block pointer-events-none"
-      style={{ top: "-0.5rem", right: "-1%", width: "min(31vw, 340px)" }}
+      style={{ top: "-1.5rem", right: "-2%", width: "min(30vw, 320px)" }}
       initial={reduce ? undefined : "hidden"}
       whileInView={reduce ? undefined : "shown"}
-      viewport={{ once: true, amount: 0.4 }}
+      viewport={{ once: true, amount: 0.35 }}
     >
-      <svg viewBox="0 0 380 300" fill="none" style={{ width: "100%", overflow: "visible" }} aria-hidden>
+      <svg viewBox="0 0 360 350" fill="none" style={{ width: "100%", overflow: "visible" }} aria-hidden>
         <defs>
-          <linearGradient id="pb-pencil" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="rgba(0,0,0,0.16)" />
-            <stop offset="45%" stopColor="rgba(255,255,255,0.34)" />
-            <stop offset="100%" stopColor="rgba(0,0,0,0.16)" />
+          <linearGradient id="pb-foil" x1="0.15" y1="0" x2="0.35" y2="1">
+            <stop offset="0%" stopColor="#F9CEDA" />
+            <stop offset="38%" stopColor="#EC9FB6" />
+            <stop offset="72%" stopColor="#DA7E9B" />
+            <stop offset="100%" stopColor="#C86C89" />
           </linearGradient>
+          <radialGradient id="pb-pink" cx="36%" cy="30%" r="75%">
+            <stop offset="0%" stopColor="#FBE0E9" />
+            <stop offset="55%" stopColor="#EDA9C0" />
+            <stop offset="100%" stopColor="#D083A0" />
+          </radialGradient>
+          <radialGradient id="pb-white" cx="36%" cy="30%" r="75%">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="60%" stopColor="#FBF6EE" />
+            <stop offset="100%" stopColor="#E6DAC6" />
+          </radialGradient>
+          <radialGradient id="pb-cream" cx="36%" cy="30%" r="75%">
+            <stop offset="0%" stopColor="#FBF3E4" />
+            <stop offset="58%" stopColor="#EFE2CC" />
+            <stop offset="100%" stopColor="#D8C4A5" />
+          </radialGradient>
+          <radialGradient id="pb-heart" cx="40%" cy="34%" r="72%">
+            <stop offset="0%" stopColor="#EBDBCA" />
+            <stop offset="70%" stopColor="#D9C3AF" />
+            <stop offset="100%" stopColor="#BFA48C" />
+          </radialGradient>
         </defs>
 
-        {/* Arche esquissée */}
-        <motion.path
-          d="M122 214 C122 122 166 60 226 60 C286 60 330 122 330 214"
-          stroke="#B65572"
-          strokeOpacity="0.42"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          variants={{ hidden: { pathLength: 0 }, shown: { pathLength: 1, transition: { duration: 1.1, ease } } }}
-        />
-        <motion.path
-          d="M128 216 C128 128 170 66 227 66 C283 66 324 126 325 210"
-          stroke="#B65572"
-          strokeOpacity="0.18"
-          strokeWidth="1"
-          strokeLinecap="round"
-          strokeDasharray="2.5 4"
-          variants={{ hidden: { pathLength: 0 }, shown: { pathLength: 1, transition: { duration: 1.1, delay: 0.12, ease } } }}
-        />
-        {DOTS.map(([x, y], i) => (
-          <motion.circle
-            key={i}
-            cx={x}
-            cy={y}
-            r="3"
-            fill="#D9628A"
-            style={{ transformOrigin: `${x}px ${y}px` }}
+        <g
+          style={
+            reduce
+              ? { transformOrigin: "180px 336px" }
+              : { transformOrigin: "180px 336px", animation: "gd-sway 8s ease-in-out infinite" }
+          }
+        >
+          {/* Chiffre 4 en ballon mylar */}
+          <motion.g
+            variants={{
+              hidden: { opacity: 0, y: 34 },
+              shown: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.35, ease } },
+            }}
+          >
+            <g
+              stroke="url(#pb-foil)"
+              strokeWidth="46"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+            >
+              <path d="M214 50 L126 172" />
+              <path d="M118 168 L252 168" />
+              <path d="M214 50 L214 252" />
+            </g>
+            {/* reflets */}
+            <g stroke="#FFFFFF" strokeOpacity="0.28" strokeWidth="6" strokeLinecap="round" fill="none">
+              <path d="M206 62 L134 164" />
+              <path d="M206 62 L206 244" />
+            </g>
+            {/* coutures du mylar */}
+            <g stroke="#FFFFFF" strokeOpacity="0.22" strokeWidth="1.4">
+              <line x1="194" y1="90" x2="234" y2="90" />
+              <line x1="194" y1="120" x2="234" y2="120" />
+              <line x1="194" y1="150" x2="234" y2="150" />
+              <line x1="194" y1="188" x2="234" y2="188" />
+              <line x1="194" y1="218" x2="234" y2="218" />
+              <line x1="130" y1="168" x2="130" y2="168" />
+            </g>
+          </motion.g>
+
+          {/* Nœud ruban */}
+          <motion.g
+            variants={{
+              hidden: { opacity: 0, y: -12, scale: 0.8 },
+              shown: {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                transition: { type: "spring", stiffness: 220, damping: 16, delay: 0.95 },
+              },
+            }}
+            style={{ transformOrigin: "150px 96px" }}
+          >
+            <path d="M150 96 Q124 78 122 104 Q126 118 150 104 Z" fill="#F6CDD9" />
+            <path d="M150 96 Q176 78 178 104 Q174 118 150 104 Z" fill="#F0BFCE" />
+            <path d="M147 104 Q140 128 143 150 L150 144 L157 150 Q160 128 153 104 Z" fill="#F6CDD9" />
+            <circle cx="150" cy="100" r="7" fill="#EBB2C4" />
+          </motion.g>
+
+          {/* Cluster de ballons — base */}
+          {CLUSTER.map((b, i) => (
+            <motion.g
+              key={i}
+              custom={i}
+              variants={{
+                hidden: { scale: 0, opacity: 0 },
+                shown: (idx: number) => ({
+                  scale: 1,
+                  opacity: 1,
+                  transition: { type: "spring", stiffness: 260, damping: 15, delay: 0.05 + idx * 0.035 },
+                }),
+              }}
+              style={{ transformOrigin: `${b.x}px ${b.y}px` }}
+            >
+              <circle cx={b.x} cy={b.y} r={b.r} fill={`url(#pb-${b.c})`} />
+              <ellipse
+                cx={b.x - b.r * 0.32}
+                cy={b.y - b.r * 0.36}
+                rx={b.r * 0.22}
+                ry={b.r * 0.3}
+                fill="rgba(255,255,255,0.55)"
+                transform={`rotate(-24 ${b.x - b.r * 0.32} ${b.y - b.r * 0.36})`}
+              />
+            </motion.g>
+          ))}
+          {FILLERS.map(([x, y, r], i) => (
+            <motion.circle
+              key={`f${i}`}
+              cx={x}
+              cy={y}
+              r={r}
+              fill="#F4EBDB"
+              style={{ transformOrigin: `${x}px ${y}px` }}
+              variants={{
+                hidden: { scale: 0, opacity: 0 },
+                shown: {
+                  scale: 1,
+                  opacity: 0.9,
+                  transition: { type: "spring", stiffness: 260, damping: 15, delay: 0.5 + i * 0.03 },
+                },
+              }}
+            />
+          ))}
+
+          {/* Petit cœur devant */}
+          <motion.g
             variants={{
               hidden: { scale: 0, opacity: 0 },
               shown: {
                 scale: 1,
-                opacity: 0.75,
-                transition: { delay: 0.5 + i * 0.12, type: "spring", stiffness: 300, damping: 14 },
+                opacity: 1,
+                transition: { type: "spring", stiffness: 240, damping: 14, delay: 0.7 },
               },
             }}
-          />
-        ))}
-
-        {/* Éventail de nuanciers */}
-        <motion.g
-          animate={reduce ? undefined : { rotate: [-1.2, 1.2, -1.2] }}
-          transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
-          style={{ transformOrigin: `${PIV.x}px ${PIV.y}px` }}
-        >
-          {SWATCHES.map((s, i) => (
-            <motion.g
-              key={i}
-              custom={i}
-              style={{ transformOrigin: `${PIV.x}px ${PIV.y}px` }}
-              variants={{
-                hidden: { rotate: -6 },
-                shown: (idx: number) => ({
-                  rotate: s.a,
-                  transition: { type: "spring", stiffness: 120, damping: 15, delay: 0.2 + idx * 0.07 },
-                }),
-              }}
-            >
-              <rect
-                x={PIV.x}
-                y={PIV.y - 12}
-                width="120"
-                height="24"
-                rx="12"
-                fill={s.c}
-                stroke="rgba(255,255,255,0.65)"
-                strokeWidth="1"
-              />
-            </motion.g>
-          ))}
-          <circle cx={PIV.x} cy={PIV.y} r="5" fill="#2A2320" opacity="0.45" />
-        </motion.g>
-
-        {/* Crayon */}
-        <motion.g
-          variants={{
-            hidden: { opacity: 0, x: 18, y: 8 },
-            shown: { opacity: 1, x: 0, y: 0, transition: { duration: 0.6, delay: 0.85, ease } },
-          }}
-        >
-          <motion.g
-            animate={reduce ? undefined : { y: [0, -6, 0], rotate: [0, -2, 0] }}
-            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
-            style={{ transformOrigin: "230px 40px" }}
+            style={{ transformOrigin: "150px 262px" }}
           >
-            <g transform="rotate(42 230 60)">
-              <rect x="222" y="-14" width="14" height="118" rx="3" fill="#EBC79C" />
-              <rect x="222" y="-14" width="14" height="118" rx="3" fill="url(#pb-pencil)" />
-              <rect x="222" y="98" width="14" height="9" fill="#C9CDD2" />
-              <rect x="222" y="105" width="14" height="12" rx="3" fill="#F2A9BC" />
-              <path d="M222 -14 L236 -14 L229 -30 Z" fill="#E8B98C" />
-              <path d="M226 -20 L232 -20 L229 -30 Z" fill="#3A2A20" />
-            </g>
+            <path
+              d="M150 250 C142 236 118 238 118 258 C118 280 150 300 150 300 C150 300 182 280 182 258 C182 238 158 236 150 250 Z"
+              fill="url(#pb-heart)"
+              stroke="rgba(255,255,255,0.4)"
+              strokeWidth="1"
+            />
+            <ellipse cx="134" cy="250" rx="6" ry="8" fill="rgba(255,255,255,0.4)" transform="rotate(-20 134 250)" />
           </motion.g>
-        </motion.g>
+        </g>
       </svg>
     </motion.div>
   );
@@ -184,7 +252,7 @@ export function Process() {
       />
 
       <div className="relative max-w-6xl mx-auto px-6 lg:px-10">
-        <StudioBoard />
+        <BalloonNumber />
 
         {/* En-tête */}
         <motion.div
