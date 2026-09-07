@@ -501,7 +501,7 @@ function RealisationsCarousel() {
         >
           {/* ── Rolodex de types ── */}
           <div
-            className="relative flex items-center justify-center overflow-hidden px-6 min-h-[300px] lg:min-h-[560px] lg:w-[42%]"
+            className="relative flex items-center justify-center overflow-hidden px-6 min-h-[360px] lg:min-h-[560px] lg:w-[42%]"
             style={{ background: "#F2D4D9" }}
           >
             <div className="absolute inset-x-0 top-0 h-24 z-10 pointer-events-none" style={{ background: "linear-gradient(#F2D4D9, rgba(242,212,217,0))" }} />
@@ -568,6 +568,16 @@ function RealisationsCarousel() {
                 );
               })}
             </div>
+
+            {/* CTA galerie — au pied de la liste des thèmes */}
+            <Link
+              href="/galerie"
+              className="group absolute inset-x-0 bottom-5 z-20 mx-auto flex w-max max-w-[88%] items-center justify-center gap-2 rounded-full px-6 py-3 font-sans text-[11px] font-semibold uppercase tracking-[0.16em] shadow-lg transition-transform duration-200 hover:scale-[1.04]"
+              style={{ background: "#D9628A", color: "#FAF7F2" }}
+            >
+              {t.realisations.ctaAll}
+              <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
+            </Link>
           </div>
 
           {/* ── Pile photo ── */}
@@ -751,14 +761,6 @@ function RealisationsCarousel() {
           </AnimatePresence>
         </div>
 
-        <Link
-          href="/galerie"
-          className="group mt-10 lg:mt-12 inline-flex items-center gap-2 font-sans text-[12px] font-medium uppercase tracking-[0.18em]"
-          style={{ color: "#B65572" }}
-        >
-          {t.realisations.ctaAll}
-          <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
-        </Link>
       </div>
 
       <AnimatePresence>
