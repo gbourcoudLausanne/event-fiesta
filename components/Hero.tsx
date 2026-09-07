@@ -243,14 +243,21 @@ function PhotoWall({ columns = 3 }: { columns?: number }) {
         aria-hidden
       />
       <div
-        className="absolute inset-x-0 bottom-0 h-24 pointer-events-none"
-        style={{ background: "linear-gradient(rgba(250,247,242,0), #FAF7F2)" }}
+        className="absolute inset-x-0 bottom-0 h-40 lg:h-52 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(rgba(250,247,242,0) 0%, rgba(250,247,242,0.55) 50%, #FAF7F2 100%)",
+        }}
         aria-hidden
       />
       {/* Filet intérieur */}
       <div
         className="absolute inset-3 lg:inset-4 pointer-events-none"
-        style={{ border: "1px solid rgba(217,98,138,0.14)" }}
+        style={{
+          border: "1px solid rgba(217,98,138,0.14)",
+          maskImage: "linear-gradient(#000 55%, transparent 92%)",
+          WebkitMaskImage: "linear-gradient(#000 55%, transparent 92%)",
+        }}
         aria-hidden
       />
     </div>
@@ -498,7 +505,7 @@ export function Hero() {
           <div className="flex items-center pl-10 xl:pl-16 pr-12 py-16">
             <HeroText />
           </div>
-          <div className="relative pr-6 xl:pr-10">
+          <div className="relative pr-6 xl:pr-10 pb-12 xl:pb-20">
             <motion.div
               initial={reduce ? false : { opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
