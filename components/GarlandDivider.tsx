@@ -195,13 +195,11 @@ function BalloonShape({ b }: { b: Balloon }) {
       />
       {!b.back && (
         <>
+          {/* petit nœud au bas du ballon */}
           <path
-            d={`M${b.x} ${rnd(b.y + b.r * 0.98, 3)} q ${-b.r * 0.5} ${b.r * 0.55} 0 ${b.r * 0.9} q ${b.r * 0.5} ${-b.r * 0.35} 0 ${-b.r * 0.9} Z`}
-            fill="rgba(0,0,0,0.06)"
-          />
-          <path
-            d={`M${rnd(b.x - 2.4, 3)} ${rnd(b.y + b.r, 3)} L${rnd(b.x + 2.4, 3)} ${rnd(b.y + b.r, 3)} L${b.x} ${rnd(b.y + b.r + 3.6, 3)} Z`}
+            d={`M${rnd(b.x - b.r * 0.15, 3)} ${rnd(b.y + b.r * 0.95, 3)} L${rnd(b.x + b.r * 0.15, 3)} ${rnd(b.y + b.r * 0.95, 3)} L${b.x} ${rnd(b.y + b.r + b.r * 0.14 + 1.2, 3)} Z`}
             fill={mid}
+            opacity="0.8"
           />
           <ellipse
             cx={rnd(b.x - b.r * 0.32, 3)}
