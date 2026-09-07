@@ -26,6 +26,48 @@ export const en = {
     intro:
       "From a birthday party to a corporate evening, we design and handcraft every decoration to measure. Two worlds, one standard: everything perfect the moment your guests walk in.",
     ctaAll: "See all our services",
+    index: [
+      {
+        key: "mariage",
+        name: "Civil wedding",
+        desc: "The civil ceremony deserves as much care as the party. Flower arch, aisle, photo corner — decor that feels like you, in a town hall or a garden.",
+      },
+      {
+        key: "anniversaire",
+        name: "Birthdays",
+        desc: "From the first candle to the 50th: balloon arch, sweet table, giant number. The decor fits the age, the theme and the person being celebrated.",
+      },
+      {
+        key: "babyshower",
+        name: "Baby shower",
+        desc: "A soft setting to welcome the baby — pastels, flowers, clouds of balloons. Designed for the photos you'll keep for years, too.",
+      },
+      {
+        key: "genderreveal",
+        name: "Gender reveal",
+        desc: "The moment of the reveal, staged: neutral arch, balloon box or smoke. Pink or blue, the surprise holds right to the end.",
+      },
+      {
+        key: "bapteme",
+        name: "Christenings",
+        desc: "Christening, communion or civil naming: a quiet, luminous decoration, at church, in a hall or at home.",
+      },
+      {
+        key: "piquenique",
+        name: "Picnics",
+        desc: "A fully managed luxury picnic: low table, cushions, tableware, flower runner. We set up in the park, by the water or in your garden.",
+      },
+      {
+        key: "surmesure",
+        name: "Bespoke event",
+        desc: "A precise idea, an unusual theme, a tricky venue? We design and handcraft the decor, just for your event.",
+      },
+      {
+        key: "entreprise",
+        name: "Corporate event",
+        desc: "Seminars, end-of-year parties, openings, launches: decor that carries your brand image, set up and taken down without you thinking about it.",
+      },
+    ],
     particuliers: {
       label: "Private clients",
       title: "Your private celebrations",

@@ -26,6 +26,48 @@ export const es = {
     intro:
       "Desde una fiesta de cumpleaños hasta una velada de empresa, diseñamos y elaboramos cada decoración a medida. Dos universos, una misma exigencia: que todo esté perfecto cuando tus invitados entran en la sala.",
     ctaAll: "Ver todos nuestros servicios",
+    index: [
+      {
+        key: "mariage",
+        name: "Boda civil",
+        desc: "La ceremonia civil merece tanto cuidado como la fiesta. Arco floral, pasillo, rincón de fotos — una decoración que os representa, en el ayuntamiento o en el jardín.",
+      },
+      {
+        key: "anniversaire",
+        name: "Cumpleaños",
+        desc: "De la primera vela a los 50: arco de globos, sweet table, número gigante. La decoración se adapta a la edad, al tema y a la persona que se celebra.",
+      },
+      {
+        key: "babyshower",
+        name: "Baby shower",
+        desc: "Una decoración suave para recibir al bebé — pasteles, flores, nubes de globos. Pensada también para las fotos que guardaréis mucho tiempo.",
+      },
+      {
+        key: "genderreveal",
+        name: "Gender reveal",
+        desc: "El momento de la revelación, escenificado: arco neutro, caja de globos o humo. Rosa o azul, la sorpresa se mantiene hasta el final.",
+      },
+      {
+        key: "bapteme",
+        name: "Bautizos",
+        desc: "Bautizo, comunión o bautizo civil: una decoración sobria y luminosa, en la iglesia, en una sala o en casa.",
+      },
+      {
+        key: "piquenique",
+        name: "Pícnics",
+        desc: "Pícnic de lujo llave en mano: mesa baja, cojines, vajilla, camino de flores. Montamos en el parque, junto al agua o en tu jardín.",
+      },
+      {
+        key: "surmesure",
+        name: "Evento a medida",
+        desc: "¿Una idea concreta, un tema poco común, una limitación de lugar? Diseñamos y elaboramos la decoración a mano, solo para tu evento.",
+      },
+      {
+        key: "entreprise",
+        name: "Evento de empresa",
+        desc: "Seminarios, fiestas de fin de año, inauguraciones, lanzamientos: una decoración que lleva tu imagen de marca, montada y desmontada sin que tengas que pensarlo.",
+      },
+    ],
     particuliers: {
       label: "Particulares",
       title: "Tus celebraciones privadas",

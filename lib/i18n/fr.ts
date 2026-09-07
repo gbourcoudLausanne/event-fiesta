@@ -26,6 +26,48 @@ export const fr = {
     intro:
       "De la fête d'anniversaire à la soirée d'entreprise, nous concevons et fabriquons chaque décoration sur mesure. Deux univers, une même exigence : que tout soit parfait au moment où vos invités entrent dans la salle.",
     ctaAll: "Voir tous nos services",
+    index: [
+      {
+        key: "mariage",
+        name: "Mariage civil",
+        desc: "La cérémonie civile mérite autant de soin que la fête. Arche fleurie, chemin, coin photos — un décor qui vous ressemble, en salle communale comme au jardin.",
+      },
+      {
+        key: "anniversaire",
+        name: "Anniversaires",
+        desc: "De la première bougie aux 50 ans : arche de ballons, sweet table, chiffre géant. Le décor s'adapte à l'âge, au thème et à la personne qu'on célèbre.",
+      },
+      {
+        key: "babyshower",
+        name: "Baby shower",
+        desc: "Un décor tout en douceur pour accueillir bébé — tons pastel, fleurs, nuages de ballons. Pensé aussi pour les photos que vous garderez longtemps.",
+      },
+      {
+        key: "genderreveal",
+        name: "Gender reveal",
+        desc: "Le moment de la révélation, mis en scène : arche neutre, boîte à ballons ou fumigènes. Rose ou bleu, la surprise reste entière jusqu'au bout.",
+      },
+      {
+        key: "bapteme",
+        name: "Baptêmes",
+        desc: "Baptême, communion ou baptême civil : une décoration sobre et lumineuse, à l'église, en salle ou à la maison.",
+      },
+      {
+        key: "piquenique",
+        name: "Pique-niques",
+        desc: "Pique-nique de luxe clé en main : table basse, coussins, vaisselle, chemin de fleurs. On installe au parc, au bord de l'eau ou dans votre jardin.",
+      },
+      {
+        key: "surmesure",
+        name: "Événement sur mesure",
+        desc: "Une idée précise, un thème inhabituel, une contrainte de lieu ? On conçoit et fabrique le décor à la main, rien que pour votre événement.",
+      },
+      {
+        key: "entreprise",
+        name: "Événement d'entreprise",
+        desc: "Séminaires, soirées de fin d'année, inaugurations, lancements : un décor qui porte votre image de marque, monté et démonté sans que vous ayez à y penser.",
+      },
+    ],
     particuliers: {
       label: "Particuliers",
       title: "Vos célébrations privées",

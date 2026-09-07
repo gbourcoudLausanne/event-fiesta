@@ -12,7 +12,7 @@ export default function Home() {
     <>
       <Hero />
 
-      <Services preview />
+      <Services />
       {/* crème → crème-2 */}
       <SectionDivider from="#FAF7F2" to="#F3EDE6" variant="diagonal-inv" height={56} />
 
