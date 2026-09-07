@@ -44,6 +44,17 @@ const noise = (n: number) => {
   return s - Math.floor(s);
 };
 
+const ARCH_CONFETTI = [
+  { x: 44,  s: "c", c: "#F2A6B8", d: 0 },
+  { x: 108, s: "r", c: "#E3B593", d: 1.8 },
+  { x: 168, s: "c", c: "#AFD2E1", d: 3.4 },
+  { x: 232, s: "r", c: "#E58AA6", d: 0.9 },
+  { x: 296, s: "c", c: "#F2A6B8", d: 4.6 },
+  { x: 356, s: "r", c: "#AFD2E1", d: 2.4 },
+  { x: 138, s: "c", c: "#E3B593", d: 5.2 },
+  { x: 320, s: "r", c: "#E58AA6", d: 3.9 },
+];
+
 function BalloonArch() {
   const reduce = useReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -110,6 +121,26 @@ function BalloonArch() {
             );
           })}
         </defs>
+
+        {/* Confettis qui tombent en continu */}
+        {!reduce &&
+          ARCH_CONFETTI.map((f, i) => (
+            <motion.g
+              key={`ac${i}`}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              animate={{ y: [-30, 460], rotate: [0, 240], opacity: [0, 0.6, 0.6, 0] }}
+              transition={{ repeat: Infinity, duration: 9 + i, ease: "linear", delay: f.d }}
+              style={{ transformOrigin: `${f.x}px 0px` }}
+            >
+              {f.s === "c" ? (
+                <circle cx={f.x} cy={0} r={3} fill={f.c} />
+              ) : (
+                <rect x={f.x - 1.6} y={-5} width={3.2} height={10} rx={1.2} fill={f.c} />
+              )}
+            </motion.g>
+          ))}
 
         <motion.path
           ref={pathRef}
