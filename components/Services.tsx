@@ -196,9 +196,9 @@ function BalloonArch({ level }: { level: number }) {
           transition={{ repeat: Infinity, duration: 7.5, ease: "easeInOut", delay: 2.4 }}
           style={{ transformOrigin: "210px 26px" }}
         >
-          {/* Pampa — niveau 3 */}
+          {/* Pampa — niveau 4 */}
           <AnimatePresence>
-            {level >= 3 &&
+            {level >= 4 &&
               ARCH_PAMPA.map((pp, i) => (
                 <motion.g
                   key={`p${i}`}
@@ -211,10 +211,10 @@ function BalloonArch({ level }: { level: number }) {
               ))}
           </AnimatePresence>
 
-          {/* Ballons — tier 1 dès le niveau 1, tier 2 dès le niveau 2 */}
+          {/* Arche nue au niveau 1 ; ballons tier 1 dès le niveau 2, tier 2 dès le niveau 3 */}
           <AnimatePresence>
             {balloons.map((b, i) =>
-              level >= b.tier ? (
+              level >= b.tier + 1 ? (
                 <motion.g
                   key={i}
                   {...pop}
@@ -235,9 +235,9 @@ function BalloonArch({ level }: { level: number }) {
             )}
           </AnimatePresence>
 
-          {/* Accents rose gold — niveau 2 */}
+          {/* Accents rose gold — niveau 3 */}
           <AnimatePresence>
-            {level >= 2 &&
+            {level >= 3 &&
               ARCH_ACCENTS.map((b, i) => (
                 <motion.g
                   key={`g${i}`}
@@ -251,9 +251,9 @@ function BalloonArch({ level }: { level: number }) {
               ))}
           </AnimatePresence>
 
-          {/* Panneau « Bienvenue » — niveau 4 */}
+          {/* Panneau « Bienvenue » — niveau 5 */}
           <AnimatePresence>
-            {level >= 4 && (
+            {level >= 5 && (
               <motion.g
                 key="sign"
                 initial={reduce ? false : { y: -14, opacity: 0, scale: 0.9 }}
@@ -306,7 +306,7 @@ function ArchDecorButton({
         className="absolute flex flex-col items-center gap-2 pointer-events-auto"
         style={{ left: "50%", top: "62%", transform: "translate(-50%, -50%)" }}
       >
-        {level < 4 ? (
+        {level < 5 ? (
           <button
             type="button"
             onClick={onStep}
@@ -564,7 +564,7 @@ export function Services() {
 
       <ArchDecorButton
         level={decor}
-        onStep={() => setDecor((d) => Math.min(4, d + 1))}
+        onStep={() => setDecor((d) => Math.min(5, d + 1))}
         onReset={() => setDecor(1)}
       />
     </section>
