@@ -13,12 +13,12 @@ export default function Home() {
     <>
       <Hero />
 
-      <GarlandDivider />
-
       <Services />
       <SoftDivider from="#FAF7F2" to="#F3EDE6" />
 
       <Realisations preview />
+
+      <GarlandDivider bg="#F3EDE6" />
 
       <Process />
 
