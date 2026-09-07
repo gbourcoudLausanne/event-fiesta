@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -62,7 +62,7 @@ function ArchDecor() {
   return (
     <motion.svg
       className="absolute pointer-events-none hidden lg:block"
-      style={{ top: "-4%", right: "-4%", width: "min(40vw, 560px)", overflow: "visible" }}
+      style={{ top: "7%", right: "-3%", width: "min(38vw, 520px)", overflow: "visible" }}
       viewBox="0 0 400 400"
       fill="none"
       aria-hidden
@@ -109,6 +109,40 @@ export function Services() {
   const items = t.services.index;
   const [active, setActive] = useState(0);
 
+  const listRef = useRef<HTMLUListElement>(null);
+  const liRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const photoRef = useRef<HTMLDivElement>(null);
+  const [centers, setCenters] = useState<number[]>([]);
+  const [listH, setListH] = useState(0);
+  const [photoH, setPhotoH] = useState(0);
+
+  useEffect(() => {
+    const measure = () => {
+      const ul = listRef.current;
+      if (!ul) return;
+      const listTop = ul.offsetTop;
+      setCenters(
+        liRefs.current.map((el) =>
+          el ? el.offsetTop - listTop + el.offsetHeight / 2 : 0,
+        ),
+      );
+      setListH(ul.offsetHeight);
+      setPhotoH(photoRef.current?.offsetHeight ?? 0);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (listRef.current) ro.observe(listRef.current);
+    if (photoRef.current) ro.observe(photoRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [items.length]);
+
+  const rawTop = (centers[active] ?? 0) - photoH / 2;
+  const photoTop = Math.min(Math.max(rawTop, 0), Math.max(0, listH - photoH));
+
   return (
     <section
       id="services"
@@ -146,12 +180,13 @@ export function Services() {
 
         <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-8 lg:gap-16 items-start">
           {/* ── Index ── */}
-          <ul>
+          <ul ref={listRef}>
             {items.map((it, i) => {
               const on = active === i;
               return (
                 <li
                   key={it.key}
+                  ref={(el) => { liRefs.current[i] = el; }}
                   onMouseEnter={() => setActive(i)}
                   className="border-t last:border-b"
                   style={{ borderColor: "rgba(13,11,8,0.12)" }}
@@ -217,8 +252,14 @@ export function Services() {
             })}
           </ul>
 
-          {/* ── Aperçu sticky (desktop) ── */}
-          <div className="hidden lg:block lg:sticky lg:top-28">
+          {/* ── Aperçu qui suit le service survolé (desktop) ── */}
+          <div className="hidden lg:block relative" style={{ height: listH || undefined }}>
+            <motion.div
+              ref={photoRef}
+              className="absolute left-0 right-0"
+              animate={{ top: photoTop }}
+              transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 190, damping: 26 }}
+            >
             <div
               className="relative w-full overflow-hidden"
               style={{
@@ -260,6 +301,7 @@ export function Services() {
                 </p>
               </div>
             </div>
+            </motion.div>
           </div>
         </div>
 
