@@ -45,14 +45,14 @@ export function WhyUs() {
     <section
       id="whyus"
       className="py-24 lg:py-36 relative overflow-hidden"
-      style={{ background: "#0D0B08" }}
+      style={{ background: "#F3EDE6" }}
     >
       {/* Subtle gold radial glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(176,139,58,0.05) 0%, transparent 60%)",
+            "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(217,98,138,0.08) 0%, transparent 60%)",
         }}
         aria-hidden
       />
@@ -67,12 +67,12 @@ export function WhyUs() {
           transition={{ duration: 0.6, ease }}
           className="mb-20 lg:mb-24"
         >
-          <p className="font-sans text-[11px] uppercase tracking-[0.28em] mb-3" style={{ color: "#B08B3A" }}>
+          <p className="font-sans text-[11px] uppercase tracking-[0.28em] mb-3" style={{ color: "#D9628A" }}>
             {t.whyus.eyebrow}
           </p>
           <h2
             className="font-serif font-light italic"
-            style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", color: "rgba(250,247,242,0.4)" }}
+            style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", color: "rgba(13,11,8,0.55)" }}
           >
             {t.whyus.title}
           </h2>
@@ -80,7 +80,7 @@ export function WhyUs() {
 
         {/* Stats grid — 4 columns */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0 md:divide-x mb-20 lg:mb-28"
-          style={{ borderColor: "rgba(176,139,58,0.1)" }}
+          style={{ borderColor: "rgba(217,98,138,0.1)" }}
         >
           {t.whyus.stats.map((stat, i) => {
             const cfg = statConfigs[i];
@@ -92,11 +92,11 @@ export function WhyUs() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.7, delay: i * 0.1, ease }}
                 className="flex flex-col gap-3 md:px-10 first:md:pl-0 last:md:pr-0"
-                style={{ borderColor: "rgba(176,139,58,0.1)" }}
+                style={{ borderColor: "rgba(217,98,138,0.1)" }}
               >
                 <div
                   className="font-serif font-light leading-none"
-                  style={{ fontSize: "clamp(3.5rem, 7vw, 5.5rem)", color: "#B08B3A" }}
+                  style={{ fontSize: "clamp(3.5rem, 7vw, 5.5rem)", color: "#D9628A" }}
                 >
                   {cfg.isCounter ? (
                     <AnimatedCounter to={cfg.numeric} suffix={cfg.suffix} />
@@ -104,7 +104,7 @@ export function WhyUs() {
                     cfg.display
                   )}
                 </div>
-                <p className="font-sans text-sm" style={{ color: "rgba(250,247,242,0.38)", letterSpacing: "0.04em" }}>
+                <p className="font-sans text-sm" style={{ color: "rgba(13,11,8,0.52)", letterSpacing: "0.04em" }}>
                   {stat.label}
                 </p>
               </motion.div>
@@ -123,7 +123,7 @@ export function WhyUs() {
           {/* Giant quotation mark */}
           <span
             className="absolute -top-10 -left-4 font-serif leading-none pointer-events-none select-none"
-            style={{ fontSize: "12rem", color: "rgba(176,139,58,0.08)", lineHeight: 1 }}
+            style={{ fontSize: "12rem", color: "rgba(217,98,138,0.08)", lineHeight: 1 }}
             aria-hidden
           >
             "
@@ -133,15 +133,15 @@ export function WhyUs() {
             className="font-display font-light italic leading-[1.35] relative z-10"
             style={{
               fontSize: "clamp(1.6rem, 3.5vw, 2.8rem)",
-              color: "rgba(250,247,242,0.82)",
+              color: "rgba(13,11,8,0.82)",
             }}
           >
             {t.whyus.quote}
           </blockquote>
 
           <div className="mt-8 flex items-center gap-4">
-            <div className="w-10 h-px" style={{ background: "#B08B3A" }} />
-            <span className="font-sans text-xs tracking-[0.2em] uppercase" style={{ color: "#B08B3A" }}>
+            <div className="w-10 h-px" style={{ background: "#D9628A" }} />
+            <span className="font-sans text-xs tracking-[0.2em] uppercase" style={{ color: "#D9628A" }}>
               Event Fiesta · Lausanne
             </span>
           </div>

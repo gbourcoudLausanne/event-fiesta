@@ -1,19 +1,19 @@
 export const es = {
   nav: {
+    home: "Inicio",
+    about: "Nosotros",
     services: "Servicios",
-    realisations: "Realizaciones",
-    about: "Nuestro equipo",
+    gallery: "Galería",
     contact: "Contacto",
     cta: "Pedir presupuesto",
   },
   hero: {
     eyebrow: "Lausana · Suiza Romanda · Desde 2020",
-    headline1: "Tus eventos,",
-    headline2: "nuestra obra.",
-    subtext:
-      "Decoración personalizada para tus celebraciones en Lausana y la Suiza romanda.",
-    cta1: "Descubrir nuestros servicios",
-    cta2: "Pedir presupuesto",
+    headline1: "Creemos juntos un evento",
+    headline2: "inolvidable y a tu imagen",
+    subtext: "Decoración de eventos a medida · Suiza romanda",
+    cta1: "Pedir presupuesto",
+    cta2: "Descubrir la galería",
     features: [
       { label: "Deco personalizada" },
       { label: "Todo incluido" },
@@ -23,6 +23,46 @@ export const es = {
   services: {
     eyebrow: "Lo que creamos",
     title: "Nuestros servicios",
+    intro:
+      "Desde una fiesta de cumpleaños hasta una velada de empresa, diseñamos y elaboramos cada decoración a medida. Dos universos, una misma exigencia: que todo esté perfecto cuando tus invitados entran en la sala.",
+    ctaAll: "Ver todos nuestros servicios",
+    particuliers: {
+      label: "Particulares",
+      title: "Tus celebraciones privadas",
+      desc: "Cumpleaños, bautizos, baby showers, comuniones, gender reveals, fiestas temáticas, pícnics de lujo… Cada momento merece un escenario único.",
+    },
+    professionnels: {
+      label: "Empresas",
+      title: "Tus eventos corporativos",
+      desc: "Seminarios, fiestas de fin de año, lanzamientos de producto, galas, inauguraciones. Decoración al servicio de tu imagen de marca, llave en mano.",
+    },
+    proItems: [
+      {
+        key: "corporate",
+        title: "Eventos de empresa",
+        desc: "Seminarios, juntas y jornadas de equipo escenificados con elegancia y coherencia de marca.",
+      },
+      {
+        key: "yearend",
+        title: "Fiestas de fin de año",
+        desc: "Una velada de Navidad o Año Nuevo memorable para tus equipos: escenografía, photobooth, mesa de bienvenida.",
+      },
+      {
+        key: "launch",
+        title: "Lanzamientos de producto",
+        desc: "Un escenario que pone tu producto en el centro y hace el evento instagrameable.",
+      },
+      {
+        key: "gala",
+        title: "Galas y entregas de premios",
+        desc: "Arcos, backdrops, caminos de mesa y señalética para veladas de prestigio cuidadas al detalle.",
+      },
+      {
+        key: "opening",
+        title: "Inauguraciones",
+        desc: "Apertura de tienda, oficinas o restaurante: una decoración festiva que marca el evento.",
+      },
+    ],
     items: [
       {
         key: "anniversary",
@@ -59,12 +99,52 @@ export const es = {
         title: "Corporativo",
         desc: "Seminarios, galas y lanzamientos con un toque de elegancia. La excelencia al servicio de tu imagen.",
       },
+      {
+        key: "creation",
+        title: "Creaciones a medida",
+        desc: "Arcos florales, columnas decorativas, muros de globos... Decoraciones únicas diseñadas y elaboradas a mano para cada evento.",
+      },
+      {
+        key: "goodies",
+        title: "Goodies & Regalos",
+        desc: "Cestas personalizadas, kits de regalo, sorpresas para invitados... El toque final que hace cada evento inolvidable.",
+      },
     ],
+  },
+  about: {
+    eyebrow: "Nosotros",
+    title: "Nacidas para hacer brillar tus fiestas",
+    lead:
+      "Event Fiesta es un equipo apasionado con base en Lausana, especializado en decoración de eventos desde 2020.",
+    paragraphs: [
+      "Transformamos cada celebración — pequeña o grande — en un momento visual inolvidable. Todo se diseña y se elabora a mano: arcos de globos, muros florales, columnas decorativas, sweet tables, señalética y goodies personalizados.",
+      "Tres idiomas hablados, decenas de temáticas dominadas y una sola obsesión: que te quedes sin palabras al entrar en la sala. Entregamos, instalamos y desmontamos todo — tú solo tienes que disfrutar.",
+    ],
+    storyTitle: "Nuestra historia",
+    story:
+      "Lo que empezó como unas decoraciones para la familia y los amigos se convirtió, año tras año, en un estudio propio. Más de 200 eventos después, el mismo equipo sigue tratando cada proyecto como si fuera suyo.",
+    valuesTitle: "Nuestros valores",
+    values: [
+      {
+        label: "Pasión",
+        desc: "Cada globo, cada flor, cada detalle se coloca con amor.",
+      },
+      {
+        label: "A medida",
+        desc: "Cero plantillas. Cada decoración es única y pensada para ti.",
+      },
+      {
+        label: "Fiabilidad",
+        desc: "Nos comprometemos con los plazos, los colores y la calidad. Siempre.",
+      },
+    ],
+    cta: "Hablemos de tu evento",
   },
   realisations: {
     eyebrow: "Portfolio",
     title: "Nuestras realizaciones",
     subtitle: "Una muestra de nuestras creaciones en Lausana y la Suiza romanda.",
+    ctaAll: "Ver la galería completa",
     filters: {
       all: "Todo",
       anniversary: "Cumpleaños",
@@ -72,6 +152,8 @@ export const es = {
       babyshower: "Baby Showers",
       themed: "Fiestas temáticas",
       corporate: "Corporativo",
+      creation: "Creaciones personalizadas",
+      goodies: "Goodies",
     },
   },
   whyus: {

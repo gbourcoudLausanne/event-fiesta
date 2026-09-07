@@ -1,19 +1,19 @@
 export const en = {
   nav: {
+    home: "Home",
+    about: "About",
     services: "Services",
-    realisations: "Portfolio",
-    about: "Our team",
+    gallery: "Gallery",
     contact: "Contact",
     cta: "Request a quote",
   },
   hero: {
     eyebrow: "Lausanne · French Switzerland · Since 2020",
-    headline1: "Your events,",
-    headline2: "our craft.",
-    subtext:
-      "Custom decoration for your celebrations in Lausanne and French-speaking Switzerland.",
-    cta1: "Discover our services",
-    cta2: "Request a quote",
+    headline1: "Let's create an event",
+    headline2: "as unforgettable as you are",
+    subtext: "Bespoke event decoration · French-speaking Switzerland",
+    cta1: "Request a quote",
+    cta2: "Explore the gallery",
     features: [
       { label: "Custom decoration" },
       { label: "Full-service" },
@@ -23,6 +23,46 @@ export const en = {
   services: {
     eyebrow: "What we create",
     title: "Our services",
+    intro:
+      "From a birthday party to a corporate evening, we design and handcraft every decoration to measure. Two worlds, one standard: everything perfect the moment your guests walk in.",
+    ctaAll: "See all our services",
+    particuliers: {
+      label: "Private clients",
+      title: "Your private celebrations",
+      desc: "Birthdays, christenings, baby showers, communions, gender reveals, themed parties, luxury picnics… Every milestone deserves a unique setting.",
+    },
+    professionnels: {
+      label: "Businesses",
+      title: "Your corporate events",
+      desc: "Seminars, end-of-year parties, product launches, galas, openings. Decoration that serves your brand image, fully managed.",
+    },
+    proItems: [
+      {
+        key: "corporate",
+        title: "Corporate events",
+        desc: "Seminars, meetings and team days staged with elegance and brand consistency.",
+      },
+      {
+        key: "yearend",
+        title: "End-of-year parties",
+        desc: "A memorable Christmas or New Year evening for your teams: scenography, photobooth, welcome table.",
+      },
+      {
+        key: "launch",
+        title: "Product launches",
+        desc: "A setting that puts your product centre stage and makes the event instagrammable.",
+      },
+      {
+        key: "gala",
+        title: "Galas & award nights",
+        desc: "Arches, backdrops, table runners and signage for prestige evenings finished in every detail.",
+      },
+      {
+        key: "opening",
+        title: "Openings",
+        desc: "Shop, office or restaurant opening: festive decoration that marks the occasion.",
+      },
+    ],
     items: [
       {
         key: "anniversary",
@@ -59,13 +99,53 @@ export const en = {
         title: "Corporate",
         desc: "Seminars, galas and product launches with a touch of elegance. Excellence at the service of your image.",
       },
+      {
+        key: "creation",
+        title: "Custom Creations",
+        desc: "Floral arches, decorative columns, balloon walls... Unique decors designed and handcrafted for every event.",
+      },
+      {
+        key: "goodies",
+        title: "Goodies & Gifts",
+        desc: "Personalised baskets, gift kits, guest surprises... The finishing touch that makes every event unforgettable.",
+      },
     ],
+  },
+  about: {
+    eyebrow: "About",
+    title: "Born to make your parties shine",
+    lead:
+      "Event Fiesta is a passionate team based in Lausanne, specialising in event decoration since 2020.",
+    paragraphs: [
+      "We turn every celebration — big or small — into an unforgettable visual moment. Everything is designed and handcrafted: balloon arches, flower walls, decorative columns, sweet tables, signage and personalised goodies.",
+      "Three languages spoken, dozens of themes mastered, and a single obsession: that you are stunned the moment you walk into the room. We deliver, install and dismantle everything — all you have to do is enjoy.",
+    ],
+    storyTitle: "Our story",
+    story:
+      "What began as a few decorations for family and friends grew, year after year, into a studio in its own right. More than 200 events later, the same team still treats every project as if it were its own.",
+    valuesTitle: "Our values",
+    values: [
+      {
+        label: "Passion",
+        desc: "Every balloon, every flower, every detail is placed with love.",
+      },
+      {
+        label: "Bespoke",
+        desc: "Zero templates. Every decoration is unique and designed for you.",
+      },
+      {
+        label: "Reliability",
+        desc: "We commit to deadlines, colours and quality. Always.",
+      },
+    ],
+    cta: "Let's talk about your event",
   },
   realisations: {
     eyebrow: "Portfolio",
     title: "Our work",
     subtitle:
       "A glimpse of our creations in Lausanne and French-speaking Switzerland.",
+    ctaAll: "See the full gallery",
     filters: {
       all: "All",
       anniversary: "Birthdays",
@@ -73,6 +153,8 @@ export const en = {
       babyshower: "Baby Showers",
       themed: "Themed Parties",
       corporate: "Corporate",
+      creation: "Custom Creations",
+      goodies: "Goodies",
     },
   },
   whyus: {

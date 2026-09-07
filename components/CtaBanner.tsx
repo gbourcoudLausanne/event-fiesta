@@ -1,23 +1,25 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
+import { useRouter } from "next/navigation";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
 export function CtaBanner() {
   const reduce = useReducedMotion();
+  const router = useRouter();
 
   return (
     <section
       className="relative py-28 lg:py-36 overflow-hidden"
-      style={{ background: "#0D0B08" }}
+      style={{ background: "#F3EDE6" }}
     >
       {/* Radial gold glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 70% 90% at 50% 50%, rgba(176,139,58,0.08) 0%, transparent 65%)",
+            "radial-gradient(ellipse 70% 90% at 50% 50%, rgba(217,98,138,0.1) 0%, transparent 65%)",
         }}
         aria-hidden
       />
@@ -30,7 +32,7 @@ export function CtaBanner() {
           style={{
             width: size,
             height: size,
-            border: `1px solid rgba(176,139,58,${0.04 + i * 0.02})`,
+            border: `1px solid rgba(217,98,138,${0.06 + i * 0.02})`,
           }}
           aria-hidden
         />
@@ -43,7 +45,7 @@ export function CtaBanner() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease }}
           className="font-sans text-[11px] uppercase tracking-[0.3em] mb-6"
-          style={{ color: "#B08B3A" }}
+          style={{ color: "#D9628A" }}
         >
           Commençons ensemble
         </motion.p>
@@ -56,7 +58,7 @@ export function CtaBanner() {
           className="font-serif font-light italic leading-[1.2] mb-10"
           style={{
             fontSize: "clamp(2rem, 5vw, 3.8rem)",
-            color: "#FAF7F2",
+            color: "#0D0B08",
           }}
         >
           Votre prochaine célébration
@@ -72,16 +74,14 @@ export function CtaBanner() {
           className="flex flex-col sm:flex-row gap-4 items-center justify-center"
         >
           <button
-            onClick={() =>
-              document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
-            }
+            onClick={() => router.push("/contact")}
             className="btn-gold-shimmer font-sans text-sm font-medium px-10 py-4 rounded-full cursor-pointer active:scale-[0.97] transition-all duration-300"
-            style={{ background: "#B08B3A", color: "#080605" }}
+            style={{ background: "#D9628A", color: "#0D0B08" }}
             onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLButtonElement).style.background = "#C9A84C")
+              ((e.currentTarget as HTMLButtonElement).style.background = "#F4A8B8")
             }
             onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLButtonElement).style.background = "#B08B3A")
+              ((e.currentTarget as HTMLButtonElement).style.background = "#D9628A")
             }
           >
             Demander un devis gratuit
@@ -90,13 +90,13 @@ export function CtaBanner() {
           <a
             href="tel:0779143855"
             className="font-sans text-sm font-light transition-colors duration-200"
-            style={{ color: "rgba(250,247,242,0.38)" }}
+            style={{ color: "rgba(13,11,8,0.5)" }}
             onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLAnchorElement).style.color = "#FAF7F2")
+              ((e.currentTarget as HTMLAnchorElement).style.color = "#0D0B08")
             }
             onMouseLeave={(e) =>
               ((e.currentTarget as HTMLAnchorElement).style.color =
-                "rgba(250,247,242,0.38)")
+                "rgba(13,11,8,0.5)")
             }
           >
             ou appelez-nous · 077 914 38 55
@@ -119,13 +119,13 @@ export function CtaBanner() {
             <div key={label} className="flex flex-col items-center gap-1">
               <span
                 className="font-serif font-light"
-                style={{ fontSize: "1.5rem", color: "#B08B3A" }}
+                style={{ fontSize: "1.5rem", color: "#D9628A" }}
               >
                 {value}
               </span>
               <span
                 className="font-sans text-[10px] uppercase tracking-[0.15em]"
-                style={{ color: "rgba(250,247,242,0.22)" }}
+                style={{ color: "rgba(13,11,8,0.4)" }}
               >
                 {label}
               </span>

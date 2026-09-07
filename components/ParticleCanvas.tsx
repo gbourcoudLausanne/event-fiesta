@@ -14,7 +14,7 @@ interface Particle {
   color: string;
 }
 
-const COLORS = ["#B08B3A", "#C9A84C", "#D4B060", "#BF9840"];
+const COLORS = ["#D9628A", "#6FA8C2", "#D9A06B", "#C4749A"];
 
 export function ParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -50,7 +50,7 @@ export function ParticleCanvas() {
       vy: (Math.random() - 0.5) * 0.35,
       size: Math.random() * 2.5 + 0.8,
       opacity: 0,
-      baseOpacity: Math.random() * 0.35 + 0.08,
+      baseOpacity: Math.random() * 0.4 + 0.18,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
     }));
 
@@ -103,8 +103,8 @@ export function ParticleCanvas() {
               ctx.beginPath();
               ctx.moveTo(p.x, p.y);
               ctx.lineTo(other.x, other.y);
-              ctx.strokeStyle = "#B08B3A";
-              ctx.globalAlpha = (1 - dist / 90) * 0.07;
+              ctx.strokeStyle = "#D9628A";
+              ctx.globalAlpha = (1 - dist / 90) * 0.1;
               ctx.lineWidth = 0.5;
               ctx.stroke();
               ctx.globalAlpha = 1;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import { useI18n } from "@/lib/i18n";
 
@@ -16,7 +17,7 @@ function StarRating({ count }: { count: number }) {
           whileInView={{ scale: 1, opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.3, delay: 0.6 + i * 0.08, ease }}
-          style={{ color: "#C9A84C", fontSize: 14 }}
+          style={{ color: "#F4A8B8", fontSize: 14 }}
           aria-hidden
         >
           ★
@@ -26,7 +27,7 @@ function StarRating({ count }: { count: number }) {
   );
 }
 
-const AVATAR_COLORS = ["#2A1F1A", "#1E2B1F", "#1A2135", "#281A35"];
+const AVATAR_COLORS = ["#F0DCC8", "#EAD8C4", "#F3E0DC", "#E8D4C0"];
 
 function Avatar({ name, index }: { name: string; index: number }) {
   const initials = name
@@ -40,10 +41,10 @@ function Avatar({ name, index }: { name: string; index: number }) {
       className="w-11 h-11 rounded-full flex items-center justify-center shrink-0"
       style={{
         background: AVATAR_COLORS[index % AVATAR_COLORS.length],
-        border: "1px solid rgba(176,139,58,0.28)",
+        border: "1px solid rgba(217,98,138,0.28)",
       }}
     >
-      <span className="font-sans text-xs font-medium" style={{ color: "#C9A84C" }}>
+      <span className="font-sans text-xs font-medium" style={{ color: "#0D0B08" }}>
         {initials}
       </span>
     </div>
@@ -53,6 +54,7 @@ function Avatar({ name, index }: { name: string; index: number }) {
 export function Testimonials() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
+  const router = useRouter();
   const trackRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -91,7 +93,7 @@ export function Testimonials() {
   };
 
   return (
-    <section className="py-24 lg:py-32" style={{ background: "#0D0B08" }}>
+    <section className="py-24 lg:py-32" style={{ background: "#F3EDE6" }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
         {/* Header */}
@@ -105,20 +107,20 @@ export function Testimonials() {
           <div>
             <p
               className="font-sans text-[11px] uppercase tracking-[0.28em] mb-2"
-              style={{ color: "#B08B3A" }}
+              style={{ color: "#D9628A" }}
             >
               {t.testimonials.eyebrow}
             </p>
             <h2
               className="font-serif font-light"
-              style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", color: "#FAF7F2" }}
+              style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", color: "#0D0B08" }}
             >
               {t.testimonials.title}
             </h2>
           </div>
           <p
             className="font-sans text-xs"
-            style={{ color: "rgba(250,247,242,0.28)", letterSpacing: "0.05em" }}
+            style={{ color: "rgba(13,11,8,0.42)", letterSpacing: "0.05em" }}
           >
             Glissez pour voir plus →
           </p>
@@ -149,33 +151,33 @@ export function Testimonials() {
               <div className="relative flex-1">
                 <span
                   className="absolute -top-3 -left-1 font-serif text-5xl leading-none"
-                  style={{ color: "rgba(176,139,58,0.22)" }}
+                  style={{ color: "rgba(217,98,138,0.22)" }}
                   aria-hidden
                 >
                   "
                 </span>
                 <p
                   className="font-serif font-light italic text-base lg:text-lg leading-relaxed pt-3"
-                  style={{ color: "rgba(250,247,242,0.72)" }}
+                  style={{ color: "rgba(13,11,8,0.75)" }}
                 >
                   {item.text}
                 </p>
               </div>
 
-              <div className="h-px" style={{ background: "rgba(176,139,58,0.12)" }} />
+              <div className="h-px" style={{ background: "rgba(217,98,138,0.12)" }} />
 
               <div className="flex items-center gap-3">
                 <Avatar name={item.name} index={i} />
                 <div>
                   <p
                     className="font-sans text-sm font-medium"
-                    style={{ color: "#FAF7F2" }}
+                    style={{ color: "#0D0B08" }}
                   >
                     {item.name}
                   </p>
                   <p
                     className="font-sans text-xs"
-                    style={{ color: "rgba(250,247,242,0.36)" }}
+                    style={{ color: "rgba(13,11,8,0.5)" }}
                   >
                     {item.event} · {item.location}
                   </p>
@@ -183,9 +185,9 @@ export function Testimonials() {
                 <div className="ml-auto shrink-0">
                   <div
                     className="w-6 h-6 rounded-full flex items-center justify-center"
-                    style={{ background: "rgba(176,139,58,0.12)" }}
+                    style={{ background: "rgba(217,98,138,0.12)" }}
                   >
-                    <span style={{ color: "#C9A84C", fontSize: 10 }}>✓</span>
+                    <span style={{ color: "#F4A8B8", fontSize: 10 }}>✓</span>
                   </div>
                 </div>
               </div>
@@ -201,34 +203,32 @@ export function Testimonials() {
             className="rounded-2xl p-7 flex-shrink-0 flex flex-col items-center justify-center gap-5 text-center"
             style={{
               width: "clamp(260px, 60vw, 320px)",
-              border: "1px dashed rgba(176,139,58,0.28)",
-              background: "rgba(176,139,58,0.04)",
+              border: "1px dashed rgba(217,98,138,0.28)",
+              background: "rgba(217,98,138,0.04)",
             }}
           >
             <div
               className="w-14 h-14 rounded-full flex items-center justify-center"
               style={{
-                background: "rgba(176,139,58,0.1)",
-                border: "1px solid rgba(176,139,58,0.28)",
+                background: "rgba(217,98,138,0.1)",
+                border: "1px solid rgba(217,98,138,0.28)",
               }}
             >
-              <span style={{ color: "#C9A84C", fontSize: 22 }}>★</span>
+              <span style={{ color: "#F4A8B8", fontSize: 22 }}>★</span>
             </div>
             <p
               className="font-serif font-light italic text-xl"
-              style={{ color: "rgba(250,247,242,0.55)" }}
+              style={{ color: "rgba(13,11,8,0.62)" }}
             >
               Votre avis compte
             </p>
-            <p className="font-sans text-sm" style={{ color: "rgba(250,247,242,0.32)" }}>
+            <p className="font-sans text-sm" style={{ color: "rgba(13,11,8,0.48)" }}>
               Partagez votre expérience avec Event Fiesta
             </p>
             <button
-              onClick={() =>
-                document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
-              }
+              onClick={() => router.push("/contact")}
               className="font-sans text-xs font-medium px-5 py-2.5 rounded-full cursor-pointer transition-colors duration-200"
-              style={{ background: "#B08B3A", color: "#080605" }}
+              style={{ background: "#D9628A", color: "#0D0B08" }}
             >
               Nous contacter
             </button>
@@ -245,7 +245,7 @@ export function Testimonials() {
                 width: i === activeDot ? 24 : 6,
                 height: 6,
                 background:
-                  i === activeDot ? "#B08B3A" : "rgba(176,139,58,0.22)",
+                  i === activeDot ? "#D9628A" : "rgba(217,98,138,0.22)",
                 transition: "width 0.3s ease, background 0.3s ease",
               }}
             />

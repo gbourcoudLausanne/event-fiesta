@@ -4,6 +4,13 @@
   --or: #B08B3A;
   --or-light: #C9A84C;
   --or-dim: rgba(176, 139, 58, 0.12);
+  --rose: #F4A8B8;
+  --rose-light: #FBD5DE;
+  --rose-deep: #D9628A;
+  --blue: #A8CEE0;
+  --blue-light: #D6EAF2;
+  --peach: #F0C29A;
+  --peach-light: #FBE6D2;
   --encre: #080605;
   --noir: #0D0B08;
   --noir-2: #141210;
@@ -16,6 +23,12 @@
 @theme inline {
   --color-or: var(--or);
   --color-or-light: var(--or-light);
+  --color-rose: var(--rose);
+  --color-rose-light: var(--rose-light);
+  --color-blue: var(--blue);
+  --color-blue-light: var(--blue-light);
+  --color-peach: var(--peach);
+  --color-peach-light: var(--peach-light);
   --color-blush: var(--blush);
   --color-encre: var(--encre);
   --color-noir: var(--noir);
@@ -29,28 +42,14 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: var(--encre);
-  color: var(--creme);
+  background-color: var(--creme);
+  color: var(--noir);
   overflow-x: hidden;
 }
 
 ::selection {
-  background-color: var(--or);
-  color: var(--creme);
-}
-
-/* ─── Custom cursor ─────────────────────────────── */
-@media (min-width: 1024px) {
-  *, *::before, *::after { cursor: none !important; }
-}
-
-.cursor-ring-hover {
-  width: 48px !important;
-  height: 48px !important;
-  border-color: rgba(176, 139, 58, 0.5) !important;
-  background: rgba(176, 139, 58, 0.06);
-  margin-left: -24px !important;
-  margin-top: -24px !important;
+  background-color: var(--rose);
+  color: var(--noir);
 }
 
 /* ─── Keyframes ─────────────────────────────────── */
@@ -66,6 +65,26 @@ body {
   66%       { transform: translateY(-12px) translateX(-6px); opacity: 0.28; }
 }
 
+@keyframes balloon-float {
+  0%   { transform: translateY(0)      translateX(0px);   opacity: 0; }
+  6%   { opacity: 0.82; }
+  28%  { transform: translateY(-27vh)  translateX(7px);   }
+  52%  { transform: translateY(-54vh)  translateX(-5px);  }
+  78%  { transform: translateY(-80vh)  translateX(9px);   }
+  93%  { opacity: 0.55; }
+  100% { transform: translateY(-112vh) translateX(2px);   opacity: 0; }
+}
+
+@keyframes balloon-float-r {
+  0%   { transform: translateY(0)      translateX(0px);   opacity: 0; }
+  6%   { opacity: 0.82; }
+  28%  { transform: translateY(-27vh)  translateX(-7px);  }
+  52%  { transform: translateY(-54vh)  translateX(6px);   }
+  78%  { transform: translateY(-80vh)  translateX(-8px);  }
+  93%  { opacity: 0.55; }
+  100% { transform: translateY(-112vh) translateX(-2px);  opacity: 0; }
+}
+
 @keyframes shimmer-slide {
   from { transform: translateX(-150%) skewX(-15deg); }
   to   { transform: translateX(300%) skewX(-15deg); }
@@ -74,6 +93,11 @@ body {
 @keyframes spin-slow {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
+}
+
+@keyframes marquee-y {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
 }
 
 @keyframes blink-cursor {
@@ -94,8 +118,8 @@ body {
 }
 
 @keyframes pulse-gold {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(176, 139, 58, 0.4); }
-  50%       { box-shadow: 0 0 0 8px rgba(176, 139, 58, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(244, 168, 184, 0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(244, 168, 184, 0); }
 }
 
 @keyframes fade-up {
@@ -132,7 +156,7 @@ body {
 }
 
 .text-gradient-gold {
-  background: linear-gradient(135deg, #B08B3A 0%, #C9A84C 40%, #E8C870 65%, #C9A84C 80%, #B08B3A 100%);
+  background: linear-gradient(135deg, #F4A8B8 0%, #F0C29A 40%, #FBD5DE 65%, #F0C29A 80%, #F4A8B8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -140,7 +164,7 @@ body {
 
 .typewriter-cursor::after {
   content: '|';
-  color: var(--or);
+  color: var(--rose);
   animation: blink-cursor 1s step-end infinite;
   margin-left: 2px;
   font-weight: 300;
@@ -172,7 +196,7 @@ body {
 .field-float input:focus,
 .field-float textarea:focus,
 .field-float select:focus {
-  border-color: var(--or);
+  border-color: var(--rose);
 }
 .field-float label {
   position: absolute;
@@ -193,17 +217,18 @@ body {
 .field-float.has-value label {
   top: 2px;
   font-size: 10px;
-  color: var(--or);
+  color: var(--rose);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-/* ─── Glassmorphism card (dark theme) ───────────── */
+/* ─── Glassmorphism card (light theme) ──────────── */
 .glass-card {
-  background: rgba(20, 18, 16, 0.75);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(176, 139, 58, 0.1);
+  border: 1px solid rgba(244, 168, 184, 0.25);
+  box-shadow: 0 8px 40px rgba(13, 11, 8, 0.06);
 }
 
 /* ─── Parallax images ───────────────────────────── */
@@ -223,7 +248,7 @@ body {
   left: 0;
   width: 0%;
   height: 1px;
-  background: var(--or);
+  background: var(--rose);
   transition: width 0.3s ease;
 }
 .nav-link:hover::after {
@@ -243,7 +268,7 @@ body {
 .section-line {
   width: 40px;
   height: 1px;
-  background: var(--or);
+  background: var(--rose);
   display: inline-block;
 }
 

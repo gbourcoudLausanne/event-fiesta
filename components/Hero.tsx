@@ -1,474 +1,374 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion, useReducedMotion, useMotionValue, useTransform } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
-import { ParticleCanvas } from "./ParticleCanvas";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { ArrowRight } from "@phosphor-icons/react";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-// Animated word reveal with blur
-function WordReveal({
-  text,
-  delay = 0,
-  className,
-}: {
-  text: string;
-  delay?: number;
-  className?: string;
-}) {
+const PHOTOS = [
+  { src: "/Galerie/hero-slides/hero-slide-1.PNG", alt: "Arche de ballons rose et blanc au-dessus d'une table nappée de tulle" },
+  { src: "/Galerie/hero-slides/hero-slide-2.PNG", alt: "Arche organique rose poudré, crème et rose gold" },
+  { src: "/Galerie/hero-slides/hero-slide-3.PNG", alt: "Guirlande de ballons multicolore au-dessus d'une grazing table" },
+  { src: "/Galerie/hero-slides/hero-slide-4.PNG", alt: "Arche de ballons fleurs et rideau de franges terracotta, chiffre 3" },
+  { src: "/Galerie/hero-slides/hero-slide-5.PNG", alt: "Arche menthe, pêche et rose avec chiffre 1 argenté" },
+  { src: "/Galerie/hero-slides/hero-slide-6.PNG", alt: "Sweet table dorée avec gâteau et guirlande de ballons rose et pêche" },
+  { src: "/Galerie/hero-slides/hero-slide-7.jpeg", alt: "Arche de cérémonie en bois avec voile ivoire drapé et compositions de fleurs séchées orangées" },
+  { src: "/Galerie/hero-slides/hero-slide-8.PNG", alt: "Arche de ballons dégradée fuchsia, corail et crème avec sweet table" },
+  { src: "/Galerie/hero-slides/hero-slide-9.PNG", alt: "Arche de ballons rose et blanc avec chiffre 6 et gâteau ballerine" },
+  { src: "/Galerie/hero-slides/hero-slide-10.PNG", alt: "Chiffres 50 noirs et bouquets de ballons or, argent et noir" },
+  { src: "/Galerie/hero-slides/hero-slide-11.JPG", alt: "Table dressée en extérieur, chemin de table blanc, sous-assiettes dorées et centre floral" },
+  { src: "/Galerie/hero-slides/hero-slide-12.JPG", alt: "Chiffre 30 lumineux et arche de ballons blanc et or en extérieur" },
+  { src: "/Galerie/hero-slides/hero-slide-13.PNG", alt: "Arche ronde de ballons violet et or Joyeux anniversaire dans un jardin" },
+  { src: "/Galerie/hero-slides/hero-slide-14.JPG", alt: "Bouquet de ballons chiffre 15 rose gold personnalisé" },
+  { src: "/Galerie/hero-slides/hero-slide-15.PNG", alt: "Bouquet de ballons chiffre 10 rose personnalisé avec cœur" },
+  { src: "/Galerie/hero-slides/hero-slide-16.webp", alt: "Table dressée élégante avec nappe rose vieilli et compositions de fleurs roses" },
+  { src: "/Galerie/hero-slides/hero-slide-17.webp", alt: "Pique-nique de luxe au bord de l'eau, table basse en bois, coussins de sol et chemin de table d'eucalyptus" },
+  { src: "/Galerie/hero-slides/hero-slide-18.webp", alt: "Fête pyjama d'anniversaire enfant avec arche pêche et corail, coussins et portant de peignoirs roses" },
+];
+
+// Vitesse de défilement identique pour toutes les colonnes.
+// Durée = nb de photos × ce facteur (sinon une colonne plus courte défilerait plus vite).
+const SECONDS_PER_PHOTO = 16;
+// Sens alterné d'une colonne à l'autre.
+const COLUMN_REVERSED = [false, true, false, true];
+
+const HERO_SERVICES = [
+  "Mariage civil",
+  "Anniversaires",
+  "Baby shower & gender reveal",
+  "Baptêmes",
+  "Pique-niques",
+  "Événement sur mesure",
+  "Événement d'entreprise",
+];
+
+/* ── Ligne de services qui défile un par un ────────────────────────────── */
+function RotatingServices() {
   const reduce = useReducedMotion();
-  const words = text.split(" ");
-  if (reduce) return <span className={className}>{text}</span>;
-  return (
-    <span className={className} aria-label={text}>
-      {words.map((word, i) => (
-        <span
-          key={i}
-          style={{ display: "inline-block", overflow: "hidden", marginRight: "0.28em" }}
-        >
-          <motion.span
-            initial={{ y: "110%", opacity: 0, filter: "blur(8px)" }}
-            animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
-            transition={{ duration: 0.9, delay: delay + i * 0.14, ease }}
-            style={{ display: "inline-block" }}
-            aria-hidden
-          >
-            {word}
-          </motion.span>
-        </span>
-      ))}
-    </span>
-  );
-}
-
-// Single decoration photo card with hover and parallax
-function PhotoCard({
-  src,
-  alt,
-  category,
-  delay,
-  className,
-  mouseX,
-  mouseY,
-  depth = 0.02,
-  rotate = 0,
-}: {
-  src: string;
-  alt: string;
-  category: string;
-  delay: number;
-  className?: string;
-  mouseX: ReturnType<typeof useMotionValue<number>>;
-  mouseY: ReturnType<typeof useMotionValue<number>>;
-  depth?: number;
-  rotate?: number;
-}) {
-  const x = useTransform(mouseX, [-700, 700], [-depth * 700, depth * 700]);
-  const y = useTransform(mouseY, [-500, 500], [-depth * 500, depth * 500]);
-
-  return (
-    <motion.div
-      style={{ x, y, rotate }}
-      className={className}
-      initial={{ opacity: 0, y: 40, scale: 0.94 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 1.1, delay, ease }}
-    >
-      <div
-        className="relative w-full h-full overflow-hidden group"
-        style={{
-          borderRadius: 20,
-          border: "1px solid rgba(176,139,58,0.22)",
-          boxShadow: "0 32px 80px rgba(0,0,0,0.55)",
-        }}
-      >
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-          sizes="(max-width: 1024px) 0px, 30vw"
-        />
-        {/* Gradient overlay */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to top, rgba(8,6,5,0.82) 0%, rgba(8,6,5,0.18) 45%, transparent 70%)",
-          }}
-          aria-hidden
-        />
-        {/* Category label */}
-        <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
-          <span
-            className="font-sans text-[10px] uppercase tracking-[0.22em]"
-            style={{ color: "#C9A84C" }}
-          >
-            {category}
-          </span>
-          {/* Gold corner accent */}
-          <div
-            className="w-5 h-5 shrink-0"
-            style={{
-              borderRight: "1px solid rgba(176,139,58,0.5)",
-              borderBottom: "1px solid rgba(176,139,58,0.5)",
-            }}
-            aria-hidden
-          />
-        </div>
-        {/* Hover border glow */}
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-          style={{
-            borderRadius: 20,
-            border: "1px solid rgba(176,139,58,0.55)",
-          }}
-          aria-hidden
-        />
-      </div>
-    </motion.div>
-  );
-}
-
-export function Hero() {
-  const { t } = useI18n();
-  const reduce = useReducedMotion();
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  const [i, setI] = useState(0);
 
   useEffect(() => {
     if (reduce) return;
-    const onMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX - window.innerWidth / 2);
-      mouseY.set(e.clientY - window.innerHeight / 2);
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [reduce, mouseX, mouseY]);
-
-  // headline2 = "notre oeuvre." → last word = gold italic, rest = cream
-  const h2Words = t.hero.headline2.split(" ");
-  const goldWord = h2Words.pop() ?? "";
-  const restH2 = h2Words.join(" ");
+    const id = setInterval(() => setI((n) => (n + 1) % HERO_SERVICES.length), 2600);
+    return () => clearInterval(id);
+  }, [reduce]);
 
   return (
-    <section
-      id="hero"
-      className="relative min-h-[100dvh] flex flex-col overflow-hidden"
-      style={{ background: "#080605" }}
-    >
-      {/* Canvas particles — subtle ambient */}
-      <ParticleCanvas />
-
-      {/* Deep radial glow */}
+    <div className="text-center">
+      <p
+        className="font-sans text-[10px] uppercase tracking-[0.3em] mb-4"
+        style={{ color: "rgba(42,35,32,0.4)" }}
+      >
+        Ce que nous créons
+      </p>
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="relative overflow-hidden"
+        style={{ height: "1.9em", fontSize: "clamp(2rem, 3.2vw, 2.8rem)" }}
+      >
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={i}
+            initial={reduce ? false : { y: "115%", opacity: 0 }}
+            animate={{ y: "0%", opacity: 1 }}
+            exit={reduce ? { opacity: 0 } : { y: "-115%", opacity: 0 }}
+            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-x-0 top-0 flex items-center justify-center h-full font-serif italic font-light whitespace-nowrap"
+            style={{ color: "#B65572", lineHeight: 1 }}
+          >
+            {HERO_SERVICES[i]}
+          </motion.span>
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+// Répartit les photos en `count` colonnes SANS aucune répétition d'une colonne à l'autre.
+function splitColumns<T>(items: T[], count: number): T[][] {
+  const cols: T[][] = Array.from({ length: count }, () => []);
+  items.forEach((item, i) => cols[i % count].push(item));
+  return cols;
+}
+
+/* ── Colonne de photos : défile seule, se fige au survol, scrollable à la main ── */
+function MarqueeColumn({
+  photos,
+  duration,
+  reverse,
+  priority,
+}: {
+  photos: { src: string; alt: string }[];
+  duration: number;
+  reverse: boolean;
+  priority?: boolean;
+}) {
+  const reduce = useReducedMotion();
+  const boxRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const pos = useRef(0);
+  const hovering = useRef(false);
+  const loop = [...photos, ...photos];
+
+  useEffect(() => {
+    const box = boxRef.current;
+    const track = trackRef.current;
+    if (!box || !track) return;
+
+    const half = () => track.offsetHeight / 2 || 1;
+    const wrap = () => {
+      const h = half();
+      if (pos.current >= h) pos.current -= h;
+      else if (pos.current < 0) pos.current += h;
+    };
+    const apply = () => {
+      track.style.transform = `translate3d(0, ${-pos.current}px, 0)`;
+    };
+    apply();
+
+    let raf = 0;
+    let last = performance.now();
+    let manualUntil = 0;
+    const tick = (now: number) => {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      if (!reduce && !hovering.current && now > manualUntil) {
+        pos.current += (reverse ? -1 : 1) * (half() / duration) * dt;
+        wrap();
+        apply();
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    // Molette : fait défiler la colonne à la main (et non la page) quand on est dessus.
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      pos.current += e.deltaY;
+      wrap();
+      apply();
+    };
+    // Tactile : glisser du doigt fait défiler la colonne.
+    let touchY = 0;
+    const onTouchStart = (e: TouchEvent) => {
+      touchY = e.touches[0].clientY;
+      manualUntil = performance.now() + 2500;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      const y = e.touches[0].clientY;
+      pos.current += touchY - y;
+      touchY = y;
+      manualUntil = performance.now() + 2500;
+      wrap();
+      apply();
+      e.preventDefault();
+    };
+
+    box.addEventListener("wheel", onWheel, { passive: false });
+    box.addEventListener("touchstart", onTouchStart, { passive: true });
+    box.addEventListener("touchmove", onTouchMove, { passive: false });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      box.removeEventListener("wheel", onWheel);
+      box.removeEventListener("touchstart", onTouchStart);
+      box.removeEventListener("touchmove", onTouchMove);
+    };
+  }, [reduce, reverse, duration]);
+
+  return (
+    <div
+      ref={boxRef}
+      onPointerEnter={() => (hovering.current = true)}
+      onPointerLeave={() => (hovering.current = false)}
+      className="relative shrink-0 w-[46%] sm:w-[42%] lg:w-1/3 px-1.5 overflow-hidden"
+    >
+      <div ref={trackRef} className="flex flex-col gap-3 py-1 will-change-transform">
+        {loop.map((p, i) => (
+          <div
+            key={i}
+            className="relative w-full overflow-hidden rounded-2xl"
+            style={{
+              aspectRatio: "3 / 4",
+              boxShadow: "0 10px 30px -12px rgba(120,60,80,0.4)",
+            }}
+          >
+            <Image
+              src={p.src}
+              alt={i < photos.length ? p.alt : ""}
+              fill
+              priority={priority && i === 0}
+              className="object-cover"
+              sizes="(max-width: 1024px) 45vw, 20vw"
+            />
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: "linear-gradient(180deg, rgba(0,0,0,0) 70%, rgba(74,40,52,0.22) 100%)" }}
+              aria-hidden
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Fenêtre : plusieurs colonnes qui défilent ─────────────────────────── */
+function PhotoWall({ columns = 3 }: { columns?: number }) {
+  return (
+    <div
+      className="relative h-full w-full overflow-hidden rounded-[22px] lg:rounded-[30px]"
+      style={{ boxShadow: "0 40px 90px -35px rgba(120,60,80,0.5), 0 10px 30px rgba(13,11,8,0.08)" }}
+    >
+      <div className="absolute inset-0 flex justify-center py-3">
+        {splitColumns(PHOTOS, columns).map((photos, i) => (
+          <MarqueeColumn
+            key={i}
+            photos={photos}
+            duration={photos.length * SECONDS_PER_PHOTO}
+            reverse={COLUMN_REVERSED[i % COLUMN_REVERSED.length]}
+            priority={i === 0}
+          />
+        ))}
+      </div>
+
+      {/* Fondu haut / bas */}
+      <div
+        className="absolute inset-x-0 top-0 h-24 pointer-events-none"
+        style={{ background: "linear-gradient(#FAF7F2, rgba(250,247,242,0))" }}
+        aria-hidden
+      />
+      <div
+        className="absolute inset-x-0 bottom-0 h-24 pointer-events-none"
+        style={{ background: "linear-gradient(rgba(250,247,242,0), #FAF7F2)" }}
+        aria-hidden
+      />
+      {/* Filet intérieur */}
+      <div
+        className="absolute inset-3 lg:inset-4 rounded-[14px] pointer-events-none"
+        style={{ border: "1px solid rgba(217,98,138,0.14)" }}
+        aria-hidden
+      />
+    </div>
+  );
+}
+
+/* ── Colonne texte ─────────────────────────────────────────────────────── */
+function HeroText() {
+  const { t } = useI18n();
+  const reduce = useReducedMotion();
+
+  const item = (delay: number) => ({
+    initial: reduce ? false : { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.8, delay, ease },
+  });
+
+  return (
+    <div className="max-w-[34rem]">
+      <motion.div {...item(0)} className="flex items-center gap-3 mb-7">
+        <span className="w-12 h-px" style={{ background: "#D9628A" }} />
+        <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
+          Décoration d&apos;événements · Suisse romande
+        </span>
+      </motion.div>
+
+      <motion.h1
+        {...item(0.12)}
+        className="font-serif font-light tracking-tight"
+        style={{ fontSize: "clamp(2.5rem, 4.4vw, 4.6rem)", lineHeight: 1.06, color: "#2A2320" }}
+      >
+        {t.hero.headline1}{" "}
+        <span className="font-serif italic" style={{ color: "#B65572" }}>
+          {t.hero.headline2}
+        </span>
+      </motion.h1>
+
+      <motion.p
+        {...item(0.26)}
+        className="font-sans font-light mt-7 text-[15px] leading-relaxed"
+        style={{ color: "rgba(42,35,32,0.6)" }}
+      >
+        {t.hero.subtext}
+      </motion.p>
+
+      <motion.div {...item(0.4)} className="mt-9 flex flex-wrap items-center gap-5">
+        <Link
+          href="/contact"
+          className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[13px] font-medium px-8 py-4 rounded-full cursor-pointer transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
+          style={{ background: "#D9628A", color: "#FAF7F2" }}
+        >
+          {t.hero.cta1}
+          <ArrowRight size={15} weight="bold" />
+        </Link>
+        <Link
+          href="/galerie"
+          className="group inline-flex items-center gap-1.5 font-sans text-[13px] font-medium tracking-wide transition-colors duration-200"
+          style={{ color: "rgba(42,35,32,0.7)" }}
+        >
+          {t.hero.cta2}
+          <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
+        </Link>
+      </motion.div>
+
+      <motion.div
+        {...item(0.55)}
+        className="mt-10 pt-7"
+        style={{ borderTop: "1px solid rgba(42,35,32,0.12)" }}
+      >
+        <RotatingServices />
+      </motion.div>
+    </div>
+  );
+}
+
+/* ── Hero ──────────────────────────────────────────────────────────────── */
+export function Hero() {
+  const reduce = useReducedMotion();
+
+  return (
+    <section className="relative overflow-hidden" style={{ background: "#FAF7F2" }}>
+      {/* Halo décoratif */}
+      <div
+        className="absolute rounded-full pointer-events-none"
         style={{
-          background:
-            "radial-gradient(ellipse 65% 55% at 32% 52%, rgba(176,139,58,0.055) 0%, transparent 65%)",
+          top: "-22%", left: "-12%", width: "min(48vw, 640px)", aspectRatio: "1",
+          background: "radial-gradient(circle at 60% 60%, rgba(244,168,184,0.2), rgba(244,168,184,0) 70%)",
         }}
         aria-hidden
       />
 
-      {/* Main grid */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[48%_52%] min-h-[100dvh]">
-
-        {/* ── LEFT : text ── */}
-        <div className="relative z-10 flex flex-col justify-center px-8 lg:px-14 xl:px-20 pt-28 pb-20 lg:pt-36">
-
-          {/* Eyebrow */}
-          <motion.div
-            initial={reduce ? false : { opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.25, ease }}
-            className="flex items-center gap-3 mb-10"
-          >
-            <div className="w-8 h-px shrink-0" style={{ background: "#B08B3A" }} />
-            <span
-              className="font-sans text-[10px] uppercase tracking-[0.3em]"
-              style={{ color: "#B08B3A" }}
-            >
-              {t.hero.eyebrow}
-            </span>
-          </motion.div>
-
-          {/* Headline */}
-          <h1
-            className="font-serif font-light leading-[1.06] tracking-tight mb-7"
-            style={{ fontSize: "clamp(3rem, 6vw, 5.8rem)", color: "#FAF7F2" }}
-          >
-            <WordReveal text={t.hero.headline1} delay={0.4} />
-            <br />
-            {restH2 && (
-              <WordReveal text={restH2} delay={0.65} />
-            )}
-            {restH2 && " "}
-            <span style={{ color: "#C9A84C" }}>
-              <WordReveal
-                text={goldWord}
-                delay={restH2 ? 0.88 : 0.65}
-                className="font-serif italic"
-              />
-            </span>
-          </h1>
-
-          {/* Description */}
-          <motion.p
-            initial={reduce ? false : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 1.1, ease }}
-            className="font-sans font-light text-base leading-relaxed mb-10 max-w-sm"
-            style={{ color: "rgba(250,247,242,0.48)" }}
-          >
-            {t.hero.subtext}
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.25, ease }}
-            className="flex flex-wrap gap-4 mb-14"
-          >
-            <button
-              onClick={() =>
-                document.getElementById("services")?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="font-sans text-sm font-medium px-8 py-3.5 rounded-full border cursor-pointer transition-all duration-300 active:scale-[0.97] whitespace-nowrap"
-              style={{
-                borderColor: "rgba(250,247,242,0.25)",
-                color: "#FAF7F2",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.borderColor = "#B08B3A";
-                (e.currentTarget as HTMLButtonElement).style.color = "#C9A84C";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.borderColor =
-                  "rgba(250,247,242,0.25)";
-                (e.currentTarget as HTMLButtonElement).style.color = "#FAF7F2";
-              }}
-            >
-              {t.hero.cta1}
-            </button>
-
-            <button
-              onClick={() =>
-                document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="btn-gold-shimmer font-sans text-sm font-medium px-8 py-3.5 rounded-full cursor-pointer active:scale-[0.97] whitespace-nowrap transition-all duration-300"
-              style={{ background: "#B08B3A", color: "#080605" }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLButtonElement).style.background = "#C9A84C")
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLButtonElement).style.background = "#B08B3A")
-              }
-            >
-              {t.hero.cta2}
-            </button>
-          </motion.div>
-
-          {/* Feature row */}
-          <motion.div
-            initial={reduce ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 1.45, ease }}
-            className="flex flex-wrap gap-8"
-          >
-            {t.hero.features.map((f, i) => (
-              <div key={i} className="flex items-center gap-2.5">
-                <div
-                  className="w-1 h-1 rounded-full shrink-0"
-                  style={{ background: "#B08B3A" }}
-                  aria-hidden
-                />
-                <span
-                  className="font-sans text-[11px] uppercase tracking-[0.14em]"
-                  style={{ color: "rgba(250,247,242,0.36)" }}
-                >
-                  {f.label}
-                </span>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Rotating badge */}
-          {!reduce && (
+      <div className="relative max-w-[1440px] mx-auto">
+        {/* ── Desktop ── */}
+        <div className="hidden lg:grid grid-cols-[minmax(0,5fr)_minmax(0,6fr)] items-stretch min-h-[calc(100svh-68px)] pt-[68px]">
+          <div className="flex items-center pl-10 xl:pl-16 pr-12 py-16">
+            <HeroText />
+          </div>
+          <div className="relative py-10 pr-6 xl:pr-10">
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 2.4 }}
-              className="absolute bottom-16 right-0 hidden xl:block"
-              aria-hidden
+              initial={reduce ? false : { opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, delay: 0.3, ease }}
+              className="h-full w-full"
             >
-              <motion.svg
-                viewBox="0 0 120 120"
-                className="w-[90px] h-[90px]"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
-              >
-                <defs>
-                  <path
-                    id="badge-ring"
-                    d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"
-                  />
-                </defs>
-                <circle cx="60" cy="60" r="4.5" fill="#B08B3A" opacity="0.9" />
-                <text
-                  fontSize="9.5"
-                  fontFamily="Montserrat, sans-serif"
-                  letterSpacing="2.5"
-                  fill="#B08B3A"
-                >
-                  <textPath href="#badge-ring">
-                    Lausanne · Suisse Romande · Since 2020 ·
-                  </textPath>
-                </text>
-              </motion.svg>
+              <PhotoWall columns={3} />
             </motion.div>
-          )}
+          </div>
         </div>
 
-        {/* ── RIGHT : photo collage ── */}
-        <div className="relative hidden lg:block">
-
-          {/* Subtle left fade */}
-          <div
-            className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(to right, #080605 0%, transparent 100%)",
-            }}
-            aria-hidden
-          />
-
-          {/* Photo grid — asymmetric 3-photo layout */}
-          <div className="absolute inset-6 xl:inset-8 grid gap-3.5 xl:gap-4"
-            style={{
-              gridTemplateColumns: "1.15fr 0.85fr",
-              gridTemplateRows: "1fr 1fr",
-            }}
-          >
-            {/* Photo 1 — big left, spans 2 rows */}
-            <PhotoCard
-              src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=85"
-              alt="Décoration florale romantique"
-              category="Baptême & célébration"
-              delay={0.5}
-              depth={0.018}
-              rotate={-1.5}
-              className="row-span-2 relative"
-              mouseX={mouseX}
-              mouseY={mouseY}
-            />
-
-            {/* Photo 2 — top right */}
-            <PhotoCard
-              src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=700&q=85"
-              alt="Ballons colorés pour anniversaire"
-              category="Anniversaire"
-              delay={0.7}
-              depth={0.025}
-              rotate={1.2}
-              className="relative"
-              mouseX={mouseX}
-              mouseY={mouseY}
-            />
-
-            {/* Photo 3 — bottom right */}
-            <PhotoCard
-              src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=700&q=85"
-              alt="Table décorée pour réception dorée"
-              category="Corporate & gala"
-              delay={0.88}
-              depth={0.015}
-              rotate={-0.8}
-              className="relative"
-              mouseX={mouseX}
-              mouseY={mouseY}
-            />
+        {/* ── Mobile / tablette ── */}
+        <div className="lg:hidden pt-[84px] pb-6 px-4 sm:px-6">
+          <div className="relative h-[52vh] min-h-[360px] mb-10">
+            <PhotoWall columns={2} />
           </div>
-
-          {/* Floating event count badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85, y: 12 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 1.3, ease }}
-            className="absolute bottom-10 left-14 z-20 glass-card rounded-2xl px-5 py-3.5 flex gap-4 items-center"
-          >
-            <div className="flex flex-col">
-              <span
-                className="font-serif font-light text-2xl leading-none"
-                style={{ color: "#C9A84C" }}
-              >
-                200+
-              </span>
-              <span
-                className="font-sans text-[10px] uppercase tracking-[0.18em] mt-0.5"
-                style={{ color: "rgba(250,247,242,0.4)" }}
-              >
-                événements
-              </span>
-            </div>
-            <div
-              className="w-px h-8 shrink-0"
-              style={{ background: "rgba(176,139,58,0.2)" }}
-              aria-hidden
-            />
-            <div className="flex flex-col">
-              <span
-                className="font-serif font-light text-2xl leading-none"
-                style={{ color: "#C9A84C" }}
-              >
-                5★
-              </span>
-              <span
-                className="font-sans text-[10px] uppercase tracking-[0.18em] mt-0.5"
-                style={{ color: "rgba(250,247,242,0.4)" }}
-              >
-                satisfaction
-              </span>
-            </div>
-          </motion.div>
+          <div className="px-1 pb-6">
+            <HeroText />
+          </div>
         </div>
       </div>
-
-      {/* Scroll indicator */}
-      {!reduce && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 2.0 }}
-          className="absolute bottom-8 left-8 lg:left-1/2 lg:-translate-x-1/2 flex flex-col items-center gap-2"
-          aria-hidden
-        >
-          <span
-            className="font-sans text-[9px] tracking-[0.25em] uppercase"
-            style={{ color: "rgba(176,139,58,0.55)" }}
-          >
-            Défiler
-          </span>
-          <div
-            className="w-px h-12 overflow-hidden relative"
-            style={{ background: "rgba(176,139,58,0.15)" }}
-          >
-            <div
-              className="w-full scroll-indicator-line"
-              style={{ background: "#B08B3A", height: "100%" }}
-            />
-          </div>
-        </motion.div>
-      )}
-
-      {/* Bottom bleed gradient */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
-        style={{ background: "linear-gradient(to bottom, transparent, #080605 85%)" }}
-        aria-hidden
-      />
     </section>
   );
 }

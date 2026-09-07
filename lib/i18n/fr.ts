@@ -1,19 +1,19 @@
 export const fr = {
   nav: {
-    services: "Services",
-    realisations: "Réalisations",
-    about: "Notre équipe",
+    home: "Accueil",
+    about: "À propos",
+    services: "Nos services",
+    gallery: "Galerie",
     contact: "Contact",
     cta: "Demander un devis",
   },
   hero: {
     eyebrow: "Lausanne · Suisse Romande · Depuis 2020",
-    headline1: "Vos événements,",
-    headline2: "notre oeuvre.",
-    subtext:
-      "Décoration sur mesure pour vos célébrations à Lausanne et en Suisse romande.",
-    cta1: "Découvrir nos services",
-    cta2: "Demander un devis",
+    headline1: "Créons ensemble un événement",
+    headline2: "inoubliable à votre image",
+    subtext: "Décoration d'événements sur mesure · Suisse romande",
+    cta1: "Demander un devis",
+    cta2: "Découvrir la galerie",
     features: [
       { label: "Déco personnalisée" },
       { label: "Clé en main" },
@@ -23,6 +23,46 @@ export const fr = {
   services: {
     eyebrow: "Ce que nous créons",
     title: "Nos services",
+    intro:
+      "De la fête d'anniversaire à la soirée d'entreprise, nous concevons et fabriquons chaque décoration sur mesure. Deux univers, une même exigence : que tout soit parfait au moment où vos invités entrent dans la salle.",
+    ctaAll: "Voir tous nos services",
+    particuliers: {
+      label: "Particuliers",
+      title: "Vos célébrations privées",
+      desc: "Anniversaires, baptêmes, baby showers, communions, gender reveals, soirées à thème, pique-niques de luxe… Chaque moment de vie mérite un décor unique.",
+    },
+    professionnels: {
+      label: "Professionnels",
+      title: "Vos événements d'entreprise",
+      desc: "Séminaires, soirées de fin d'année, lancements de produit, galas, inaugurations. Une décoration au service de votre image de marque, clé en main.",
+    },
+    proItems: [
+      {
+        key: "corporate",
+        title: "Événements d'entreprise",
+        desc: "Séminaires, assemblées et journées collaborateurs mis en scène avec élégance et cohérence de marque.",
+      },
+      {
+        key: "yearend",
+        title: "Soirées de fin d'année",
+        desc: "Une soirée de Noël ou de nouvel an mémorable pour vos équipes : scénographie, photobooth, table d'accueil.",
+      },
+      {
+        key: "launch",
+        title: "Lancements de produit",
+        desc: "Un décor qui met votre produit au centre de l'attention et rend l'événement instagrammable.",
+      },
+      {
+        key: "gala",
+        title: "Galas & remises de prix",
+        desc: "Arches, backdrops, chemins de table et signalétique pour des soirées de prestige soignées dans le détail.",
+      },
+      {
+        key: "opening",
+        title: "Inaugurations",
+        desc: "Ouverture de boutique, de bureaux ou de restaurant : une décoration festive qui marque l'événement.",
+      },
+    ],
     items: [
       {
         key: "anniversary",
@@ -59,12 +99,52 @@ export const fr = {
         title: "Corporate",
         desc: "Séminaires, galas et lancements produits avec une touche d'élégance. L'excellence au service de votre image.",
       },
+      {
+        key: "creation",
+        title: "Création sur mesure",
+        desc: "Arches florales, colonnes décoratives, murs de ballons... Des décors uniques conçus et fabriqués à la main pour chaque événement.",
+      },
+      {
+        key: "goodies",
+        title: "Goodies & Cadeaux",
+        desc: "Paniers personnalisés, kits cadeaux, surprises pour invités... La touche finale qui rend chaque événement inoubliable.",
+      },
     ],
+  },
+  about: {
+    eyebrow: "À propos",
+    title: "Nées pour faire briller vos fêtes",
+    lead:
+      "Event Fiesta, c'est une équipe passionnée basée à Lausanne, spécialisée dans la décoration d'événements depuis 2020.",
+    paragraphs: [
+      "Nous transformons chaque célébration — petite ou grande — en un moment visuel inoubliable. Tout est conçu et fabriqué à la main : arches de ballons, murs floraux, colonnes décoratives, sweet tables, signalétique et goodies personnalisés.",
+      "Trois langues parlées, des dizaines de thèmes maîtrisés, et une seule obsession : que vous soyez époustouflée au moment où vous entrez dans la salle. Nous livrons, installons et démontons tout — vous n'avez qu'à profiter.",
+    ],
+    storyTitle: "Notre histoire",
+    story:
+      "Ce qui a commencé comme quelques décorations pour la famille et les amis est devenu, année après année, un studio à part entière. Plus de 200 événements plus tard, la même équipe conçoit toujours chaque projet comme si c'était le sien.",
+    valuesTitle: "Nos valeurs",
+    values: [
+      {
+        label: "Passion",
+        desc: "Chaque ballon, chaque fleur, chaque détail est posé avec amour.",
+      },
+      {
+        label: "Sur mesure",
+        desc: "Zéro template. Chaque décoration est unique et pensée pour vous.",
+      },
+      {
+        label: "Fiabilité",
+        desc: "On s'engage sur les délais, les couleurs et la qualité. Toujours.",
+      },
+    ],
+    cta: "Discutons de votre événement",
   },
   realisations: {
     eyebrow: "Portfolio",
     title: "Nos réalisations",
     subtitle: "Un aperçu de nos créations à Lausanne et en Suisse romande.",
+    ctaAll: "Voir la galerie complète",
     filters: {
       all: "Tout",
       anniversary: "Anniversaires",
@@ -72,6 +152,8 @@ export const fr = {
       babyshower: "Baby Showers",
       themed: "Soirées à thème",
       corporate: "Corporate",
+      creation: "Créations sur mesure",
+      goodies: "Goodies",
     },
   },
   whyus: {

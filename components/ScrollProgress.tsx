@@ -32,7 +32,7 @@ export function ScrollProgress() {
         left: 0,
         right: 0,
         height: 3,
-        background: "#B08B3A",
+        background: "#D9628A",
         zIndex: 9996,
         pointerEvents: "none",
         transformOrigin: "0% 50%",

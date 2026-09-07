@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -43,9 +44,12 @@ export function Footer() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
+  const footerLinks: [string, string][] = [
+    ["/a-propos", t.nav.about],
+    ["/nos-services", t.nav.services],
+    ["/galerie", t.nav.gallery],
+    ["/contact", t.nav.contact],
+  ];
 
   const socials = [
     { href: t.footer.social.instagram, icon: <InstagramIcon />, label: "Instagram" },
@@ -54,14 +58,14 @@ export function Footer() {
   ];
 
   return (
-    <footer style={{ background: "#0D0B08" }}>
+    <footer style={{ background: "#F3EDE6" }}>
       {/* Instagram feed strip */}
-      <div className="border-b" style={{ borderColor: "rgba(176,139,58,0.1)" }}>
+      <div className="border-b" style={{ borderColor: "rgba(217,98,138,0.1)" }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-10 py-10">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <span style={{ color: "#B08B3A" }}><InstagramIcon /></span>
-              <span className="font-sans text-sm" style={{ color: "rgba(250,247,242,0.5)" }}>
+              <span style={{ color: "#D9628A" }}><InstagramIcon /></span>
+              <span className="font-sans text-sm" style={{ color: "rgba(13,11,8,0.6)" }}>
                 @eventfiesta.ch
               </span>
             </div>
@@ -70,9 +74,9 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="font-sans text-[11px] uppercase tracking-[0.18em] transition-colors duration-200"
-              style={{ color: "#B08B3A" }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#C9A84C")}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#B08B3A")}
+              style={{ color: "#D9628A" }}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#F4A8B8")}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#D9628A")}
             >
               Suivre →
             </a>
@@ -101,7 +105,7 @@ export function Footer() {
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
                   style={{ background: "rgba(13,11,8,0.55)" }}
                 >
-                  <span style={{ color: "#C9A84C" }}><InstagramIcon /></span>
+                  <span style={{ color: "#F4A8B8" }}><InstagramIcon /></span>
                 </div>
               </motion.a>
             ))}
@@ -115,25 +119,25 @@ export function Footer() {
 
           {/* Brand */}
           <div className="lg:col-span-2">
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            <Link
+              href="/"
               className="flex items-baseline gap-2 mb-3 cursor-pointer"
-              aria-label="Retour en haut"
+              aria-label="Event Fiesta — Accueil"
             >
               <span
                 className="font-sans font-medium text-2xl tracking-[0.12em] uppercase"
-                style={{ color: "#FAF7F2" }}
+                style={{ color: "#0D0B08" }}
               >
                 Event
               </span>
-              <span className="font-serif italic text-3xl font-light" style={{ color: "#C9A84C" }}>
+              <span className="font-serif italic text-3xl font-light" style={{ color: "#F4A8B8" }}>
                 Fiesta
               </span>
-            </button>
-            <p className="font-sans text-xs mb-6" style={{ color: "rgba(250,247,242,0.3)", letterSpacing: "0.1em" }}>
+            </Link>
+            <p className="font-sans text-xs mb-6" style={{ color: "rgba(13,11,8,0.42)", letterSpacing: "0.1em" }}>
               {t.footer.tagline}
             </p>
-            <p className="font-sans text-sm leading-relaxed mb-8 max-w-xs" style={{ color: "rgba(250,247,242,0.38)" }}>
+            <p className="font-sans text-sm leading-relaxed mb-8 max-w-xs" style={{ color: "rgba(13,11,8,0.5)" }}>
               Spécialistes de la décoration d'événements sur mesure à Lausanne et en Suisse romande depuis 2020.
             </p>
 
@@ -147,17 +151,17 @@ export function Footer() {
                   rel="noopener noreferrer"
                   aria-label={label}
                   className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-250 cursor-pointer"
-                  style={{ border: "1px solid rgba(176,139,58,0.25)", color: "rgba(250,247,242,0.4)" }}
+                  style={{ border: "1px solid rgba(217,98,138,0.3)", color: "rgba(13,11,8,0.55)" }}
                   onMouseEnter={(e) => {
                     const el = e.currentTarget as HTMLAnchorElement;
-                    el.style.borderColor = "#B08B3A";
-                    el.style.color = "#C9A84C";
-                    el.style.background = "rgba(176,139,58,0.1)";
+                    el.style.borderColor = "#D9628A";
+                    el.style.color = "#0D0B08";
+                    el.style.background = "rgba(217,98,138,0.15)";
                   }}
                   onMouseLeave={(e) => {
                     const el = e.currentTarget as HTMLAnchorElement;
-                    el.style.borderColor = "rgba(176,139,58,0.25)";
-                    el.style.color = "rgba(250,247,242,0.4)";
+                    el.style.borderColor = "rgba(217,98,138,0.3)";
+                    el.style.color = "rgba(13,11,8,0.55)";
                     el.style.background = "transparent";
                   }}
                 >
@@ -171,26 +175,22 @@ export function Footer() {
           <div>
             <p
               className="font-sans text-[10px] uppercase tracking-[0.2em] mb-5"
-              style={{ color: "rgba(176,139,58,0.7)" }}
+              style={{ color: "rgba(217,98,138,0.7)" }}
             >
               Navigation
             </p>
             <ul className="flex flex-col gap-3">
-              {[
-                ["services", t.footer.links.services],
-                ["realisations", t.footer.links.realisations],
-                ["contact", t.footer.links.contact],
-              ].map(([id, label]) => (
-                <li key={id}>
-                  <button
-                    onClick={() => scrollTo(id)}
+              {footerLinks.map(([href, label]) => (
+                <li key={href}>
+                  <Link
+                    href={href}
                     className="font-sans text-sm font-light transition-colors duration-200 cursor-pointer"
-                    style={{ color: "rgba(250,247,242,0.38)" }}
-                    onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "#FAF7F2")}
-                    onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "rgba(250,247,242,0.38)")}
+                    style={{ color: "rgba(13,11,8,0.5)" }}
+                    onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#0D0B08")}
+                    onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(13,11,8,0.5)")}
                   >
                     {label}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -200,7 +200,7 @@ export function Footer() {
           <div>
             <p
               className="font-sans text-[10px] uppercase tracking-[0.2em] mb-5"
-              style={{ color: "rgba(176,139,58,0.7)" }}
+              style={{ color: "rgba(217,98,138,0.7)" }}
             >
               Contact
             </p>
@@ -208,64 +208,64 @@ export function Footer() {
               <a
                 href="tel:0779143855"
                 className="font-sans text-sm font-light transition-colors duration-200"
-                style={{ color: "rgba(250,247,242,0.38)" }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#C9A84C")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(250,247,242,0.38)")}
+                style={{ color: "rgba(13,11,8,0.5)" }}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#F4A8B8")}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(13,11,8,0.5)")}
               >
                 077 914 38 55
               </a>
               <a
                 href="mailto:contact@eventfiesta.ch"
                 className="font-sans text-sm font-light transition-colors duration-200"
-                style={{ color: "rgba(250,247,242,0.38)" }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#C9A84C")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(250,247,242,0.38)")}
+                style={{ color: "rgba(13,11,8,0.5)" }}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#F4A8B8")}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(13,11,8,0.5)")}
               >
                 contact@eventfiesta.ch
               </a>
-              <p className="font-sans text-sm font-light" style={{ color: "rgba(250,247,242,0.25)" }}>
+              <p className="font-sans text-sm font-light" style={{ color: "rgba(13,11,8,0.4)" }}>
                 {t.footer.location}
               </p>
             </div>
 
             {/* CTA */}
-            <button
-              onClick={() => scrollTo("contact")}
-              className="btn-gold-shimmer mt-8 font-sans text-xs font-medium px-5 py-2.5 rounded-full cursor-pointer transition-all duration-300"
-              style={{ background: "rgba(176,139,58,0.15)", color: "#C9A84C", border: "1px solid rgba(176,139,58,0.3)" }}
+            <Link
+              href="/contact"
+              className="btn-gold-shimmer mt-8 inline-block font-sans text-xs font-medium px-5 py-2.5 rounded-full cursor-pointer transition-all duration-300"
+              style={{ background: "rgba(217,98,138,0.15)", color: "#F4A8B8", border: "1px solid rgba(217,98,138,0.3)" }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = "#B08B3A";
-                (e.currentTarget as HTMLButtonElement).style.color = "#0D0B08";
+                (e.currentTarget as HTMLAnchorElement).style.background = "#D9628A";
+                (e.currentTarget as HTMLAnchorElement).style.color = "#0D0B08";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.background = "rgba(176,139,58,0.15)";
-                (e.currentTarget as HTMLButtonElement).style.color = "#C9A84C";
+                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(217,98,138,0.15)";
+                (e.currentTarget as HTMLAnchorElement).style.color = "#F4A8B8";
               }}
             >
-              Demander un devis
-            </button>
+              {t.nav.cta}
+            </Link>
           </div>
         </div>
 
         {/* Bottom bar */}
         <div
           className="mt-14 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3"
-          style={{ borderColor: "rgba(176,139,58,0.1)" }}
+          style={{ borderColor: "rgba(217,98,138,0.1)" }}
         >
-          <p className="font-sans text-xs" style={{ color: "rgba(250,247,242,0.2)" }}>
+          <p className="font-sans text-xs" style={{ color: "rgba(13,11,8,0.35)" }}>
             {t.footer.copyright}
           </p>
           <div className="flex items-center gap-6">
             <button
               className="font-sans text-xs transition-colors duration-200 cursor-pointer"
-              style={{ color: "rgba(250,247,242,0.2)" }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "rgba(250,247,242,0.5)")}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "rgba(250,247,242,0.2)")}
+              style={{ color: "rgba(13,11,8,0.35)" }}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "rgba(13,11,8,0.65)")}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "rgba(13,11,8,0.35)")}
             >
               {t.footer.legal}
             </button>
-            <span style={{ color: "rgba(250,247,242,0.1)", fontSize: 10 }}>·</span>
-            <p className="font-sans text-xs" style={{ color: "rgba(250,247,242,0.15)" }}>
+            <span style={{ color: "rgba(13,11,8,0.2)", fontSize: 10 }}>·</span>
+            <p className="font-sans text-xs" style={{ color: "rgba(13,11,8,0.3)" }}>
               Lausanne · Suisse romande
             </p>
           </div>
