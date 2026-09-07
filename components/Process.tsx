@@ -69,25 +69,12 @@ function BalloonNumber() {
     >
       <svg viewBox="0 0 360 350" fill="none" style={{ width: "100%", overflow: "visible" }} aria-hidden>
         <defs>
-          <linearGradient id="pb-foil" x1="0.12" y1="0" x2="0.42" y2="1">
-            <stop offset="0%" stopColor="#FBDAE3" />
-            <stop offset="22%" stopColor="#F1AEC2" />
-            <stop offset="40%" stopColor="#FFF0F5" />
-            <stop offset="58%" stopColor="#E491AB" />
-            <stop offset="80%" stopColor="#D07C99" />
-            <stop offset="100%" stopColor="#BE6A88" />
+          <linearGradient id="pb-foil" x1="0.15" y1="0" x2="0.35" y2="1">
+            <stop offset="0%" stopColor="#F9CEDA" />
+            <stop offset="38%" stopColor="#EC9FB6" />
+            <stop offset="72%" stopColor="#DA7E9B" />
+            <stop offset="100%" stopColor="#C86C89" />
           </linearGradient>
-          <linearGradient id="pb-sheen" x1="0" y1="0" x2="0.75" y2="1">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
-            <stop offset="26%" stopColor="rgba(255,255,255,0.32)" />
-            <stop offset="52%" stopColor="rgba(255,255,255,0)" />
-            <stop offset="78%" stopColor="rgba(255,255,255,0)" />
-            <stop offset="92%" stopColor="rgba(255,255,255,0.18)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-          </linearGradient>
-          <filter id="pb-blur" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="2.6" />
-          </filter>
           <radialGradient id="pb-pink" cx="36%" cy="30%" r="75%">
             <stop offset="0%" stopColor="#FBE0E9" />
             <stop offset="55%" stopColor="#EDA9C0" />
@@ -135,22 +122,10 @@ function BalloonNumber() {
               <path d="M196 48 L104 176 L250 176" />
               <path d="M212 42 L212 250" />
             </g>
-            {/* voile lustré */}
-            <g stroke="url(#pb-sheen)" strokeWidth="44" strokeLinecap="round" strokeLinejoin="round" fill="none">
-              <path d="M196 48 L104 176 L250 176" />
-              <path d="M212 42 L212 250" />
-            </g>
-            {/* liseré lumineux haut-gauche */}
-            <g stroke="#FFFFFF" strokeOpacity="0.55" strokeWidth="2.5" strokeLinecap="round" fill="none">
-              <path d="M188 56 L110 172" />
-              <path d="M200 50 L200 116" />
-            </g>
-            {/* éclats spéculaires */}
-            <g fill="#FFFFFF" style={{ filter: "url(#pb-blur)" }}>
-              <ellipse cx="150" cy="118" rx="6" ry="19" transform="rotate(-52 150 118)" opacity="0.6" />
-              <ellipse cx="204" cy="92" rx="5.5" ry="24" opacity="0.5" />
-              <ellipse cx="126" cy="176" rx="11" ry="6" opacity="0.42" />
-              <circle cx="182" cy="70" r="5" opacity="0.7" />
+            {/* reflet lumineux */}
+            <g stroke="#FFFFFF" strokeOpacity="0.3" strokeWidth="7" strokeLinecap="round" fill="none">
+              <path d="M190 60 L112 168" />
+              <path d="M203 58 L203 238" />
             </g>
            </g>
           </motion.g>
