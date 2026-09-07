@@ -62,7 +62,7 @@ function BalloonNumber() {
   return (
     <motion.div
       className="absolute hidden lg:block pointer-events-none"
-      style={{ top: "-9rem", right: "-3%", width: "min(40vw, 460px)" }}
+      style={{ top: "-12.5rem", right: "-2%", width: "min(33vw, 400px)" }}
       initial={reduce ? undefined : "hidden"}
       whileInView={reduce ? undefined : "shown"}
       viewport={{ once: true, amount: 0.35 }}
@@ -241,21 +241,22 @@ export function Process() {
   return (
     <section
       id="process"
-      className="relative overflow-hidden py-20 lg:py-28"
+      className="relative py-20 lg:py-28"
       style={{ background: "#F3EDE6" }}
     >
-      <div
-        className="absolute pointer-events-none rounded-full"
-        style={{
-          top: "-12%",
-          right: "-8%",
-          width: "min(46vw, 560px)",
-          aspectRatio: "1",
-          background:
-            "radial-gradient(circle at 50% 50%, rgba(244,168,184,0.18), rgba(244,168,184,0) 70%)",
-        }}
-        aria-hidden
-      />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden>
+        <div
+          className="absolute rounded-full"
+          style={{
+            top: "-12%",
+            right: "-8%",
+            width: "min(46vw, 560px)",
+            aspectRatio: "1",
+            background:
+              "radial-gradient(circle at 50% 50%, rgba(244,168,184,0.18), rgba(244,168,184,0) 70%)",
+          }}
+        />
+      </div>
 
       <div className="relative max-w-6xl mx-auto px-6 lg:px-10">
         <BalloonNumber />
