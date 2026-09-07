@@ -22,28 +22,64 @@ const INDEX_IMAGES: Record<string, string> = {
 
 type Item = { key: string; name: string; desc: string };
 
-/* ── Arche — motif signature, se trace au scroll ───────────────────────── */
+// Ballons le long de l'arche (viewBox 400×400), du bas-gauche au bas-droite
+const ARCH_BALLOONS: { cx: number; cy: number; r: number; c: string }[] = [
+  { cx: 27, cy: 388, r: 14, c: "#F4A8B8" }, { cx: 17, cy: 356, r: 9, c: "#FBD5DE" },
+  { cx: 34, cy: 338, r: 16, c: "#A8CEE0" }, { cx: 23, cy: 308, r: 11, c: "#FAF7F2" },
+  { cx: 40, cy: 286, r: 17, c: "#F0C29A" }, { cx: 29, cy: 260, r: 10, c: "#F4A8B8" },
+  { cx: 45, cy: 236, r: 15, c: "#FBD5DE" }, { cx: 37, cy: 210, r: 12, c: "#A8CEE0" },
+  { cx: 55, cy: 186, r: 17, c: "#F4A8B8" }, { cx: 47, cy: 160, r: 10, c: "#FAF7F2" },
+  { cx: 66, cy: 138, r: 14, c: "#F0C29A" }, { cx: 60, cy: 114, r: 11, c: "#F4A8B8" },
+  { cx: 83, cy: 94, r: 16, c: "#FBD5DE" },  { cx: 110, cy: 66, r: 12, c: "#A8CEE0" },
+  { cx: 140, cy: 46, r: 18, c: "#F4A8B8" }, { cx: 172, cy: 35, r: 11, c: "#FAF7F2" },
+  { cx: 200, cy: 31, r: 16, c: "#F0C29A" }, { cx: 228, cy: 37, r: 13, c: "#F4A8B8" },
+  { cx: 258, cy: 49, r: 17, c: "#FBD5DE" }, { cx: 288, cy: 70, r: 12, c: "#A8CEE0" },
+  { cx: 312, cy: 98, r: 15, c: "#F4A8B8" }, { cx: 326, cy: 126, r: 12, c: "#F0C29A" },
+  { cx: 341, cy: 154, r: 17, c: "#FBD5DE" },{ cx: 332, cy: 182, r: 10, c: "#FAF7F2" },
+  { cx: 349, cy: 210, r: 16, c: "#F4A8B8" },{ cx: 340, cy: 238, r: 11, c: "#A8CEE0" },
+  { cx: 357, cy: 266, r: 17, c: "#F0C29A" },{ cx: 347, cy: 294, r: 12, c: "#F4A8B8" },
+  { cx: 363, cy: 322, r: 14, c: "#FBD5DE" },{ cx: 353, cy: 350, r: 10, c: "#FAF7F2" },
+  { cx: 369, cy: 380, r: 15, c: "#F4A8B8" },
+];
+
+/* ── Arche — motif signature qui se monte en ballons au scroll ─────────── */
 function ArchLine() {
   const reduce = useReducedMotion();
   return (
-    <svg
+    <motion.svg
       className="absolute pointer-events-none hidden lg:block"
       style={{ top: "6%", right: "-4%", width: "min(34vw, 460px)", overflow: "visible" }}
       viewBox="0 0 400 400"
       fill="none"
       aria-hidden
+      initial={reduce ? undefined : "hidden"}
+      whileInView={reduce ? undefined : "shown"}
+      viewport={{ once: true, amount: 0.4 }}
     >
       <motion.path
         d="M20 400 C20 190 100 30 200 30 C300 30 380 190 380 400"
-        stroke="rgba(217,98,138,0.16)"
+        stroke="rgba(217,98,138,0.18)"
         strokeWidth="1.5"
         strokeLinecap="round"
-        initial={reduce ? undefined : { pathLength: 0 }}
-        whileInView={reduce ? undefined : { pathLength: 1 }}
-        viewport={{ once: true, amount: 0.4 }}
-        transition={{ duration: 1.6, ease }}
+        variants={{ hidden: { pathLength: 0 }, shown: { pathLength: 1 } }}
+        transition={{ duration: 1.5, ease }}
       />
-    </svg>
+      <motion.g variants={{ shown: { transition: { staggerChildren: 0.03, delayChildren: 0.35 } } }}>
+        {ARCH_BALLOONS.map((b, i) => (
+          <motion.circle
+            key={i}
+            cx={b.cx}
+            cy={b.cy}
+            r={b.r}
+            fill={b.c}
+            stroke="rgba(13,11,8,0.04)"
+            style={{ transformBox: "fill-box", transformOrigin: "center" }}
+            variants={{ hidden: { scale: 0, opacity: 0 }, shown: { scale: 1, opacity: 0.42 } }}
+            transition={{ type: "spring", stiffness: 260, damping: 16 }}
+          />
+        ))}
+      </motion.g>
+    </motion.svg>
   );
 }
 
