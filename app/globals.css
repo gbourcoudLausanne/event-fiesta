@@ -110,6 +110,11 @@ body {
   to   { stroke-dashoffset: 0; }
 }
 
+@keyframes gd-sway {
+  0%, 100% { transform: rotate(-0.9deg); }
+  50%      { transform: rotate(0.9deg); }
+}
+
 @keyframes blink-cursor {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
