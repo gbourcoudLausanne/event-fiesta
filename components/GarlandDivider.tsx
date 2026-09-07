@@ -14,9 +14,17 @@ const GRADS: Record<string, [string, string, string]> = {
 };
 const GKEYS = ["rose", "blue", "peach", "roseDeep", "cream", "gold"] as const;
 
+// Arrondis stables serveur/client : Math.sin & co. peuvent différer d'un ULP
+// entre Node et le navigateur → mismatch d'hydratation sur les attributs SVG.
+const rnd = (n: number, p = 2) => {
+  const f = 10 ** p;
+  return Math.round(n * f) / f;
+};
+const tsin = (x: number) => rnd(Math.sin(x), 6);
+
 function noise(n: number) {
-  const s = Math.sin(n * 127.1 + 311.7) * 43758.5453;
-  return s - Math.floor(s);
+  const s = tsin(n * 127.1 + 311.7) * 43758.5453;
+  return rnd(s - Math.floor(s), 5);
 }
 
 // Point + normale le long de la guirlande (bézier quadratique P0-P1-P2).
@@ -29,8 +37,8 @@ function swag(t: number) {
   const y = mt * mt * P0.y + 2 * mt * t * P1.y + t * t * P2.y;
   const tx = 2 * mt * (P1.x - P0.x) + 2 * t * (P2.x - P1.x);
   const ty = 2 * mt * (P1.y - P0.y) + 2 * t * (P2.y - P1.y);
-  const m = Math.hypot(tx, ty) || 1;
-  return { x, y, nx: -ty / m, ny: tx / m };
+  const m = rnd(Math.sqrt(tx * tx + ty * ty), 4) || 1;
+  return { x: rnd(x, 3), y: rnd(y, 3), nx: rnd(-ty / m, 5), ny: rnd(tx / m, 5) };
 }
 
 const N_BALLOONS = 34;
@@ -38,12 +46,14 @@ const BALLOONS = Array.from({ length: N_BALLOONS }).map((_, i) => {
   const t = i / (N_BALLOONS - 1);
   const p = swag(t);
   const side = i % 2 === 0 ? 1 : -1;
-  const bump = 0.55 + 0.75 * Math.sin(t * Math.PI); // plus gros au centre
-  const r = (11 + noise(i + 5) * 15) * bump;
+  const bump = 0.55 + 0.75 * tsin(t * Math.PI); // plus gros au centre
+  const r = rnd((11 + noise(i + 5) * 15) * bump, 3);
   const off = side * (4 + noise(i) * 12) - r * 0.35;
   return {
-    x: p.x + p.nx * off,
-    y: p.y + p.ny * off + r * 0.42,
+    x: rnd(p.x + p.nx * off, 3),
+    y: rnd(p.y + p.ny * off + r * 0.42, 3),
+    sx: p.x,
+    sy: p.y,
     r,
     g: GKEYS[Math.floor(noise(i + 2) * GKEYS.length)],
     back: noise(i + 9) < 0.22,
@@ -56,10 +66,10 @@ const PAMPA_AT = [0.12, 0.34, 0.5, 0.68, 0.88];
 const EUCA_AT = [0.2, 0.44, 0.62, 0.82];
 
 const CONFETTI = Array.from({ length: 16 }).map((_, i) => ({
-  x: 60 + noise(i * 3.3) * 1320,
+  x: rnd(60 + noise(i * 3.3) * 1320, 3),
   c: ["#F4A8B8", "#A8CEE0", "#F0C29A", "#E3C179", "#FBD5DE"][i % 5],
   shape: i % 3 === 0 ? "r" : "c",
-  d: noise(i + 20) * 6,
+  d: rnd(noise(i + 20) * 6, 3),
 }));
 
 function Pampa({ x, y, a }: { x: number; y: number; a: number }) {
@@ -70,7 +80,7 @@ function Pampa({ x, y, a }: { x: number; y: number; a: number }) {
       {Array.from({ length: barbs }).map((_, k) => {
         const tt = k / (barbs - 1);
         const yy = -3 - tt * 46;
-        const env = Math.sin(tt * Math.PI);
+        const env = tsin(tt * Math.PI);
         const sp = 3 + env * 7;
         const dr = 3 + tt * 5;
         return (
@@ -95,7 +105,7 @@ function Euca({ x, y, a, flip }: { x: number; y: number; a: number; flip: boolea
         const ly = -4 - tt * 38;
         const sx = tt * 3 * dir;
         const s = k % 2 === 0 ? 1 : -1;
-        const lr = 3 + Math.sin(tt * Math.PI) * 2.6;
+        const lr = 3 + tsin(tt * Math.PI) * 2.6;
         const ax = sx + s * dir * lr * 0.8;
         return (
           <ellipse
@@ -105,7 +115,7 @@ function Euca({ x, y, a, flip }: { x: number; y: number; a: number; flip: boolea
             rx={lr}
             ry={lr * 0.62}
             fill="#B6C7A6"
-            opacity={0.55 + 0.3 * Math.sin(tt * Math.PI)}
+            opacity={0.55 + 0.3 * tsin(tt * Math.PI)}
             transform={`rotate(${-s * 38 * dir} ${ax} ${ly})`}
           />
         );
@@ -234,9 +244,9 @@ export function GarlandDivider({ bg = "#FAF7F2" }: { bg?: string }) {
             >
               <line
                 x1={b.x}
-                y1={b.y - b.r}
-                x2={swag((i / (N_BALLOONS - 1)) * 0.999 + 0.0005).x}
-                y2={swag((i / (N_BALLOONS - 1)) * 0.999 + 0.0005).y}
+                y1={rnd(b.y - b.r, 3)}
+                x2={b.sx}
+                y2={b.sy}
                 stroke="rgba(120,90,70,0.22)"
                 strokeWidth="0.7"
               />
