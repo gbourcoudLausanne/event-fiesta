@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
 import { X, ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import { useI18n } from "@/lib/i18n";
@@ -173,6 +173,64 @@ const photos = [
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
+/* ── Sélection éditoriale pour l'aperçu accueil ───────────────────────── */
+const PREVIEW = [
+  { src: "/Galerie/hero-slides/hero-slide-13.PNG", alt: "Arche ronde de ballons violet et or dans un jardin", cat: "Anniversaire", place: "au jardin", name: "Anniversaire au jardin" },
+  { src: "/Galerie/anniversaires/Anniv_1.webp", alt: "Arche de ballons rose gold Happy Birthday 50", cat: "Anniversaire", place: "50 ans", name: "Happy Birthday · 50 ans" },
+  { src: "/Galerie/Gender-Reveal/GenderReveal_1.webp", alt: "Gender reveal Oh Baby, arche dorée et fleurs", cat: "Gender reveal", place: "Renens", name: "Oh Baby !" },
+  { src: "/Galerie/hero-slides/hero-slide-6.PNG", alt: "Sweet table dorée avec gâteau et ballons rose et pêche", cat: "Sweet table", place: "sur mesure", name: "Sweet table rosée" },
+  { src: "/Galerie/hero-slides/hero-slide-17.webp", alt: "Pique-nique de luxe au bord de l'eau", cat: "Pique-nique", place: "au bord de l'eau", name: "Pique-nique de luxe" },
+  { src: "/Galerie/Corporate/Corporate_1.jpg", alt: "Arche de ballons colorée pour un événement d'entreprise", cat: "Entreprise", place: "corporate", name: "Événement corporate" },
+];
+
+function PreviewTile({
+  photo,
+  i,
+  onOpen,
+  className = "",
+}: {
+  photo: (typeof PREVIEW)[number];
+  i: number;
+  onOpen: (i: number) => void;
+  className?: string;
+}) {
+  const reduce = useReducedMotion();
+  return (
+    <motion.button
+      type="button"
+      onClick={() => onOpen(i)}
+      initial={reduce ? false : { opacity: 0, y: 26 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.6, delay: (i % 3) * 0.08, ease }}
+      className={`group relative block w-full overflow-hidden cursor-pointer ${className}`}
+      style={{ background: "#E4D4CC" }}
+      aria-label={`Voir ${photo.name}`}
+    >
+      <Image
+        src={photo.src}
+        alt={photo.alt}
+        fill
+        className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
+        sizes="(max-width: 1024px) 50vw, 40vw"
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "linear-gradient(180deg, rgba(13,11,8,0) 55%, rgba(13,11,8,0.66) 100%)" }}
+      />
+      <div className="absolute inset-4 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ border: "1px solid rgba(250,247,242,0.4)" }} />
+      <div className="absolute inset-x-0 bottom-0 p-4 lg:p-5 text-left">
+        <p className="font-sans text-[10px] uppercase tracking-[0.2em]" style={{ color: "#F4A8B8" }}>
+          {photo.cat}
+        </p>
+        <p className="font-serif font-light italic text-[15px] lg:text-lg leading-tight mt-0.5" style={{ color: "#FAF7F2" }}>
+          {photo.place}
+        </p>
+      </div>
+    </motion.button>
+  );
+}
+
 function Lightbox({
   photos: allPhotos,
   activeIndex,
@@ -289,6 +347,98 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
   const closeLightbox = () => setLightboxIndex(null);
   const goNext = () => setLightboxIndex((i) => i === null ? 0 : (i + 1) % filtered.length);
   const goPrev = () => setLightboxIndex((i) => i === null ? 0 : (i - 1 + filtered.length) % filtered.length);
+
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const yA = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [34, -34]);
+  const yB = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [56, -22]);
+
+  if (preview) {
+    return (
+      <section
+        ref={sectionRef}
+        id="realisations"
+        className="relative overflow-hidden py-20 lg:py-28"
+        style={{ background: "#F3EDE6" }}
+      >
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          {/* En-tête */}
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6, ease }}
+            className="max-w-2xl mb-12 lg:mb-16"
+          >
+            <div className="flex items-center gap-3 mb-5">
+              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
+                {t.realisations.eyebrow}
+              </span>
+            </div>
+            <h2
+              className="font-serif font-light leading-tight tracking-tight"
+              style={{ fontSize: "clamp(2.3rem, 4.6vw, 3.8rem)", color: "#2A2320" }}
+            >
+              {t.realisations.title}
+            </h2>
+            <p
+              className="font-sans font-light text-[14.5px] leading-relaxed mt-5"
+              style={{ color: "rgba(42,35,32,0.55)" }}
+            >
+              {t.realisations.subtitle}
+            </p>
+          </motion.div>
+
+          {/* Mosaïque éditoriale */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-3 lg:gap-4">
+            <PreviewTile
+              photo={PREVIEW[0]}
+              i={0}
+              onOpen={setLightboxIndex}
+              className="aspect-[4/5] lg:aspect-auto lg:h-full"
+            />
+            <motion.div style={{ y: yA }} className="grid gap-3 lg:gap-4">
+              <PreviewTile photo={PREVIEW[1]} i={1} onOpen={setLightboxIndex} className="aspect-[16/10]" />
+              <div className="grid grid-cols-2 gap-3 lg:gap-4">
+                <PreviewTile photo={PREVIEW[2]} i={2} onOpen={setLightboxIndex} className="aspect-[3/4]" />
+                <PreviewTile photo={PREVIEW[3]} i={3} onOpen={setLightboxIndex} className="aspect-[3/4]" />
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div style={{ y: yB }} className="grid grid-cols-2 gap-3 lg:gap-4 mt-3 lg:mt-4">
+            <PreviewTile photo={PREVIEW[4]} i={4} onOpen={setLightboxIndex} className="aspect-[16/10]" />
+            <PreviewTile photo={PREVIEW[5]} i={5} onOpen={setLightboxIndex} className="aspect-[16/10]" />
+          </motion.div>
+
+          <Link
+            href="/galerie"
+            className="group mt-10 lg:mt-14 inline-flex items-center gap-2 font-sans text-[12px] font-medium uppercase tracking-[0.18em]"
+            style={{ color: "#B65572" }}
+          >
+            {t.realisations.ctaAll}
+            <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
+          </Link>
+        </div>
+
+        <AnimatePresence>
+          {lightboxIndex !== null && (
+            <Lightbox
+              photos={PREVIEW as unknown as typeof photos}
+              activeIndex={lightboxIndex}
+              onClose={closeLightbox}
+              onNext={() => setLightboxIndex((n) => (n === null ? 0 : (n + 1) % PREVIEW.length))}
+              onPrev={() => setLightboxIndex((n) => (n === null ? 0 : (n - 1 + PREVIEW.length) % PREVIEW.length))}
+            />
+          )}
+        </AnimatePresence>
+      </section>
+    );
+  }
 
   return (
     <section id="realisations" className="py-20 lg:py-24" style={{ background: "#F3EDE6" }}>
