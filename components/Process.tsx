@@ -29,32 +29,37 @@ const TILT = [-2.5, 1.5, -1.5, 2.5];
 type Blob = { x: number; y: number; r: number; c: "pink" | "white" | "cream" };
 const CLUSTER: Blob[] = [
   // rangée arrière
-  { x: 90, y: 260, r: 26, c: "cream" },
-  { x: 136, y: 250, r: 29, c: "pink" },
-  { x: 184, y: 246, r: 31, c: "white" },
-  { x: 232, y: 250, r: 29, c: "cream" },
-  { x: 278, y: 260, r: 26, c: "pink" },
+  { x: 84, y: 264, r: 26, c: "cream" },
+  { x: 132, y: 254, r: 29, c: "pink" },
+  { x: 182, y: 250, r: 31, c: "white" },
+  { x: 234, y: 252, r: 30, c: "cream" },
+  { x: 286, y: 256, r: 29, c: "pink" },
+  { x: 336, y: 264, r: 26, c: "white" },
   // rangée avant
-  { x: 60, y: 304, r: 29, c: "pink" },
-  { x: 110, y: 298, r: 30, c: "white" },
-  { x: 162, y: 304, r: 32, c: "pink" },
-  { x: 214, y: 300, r: 31, c: "cream" },
-  { x: 266, y: 304, r: 29, c: "white" },
-  { x: 312, y: 300, r: 26, c: "pink" },
+  { x: 52, y: 306, r: 28, c: "pink" },
+  { x: 102, y: 300, r: 30, c: "white" },
+  { x: 154, y: 306, r: 32, c: "pink" },
+  { x: 208, y: 302, r: 31, c: "cream" },
+  { x: 262, y: 306, r: 30, c: "white" },
+  { x: 314, y: 302, r: 29, c: "pink" },
+  { x: 366, y: 306, r: 26, c: "cream" },
   // socle
-  { x: 128, y: 328, r: 24, c: "cream" },
-  { x: 194, y: 330, r: 25, c: "pink" },
-  { x: 256, y: 328, r: 24, c: "white" },
+  { x: 118, y: 330, r: 23, c: "cream" },
+  { x: 186, y: 332, r: 25, c: "pink" },
+  { x: 256, y: 330, r: 24, c: "white" },
+  { x: 322, y: 330, r: 22, c: "pink" },
 ];
 const FILLERS: [number, number, number][] = [
-  [98, 280, 10],
-  [158, 274, 11],
-  [216, 278, 10],
-  [274, 282, 10],
-  [82, 322, 10],
-  [164, 326, 11],
-  [228, 322, 10],
-  [296, 322, 9],
+  [90, 282, 10],
+  [150, 276, 11],
+  [210, 278, 10],
+  [270, 280, 10],
+  [330, 284, 10],
+  [76, 322, 10],
+  [156, 328, 11],
+  [226, 322, 10],
+  [294, 324, 10],
+  [356, 322, 9],
 ];
 
 function BalloonNumber() {
@@ -62,12 +67,12 @@ function BalloonNumber() {
   return (
     <motion.div
       className="absolute hidden lg:block pointer-events-none"
-      style={{ top: "-9.5rem", right: "-2%", width: "min(33vw, 400px)" }}
+      style={{ top: "-9.5rem", right: "-2%", width: "min(39vw, 460px)" }}
       initial={reduce ? undefined : "hidden"}
       whileInView={reduce ? undefined : "shown"}
       viewport={{ once: true, amount: 0.35 }}
     >
-      <svg viewBox="0 0 360 350" fill="none" style={{ width: "100%", overflow: "visible" }} aria-hidden>
+      <svg viewBox="0 0 440 360" fill="none" style={{ width: "100%", overflow: "visible" }} aria-hidden>
         <defs>
           <linearGradient id="pb-foil" x1="0.15" y1="0" x2="0.35" y2="1">
             <stop offset="0%" stopColor="#F9CEDA" />
@@ -100,27 +105,29 @@ function BalloonNumber() {
         <g
           style={
             reduce
-              ? { transformOrigin: "180px 336px" }
-              : { transformOrigin: "180px 336px", animation: "gd-sway 8s ease-in-out infinite" }
+              ? { transformOrigin: "210px 344px" }
+              : { transformOrigin: "210px 344px", animation: "gd-sway 8s ease-in-out infinite" }
           }
         >
-          {/* Chiffre 4 en ballon mylar */}
+          {/* Chiffre 10 en ballons mylar */}
           <motion.g
             variants={{
               hidden: { opacity: 0, y: 34 },
               shown: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.35, ease } },
             }}
           >
-           <g transform="translate(177 150) scale(0.84) translate(-177 -150)">
-            {/* liseré sombre sous la forme */}
+           <g transform="translate(209 152) scale(0.82) translate(-209 -152)">
+            {/* liseré sombre */}
             <g stroke="#C06985" strokeWidth="50" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.55">
-              <path d="M196 48 L104 176 L250 176" />
-              <path d="M212 42 L212 250" />
+              <path d="M98 88 L126 50" />
+              <path d="M126 48 L126 246" />
+              <ellipse cx="286" cy="146" rx="62" ry="100" />
             </g>
-            {/* corps du chiffre */}
+            {/* corps des chiffres */}
             <g stroke="url(#pb-foil)" strokeWidth="44" strokeLinecap="round" strokeLinejoin="round" fill="none">
-              <path d="M196 48 L104 176 L250 176" />
-              <path d="M212 42 L212 250" />
+              <path d="M98 88 L126 50" />
+              <path d="M126 48 L126 246" />
+              <ellipse cx="286" cy="146" rx="62" ry="100" />
             </g>
            </g>
           </motion.g>
@@ -136,9 +143,9 @@ function BalloonNumber() {
                 transition: { type: "spring", stiffness: 220, damping: 16, delay: 0.95 },
               },
             }}
-            style={{ transformOrigin: "166px 92px" }}
+            style={{ transformOrigin: "120px 78px" }}
           >
-            <g transform="translate(16 -6)">
+            <g transform="translate(-32 -18)">
               <path d="M150 96 Q124 78 122 104 Q126 118 150 104 Z" fill="#F6CDD9" />
               <path d="M150 96 Q176 78 178 104 Q174 118 150 104 Z" fill="#F0BFCE" />
               <path d="M147 104 Q140 128 143 150 L150 144 L157 150 Q160 128 153 104 Z" fill="#F6CDD9" />
@@ -201,15 +208,17 @@ function BalloonNumber() {
                 transition: { type: "spring", stiffness: 240, damping: 14, delay: 0.7 },
               },
             }}
-            style={{ transformOrigin: "150px 262px" }}
+            style={{ transformOrigin: "208px 262px" }}
           >
-            <path
-              d="M150 250 C142 236 118 238 118 258 C118 280 150 300 150 300 C150 300 182 280 182 258 C182 238 158 236 150 250 Z"
-              fill="url(#pb-heart)"
-              stroke="rgba(255,255,255,0.4)"
-              strokeWidth="1"
-            />
-            <ellipse cx="134" cy="250" rx="6" ry="8" fill="rgba(255,255,255,0.4)" transform="rotate(-20 134 250)" />
+            <g transform="translate(58 0)">
+              <path
+                d="M150 250 C142 236 118 238 118 258 C118 280 150 300 150 300 C150 300 182 280 182 258 C182 238 158 236 150 250 Z"
+                fill="url(#pb-heart)"
+                stroke="rgba(255,255,255,0.4)"
+                strokeWidth="1"
+              />
+              <ellipse cx="134" cy="250" rx="6" ry="8" fill="rgba(255,255,255,0.4)" transform="rotate(-20 134 250)" />
+            </g>
           </motion.g>
         </g>
       </svg>
