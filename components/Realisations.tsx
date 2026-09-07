@@ -189,7 +189,7 @@ const wrap = (min: number, max: number, v: number) => {
   return ((((v - min) % range) + range) % range) + min;
 };
 
-const ITEM_H = 56;
+const ITEM_H = 66;
 
 function RealisationsCarousel() {
   const { t } = useI18n();
@@ -257,19 +257,19 @@ function RealisationsCarousel() {
         >
           {/* Rolodex de types */}
           <div
-            className="relative flex items-center overflow-hidden px-8 lg:px-12 min-h-[260px] lg:min-h-[540px] lg:w-[38%]"
+            className="relative flex items-center overflow-hidden px-6 min-h-[320px] lg:min-h-[560px] lg:w-[40%]"
             style={{ background: "#F2D4D9" }}
           >
-            <div className="absolute inset-x-0 top-0 h-16 z-10 pointer-events-none" style={{ background: "linear-gradient(#F2D4D9, rgba(242,212,217,0))" }} />
-            <div className="absolute inset-x-0 bottom-0 h-16 z-10 pointer-events-none" style={{ background: "linear-gradient(rgba(242,212,217,0), #F2D4D9)" }} />
-            <div className="relative flex h-full w-full items-center">
+            <div className="absolute inset-x-0 top-0 h-20 z-10 pointer-events-none" style={{ background: "linear-gradient(#F2D4D9, rgba(242,212,217,0))" }} />
+            <div className="absolute inset-x-0 bottom-0 h-20 z-10 pointer-events-none" style={{ background: "linear-gradient(rgba(242,212,217,0), #F2D4D9)" }} />
+            <div className="relative flex h-full w-full items-center justify-center">
               {CAROUSEL.map((it, i) => {
                 const wd = wrap(-(N / 2), N / 2, i - cur);
                 const on = i === cur;
                 return (
                   <motion.div
                     key={i}
-                    className="absolute"
+                    className="absolute inset-x-0 flex justify-center"
                     style={{ height: ITEM_H }}
                     animate={{
                       y: wd * ITEM_H,
@@ -281,17 +281,17 @@ function RealisationsCarousel() {
                       onClick={() => jump(i)}
                       onMouseEnter={() => setPaused(true)}
                       onMouseLeave={() => setPaused(false)}
-                      className="flex items-center gap-3 rounded-full border px-6 py-3 transition-colors duration-500 cursor-pointer"
+                      className="flex items-center justify-center gap-3 rounded-full border px-9 py-4 transition-colors duration-500 cursor-pointer"
                       style={
                         on
                           ? { background: "#FAF7F2", color: "#B65572", borderColor: "#FAF7F2" }
-                          : { background: "transparent", color: "rgba(42,35,32,0.5)", borderColor: "rgba(42,35,32,0.18)" }
+                          : { background: "transparent", color: "rgba(42,35,32,0.5)", borderColor: "rgba(42,35,32,0.2)" }
                       }
                     >
-                      <span className="h-1.5 w-1.5 rounded-full" style={{ background: on ? "#D9628A" : "rgba(42,35,32,0.28)" }} />
+                      <span className="h-2 w-2 rounded-full shrink-0" style={{ background: on ? "#D9628A" : "rgba(42,35,32,0.3)" }} />
                       <span
-                        className="font-serif font-light text-[15px] whitespace-nowrap"
-                        style={{ fontStyle: on ? "italic" : "normal" }}
+                        className="font-serif font-light whitespace-nowrap"
+                        style={{ fontSize: "clamp(1.05rem, 1.5vw, 1.3rem)", fontStyle: on ? "italic" : "normal" }}
                       >
                         {it.label}
                       </span>
