@@ -295,12 +295,16 @@ function ArchDecorButton({
   return (
     <div
       className="absolute z-30 hidden lg:block pointer-events-none"
-      style={{ top: "2%", right: "-7%", width: "min(42vw, 640px)" }}
-      aria-hidden={false}
+      style={{
+        top: "2%",
+        right: "-7%",
+        width: "min(42vw, 640px)",
+        height: "min(42vw, 640px)",
+      }}
     >
       <div
         className="absolute flex flex-col items-center gap-2 pointer-events-auto"
-        style={{ left: "50%", top: "60%", transform: "translate(-50%, -50%)" }}
+        style={{ left: "50%", top: "62%", transform: "translate(-50%, -50%)" }}
       >
         {level < 4 ? (
           <button
