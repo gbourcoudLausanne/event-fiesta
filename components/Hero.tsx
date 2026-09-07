@@ -257,6 +257,111 @@ function PhotoWall({ columns = 3 }: { columns?: number }) {
   );
 }
 
+/* ── Ruban horizontal plein cadre (mobile) ────────────────────────────── */
+function HorizontalMarquee() {
+  const reduce = useReducedMotion();
+  const boxRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const pos = useRef(0);
+  const loop = [...PHOTOS, ...PHOTOS];
+
+  useEffect(() => {
+    const box = boxRef.current;
+    const track = trackRef.current;
+    if (!box || !track) return;
+
+    const half = () => track.scrollWidth / 2 || 1;
+    const wrap = () => {
+      const h = half();
+      if (pos.current >= h) pos.current -= h;
+      else if (pos.current < 0) pos.current += h;
+    };
+    const apply = () => {
+      track.style.transform = `translate3d(${-pos.current}px, 0, 0)`;
+    };
+    apply();
+
+    let raf = 0;
+    let last = performance.now();
+    let manualUntil = 0;
+    const tick = (now: number) => {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      if (!reduce && now > manualUntil) {
+        pos.current += 32 * dt;
+        wrap();
+        apply();
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    let tx = 0;
+    const onTouchStart = (e: TouchEvent) => {
+      tx = e.touches[0].clientX;
+      manualUntil = performance.now() + 2600;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      const x = e.touches[0].clientX;
+      pos.current += tx - x;
+      tx = x;
+      manualUntil = performance.now() + 2600;
+      wrap();
+      apply();
+    };
+    box.addEventListener("touchstart", onTouchStart, { passive: true });
+    box.addEventListener("touchmove", onTouchMove, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      box.removeEventListener("touchstart", onTouchStart);
+      box.removeEventListener("touchmove", onTouchMove);
+    };
+  }, [reduce]);
+
+  return (
+    <div
+      ref={boxRef}
+      className="relative overflow-hidden"
+      style={{ height: "clamp(300px, 44vh, 460px)" }}
+    >
+      <div ref={trackRef} className="flex gap-3 h-full px-4 will-change-transform">
+        {loop.map((p, i) => (
+          <div
+            key={i}
+            className="relative h-full shrink-0 overflow-hidden rounded-2xl"
+            style={{ aspectRatio: "3 / 4", boxShadow: "0 14px 34px -14px rgba(120,60,80,0.45)" }}
+          >
+            <Image
+              src={p.src}
+              alt={i < PHOTOS.length ? p.alt : ""}
+              fill
+              priority={i === 0}
+              className="object-cover"
+              sizes="70vw"
+            />
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: "linear-gradient(180deg, rgba(0,0,0,0) 72%, rgba(74,40,52,0.25) 100%)" }}
+              aria-hidden
+            />
+          </div>
+        ))}
+      </div>
+      <div
+        className="absolute inset-y-0 left-0 w-8 pointer-events-none"
+        style={{ background: "linear-gradient(to right, #FAF7F2, rgba(250,247,242,0))" }}
+        aria-hidden
+      />
+      <div
+        className="absolute inset-y-0 right-0 w-8 pointer-events-none"
+        style={{ background: "linear-gradient(to left, #FAF7F2, rgba(250,247,242,0))" }}
+        aria-hidden
+      />
+    </div>
+  );
+}
+
 /* ── Colonne texte ─────────────────────────────────────────────────────── */
 // part: "intro" = filet + titre + sous-titre · "actions" = CTA + services · undefined = tout
 function HeroText({ part }: { part?: "intro" | "actions" }) {
@@ -305,39 +410,48 @@ function HeroText({ part }: { part?: "intro" | "actions" }) {
       </>
       )}
 
-      {showActions && (
-      <>
-      <motion.div
-        {...item(0.4)}
-        className="mt-7 sm:mt-9 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3.5 sm:gap-5"
-      >
-        <Link
-          href="/contact"
-          className="btn-gold-shimmer inline-flex items-center justify-center gap-2 font-sans text-[13px] font-medium px-8 py-4 rounded-full cursor-pointer transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
-          style={{ background: "#D9628A", color: "#FAF7F2" }}
-        >
-          {t.hero.cta1}
-          <ArrowRight size={15} weight="bold" />
-        </Link>
-        <Link
-          href="/galerie"
-          className="group inline-flex items-center justify-center sm:justify-start gap-1.5 font-sans text-[13px] font-medium tracking-wide transition-colors duration-200 py-2"
-          style={{ color: "rgba(42,35,32,0.7)" }}
-        >
-          {t.hero.cta2}
-          <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
-        </Link>
-      </motion.div>
-
-      <motion.div
-        {...item(0.55)}
-        className="mt-8 pt-6 sm:mt-10 sm:pt-7"
-        style={{ borderTop: "1px solid rgba(42,35,32,0.12)" }}
-      >
-        <RotatingServices />
-      </motion.div>
-      </>
-      )}
+      {showActions && (() => {
+        const cta = (
+          <motion.div
+            key="cta"
+            {...item(0.4)}
+            className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3.5 sm:gap-5"
+          >
+            <Link
+              href="/contact"
+              className="btn-gold-shimmer inline-flex items-center justify-center gap-2 font-sans text-[13px] font-medium px-8 py-4 rounded-full cursor-pointer transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
+              style={{ background: "#D9628A", color: "#FAF7F2" }}
+            >
+              {t.hero.cta1}
+              <ArrowRight size={15} weight="bold" />
+            </Link>
+            <Link
+              href="/galerie"
+              className="group inline-flex items-center justify-center sm:justify-start gap-1.5 font-sans text-[13px] font-medium tracking-wide transition-colors duration-200 py-2"
+              style={{ color: "rgba(42,35,32,0.7)" }}
+            >
+              {t.hero.cta2}
+              <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
+            </Link>
+          </motion.div>
+        );
+        const services = (
+          <motion.div
+            key="services"
+            {...item(0.55)}
+            className="pt-6 sm:pt-7"
+            style={{ borderTop: "1px solid rgba(42,35,32,0.12)" }}
+          >
+            <RotatingServices />
+          </motion.div>
+        );
+        // Mobile ("actions") : services puis CTA · Desktop (tout) : CTA puis services
+        return (
+          <div className={`flex flex-col ${part === "actions" ? "gap-9" : "gap-10 mt-9"}`}>
+            {part === "actions" ? [services, cta] : [cta, services]}
+          </div>
+        );
+      })()}
     </div>
   );
 }
@@ -376,15 +490,15 @@ export function Hero() {
           </div>
         </div>
 
-        {/* ── Mobile / tablette : texte d'intro → photos → CTA ── */}
-        <div className="lg:hidden pt-[92px] pb-12 px-5 sm:px-6">
-          <div className="px-1">
+        {/* ── Mobile / tablette : intro → ruban photos plein cadre → services + CTA ── */}
+        <div className="lg:hidden pt-[92px] pb-14">
+          <div className="px-6 sm:px-8">
             <HeroText part="intro" />
           </div>
-          <div className="relative h-[42vh] min-h-[300px] max-h-[500px] my-8">
-            <PhotoWall columns={2} />
+          <div className="my-9">
+            <HorizontalMarquee />
           </div>
-          <div className="px-1">
+          <div className="px-6 sm:px-8">
             <HeroText part="actions" />
           </div>
         </div>
