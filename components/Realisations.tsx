@@ -244,6 +244,84 @@ const wrap = (min: number, max: number, v: number) => {
   return ((((v - min) % range) + range) % range) + min;
 };
 
+/* ── Bouquet de ballons qui s'élève (motif animé de la section) ────────── */
+const RZ_GRADS: Record<string, [string, string, string]> = {
+  rose:     ["#FCE2E9", "#F2A6B8", "#DE7C98"],
+  roseDeep: ["#F7C9D6", "#E58AA6", "#C65E7F"],
+  gold:     ["#F6E2CF", "#E3B593", "#C68C63"],
+  blue:     ["#E4F0F5", "#AFD2E1", "#7FB0C6"],
+  cream:    ["#FFFDFA", "#F3EBDF", "#DFD2BF"],
+};
+const RZ_BALLOONS = [
+  { x: 96,  y: 96,  r: 30, g: "rose",     s: "M96 126 C90 150 104 168 96 196 C92 210 98 220 96 232", d: 0.10, sw: 3.5 },
+  { x: 150, y: 66,  r: 24, g: "gold",     s: "M150 90 C144 116 156 132 150 162 C147 178 152 188 150 200", d: 0.22, sw: 4.5 },
+  { x: 58,  y: 150, r: 22, g: "blue",     s: "M58 172 C52 196 66 212 58 240 C55 254 60 262 58 272", d: 0.34, sw: 5 },
+  { x: 128, y: 148, r: 27, g: "roseDeep", s: "M128 175 C122 200 136 216 128 246 C125 262 130 270 128 282", d: 0.16, sw: 3 },
+  { x: 188, y: 128, r: 20, g: "cream",    s: "M188 148 C182 172 196 186 188 214 C185 228 190 236 188 246", d: 0.42, sw: 5.5 },
+  { x: 80,  y: 40,  r: 18, g: "roseDeep", s: "M80 58 C76 82 88 96 80 122 C78 136 82 144 80 154", d: 0.50, sw: 6 },
+  { x: 168, y: 190, r: 17, g: "blue",     s: "M168 207 C164 228 176 242 168 268 C166 282 170 288 168 298", d: 0.30, sw: 6 },
+];
+
+function FloatingBalloons() {
+  const reduce = useReducedMotion();
+  return (
+    <motion.svg
+      viewBox="0 0 260 330"
+      fill="none"
+      className="w-full max-w-[300px] lg:max-w-[360px]"
+      style={{ overflow: "visible" }}
+      aria-hidden
+      initial={reduce ? undefined : "hidden"}
+      whileInView={reduce ? undefined : "shown"}
+      viewport={{ once: true, amount: 0.4 }}
+    >
+      <defs>
+        {Object.entries(RZ_GRADS).map(([k, [a, b, c]]) => (
+          <radialGradient key={k} id={`rz-${k}`} cx="34%" cy="28%" r="80%">
+            <stop offset="0%" stopColor={a} />
+            <stop offset="52%" stopColor={b} />
+            <stop offset="100%" stopColor={c} />
+          </radialGradient>
+        ))}
+      </defs>
+      {RZ_BALLOONS.map((b, i) => (
+        <motion.g
+          key={i}
+          variants={{
+            hidden: { y: 70, opacity: 0 },
+            shown: {
+              y: 0,
+              opacity: 0.95,
+              transition: { type: "spring", stiffness: 120, damping: 16, delay: b.d },
+            },
+          }}
+        >
+          <motion.g
+            animate={reduce ? undefined : { y: [0, -9, 0], rotate: [0, i % 2 ? 1.4 : -1.4, 0] }}
+            transition={{ repeat: Infinity, duration: 5.5 + i * 0.5, ease: "easeInOut", delay: 1 + b.d }}
+            style={{ transformOrigin: `${b.x}px ${b.y}px` }}
+          >
+            <path d={b.s} stroke="rgba(120,60,80,0.28)" strokeWidth={b.sw * 0.16} fill="none" strokeLinecap="round" />
+            <circle cx={b.x} cy={b.y} r={b.r} fill={`url(#rz-${b.g})`} />
+            <path
+              d={`M${b.x - 4} ${b.y + b.r - 1} Q${b.x} ${b.y + b.r + 5} ${b.x + 4} ${b.y + b.r - 1} Z`}
+              fill={`url(#rz-${b.g})`}
+            />
+            <ellipse
+              cx={b.x - b.r * 0.32}
+              cy={b.y - b.r * 0.36}
+              rx={b.r * 0.22}
+              ry={b.r * 0.32}
+              fill="rgba(255,255,255,0.5)"
+              transform={`rotate(-22 ${b.x - b.r * 0.32} ${b.y - b.r * 0.36})`}
+            />
+          </motion.g>
+        </motion.g>
+      ))}
+    </motion.svg>
+  );
+}
+
 const ITEM_H = 66;
 
 const DUR = 4600;
@@ -291,30 +369,39 @@ function RealisationsCarousel() {
   return (
     <section id="realisations" className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#F3EDE6" }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        {/* En-tête */}
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.6, ease }}
-          className="max-w-2xl mb-10 lg:mb-14"
-        >
-          <div className="flex items-center gap-3 mb-5">
-            <span className="w-10 h-px" style={{ background: "#D9628A" }} />
-            <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
-              {t.realisations.eyebrow}
-            </span>
+        {/* En-tête : motif animé à gauche, texte à droite */}
+        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-14 items-center mb-10 lg:mb-16">
+          <div className="order-2 lg:order-1 flex justify-center lg:justify-start">
+            <FloatingBalloons />
           </div>
-          <h2
-            className="font-serif font-light leading-tight tracking-tight"
-            style={{ fontSize: "clamp(2.3rem, 4.6vw, 3.8rem)", color: "#2A2320" }}
+
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6, ease }}
+            className="order-1 lg:order-2 lg:text-right"
           >
-            {t.realisations.title}
-          </h2>
-          <p className="font-sans font-light text-[14.5px] leading-relaxed mt-5" style={{ color: "rgba(42,35,32,0.55)" }}>
-            {t.realisations.subtitle}
-          </p>
-        </motion.div>
+            <div className="flex items-center gap-3 mb-5 lg:justify-end">
+              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
+                {t.realisations.eyebrow}
+              </span>
+              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+            </div>
+            <h2
+              className="font-serif font-light leading-tight tracking-tight"
+              style={{ fontSize: "clamp(2.3rem, 4.6vw, 3.8rem)", color: "#2A2320" }}
+            >
+              {t.realisations.title}
+            </h2>
+            <p
+              className="font-sans font-light text-[14.5px] leading-relaxed mt-5 lg:ml-auto max-w-md"
+              style={{ color: "rgba(42,35,32,0.55)" }}
+            >
+              {t.realisations.subtitle}
+            </p>
+          </motion.div>
+        </div>
 
         {/* Carousel */}
         <div
