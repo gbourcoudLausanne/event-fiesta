@@ -398,7 +398,7 @@ function FloatingBalloons() {
   );
 }
 
-const ITEM_H = 66;
+const ITEM_H = 80;
 
 const DUR = 4600;
 
@@ -556,7 +556,7 @@ function RealisationsCarousel() {
                       <span
                         className="font-serif font-light whitespace-nowrap transition-colors duration-300"
                         style={{
-                          fontSize: on ? "clamp(1.5rem, 2.4vw, 2.15rem)" : "clamp(1rem, 1.5vw, 1.2rem)",
+                          fontSize: on ? "clamp(1.9rem, 3.2vw, 2.9rem)" : "clamp(1.15rem, 1.8vw, 1.45rem)",
                           color: on ? "#B65572" : "rgba(42,35,32,0.42)",
                           fontStyle: on ? "italic" : "normal",
                         }}
