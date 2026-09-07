@@ -949,16 +949,14 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
         )}
 
         {/* Masonry grid */}
-        <AnimatePresence mode="popLayout">
-          <div className="columns-1 sm:columns-2 lg:columns-3 gap-3">
+        <div key={active} className="columns-1 sm:columns-2 lg:columns-3 gap-3">
             {filtered.map((photo, i) => (
               <motion.button
                 key={photo.src}
-                layout
                 initial={reduce ? false : { opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.45, delay: i * 0.06, ease }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: 0.45, delay: Math.min(i, 8) * 0.05, ease }}
                 onClick={() => setLightboxIndex(i)}
                 className="break-inside-avoid mb-3 group relative overflow-hidden cursor-pointer block w-full text-left focus-visible:outline-2"
                 style={{ borderRadius: 14 }}
@@ -997,8 +995,7 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
                 </div>
               </motion.button>
             ))}
-          </div>
-        </AnimatePresence>
+        </div>
 
         {preview && (
           <div className="mt-12 flex justify-center">
