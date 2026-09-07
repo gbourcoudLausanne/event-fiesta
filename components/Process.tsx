@@ -122,7 +122,7 @@ function BalloonNumber() {
               <path d="M88 98 L128 44" />
               <path d="M128 44 L128 248" />
               <path d="M96 248 L160 248" />
-              <ellipse cx="286" cy="146" rx="62" ry="100" />
+              <ellipse cx="250" cy="146" rx="62" ry="100" />
             </g>
             {/* corps des chiffres */}
             <g stroke="url(#pb-foil)" strokeWidth="44" strokeLinecap="round" strokeLinejoin="round" fill="none">
@@ -131,7 +131,7 @@ function BalloonNumber() {
               <path d="M128 44 L128 248" />
               <path d="M96 248 L160 248" />
               {/* 0 : anneau */}
-              <ellipse cx="286" cy="146" rx="62" ry="100" />
+              <ellipse cx="250" cy="146" rx="62" ry="100" />
             </g>
            </g>
           </motion.g>
@@ -147,9 +147,9 @@ function BalloonNumber() {
                 transition: { type: "spring", stiffness: 220, damping: 16, delay: 0.95 },
               },
             }}
-            style={{ transformOrigin: "292px 60px" }}
+            style={{ transformOrigin: "262px 60px" }}
           >
-            <g transform="translate(142 -50)">
+            <g transform="translate(112 -50)">
               <path d="M150 96 Q124 78 122 104 Q126 118 150 104 Z" fill="#F6CDD9" />
               <path d="M150 96 Q176 78 178 104 Q174 118 150 104 Z" fill="#F0BFCE" />
               <path d="M147 104 Q140 128 143 150 L150 144 L157 150 Q160 128 153 104 Z" fill="#F6CDD9" />
