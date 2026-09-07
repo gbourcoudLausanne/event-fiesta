@@ -381,11 +381,13 @@ function HeroText({ part }: { part?: "intro" | "actions" }) {
   const showIntro = part !== "actions";
   const showActions = part !== "intro";
 
+  const centered = part === "intro" || part === "actions";
+
   return (
-    <div className="max-w-[34rem]">
+    <div className={`max-w-[34rem] ${centered ? "mx-auto text-center" : ""}`}>
       {showIntro && (
       <>
-      <motion.div {...item(0)} className="flex items-center gap-3 mb-5 sm:mb-7">
+      <motion.div {...item(0)} className={`flex items-center gap-3 mb-5 sm:mb-7 ${centered ? "justify-center" : ""}`}>
         <span className="w-8 sm:w-12 h-px shrink-0" style={{ background: "#D9628A" }} />
         <span className="font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.22em] sm:tracking-[0.3em]" style={{ color: "#B65572" }}>
           <span className="sm:hidden">Décoration d&apos;événements</span>
@@ -396,7 +398,11 @@ function HeroText({ part }: { part?: "intro" | "actions" }) {
       <motion.h1
         {...item(0.12)}
         className="font-serif font-light tracking-tight"
-        style={{ fontSize: "clamp(2.05rem, 6vw, 4.6rem)", lineHeight: 1.07, color: "#2A2320" }}
+        style={{
+          fontSize: centered ? "clamp(2.55rem, 9vw, 3.9rem)" : "clamp(2.5rem, 4.4vw, 4.6rem)",
+          lineHeight: 1.06,
+          color: "#2A2320",
+        }}
       >
         {t.hero.headline1}{" "}
         <span className="font-serif italic" style={{ color: "#B65572" }}>
