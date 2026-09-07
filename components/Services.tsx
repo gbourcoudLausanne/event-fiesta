@@ -94,15 +94,7 @@ function Pampa({ x, y, a }: { x: number; y: number; a: number }) {
   );
 }
 
-function BalloonArch({
-  level,
-  onStep,
-  onReset,
-}: {
-  level: number;
-  onStep: () => void;
-  onReset: () => void;
-}) {
+function BalloonArch({ level }: { level: number }) {
   const reduce = useReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
@@ -153,43 +145,6 @@ function BalloonArch({
       className="absolute pointer-events-none hidden lg:block"
       style={{ top: "2%", right: "-7%", width: "min(42vw, 640px)", y }}
     >
-      {/* Bouton « décorer » au centre de l'arche */}
-      <div
-        className="absolute z-10 flex flex-col items-center gap-2"
-        style={{ left: "47%", top: "56%", transform: "translate(-50%, -50%)", pointerEvents: "auto" }}
-      >
-        {level < 4 ? (
-          <button
-            type="button"
-            onClick={onStep}
-            className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[12px] font-medium px-6 py-3 rounded-full whitespace-nowrap transition-transform duration-200 hover:scale-[1.04] active:scale-[0.97] shadow-lg"
-            style={{ background: "#D9628A", color: "#FAF7F2" }}
-          >
-            {DECOR_STEPS[level - 1]}
-            <span aria-hidden>✨</span>
-          </button>
-        ) : (
-          <Link
-            href="/contact"
-            className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[12px] font-medium px-6 py-3 rounded-full whitespace-nowrap transition-transform duration-200 hover:scale-[1.04] shadow-lg"
-            style={{ background: "#D9628A", color: "#FAF7F2" }}
-          >
-            Et la vôtre ? Demander un devis
-            <ArrowUpRight size={13} weight="bold" />
-          </Link>
-        )}
-        {level > 1 && (
-          <button
-            type="button"
-            onClick={onReset}
-            className="font-sans text-[10px] uppercase tracking-[0.16em]"
-            style={{ color: "rgba(42,35,32,0.45)" }}
-          >
-            Recommencer
-          </button>
-        )}
-      </div>
-
       <motion.svg viewBox="0 0 420 420" fill="none" style={{ overflow: "visible", width: "100%" }} aria-hidden>
         <defs>
           {GRAD_KEYS.map((k) => {
@@ -324,6 +279,61 @@ function BalloonArch({
         </motion.g>
       </motion.svg>
     </motion.div>
+  );
+}
+
+// Bouton interactif superposé au centre de l'arche (rendu après le contenu → cliquable)
+function ArchDecorButton({
+  level,
+  onStep,
+  onReset,
+}: {
+  level: number;
+  onStep: () => void;
+  onReset: () => void;
+}) {
+  return (
+    <div
+      className="absolute z-30 hidden lg:block pointer-events-none"
+      style={{ top: "2%", right: "-7%", width: "min(42vw, 640px)" }}
+      aria-hidden={false}
+    >
+      <div
+        className="absolute flex flex-col items-center gap-2 pointer-events-auto"
+        style={{ left: "50%", top: "60%", transform: "translate(-50%, -50%)" }}
+      >
+        {level < 4 ? (
+          <button
+            type="button"
+            onClick={onStep}
+            className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[12px] font-medium px-6 py-3 rounded-full whitespace-nowrap transition-transform duration-200 hover:scale-[1.04] active:scale-[0.97] shadow-lg cursor-pointer"
+            style={{ background: "#D9628A", color: "#FAF7F2" }}
+          >
+            {DECOR_STEPS[level - 1]}
+            <span aria-hidden>✨</span>
+          </button>
+        ) : (
+          <Link
+            href="/contact"
+            className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[12px] font-medium px-6 py-3 rounded-full whitespace-nowrap transition-transform duration-200 hover:scale-[1.04] shadow-lg"
+            style={{ background: "#D9628A", color: "#FAF7F2" }}
+          >
+            Et la vôtre ? Demander un devis
+            <ArrowUpRight size={13} weight="bold" />
+          </Link>
+        )}
+        {level > 1 && (
+          <button
+            type="button"
+            onClick={onReset}
+            className="font-sans text-[10px] uppercase tracking-[0.16em] cursor-pointer"
+            style={{ color: "rgba(42,35,32,0.45)" }}
+          >
+            Recommencer
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -465,11 +475,7 @@ export function Services() {
         }}
         aria-hidden
       />
-      <BalloonArch
-        level={decor}
-        onStep={() => setDecor((d) => Math.min(4, d + 1))}
-        onReset={() => setDecor(1)}
-      />
+      <BalloonArch level={decor} />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
         {/* En-tête */}
@@ -551,6 +557,12 @@ export function Services() {
           <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
         </Link>
       </div>
+
+      <ArchDecorButton
+        level={decor}
+        onStep={() => setDecor((d) => Math.min(4, d + 1))}
+        onReset={() => setDecor(1)}
+      />
     </section>
   );
 }
