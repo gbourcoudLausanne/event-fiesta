@@ -46,12 +46,14 @@ const SCALLOP_FRONT =
 export function SoftDivider({
   from,
   to,
-  tint = "rgba(217,98,138,0.09)",
+  back = "#FBEFF2",
+  front = "#F5DEE3",
   height = 90,
 }: {
   from: string;
   to: string;
-  tint?: string;
+  back?: string;
+  front?: string;
   height?: number;
 }) {
   return (
@@ -65,8 +67,15 @@ export function SoftDivider({
         preserveAspectRatio="none"
         style={{ display: "block", width: "100%", height }}
       >
-        <path d={SCALLOP_BACK} fill={tint} />
-        <path d={SCALLOP_FRONT} fill={to} />
+        <defs>
+          <linearGradient id="softdiv-blend" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={front} />
+            <stop offset="100%" stopColor={to} />
+          </linearGradient>
+        </defs>
+        <path d={SCALLOP_BACK} fill={back} />
+        <path d={SCALLOP_FRONT} fill="url(#softdiv-blend)" />
+        <rect x="0" y="112" width="1440" height="8" fill={to} />
       </svg>
     </div>
   );
