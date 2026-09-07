@@ -36,3 +36,38 @@ export function SectionDivider({
     </div>
   );
 }
+
+/* ── Séparateur en festons (silhouette de guirlande de ballons) ────────── */
+const SCALLOP_BACK =
+  "M0,120 L0,64 C35,34 80,30 120,58 C160,84 205,86 250,58 C292,32 345,28 392,62 C430,90 480,92 528,62 C570,36 625,32 675,66 C715,94 770,96 822,64 C866,38 925,34 978,68 C1022,96 1078,98 1132,66 C1180,40 1240,36 1298,70 C1345,96 1395,98 1440,72 L1440,120 Z";
+const SCALLOP_FRONT =
+  "M0,120 L0,80 C20,50 55,44 88,72 C118,98 150,100 185,76 C220,52 262,46 300,80 C332,108 368,110 405,82 C440,56 486,50 525,84 C560,112 598,114 638,84 C675,56 720,50 762,86 C800,116 840,118 882,86 C920,58 968,52 1008,88 C1045,118 1088,120 1130,88 C1168,60 1215,54 1258,90 C1295,118 1338,120 1382,90 C1405,72 1425,68 1440,82 L1440,120 Z";
+
+export function SoftDivider({
+  from,
+  to,
+  tint = "rgba(217,98,138,0.09)",
+  height = 90,
+}: {
+  from: string;
+  to: string;
+  tint?: string;
+  height?: number;
+}) {
+  return (
+    <div
+      style={{ background: from, lineHeight: 0, display: "block" } as CSSProperties}
+      aria-hidden
+    >
+      <svg
+        viewBox="0 0 1440 120"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="none"
+        style={{ display: "block", width: "100%", height }}
+      >
+        <path d={SCALLOP_BACK} fill={tint} />
+        <path d={SCALLOP_FRONT} fill={to} />
+      </svg>
+    </div>
+  );
+}
