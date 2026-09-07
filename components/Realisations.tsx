@@ -175,13 +175,13 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 /* ── Carousel d'aperçu (accueil) : rolodex de types + pile photo ──────── */
 const CAROUSEL = [
-  { label: "Anniversaire",   src: "/Galerie/hero-slides/hero-slide-13.PNG", alt: "Arche ronde de ballons violet et or dans un jardin", name: "Arche jardin · violet & or" },
-  { label: "Baby shower",    src: "/Galerie/hero-slides/hero-slide-2.PNG",  alt: "Arche organique rose poudré, crème et rose gold", name: "Arche rose poudré" },
+  { label: "Anniversaire",   src: "/Galerie/hero-slides/hero-slide-13.PNG", alt: "Arche ronde de ballons violet, lilas et or dans un jardin avec salon lounge", name: "Arche jardin · violet & or" },
+  { label: "Baby shower",    src: "/Galerie/hero-slides/hero-slide-2.PNG",  alt: "Arche organique de ballons rose poudré, crème et rose gold", name: "Arche rose poudré & rose gold" },
   { label: "Gender reveal",  src: "/Galerie/Gender-Reveal/GenderReveal_1.webp", alt: "Gender reveal Oh Baby, arche dorée et fleurs", name: "Oh Baby !" },
-  { label: "Baptême",        src: "/Galerie/Baptemes/Bapteme.jpg", alt: "Arche dorée avec guirlande de ballons rose gold et pampas", name: "Arche dorée & pampa" },
-  { label: "Sweet table",    src: "/Galerie/hero-slides/hero-slide-6.PNG", alt: "Sweet table dorée avec gâteau et ballons rose et pêche", name: "Sweet table rosée" },
-  { label: "Pique-nique",    src: "/Galerie/hero-slides/hero-slide-17.webp", alt: "Pique-nique de luxe au bord de l'eau", name: "Pique-nique · au bord de l'eau" },
-  { label: "Entreprise",     src: "/Galerie/Corporate/Corporate_1.jpg", alt: "Arche de ballons colorée pour un événement d'entreprise", name: "Événement corporate" },
+  { label: "Baptême",        src: "/Galerie/Baptemes/Bapteme.jpg", alt: "Arche dorée avec guirlande de ballons rose gold et pampa", name: "Arche dorée & pampa" },
+  { label: "Mariage civil",  src: "/Galerie/hero-slides/hero-slide-7.jpeg", alt: "Arche de cérémonie en bois avec voile ivoire et compositions de fleurs séchées", name: "Cérémonie · fleurs séchées" },
+  { label: "Pique-nique",    src: "/Galerie/hero-slides/hero-slide-17.webp", alt: "Pique-nique de luxe au bord de l'eau, table basse en bois et coussins", name: "Pique-nique de luxe · au bord de l'eau" },
+  { label: "Entreprise",     src: "/Galerie/hero-slides/hero-slide-3.PNG", alt: "Guirlande de ballons multicolore au-dessus d'une grazing table", name: "Soirée d'entreprise · grazing table" },
 ];
 
 const wrap = (min: number, max: number, v: number) => {
