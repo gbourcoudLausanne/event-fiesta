@@ -1,7 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { useRef, useState } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "motion/react";
 import Link from "next/link";
 import { ArrowUpRight, ArrowRight } from "@phosphor-icons/react";
 import { useI18n } from "@/lib/i18n";
@@ -16,63 +22,126 @@ const TINTS = [
   { bg: "#FBF1E7", dot: "#F0C29A" },
 ];
 
-// Ballons le long de l'arche (viewBox 400×400)
-const ARCH_BALLOONS: { cx: number; cy: number; r: number; c: string }[] = [
-  { cx: 27, cy: 388, r: 14, c: "#F4A8B8" }, { cx: 17, cy: 356, r: 9, c: "#FBD5DE" },
-  { cx: 34, cy: 338, r: 16, c: "#A8CEE0" }, { cx: 23, cy: 308, r: 11, c: "#FAF7F2" },
-  { cx: 40, cy: 286, r: 17, c: "#F0C29A" }, { cx: 29, cy: 260, r: 10, c: "#F4A8B8" },
-  { cx: 45, cy: 236, r: 15, c: "#FBD5DE" }, { cx: 37, cy: 210, r: 12, c: "#A8CEE0" },
-  { cx: 55, cy: 186, r: 17, c: "#F4A8B8" }, { cx: 47, cy: 160, r: 10, c: "#FAF7F2" },
-  { cx: 66, cy: 138, r: 14, c: "#F0C29A" }, { cx: 60, cy: 114, r: 11, c: "#F4A8B8" },
-  { cx: 83, cy: 94, r: 16, c: "#FBD5DE" },  { cx: 110, cy: 66, r: 12, c: "#A8CEE0" },
-  { cx: 140, cy: 46, r: 18, c: "#F4A8B8" }, { cx: 172, cy: 35, r: 11, c: "#FAF7F2" },
-  { cx: 200, cy: 31, r: 16, c: "#F0C29A" }, { cx: 228, cy: 37, r: 13, c: "#F4A8B8" },
-  { cx: 258, cy: 49, r: 17, c: "#FBD5DE" }, { cx: 288, cy: 70, r: 12, c: "#A8CEE0" },
-  { cx: 312, cy: 98, r: 15, c: "#F4A8B8" }, { cx: 326, cy: 126, r: 12, c: "#F0C29A" },
-  { cx: 341, cy: 154, r: 17, c: "#FBD5DE" },{ cx: 332, cy: 182, r: 10, c: "#FAF7F2" },
-  { cx: 349, cy: 210, r: 16, c: "#F4A8B8" },{ cx: 340, cy: 238, r: 11, c: "#A8CEE0" },
-  { cx: 357, cy: 266, r: 17, c: "#F0C29A" },{ cx: 347, cy: 294, r: 12, c: "#F4A8B8" },
-  { cx: 363, cy: 322, r: 14, c: "#FBD5DE" },{ cx: 353, cy: 350, r: 10, c: "#FAF7F2" },
-  { cx: 369, cy: 380, r: 15, c: "#F4A8B8" },
+/* ── Arche de ballons ──────────────────────────────────────────────────── */
+// g = clé de dégradé · b = arrière-plan flou (profondeur)
+type Balloon = { x: number; y: number; r: number; g: string; b?: boolean };
+
+const BALLOON_GRADS: Record<string, [string, string, string]> = {
+  rose:     ["#FCE2E9", "#F2A6B8", "#DE7C98"],
+  roseDeep: ["#F7C9D6", "#E58AA6", "#C65E7F"],
+  gold:     ["#F6E2CF", "#E3B593", "#C68C63"],
+  blue:     ["#E4F0F5", "#AFD2E1", "#7FB0C6"],
+  cream:    ["#FFFDFA", "#F3EBDF", "#DFD2BF"],
+};
+
+// Garland le long de l'arche (viewBox 420×420), du bas-gauche au bas-droite.
+const BALLOONS: Balloon[] = [
+  { x: 34, y: 402, r: 20, g: "rose" }, { x: 16, y: 380, r: 13, g: "cream", b: true },
+  { x: 44, y: 372, r: 15, g: "gold" }, { x: 24, y: 350, r: 22, g: "roseDeep" },
+  { x: 50, y: 336, r: 12, g: "blue" }, { x: 30, y: 316, r: 17, g: "rose" },
+  { x: 15, y: 300, r: 11, g: "cream", b: true }, { x: 48, y: 296, r: 21, g: "gold" },
+  { x: 33, y: 272, r: 14, g: "blue" }, { x: 52, y: 254, r: 18, g: "roseDeep" },
+  { x: 37, y: 232, r: 12, g: "cream" }, { x: 58, y: 218, r: 22, g: "rose" },
+  { x: 44, y: 196, r: 15, g: "gold" }, { x: 66, y: 180, r: 12, g: "blue", b: true },
+  { x: 55, y: 160, r: 20, g: "roseDeep" }, { x: 78, y: 146, r: 14, g: "cream" },
+  { x: 70, y: 122, r: 21, g: "rose" }, { x: 96, y: 108, r: 13, g: "gold" },
+  { x: 92, y: 84, r: 18, g: "blue" }, { x: 122, y: 74, r: 22, g: "roseDeep" },
+  { x: 118, y: 50, r: 14, g: "cream", b: true }, { x: 152, y: 46, r: 20, g: "rose" },
+  { x: 150, y: 24, r: 12, g: "gold" }, { x: 188, y: 30, r: 23, g: "roseDeep" },
+  { x: 214, y: 20, r: 13, g: "blue" }, { x: 224, y: 40, r: 19, g: "cream" },
+  { x: 252, y: 26, r: 15, g: "rose" }, { x: 262, y: 48, r: 22, g: "gold" },
+  { x: 290, y: 40, r: 13, g: "roseDeep", b: true }, { x: 300, y: 66, r: 20, g: "blue" },
+  { x: 326, y: 62, r: 15, g: "rose" }, { x: 334, y: 90, r: 22, g: "roseDeep" },
+  { x: 356, y: 88, r: 12, g: "cream" }, { x: 352, y: 116, r: 19, g: "gold" },
+  { x: 374, y: 118, r: 13, g: "blue", b: true }, { x: 366, y: 146, r: 21, g: "rose" },
+  { x: 388, y: 152, r: 12, g: "cream" }, { x: 378, y: 180, r: 18, g: "roseDeep" },
+  { x: 396, y: 190, r: 13, g: "gold" }, { x: 384, y: 218, r: 22, g: "blue" },
+  { x: 402, y: 236, r: 12, g: "cream", b: true }, { x: 390, y: 258, r: 19, g: "rose" },
+  { x: 406, y: 276, r: 14, g: "roseDeep" }, { x: 392, y: 300, r: 21, g: "gold" },
+  { x: 408, y: 322, r: 12, g: "blue" }, { x: 394, y: 344, r: 18, g: "rose" },
+  { x: 410, y: 366, r: 14, g: "cream" }, { x: 398, y: 390, r: 21, g: "roseDeep" },
+  { x: 384, y: 406, r: 13, g: "gold" },
 ];
 
-function ArchLine() {
+function BalloonArch() {
   const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [70, -90]);
+
   return (
-    <motion.svg
+    <motion.div
+      ref={ref}
       className="absolute pointer-events-none hidden lg:block"
-      style={{ top: "5%", right: "-4%", width: "min(32vw, 440px)", overflow: "visible" }}
-      viewBox="0 0 400 400"
-      fill="none"
+      style={{ top: "-6%", right: "-8%", width: "min(44vw, 680px)", y }}
       aria-hidden
-      initial={reduce ? undefined : "hidden"}
-      whileInView={reduce ? undefined : "shown"}
-      viewport={{ once: true, amount: 0.4 }}
     >
-      <motion.path
-        d="M20 400 C20 190 100 30 200 30 C300 30 380 190 380 400"
-        stroke="rgba(217,98,138,0.18)"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        variants={{ hidden: { pathLength: 0 }, shown: { pathLength: 1 } }}
-        transition={{ duration: 1.5, ease }}
-      />
-      <motion.g variants={{ shown: { transition: { staggerChildren: 0.03, delayChildren: 0.35 } } }}>
-        {ARCH_BALLOONS.map((b, i) => (
-          <motion.circle
-            key={i}
-            cx={b.cx}
-            cy={b.cy}
-            r={b.r}
-            fill={b.c}
-            stroke="rgba(13,11,8,0.04)"
-            style={{ transformBox: "fill-box", transformOrigin: "center" }}
-            variants={{ hidden: { scale: 0, opacity: 0 }, shown: { scale: 1, opacity: 0.4 } }}
-            transition={{ type: "spring", stiffness: 260, damping: 16 }}
-          />
-        ))}
-      </motion.g>
-    </motion.svg>
+      <motion.svg
+        viewBox="0 0 420 420"
+        fill="none"
+        style={{ overflow: "visible", width: "100%" }}
+        initial={reduce ? undefined : "hidden"}
+        whileInView={reduce ? undefined : "shown"}
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <defs>
+          {Object.entries(BALLOON_GRADS).map(([k, [a, b, c]]) => (
+            <radialGradient key={k} id={`ba-${k}`} cx="34%" cy="28%" r="78%">
+              <stop offset="0%" stopColor={a} />
+              <stop offset="52%" stopColor={b} />
+              <stop offset="100%" stopColor={c} />
+            </radialGradient>
+          ))}
+          <filter id="ba-blur" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="4" />
+          </filter>
+        </defs>
+
+        <motion.path
+          d="M28 420 C28 200 108 26 210 26 C312 26 392 200 392 420"
+          stroke="rgba(217,98,138,0.16)"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+          variants={{ hidden: { pathLength: 0 }, shown: { pathLength: 1 } }}
+          transition={{ duration: 1.5, ease }}
+        />
+
+        {/* Balancement lent de toute la guirlande */}
+        <motion.g
+          animate={reduce ? undefined : { y: [0, -6, 0], rotate: [0, 0.5, 0] }}
+          transition={{ repeat: Infinity, duration: 7.5, ease: "easeInOut", delay: 2.4 }}
+          style={{ transformOrigin: "210px 26px" }}
+        >
+          <motion.g variants={{ shown: { transition: { staggerChildren: 0.028, delayChildren: 0.3 } } }}>
+            {BALLOONS.map((b, i) => (
+              <motion.g
+                key={i}
+                variants={{
+                  hidden: { scale: 0, opacity: 0 },
+                  shown: {
+                    scale: 1,
+                    opacity: b.b ? 0.32 : 0.9,
+                    transition: { type: "spring", stiffness: 300, damping: 13 },
+                  },
+                }}
+                style={{ transformOrigin: `${b.x}px ${b.y}px` }}
+                filter={b.b ? "url(#ba-blur)" : undefined}
+              >
+                <circle cx={b.x} cy={b.y} r={b.r} fill={`url(#ba-${b.g})`} />
+                <ellipse
+                  cx={b.x - b.r * 0.32}
+                  cy={b.y - b.r * 0.38}
+                  rx={b.r * 0.24}
+                  ry={b.r * 0.34}
+                  fill="rgba(255,255,255,0.5)"
+                  transform={`rotate(-22 ${b.x - b.r * 0.32} ${b.y - b.r * 0.38})`}
+                />
+              </motion.g>
+            ))}
+          </motion.g>
+        </motion.g>
+      </motion.svg>
+    </motion.div>
   );
 }
 
@@ -114,7 +183,7 @@ export function Services() {
         }}
         aria-hidden
       />
-      <ArchLine />
+      <BalloonArch />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
         {/* En-tête */}
