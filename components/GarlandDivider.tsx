@@ -47,8 +47,9 @@ type Balloon = {
   idx: number;
   x: number;
   y: number;
-  sx: number;
-  sy: number;
+  nx: number;
+  ny: number;
+  nside: number;
   r: number;
   g: (typeof GKEYS)[number];
   metal: 0 | 1 | 2;
@@ -57,25 +58,29 @@ type Balloon = {
   del: number;
 };
 
-const N_BALLOONS = 48;
+const N_BALLOONS = 54;
 const ALL_BALLOONS: Balloon[] = Array.from({ length: N_BALLOONS }).map((_, i) => {
-  const t = 0.035 + (i / (N_BALLOONS - 1)) * 0.93;
+  const t = 0.03 + (i / (N_BALLOONS - 1)) * 0.94;
   const p = swag(t);
-  const side = i % 2 === 0 ? 1 : -1;
-  const back = noise(i + 9) < 0.4;
-  const bump = 0.58 + 0.7 * tsin(t * Math.PI); // plus gros au centre
-  const baseR = (back ? 8 : 13) + noise(i + 5) * (back ? 9 : 17);
+  const back = noise(i + 9) < 0.38;
+  const bump = 0.62 + 0.66 * tsin(t * Math.PI); // plus gros au centre
+  const baseR = (back ? 7.5 : 12) + noise(i + 5) * (back ? 8 : 15);
   const r = rnd(baseR * bump, 3);
-  const spread = (2 + noise(i) * 15) * (back ? 0.55 : 1);
-  const off = side * spread - r * 0.28;
-  const drop = (back ? 1 : 7) + noise(i + 13) * 11;
-  const metal = !back && noise(i + 17) < 0.2 ? (noise(i + 31) < 0.5 ? 1 : 2) : 0;
+  // chaque ballon est FIXÉ au fil : son centre est décalé le long de la normale
+  // d'une fraction de son rayon, alterné dessus / dessous → le fil passe au ras.
+  const nside = i % 2 === 0 ? 1 : -1;
+  const attach = r * (0.48 + noise(i + 3) * 0.34) * (back ? 1.2 : 1);
+  const tang = (noise(i + 11) - 0.5) * r * 0.5; // petit glissement le long du fil
+  const cx = p.x + p.nx * nside * attach + p.ny * tang;
+  const cy = p.y + p.ny * nside * attach - p.nx * tang;
+  const metal = !back && noise(i + 17) < 0.18 ? (noise(i + 31) < 0.5 ? 1 : 2) : 0;
   return {
     idx: i,
-    x: rnd(p.x + p.nx * off, 3),
-    y: rnd(p.y + p.ny * off + r * 0.34 + drop, 3),
-    sx: p.x,
-    sy: p.y,
+    x: rnd(cx, 3),
+    y: rnd(cy, 3),
+    nx: p.nx,
+    ny: p.ny,
+    nside,
     r,
     g: GKEYS[Math.floor(noise(i + 2) * GKEYS.length)],
     metal: metal as 0 | 1 | 2,
@@ -183,9 +188,18 @@ function Berry({ x, y }: { x: number; y: number }) {
 function BalloonShape({ b }: { b: Balloon }) {
   const fill = b.metal === 1 ? "url(#gd-chrome)" : b.metal === 2 ? "url(#gd-rosegold)" : `url(#gd-${b.g})`;
   const mid = b.metal === 1 ? "#C77E9A" : b.metal === 2 ? "#C79066" : GRADS[b.g][2];
+  // nœud orienté vers le fil (côté opposé au décalage du centre)
+  const dx = -b.nside * b.nx;
+  const dy = -b.nside * b.ny;
+  const bcx = rnd(b.x + dx * b.r * 0.94, 3);
+  const bcy = rnd(b.y + dy * b.r * 0.94, 3);
+  const tipx = rnd(b.x + dx * (b.r + b.r * 0.12 + 1), 3);
+  const tipy = rnd(b.y + dy * (b.r + b.r * 0.12 + 1), 3);
+  const px = -dy * b.r * 0.1;
+  const py = dx * b.r * 0.1;
+  const knotD = `M${rnd(bcx + px, 3)} ${rnd(bcy + py, 3)} Q ${tipx} ${tipy} ${rnd(bcx - px, 3)} ${rnd(bcy - py, 3)} Z`;
   return (
     <g>
-      <line x1={b.x} y1={rnd(b.y - b.r, 3)} x2={b.sx} y2={b.sy} stroke="rgba(120,90,70,0.2)" strokeWidth="0.7" />
       <circle
         cx={b.x}
         cy={b.y}
@@ -195,12 +209,8 @@ function BalloonShape({ b }: { b: Balloon }) {
       />
       {!b.back && (
         <>
-          {/* petit nœud au bas du ballon */}
-          <path
-            d={`M${rnd(b.x - b.r * 0.11, 3)} ${rnd(b.y + b.r * 0.97, 3)} Q ${b.x} ${rnd(b.y + b.r + b.r * 0.1 + 1, 3)} ${rnd(b.x + b.r * 0.11, 3)} ${rnd(b.y + b.r * 0.97, 3)} Z`}
-            fill={mid}
-            opacity="0.7"
-          />
+          {/* petit nœud, orienté vers le fil */}
+          <path d={knotD} fill={mid} opacity="0.7" />
           <ellipse
             cx={rnd(b.x - b.r * 0.32, 3)}
             cy={rnd(b.y - b.r * 0.4, 3)}
@@ -294,19 +304,6 @@ export function GarlandDivider({ bg = "#FAF7F2" }: { bg?: string }) {
               : { transformOrigin: "720px 24px", animation: "gd-sway 9s ease-in-out infinite" }
           }
         >
-          {/* Fil de la guirlande */}
-          <motion.path
-            d={STRING_D}
-            fill="none"
-            stroke="rgba(120,90,70,0.32)"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            variants={{
-              hidden: { pathLength: 0 },
-              shown: { pathLength: 1, transition: { duration: 0.9, ease } },
-            }}
-          />
-
           {/* Verdure — arrière */}
           {PAMPA_AT.map((t, i) => {
             const p = swag(t);
@@ -338,17 +335,22 @@ export function GarlandDivider({ bg = "#FAF7F2" }: { bg?: string }) {
           {/* Ballons — rangée arrière (floue) */}
           {BACK.map((b) => (
             <motion.g key={`b${b.idx}`} custom={b.idx} variants={popV} style={{ transformOrigin: `${b.x}px ${b.y}px` }}>
-              <g
-                style={
-                  reduce
-                    ? undefined
-                    : { transformOrigin: `${b.x}px ${b.y}px`, animation: `gd-bob ${b.dur}s ease-in-out ${b.del}s infinite` }
-                }
-              >
-                <BalloonShape b={b} />
-              </g>
+              <BalloonShape b={b} />
             </motion.g>
           ))}
+
+          {/* Fil de la guirlande — passe entre l'arrière et l'avant */}
+          <motion.path
+            d={STRING_D}
+            fill="none"
+            stroke="rgba(120,90,70,0.32)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            variants={{
+              hidden: { pathLength: 0 },
+              shown: { pathLength: 1, transition: { duration: 0.9, ease } },
+            }}
+          />
 
           {/* Baies séchées */}
           {BERRY_AT.map((t, i) => {
@@ -363,15 +365,7 @@ export function GarlandDivider({ bg = "#FAF7F2" }: { bg?: string }) {
           {/* Ballons — rangée avant */}
           {FRONT.map((b) => (
             <motion.g key={`f${b.idx}`} custom={b.idx} variants={popV} style={{ transformOrigin: `${b.x}px ${b.y}px` }}>
-              <g
-                style={
-                  reduce
-                    ? undefined
-                    : { transformOrigin: `${b.x}px ${b.y}px`, animation: `gd-bob ${b.dur}s ease-in-out ${b.del}s infinite` }
-                }
-              >
-                <BalloonShape b={b} />
-              </g>
+              <BalloonShape b={b} />
             </motion.g>
           ))}
 
