@@ -2,27 +2,21 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "@phosphor-icons/react";
+import { ArrowUpRight, ArrowRight } from "@phosphor-icons/react";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const INDEX_IMAGES: Record<string, string> = {
-  mariage:      "/Galerie/hero-slides/hero-slide-7.jpeg",
-  anniversaire: "/Galerie/anniversaires/Anniv_1.webp",
-  babyshower:   "/Galerie/hero-slides/hero-slide-2.PNG",
-  genderreveal: "/Galerie/Gender-Reveal/GenderReveal_1.webp",
-  bapteme:      "/Galerie/Baptemes/Bapteme.jpg",
-  piquenique:   "/Galerie/hero-slides/hero-slide-17.webp",
-  surmesure:    "/Galerie/Creation-sur-mesure/IMG_6343.JPG",
-  entreprise:   "/Galerie/Corporate/Corporate_1.jpg",
-};
+const PARTICULIERS_KEYS = ["mariage", "anniversaire", "babyshower", "genderreveal", "bapteme", "piquenique"];
 
-type Item = { key: string; name: string; desc: string };
+const TINTS = [
+  { bg: "#FBEDF0", dot: "#F4A8B8" },
+  { bg: "#ECF3F6", dot: "#A8CEE0" },
+  { bg: "#FBF1E7", dot: "#F0C29A" },
+];
 
-// Ballons le long de l'arche (viewBox 400×400), du bas-gauche au bas-droite
+// Ballons le long de l'arche (viewBox 400×400)
 const ARCH_BALLOONS: { cx: number; cy: number; r: number; c: string }[] = [
   { cx: 27, cy: 388, r: 14, c: "#F4A8B8" }, { cx: 17, cy: 356, r: 9, c: "#FBD5DE" },
   { cx: 34, cy: 338, r: 16, c: "#A8CEE0" }, { cx: 23, cy: 308, r: 11, c: "#FAF7F2" },
@@ -42,13 +36,12 @@ const ARCH_BALLOONS: { cx: number; cy: number; r: number; c: string }[] = [
   { cx: 369, cy: 380, r: 15, c: "#F4A8B8" },
 ];
 
-/* ── Arche — motif signature qui se monte en ballons au scroll ─────────── */
 function ArchLine() {
   const reduce = useReducedMotion();
   return (
     <motion.svg
       className="absolute pointer-events-none hidden lg:block"
-      style={{ top: "6%", right: "-4%", width: "min(34vw, 460px)", overflow: "visible" }}
+      style={{ top: "5%", right: "-4%", width: "min(32vw, 440px)", overflow: "visible" }}
       viewBox="0 0 400 400"
       fill="none"
       aria-hidden
@@ -74,7 +67,7 @@ function ArchLine() {
             fill={b.c}
             stroke="rgba(13,11,8,0.04)"
             style={{ transformBox: "fill-box", transformOrigin: "center" }}
-            variants={{ hidden: { scale: 0, opacity: 0 }, shown: { scale: 1, opacity: 0.42 } }}
+            variants={{ hidden: { scale: 0, opacity: 0 }, shown: { scale: 1, opacity: 0.4 } }}
             transition={{ type: "spring", stiffness: 260, damping: 16 }}
           />
         ))}
@@ -83,13 +76,27 @@ function ArchLine() {
   );
 }
 
+type Card = { key: string; name: string; desc: string };
+
 export function Services() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
-  const items = t.services.index as Item[];
-  const total = items.length;
-  const [active, setActive] = useState(0);
-  const a = items[active];
+  const [tab, setTab] = useState<"part" | "pro">("part");
+
+  const particuliers: Card[] = t.services.index.filter((x) =>
+    PARTICULIERS_KEYS.includes(x.key),
+  );
+  const pro: Card[] = t.services.proItems.map((p) => ({
+    key: p.key,
+    name: p.title,
+    desc: p.desc,
+  }));
+  const cards = tab === "part" ? particuliers : pro;
+
+  const tabs = [
+    { id: "part" as const, label: t.services.particuliers.label },
+    { id: "pro" as const, label: t.services.professionnels.label },
+  ];
 
   return (
     <section
@@ -101,7 +108,7 @@ export function Services() {
       <div
         className="absolute inset-0 pointer-events-none mix-blend-multiply"
         style={{
-          opacity: 0.35,
+          opacity: 0.32,
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E\")",
         }}
@@ -116,7 +123,7 @@ export function Services() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, ease }}
-          className="max-w-2xl mb-12 lg:mb-16"
+          className="max-w-2xl mb-10 lg:mb-12"
         >
           <div className="flex items-center gap-3 mb-5">
             <span className="w-10 h-px" style={{ background: "#D9628A" }} />
@@ -138,141 +145,101 @@ export function Services() {
           </p>
         </motion.div>
 
-        {/* ── Desktop : liste + photo ── */}
-        <div className="hidden lg:grid lg:grid-cols-[0.92fr_1.08fr] gap-16 xl:gap-24 items-center">
-          <div>
-            <ul>
-              {items.map((it, i) => {
-                const on = active === i;
-                return (
-                  <li key={it.key} className="border-t last:border-b" style={{ borderColor: "rgba(42,35,32,0.12)" }}>
-                    <button
-                      type="button"
-                      onMouseEnter={() => setActive(i)}
-                      onFocus={() => setActive(i)}
-                      onClick={() => setActive(i)}
-                      className="group flex w-full items-center gap-4 py-[1.15rem] text-left cursor-pointer"
-                    >
-                      <span
-                        className="h-px transition-all duration-300"
-                        style={{ width: on ? 28 : 12, background: on ? "#D9628A" : "rgba(42,35,32,0.25)" }}
-                        aria-hidden
-                      />
-                      <span
-                        className="flex-1 font-serif font-light leading-tight transition-all duration-300"
-                        style={{
-                          fontSize: "clamp(1.4rem, 2.3vw, 2rem)",
-                          color: on ? "#B65572" : "#2A2320",
-                          fontStyle: on ? "italic" : "normal",
-                        }}
-                      >
-                        {it.name}
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-
-            <Link
-              href="/nos-services"
-              className="group mt-9 inline-flex items-center gap-2 font-sans text-[12px] font-medium uppercase tracking-[0.18em]"
-              style={{ color: "#B65572" }}
-            >
-              {t.services.ctaAll}
-              <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
-            </Link>
-          </div>
-
-          {/* Photo */}
-          <div
-            className="relative w-full overflow-hidden"
-            style={{
-              aspectRatio: "4 / 5",
-              boxShadow: "0 40px 80px -34px rgba(120,60,80,0.42), 0 8px 24px rgba(13,11,8,0.06)",
-            }}
-          >
-            <AnimatePresence>
-              <motion.div
-                key={active}
-                className="absolute inset-0"
-                initial={{ opacity: 0, scale: reduce ? 1 : 1.04 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6, ease }}
+        {/* Onglets */}
+        <div
+          className="flex items-center gap-8 mb-8 lg:mb-10 border-b"
+          style={{ borderColor: "rgba(42,35,32,0.12)" }}
+        >
+          {tabs.map((tb) => {
+            const on = tab === tb.id;
+            return (
+              <button
+                key={tb.id}
+                type="button"
+                onClick={() => setTab(tb.id)}
+                className="relative pb-4 font-serif font-light transition-colors duration-300 cursor-pointer"
+                style={{
+                  fontSize: "clamp(1.1rem, 1.9vw, 1.55rem)",
+                  color: on ? "#B65572" : "rgba(42,35,32,0.4)",
+                  fontStyle: on ? "italic" : "normal",
+                }}
               >
-                <Image
-                  src={INDEX_IMAGES[a.key]}
-                  alt={a.name}
-                  fill
-                  priority={active === 0}
-                  className="object-cover"
-                  sizes="640px"
-                />
-              </motion.div>
-            </AnimatePresence>
-
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{ background: "linear-gradient(180deg, rgba(13,11,8,0) 52%, rgba(13,11,8,0.62) 100%)" }}
-            />
-            <div className="absolute inset-5 pointer-events-none" style={{ border: "1px solid rgba(250,247,242,0.28)" }} aria-hidden />
-
-            <div className="absolute inset-x-0 bottom-0 p-8">
-              <p className="font-sans text-[10px] uppercase tracking-[0.22em] mb-2" style={{ color: "rgba(250,247,242,0.6)" }}>
-                {String(active + 1).padStart(2, "0")} · {String(total).padStart(2, "0")}
-              </p>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={active}
-                  initial={reduce ? false : { opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
-                  transition={{ duration: 0.35, ease }}
-                >
-                  <p className="font-serif font-light italic text-2xl" style={{ color: "#FAF7F2" }}>
-                    {a.name}
-                  </p>
-                  <p className="font-sans font-light text-[13px] leading-relaxed mt-2 max-w-sm" style={{ color: "rgba(250,247,242,0.8)" }}>
-                    {a.desc}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
+                {tb.label}
+                {on && (
+                  <motion.span
+                    layoutId="svc-tab-underline"
+                    className="absolute left-0 right-0 -bottom-px h-[2px]"
+                    style={{ background: "#D9628A" }}
+                  />
+                )}
+              </button>
+            );
+          })}
         </div>
 
-        {/* ── Mobile : liste avec vignettes ── */}
-        <div className="lg:hidden">
-          <ul>
-            {items.map((it, i) => (
-              <li key={it.key} className="border-t last:border-b" style={{ borderColor: "rgba(42,35,32,0.12)" }}>
-                <Link href="/nos-services" className="flex items-center gap-4 py-4">
-                  <span className="font-sans text-[11px] tabular-nums" style={{ color: "rgba(42,35,32,0.35)" }}>
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span
-                    className="flex-1 font-serif font-light text-[1.35rem] leading-tight"
-                    style={{ color: "#2A2320" }}
-                  >
-                    {it.name}
-                  </span>
-                  <span className="relative shrink-0 w-14 h-16 overflow-hidden" style={{ background: "#EAD9D3" }}>
-                    <Image src={INDEX_IMAGES[it.key]} alt="" fill className="object-cover" sizes="56px" />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <Link
-            href="/nos-services"
-            className="group mt-8 inline-flex items-center gap-2 font-sans text-[12px] font-medium uppercase tracking-[0.18em]"
-            style={{ color: "#B65572" }}
+        {/* Grille dynamique */}
+        <AnimatePresence mode="wait">
+          <motion.ul
+            key={tab}
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
+            transition={{ duration: 0.35, ease }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4"
           >
-            {t.services.ctaAll}
-            <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
-          </Link>
-        </div>
+            {cards.map((it, i) => {
+              const tint = TINTS[i % TINTS.length];
+              return (
+                <motion.li
+                  key={it.key}
+                  initial={reduce ? false : { opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: i * 0.05, ease }}
+                >
+                  <Link
+                    href="/nos-services"
+                    className="group relative flex h-full flex-col p-6 lg:p-7 overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                    style={{ background: tint.bg, minHeight: 196, boxShadow: "0 1px 2px rgba(13,11,8,0.03)" }}
+                  >
+                    <div className="flex items-center justify-between mb-5">
+                      <span className="font-sans text-[11px] tabular-nums" style={{ color: "rgba(13,11,8,0.35)" }}>
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="w-2 h-2 rounded-full" style={{ background: tint.dot }} aria-hidden />
+                    </div>
+                    <h3
+                      className="font-serif font-light text-xl lg:text-2xl leading-tight"
+                      style={{ color: "#2A2320" }}
+                    >
+                      {it.name}
+                    </h3>
+                    <p
+                      className="font-sans font-light text-[13px] leading-relaxed mt-2 flex-1"
+                      style={{ color: "rgba(42,35,32,0.55)" }}
+                    >
+                      {it.desc}
+                    </p>
+                    <ArrowUpRight
+                      size={15}
+                      weight="bold"
+                      className="mt-4 opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
+                      style={{ color: "#B65572" }}
+                    />
+                  </Link>
+                </motion.li>
+              );
+            })}
+          </motion.ul>
+        </AnimatePresence>
+
+        <Link
+          href="/nos-services"
+          className="group mt-10 lg:mt-12 inline-flex items-center gap-2 font-sans text-[12px] font-medium uppercase tracking-[0.18em]"
+          style={{ color: "#B65572" }}
+        >
+          {t.services.ctaAll}
+          <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
+        </Link>
       </div>
     </section>
   );
