@@ -368,45 +368,52 @@ function RealisationsCarousel() {
   };
 
   return (
-    <section id="realisations" className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#F3EDE6" }}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        {/* En-tête : motif animé à gauche, texte à droite */}
-        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-14 items-center mb-10 lg:mb-16">
-          <div className="order-2 lg:order-1 flex justify-center lg:justify-start">
-            <FloatingBalloons />
-          </div>
+    <section id="realisations" className="relative overflow-hidden py-16 lg:py-24" style={{ background: "#F3EDE6" }}>
+      {/* Motif animé — bouquet de ballons, en fond haut-gauche (desktop) */}
+      <div
+        className="absolute pointer-events-none hidden lg:block"
+        style={{ top: "3rem", left: "1%", width: "min(24vw, 320px)" }}
+      >
+        <FloatingBalloons />
+      </div>
 
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.6, ease }}
-            className="order-1 lg:order-2 lg:text-right"
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
+        {/* En-tête : texte à droite */}
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.6, ease }}
+          className="lg:ml-auto lg:max-w-xl lg:text-right mb-8 lg:mb-10"
+        >
+          <div className="flex items-center gap-3 mb-5 lg:justify-end">
+            <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
+              {t.realisations.eyebrow}
+            </span>
+            <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+          </div>
+          <h2
+            className="font-serif font-light leading-tight tracking-tight"
+            style={{ fontSize: "clamp(2.3rem, 4.6vw, 3.8rem)", color: "#2A2320" }}
           >
-            <div className="flex items-center gap-3 mb-5 lg:justify-end">
-              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
-                {t.realisations.eyebrow}
-              </span>
-              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
-            </div>
-            <h2
-              className="font-serif font-light leading-tight tracking-tight"
-              style={{ fontSize: "clamp(2.3rem, 4.6vw, 3.8rem)", color: "#2A2320" }}
-            >
-              {t.realisations.title}
-            </h2>
-            <p
-              className="font-sans font-light text-[14.5px] leading-relaxed mt-5 lg:ml-auto max-w-md"
-              style={{ color: "rgba(42,35,32,0.55)" }}
-            >
-              {t.realisations.subtitle}
-            </p>
-          </motion.div>
+            {t.realisations.title}
+          </h2>
+          <p
+            className="font-sans font-light text-[14.5px] leading-relaxed mt-5 lg:ml-auto max-w-md"
+            style={{ color: "rgba(42,35,32,0.55)" }}
+          >
+            {t.realisations.subtitle}
+          </p>
+        </motion.div>
+
+        {/* Motif ballons — version mobile */}
+        <div className="lg:hidden flex justify-center mb-8">
+          <FloatingBalloons />
         </div>
 
-        {/* Carousel */}
+        {/* Carousel — remonte pour empiéter sur le bouquet */}
         <div
-          className="relative flex flex-col lg:flex-row overflow-hidden"
+          className="relative z-10 flex flex-col lg:flex-row overflow-hidden lg:-mt-10"
           style={{
             boxShadow: "0 44px 100px -36px rgba(120,60,80,0.4)",
             border: "1px solid rgba(42,35,32,0.07)",
