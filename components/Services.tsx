@@ -656,19 +656,19 @@ function ServiceCard({
             <span className="mb-6 h-2.5 w-2.5 rounded-full" style={{ background: tint.dot }} aria-hidden />
             <h3
               className="font-serif leading-tight"
-              style={{ fontSize: "clamp(1.3rem, 2vw, 1.7rem)", color: "#241E1B" }}
+              style={{ fontSize: "clamp(1.3rem, 2vw, 1.7rem)", color: "#2A2320" }}
             >
               {card.name}
             </h3>
             <p
               className="mt-2.5 flex-1 font-sans text-[13.5px] leading-relaxed"
-              style={{ color: "rgba(34,28,24,0.74)" }}
+              style={{ color: "rgba(38,32,28,0.64)" }}
             >
               {card.desc}
             </p>
             <span
               className="mt-5 inline-flex items-center gap-1.5 font-sans text-[11px] font-semibold uppercase tracking-[0.16em] opacity-75 transition-opacity duration-300 group-hover:opacity-100"
-              style={{ color: "#A64C6A" }}
+              style={{ color: "#B0546F" }}
             >
               En savoir plus
               <ArrowUpRight
