@@ -572,7 +572,7 @@ function RealisationsCarousel() {
             {/* CTA galerie — au pied de la liste des thèmes */}
             <Link
               href="/galerie"
-              className="group absolute inset-x-0 bottom-5 z-20 mx-auto flex w-max max-w-[88%] items-center justify-center gap-2 rounded-full px-6 py-3 font-sans text-[11px] font-semibold uppercase tracking-[0.16em] shadow-lg transition-transform duration-200 hover:scale-[1.04]"
+              className="group absolute inset-x-0 bottom-10 lg:bottom-14 z-20 mx-auto flex w-max max-w-[88%] items-center justify-center gap-2 rounded-full px-6 py-3 font-sans text-[11px] font-semibold uppercase tracking-[0.16em] shadow-lg transition-transform duration-200 hover:scale-[1.04]"
               style={{ background: "#D9628A", color: "#FAF7F2" }}
             >
               {t.realisations.ctaAll}
