@@ -70,59 +70,73 @@ const ARCH_ACCENTS = [
 // Touche florale — niveau ≥ 4
 // Plumes de pampa — {x, y, angle°, scale}
 const ARCH_PAMPA = [
-  { x: 38, y: 384, a: 198, s: 1.2 },
-  { x: 50, y: 150, a: 250, s: 1 },
-  { x: 150, y: 40, a: 286, s: 0.82 },
-  { x: 210, y: 14, a: 300, s: 1.12 },
-  { x: 272, y: 40, a: 314, s: 0.82 },
-  { x: 366, y: 150, a: 110, s: 1 },
-  { x: 386, y: 384, a: 342, s: 1.2 },
+  { x: 40, y: 262, a: 206, s: 1.18 },
+  { x: 58, y: 138, a: 236, s: 1 },
+  { x: 150, y: 44, a: 288, s: 0.8 },
+  { x: 210, y: 12, a: 300, s: 1.14 },
+  { x: 270, y: 44, a: 312, s: 0.8 },
+  { x: 362, y: 138, a: 124, s: 1 },
+  { x: 380, y: 262, a: 154, s: 1.18 },
 ];
 
 // Brins d'eucalyptus — {x, y, angle°, scale, flip}
 const ARCH_EUCA = [
-  { x: 30, y: 306, a: 212, s: 1, flip: false },
-  { x: 86, y: 92, a: 254, s: 0.95, flip: false },
-  { x: 210, y: 22, a: 2, s: 0.9, flip: false },
-  { x: 334, y: 92, a: 106, s: 0.95, flip: true },
-  { x: 390, y: 306, a: 328, s: 1, flip: true },
+  { x: 44, y: 326, a: 214, s: 1.05, flip: false },
+  { x: 66, y: 208, a: 232, s: 0.95, flip: false },
+  { x: 104, y: 92, a: 252, s: 1, flip: false },
+  { x: 316, y: 92, a: 108, s: 1, flip: true },
+  { x: 352, y: 208, a: 128, s: 0.95, flip: true },
+  { x: 378, y: 326, a: 146, s: 1.05, flip: true },
 ];
 
-// Roses poudrées — {x, y, scale}
+// Roses poudrées — posées PAR-DESSUS les ballons — {x, y, scale}
 const ARCH_BLOOMS = [
-  { x: 40, y: 402, s: 1.3 },
-  { x: 384, y: 402, s: 1.3 },
-  { x: 74, y: 118, s: 0.95 },
-  { x: 346, y: 118, s: 0.95 },
+  { x: 96, y: 132, s: 1.1 },
+  { x: 324, y: 132, s: 1.1 },
+  { x: 158, y: 52, s: 0.9 },
+  { x: 262, y: 52, s: 0.9 },
+  { x: 62, y: 236, s: 0.95 },
+  { x: 360, y: 236, s: 0.95 },
+];
+
+// Gypsophile (brume) — {x, y, scale}
+const ARCH_GYP = [
+  { x: 122, y: 108, s: 1 },
+  { x: 300, y: 108, s: 1 },
+  { x: 186, y: 34, s: 0.85 },
+  { x: 236, y: 34, s: 0.85 },
+  { x: 80, y: 210, s: 0.9 },
+  { x: 342, y: 210, s: 0.9 },
 ];
 
 function Pampa({ x, y, a, s = 1 }: { x: number; y: number; a: number; s?: number }) {
-  const barbs = 17;
+  const barbs = 27;
   return (
     <g transform={`translate(${x} ${y}) rotate(${a}) scale(${s})`}>
-      {/* Volume flouté derrière les barbes */}
+      {/* Silhouette floue pour le volume */}
       <path
-        d="M0 4 C 15 -20 21 -48 13 -80 C 6 -48 -9 -22 0 4 Z"
+        d="M0 8 C 17 -22 23 -54 12 -90 C 3 -54 -13 -24 0 8 Z"
         fill="url(#ba-pampa)"
-        opacity="0.22"
+        opacity="0.14"
       />
       <g stroke="url(#ba-pampa)" strokeLinecap="round" fill="none">
-        <path d="M0 0 C 5 -20 8 -44 7 -70" strokeWidth="1.5" opacity="0.85" />
+        <path d="M0 0 C 4 -22 6 -50 5 -80" strokeWidth="1.2" opacity="0.75" />
         {Array.from({ length: barbs }).map((_, k) => {
           const t = k / (barbs - 1);
-          const yy = -5 - t * 66;
-          const cx = 1.4 + Math.sin(t * Math.PI) * 1.6;
-          const spread = 4.5 + Math.sin(t * Math.PI) * 9.5 * (1 - t * 0.3);
-          const droop = 5 + t * 6;
+          const yy = -3 - t * 80;
+          const env = Math.sin(t * Math.PI);
+          const spread = 3 + env * 10.5 * (1 - t * 0.22);
+          const droop = 4 + t * 8;
+          const cx = 0.7 + env * 1.3;
           return (
-            <g key={k} opacity={0.42 + 0.45 * Math.sin(t * Math.PI)}>
+            <g key={k} opacity={0.26 + 0.42 * env}>
               <path
-                d={`M${cx} ${yy} q ${spread} ${-droop * 0.35} ${spread + 2} ${-droop}`}
-                strokeWidth="0.85"
+                d={`M${cx} ${yy} q ${spread * 0.55} ${-droop * 0.28} ${spread} ${-droop}`}
+                strokeWidth="0.5"
               />
               <path
-                d={`M${cx} ${yy} q ${-spread} ${-droop * 0.35} ${-spread - 2} ${-droop}`}
-                strokeWidth="0.85"
+                d={`M${-cx} ${yy} q ${-spread * 0.55} ${-droop * 0.28} ${-spread} ${-droop}`}
+                strokeWidth="0.5"
               />
             </g>
           );
@@ -145,34 +159,34 @@ function Eucalyptus({
   s?: number;
   flip?: boolean;
 }) {
-  const leaves = 10;
+  const leaves = 13;
   const dir = flip ? -1 : 1;
   return (
     <g transform={`translate(${x} ${y}) rotate(${a}) scale(${s})`}>
       <path
-        d={`M0 0 Q ${11 * dir} -28 ${5 * dir} -62`}
-        stroke="#A7BA98"
-        strokeWidth="1"
+        d={`M0 0 Q ${12 * dir} -30 ${4 * dir} -70`}
+        stroke="#9DB18C"
+        strokeWidth="0.9"
         fill="none"
         strokeLinecap="round"
       />
       {Array.from({ length: leaves }).map((_, k) => {
         const t = k / (leaves - 1);
-        const ly = -3 - t * 56;
-        const lx = (1.5 + t * 3) * dir;
+        const ly = -2 - t * 64;
+        const stemX = t * 4 * dir;
         const side = k % 2 === 0 ? 1 : -1;
-        const lr = 6 - t * 3;
-        const anchorX = lx + side * dir * lr * 0.75;
+        const lr = 6.6 - t * 3.4;
+        const anchorX = stemX + side * dir * lr * 0.78;
         return (
           <ellipse
             key={k}
             cx={anchorX}
             cy={ly}
             rx={lr}
-            ry={lr * 0.5}
+            ry={lr * 0.66}
             fill="url(#ba-euca)"
-            opacity={0.62 + 0.3 * Math.sin(t * Math.PI)}
-            transform={`rotate(${side * 40 * dir} ${anchorX} ${ly})`}
+            opacity={0.5 + 0.34 * Math.sin(t * Math.PI)}
+            transform={`rotate(${side * 36 * dir} ${anchorX} ${ly})`}
           />
         );
       })}
@@ -183,12 +197,49 @@ function Eucalyptus({
 function Bloom({ x, y, s = 1 }: { x: number; y: number; s?: number }) {
   return (
     <g transform={`translate(${x} ${y}) scale(${s})`}>
-      <ellipse cx="-9" cy="3" rx="5" ry="2.6" fill="url(#ba-euca)" opacity="0.9" transform="rotate(-26 -9 3)" />
-      <ellipse cx="9" cy="3" rx="5" ry="2.6" fill="url(#ba-euca)" opacity="0.9" transform="rotate(26 9 3)" />
-      <circle r="9" fill="url(#ba-bloom)" />
-      <path d="M-6.5 -5 A 9 9 0 0 1 6 -6.5" stroke="rgba(255,255,255,0.45)" strokeWidth="1" fill="none" strokeLinecap="round" />
-      <path d="M-5.5 5.5 A 7 7 0 0 0 5.5 4.5" stroke="rgba(160,74,104,0.4)" strokeWidth="1" fill="none" strokeLinecap="round" />
-      <circle r="3" fill="#C97C93" />
+      {/* feuilles */}
+      <ellipse cx="-10" cy="4" rx="5.6" ry="2.7" fill="url(#ba-euca)" opacity="0.92" transform="rotate(-24 -10 4)" />
+      <ellipse cx="10" cy="4" rx="5.6" ry="2.7" fill="url(#ba-euca)" opacity="0.92" transform="rotate(24 10 4)" />
+      {/* pétales externes */}
+      {Array.from({ length: 6 }).map((_, i) => (
+        <ellipse
+          key={i}
+          cx="0"
+          cy="-6.5"
+          rx="4"
+          ry="6"
+          fill="url(#ba-bloom)"
+          opacity="0.5"
+          transform={`rotate(${i * 60} 0 0)`}
+        />
+      ))}
+      {/* cœur */}
+      <circle r="7" fill="url(#ba-bloom)" />
+      <path d="M-4.6 -3.6 A 6.5 6.5 0 0 1 4.6 -4.6" stroke="rgba(255,255,255,0.55)" strokeWidth="1" fill="none" strokeLinecap="round" />
+      <circle r="2.6" fill="#C4788F" />
+    </g>
+  );
+}
+
+function Gyp({ x, y, s = 1 }: { x: number; y: number; s?: number }) {
+  const pts: [number, number][] = [
+    [0, 0],
+    [4.5, -5],
+    [-4, -4.5],
+    [6.5, 2],
+    [-6, 1.5],
+    [2, -9.5],
+    [-2.5, 4.5],
+    [8, -3],
+  ];
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      {pts.map(([px, py], i) => (
+        <g key={i}>
+          <line x1="0" y1="0" x2={px} y2={py} stroke="#CAD4BD" strokeWidth="0.45" />
+          <circle cx={px} cy={py} r="1.5" fill="#FBF8F1" stroke="rgba(190,168,180,0.45)" strokeWidth="0.35" />
+        </g>
+      ))}
     </g>
   );
 }
@@ -309,7 +360,7 @@ function BalloonArch({ level }: { level: number }) {
           transition={{ repeat: Infinity, duration: 7.5, ease: "easeInOut", delay: 2.4 }}
           style={{ transformOrigin: "210px 26px" }}
         >
-          {/* Touche florale — niveau 4 : eucalyptus, pampa, roses */}
+          {/* Touche florale — niveau 4 : eucalyptus + pampa en fond */}
           <AnimatePresence>
             {level >= 4 &&
               ARCH_EUCA.map((e, i) => (
@@ -343,19 +394,6 @@ function BalloonArch({ level }: { level: number }) {
                   >
                     <Pampa {...pp} />
                   </motion.g>
-                </motion.g>
-              ))}
-            {level >= 4 &&
-              ARCH_BLOOMS.map((bl, i) => (
-                <motion.g
-                  key={`bl${i}`}
-                  initial={reduce ? false : { scale: 0, opacity: 0, rotate: -28 }}
-                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                  exit={{ scale: 0, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 14, delay: 0.3 + i * 0.08 }}
-                  style={{ transformOrigin: `${bl.x}px ${bl.y}px` }}
-                >
-                  <Bloom {...bl} />
                 </motion.g>
               ))}
           </AnimatePresence>
@@ -396,6 +434,46 @@ function BalloonArch({ level }: { level: number }) {
                 >
                   <circle cx={b.x} cy={b.y} r={b.r} fill="url(#ba-gold)" stroke="rgba(198,140,99,0.5)" strokeWidth="0.6" />
                   <ellipse cx={b.x - b.r * 0.34} cy={b.y - b.r * 0.4} rx={b.r * 0.2} ry={b.r * 0.3} fill="rgba(255,255,255,0.7)" transform={`rotate(-22 ${b.x - b.r * 0.34} ${b.y - b.r * 0.4})`} />
+                </motion.g>
+              ))}
+          </AnimatePresence>
+
+          {/* Touche florale — niveau 4 : roses + gypsophile posées par-dessus */}
+          <AnimatePresence>
+            {level >= 4 &&
+              ARCH_GYP.map((g, i) => (
+                <motion.g
+                  key={`gy${i}`}
+                  {...pop}
+                  transition={{ type: "spring", stiffness: 240, damping: 16, delay: 0.34 + i * 0.05 }}
+                  style={{ transformOrigin: `${g.x}px ${g.y}px` }}
+                >
+                  <motion.g
+                    animate={reduce ? undefined : { rotate: [-3, 3, -3] }}
+                    transition={{ repeat: Infinity, duration: 5 + i * 0.6, ease: "easeInOut" }}
+                    style={{ transformOrigin: `${g.x}px ${g.y}px` }}
+                  >
+                    <Gyp {...g} />
+                  </motion.g>
+                </motion.g>
+              ))}
+            {level >= 4 &&
+              ARCH_BLOOMS.map((bl, i) => (
+                <motion.g
+                  key={`bl${i}`}
+                  initial={reduce ? false : { scale: 0, opacity: 0, rotate: -28 }}
+                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 14, delay: 0.42 + i * 0.09 }}
+                  style={{ transformOrigin: `${bl.x}px ${bl.y}px` }}
+                >
+                  <motion.g
+                    animate={reduce ? undefined : { rotate: [-2, 2, -2], y: [0, -1.5, 0] }}
+                    transition={{ repeat: Infinity, duration: 6.5 + i * 0.5, ease: "easeInOut" }}
+                    style={{ transformOrigin: `${bl.x}px ${bl.y}px` }}
+                  >
+                    <Bloom {...bl} />
+                  </motion.g>
                 </motion.g>
               ))}
           </AnimatePresence>
