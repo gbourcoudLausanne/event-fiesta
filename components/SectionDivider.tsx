@@ -37,27 +37,6 @@ export function SectionDivider({
   );
 }
 
-/* ── Séparateur discret : filet centré + petit losange ─────────────────── */
-export function HairlineDivider({
-  bg = "#FAF7F2",
-  color = "#D9628A",
-}: {
-  bg?: string;
-  color?: string;
-}) {
-  return (
-    <div
-      className="flex items-center justify-center gap-4 pt-8 pb-2 lg:pt-12 lg:pb-4"
-      style={{ background: bg }}
-      aria-hidden
-    >
-      <span className="h-px w-16 sm:w-24" style={{ background: `linear-gradient(to right, transparent, ${color}55)` }} />
-      <span className="rotate-45" style={{ width: 5, height: 5, background: `${color}99` }} />
-      <span className="h-px w-16 sm:w-24" style={{ background: `linear-gradient(to left, transparent, ${color}55)` }} />
-    </div>
-  );
-}
-
 /* ── Séparateur en festons (silhouette de guirlande de ballons) ────────── */
 const SCALLOP_BACK =
   "M0,120 L0,64 C35,34 80,30 120,58 C160,84 205,86 250,58 C292,32 345,28 392,62 C430,90 480,92 528,62 C570,36 625,32 675,66 C715,94 770,96 822,64 C866,38 925,34 978,68 C1022,96 1078,98 1132,66 C1180,40 1240,36 1298,70 C1345,96 1395,98 1440,72 L1440,120 Z";
