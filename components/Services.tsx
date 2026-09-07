@@ -692,7 +692,7 @@ export function Services() {
   useEffect(() => {
     if (!inView || reduce) return; // reduce : l'arche reste vide (état initial)
     const t0 = setTimeout(() => setDecor(5), 350);
-    const t1 = setTimeout(() => setDecor(1), 2600);
+    const t1 = setTimeout(() => setDecor(1), 5350);
     return () => {
       clearTimeout(t0);
       clearTimeout(t1);
