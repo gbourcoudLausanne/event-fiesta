@@ -204,6 +204,7 @@ const CAROUSEL: CarouselType[] = [
   {
     label: "Gender reveal",
     photos: [
+      { src: "/Galerie/Gender-Reveal/GenderReveal_2.jpg", alt: "Gender reveal Boy or Girl, arche de ballons rose et bleu sur backdrop blanc", name: "Boy or Girl ?" },
       { src: "/Galerie/Gender-Reveal/GenderReveal_1.webp", alt: "Gender reveal Oh Baby, arche dorée et fleurs", name: "Oh Baby !" },
     ],
   },
