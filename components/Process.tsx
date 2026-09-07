@@ -111,30 +111,32 @@ function BalloonNumber() {
               shown: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.35, ease } },
             }}
           >
-            <g
-              stroke="url(#pb-foil)"
-              strokeWidth="46"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-            >
-              <path d="M214 50 L126 172" />
-              <path d="M118 168 L252 168" />
-              <path d="M214 50 L214 252" />
+            {/* liseré sombre sous la forme */}
+            <g stroke="#C06985" strokeWidth="50" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.55">
+              <path d="M196 48 L104 176 L250 176" />
+              <path d="M212 42 L212 250" />
             </g>
-            {/* reflets */}
-            <g stroke="#FFFFFF" strokeOpacity="0.28" strokeWidth="6" strokeLinecap="round" fill="none">
-              <path d="M206 62 L134 164" />
-              <path d="M206 62 L206 244" />
+            {/* corps du chiffre */}
+            <g stroke="url(#pb-foil)" strokeWidth="44" strokeLinecap="round" strokeLinejoin="round" fill="none">
+              <path d="M196 48 L104 176 L250 176" />
+              <path d="M212 42 L212 250" />
+            </g>
+            {/* reflet lumineux */}
+            <g stroke="#FFFFFF" strokeOpacity="0.32" strokeWidth="7" strokeLinecap="round" fill="none">
+              <path d="M190 60 L112 168" />
+              <path d="M203 58 L203 238" />
             </g>
             {/* coutures du mylar */}
-            <g stroke="#FFFFFF" strokeOpacity="0.22" strokeWidth="1.4">
-              <line x1="194" y1="90" x2="234" y2="90" />
-              <line x1="194" y1="120" x2="234" y2="120" />
-              <line x1="194" y1="150" x2="234" y2="150" />
-              <line x1="194" y1="188" x2="234" y2="188" />
-              <line x1="194" y1="218" x2="234" y2="218" />
-              <line x1="130" y1="168" x2="130" y2="168" />
+            <g stroke="#FFFFFF" strokeOpacity="0.2" strokeWidth="1.4">
+              <line x1="193" y1="70" x2="231" y2="70" />
+              <line x1="193" y1="100" x2="231" y2="100" />
+              <line x1="193" y1="132" x2="231" y2="132" />
+              <line x1="193" y1="196" x2="231" y2="196" />
+              <line x1="193" y1="226" x2="231" y2="226" />
+              <line x1="120" y1="158" x2="120" y2="194" />
+              <line x1="150" y1="156" x2="150" y2="196" />
+              <line x1="182" y1="156" x2="182" y2="196" />
+              <line x1="222" y1="156" x2="222" y2="196" />
             </g>
           </motion.g>
 
@@ -149,12 +151,14 @@ function BalloonNumber() {
                 transition: { type: "spring", stiffness: 220, damping: 16, delay: 0.95 },
               },
             }}
-            style={{ transformOrigin: "150px 96px" }}
+            style={{ transformOrigin: "166px 92px" }}
           >
-            <path d="M150 96 Q124 78 122 104 Q126 118 150 104 Z" fill="#F6CDD9" />
-            <path d="M150 96 Q176 78 178 104 Q174 118 150 104 Z" fill="#F0BFCE" />
-            <path d="M147 104 Q140 128 143 150 L150 144 L157 150 Q160 128 153 104 Z" fill="#F6CDD9" />
-            <circle cx="150" cy="100" r="7" fill="#EBB2C4" />
+            <g transform="translate(16 -6)">
+              <path d="M150 96 Q124 78 122 104 Q126 118 150 104 Z" fill="#F6CDD9" />
+              <path d="M150 96 Q176 78 178 104 Q174 118 150 104 Z" fill="#F0BFCE" />
+              <path d="M147 104 Q140 128 143 150 L150 144 L157 150 Q160 128 153 104 Z" fill="#F6CDD9" />
+              <circle cx="150" cy="100" r="7" fill="#EBB2C4" />
+            </g>
           </motion.g>
 
           {/* Cluster de ballons — base */}
