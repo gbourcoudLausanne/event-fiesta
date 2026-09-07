@@ -493,8 +493,7 @@ function RealisationsCarousel() {
         <div
           className="relative z-10 flex flex-col lg:flex-row overflow-hidden lg:-mt-10"
           style={{
-            boxShadow: "0 44px 100px -36px rgba(120,60,80,0.4)",
-            border: "1px solid rgba(42,35,32,0.07)",
+            boxShadow: "0 26px 60px -30px rgba(120,60,80,0.22)",
           }}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
