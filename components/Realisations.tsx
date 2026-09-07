@@ -372,7 +372,7 @@ function RealisationsCarousel() {
       {/* Motif animé — bouquet de ballons, au premier plan haut-gauche (desktop) */}
       <div
         className="absolute pointer-events-none z-30 hidden lg:block"
-        style={{ top: "3rem", left: "1%", width: "min(24vw, 320px)" }}
+        style={{ top: "0.25rem", left: "1%", width: "min(24vw, 320px)" }}
       >
         <FloatingBalloons />
       </div>
