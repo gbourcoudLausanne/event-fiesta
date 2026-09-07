@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { MouseEvent } from "react";
 import {
   motion,
+  AnimatePresence,
   useReducedMotion,
   useScroll,
   useTransform,
@@ -55,11 +56,47 @@ const ARCH_CONFETTI = [
   { x: 320, s: "r", c: "#E58AA6", d: 3.9 },
 ];
 
-function BalloonArch() {
+// Accents métallisés rose gold — niveau ≥ 2
+const ARCH_ACCENTS = [
+  { x: 56, y: 150, r: 24 },
+  { x: 140, y: 54, r: 22 },
+  { x: 210, y: 24, r: 26 },
+  { x: 296, y: 60, r: 22 },
+  { x: 366, y: 172, r: 24 },
+];
+
+// Plumes de pampa — niveau ≥ 3 — {x, y, angle°}
+const ARCH_PAMPA = [
+  { x: 46, y: 366, a: 205 },
+  { x: 58, y: 150, a: 250 },
+  { x: 210, y: 18, a: 300 },
+  { x: 362, y: 150, a: 110 },
+  { x: 380, y: 366, a: 335 },
+];
+
+function Pampa({ x, y, a }: { x: number; y: number; a: number }) {
+  return (
+    <g transform={`translate(${x} ${y}) rotate(${a})`} stroke="#CBB994" strokeLinecap="round" fill="none">
+      <path d="M0 0 C 8 -14 12 -34 11 -52" strokeWidth="1.4" />
+      {Array.from({ length: 9 }).map((_, k) => {
+        const tt = (k / 8) * 46 + 4;
+        const sp = 4 + tt * 0.16;
+        return (
+          <g key={k} opacity="0.85">
+            <path d={`M${1 + tt * 0.2} ${-tt} q ${sp} -3 ${sp + 3} -9`} strokeWidth="1" />
+            <path d={`M${1 + tt * 0.2} ${-tt} q -${sp} -3 -${sp + 1} -9`} strokeWidth="1" />
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+function BalloonArch({ level }: { level: number }) {
   const reduce = useReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
-  const [balloons, setBalloons] = useState<PlacedBalloon[]>([]);
+  const [balloons, setBalloons] = useState<(PlacedBalloon & { tier: number })[]>([]);
 
   const { scrollYProgress } = useScroll({ target: wrapRef, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [50, -70]);
@@ -69,7 +106,7 @@ function BalloonArch() {
     if (!path) return;
     const len = path.getTotalLength();
     const N = 58;
-    const arr: PlacedBalloon[] = [];
+    const arr: (PlacedBalloon & { tier: number })[] = [];
     for (let i = 0; i < N; i++) {
       const l = (i / (N - 1)) * len;
       const p = path.getPointAtLength(l);
@@ -79,7 +116,6 @@ function BalloonArch() {
       const m = Math.hypot(nx, ny) || 1;
       nx /= m;
       ny /= m;
-      // alterne intérieur / extérieur de l'arc, serré contre le tracé
       const side = i % 2 === 0 ? 1 : -1;
       const off = side * (2 + noise(i) * 9);
       const jitter = (noise(i + 99) - 0.5) * 3;
@@ -89,10 +125,17 @@ function BalloonArch() {
         y: p.y + ny * off,
         r,
         g: GRAD_KEYS[i % GRAD_KEYS.length],
+        tier: noise(i + 3) < 0.45 ? 1 : 2,
       });
     }
     setBalloons(arr);
   }, []);
+
+  const pop = {
+    initial: reduce ? false : { scale: 0, opacity: 0 },
+    animate: { scale: 1, opacity: 1 },
+    exit: { scale: 0, opacity: 0 },
+  };
 
   return (
     <motion.div
@@ -101,14 +144,7 @@ function BalloonArch() {
       style={{ top: "2%", right: "-7%", width: "min(42vw, 640px)", y }}
       aria-hidden
     >
-      <motion.svg
-        viewBox="0 0 420 420"
-        fill="none"
-        style={{ overflow: "visible", width: "100%" }}
-        initial={reduce ? undefined : "hidden"}
-        whileInView={reduce ? undefined : "shown"}
-        viewport={{ once: true, amount: 0.3 }}
-      >
+      <motion.svg viewBox="0 0 420 420" fill="none" style={{ overflow: "visible", width: "100%" }}>
         <defs>
           {GRAD_KEYS.map((k) => {
             const [a, b, c] = BALLOON_GRADS[k];
@@ -148,7 +184,9 @@ function BalloonArch() {
           stroke="rgba(217,98,138,0.16)"
           strokeWidth="1.4"
           strokeLinecap="round"
-          variants={{ hidden: { pathLength: 0 }, shown: { pathLength: 1 } }}
+          initial={reduce ? undefined : { pathLength: 0 }}
+          whileInView={reduce ? undefined : { pathLength: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 1.5, ease }}
         />
 
@@ -157,32 +195,86 @@ function BalloonArch() {
           transition={{ repeat: Infinity, duration: 7.5, ease: "easeInOut", delay: 2.4 }}
           style={{ transformOrigin: "210px 26px" }}
         >
-          <motion.g variants={{ shown: { transition: { staggerChildren: 0.026, delayChildren: 0.3 } } }}>
-            {balloons.map((b, i) => (
+          {/* Pampa — niveau 3 */}
+          <AnimatePresence>
+            {level >= 3 &&
+              ARCH_PAMPA.map((pp, i) => (
+                <motion.g
+                  key={`p${i}`}
+                  {...pop}
+                  transition={{ type: "spring", stiffness: 240, damping: 16, delay: i * 0.07 }}
+                  style={{ transformOrigin: `${pp.x}px ${pp.y}px` }}
+                >
+                  <Pampa {...pp} />
+                </motion.g>
+              ))}
+          </AnimatePresence>
+
+          {/* Ballons — tier 1 dès le niveau 1, tier 2 dès le niveau 2 */}
+          <AnimatePresence>
+            {balloons.map((b, i) =>
+              level >= b.tier ? (
+                <motion.g
+                  key={i}
+                  {...pop}
+                  transition={{ type: "spring", stiffness: 300, damping: 13, delay: noise(i) * 0.35 }}
+                  style={{ transformOrigin: `${b.x}px ${b.y}px` }}
+                >
+                  <circle cx={b.x} cy={b.y} r={b.r} fill={`url(#ba-${b.g})`} opacity="0.92" />
+                  <ellipse
+                    cx={b.x - b.r * 0.32}
+                    cy={b.y - b.r * 0.38}
+                    rx={b.r * 0.24}
+                    ry={b.r * 0.34}
+                    fill="rgba(255,255,255,0.5)"
+                    transform={`rotate(-22 ${b.x - b.r * 0.32} ${b.y - b.r * 0.38})`}
+                  />
+                </motion.g>
+              ) : null,
+            )}
+          </AnimatePresence>
+
+          {/* Accents rose gold — niveau 2 */}
+          <AnimatePresence>
+            {level >= 2 &&
+              ARCH_ACCENTS.map((b, i) => (
+                <motion.g
+                  key={`g${i}`}
+                  {...pop}
+                  transition={{ type: "spring", stiffness: 300, damping: 13, delay: i * 0.06 }}
+                  style={{ transformOrigin: `${b.x}px ${b.y}px` }}
+                >
+                  <circle cx={b.x} cy={b.y} r={b.r} fill="url(#ba-gold)" stroke="rgba(198,140,99,0.5)" strokeWidth="0.6" />
+                  <ellipse cx={b.x - b.r * 0.34} cy={b.y - b.r * 0.4} rx={b.r * 0.2} ry={b.r * 0.3} fill="rgba(255,255,255,0.7)" transform={`rotate(-22 ${b.x - b.r * 0.34} ${b.y - b.r * 0.4})`} />
+                </motion.g>
+              ))}
+          </AnimatePresence>
+
+          {/* Panneau « Bienvenue » — niveau 4 */}
+          <AnimatePresence>
+            {level >= 4 && (
               <motion.g
-                key={i}
-                variants={{
-                  hidden: { scale: 0, opacity: 0 },
-                  shown: {
-                    scale: 1,
-                    opacity: 0.92,
-                    transition: { type: "spring", stiffness: 300, damping: 13 },
-                  },
-                }}
-                style={{ transformOrigin: `${b.x}px ${b.y}px` }}
+                key="sign"
+                initial={reduce ? false : { y: -14, opacity: 0, scale: 0.9 }}
+                animate={{ y: 0, opacity: 1, scale: 1 }}
+                exit={{ y: -14, opacity: 0, scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 220, damping: 18 }}
+                style={{ transformOrigin: "210px 40px" }}
               >
-                <circle cx={b.x} cy={b.y} r={b.r} fill={`url(#ba-${b.g})`} />
-                <ellipse
-                  cx={b.x - b.r * 0.32}
-                  cy={b.y - b.r * 0.38}
-                  rx={b.r * 0.24}
-                  ry={b.r * 0.34}
-                  fill="rgba(255,255,255,0.5)"
-                  transform={`rotate(-22 ${b.x - b.r * 0.32} ${b.y - b.r * 0.38})`}
-                />
+                <path d="M188 44 L184 76 M232 44 L236 76" stroke="rgba(120,60,80,0.35)" strokeWidth="1.2" strokeLinecap="round" />
+                <rect x="150" y="74" width="120" height="42" rx="4" fill="#FAF7F2" stroke="rgba(217,98,138,0.3)" strokeWidth="1" />
+                <text
+                  x="210"
+                  y="101"
+                  textAnchor="middle"
+                  fill="#B65572"
+                  style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontStyle: "italic", fontSize: 20, fontWeight: 300 }}
+                >
+                  Bienvenue
+                </text>
               </motion.g>
-            ))}
-          </motion.g>
+            )}
+          </AnimatePresence>
         </motion.g>
       </motion.svg>
     </motion.div>
@@ -290,10 +382,13 @@ function ServiceCard({
   );
 }
 
+const DECOR_STEPS = ["Décorer l'arche", "Ajouter des ballons", "La touche florale", "Poser le panneau"];
+
 export function Services() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
   const [tab, setTab] = useState<"part" | "pro">("part");
+  const [decor, setDecor] = useState(1);
 
   const particuliers: Card[] = t.services.index.filter((x) =>
     PARTICULIERS_KEYS.includes(x.key),
@@ -326,7 +421,7 @@ export function Services() {
         }}
         aria-hidden
       />
-      <BalloonArch />
+      <BalloonArch level={decor} />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
         {/* En-tête */}
@@ -355,6 +450,40 @@ export function Services() {
           >
             {t.services.intro}
           </p>
+
+          {/* Décorer l'arche — mini-interaction (desktop) */}
+          <div className="mt-7 hidden lg:flex items-center gap-4">
+            {decor < 4 ? (
+              <button
+                type="button"
+                onClick={() => setDecor((d) => Math.min(4, d + 1))}
+                className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[12px] font-medium px-6 py-3 rounded-full transition-transform duration-200 hover:scale-[1.03] active:scale-[0.97]"
+                style={{ background: "#D9628A", color: "#FAF7F2" }}
+              >
+                {DECOR_STEPS[decor - 1]}
+                <span aria-hidden>✨</span>
+              </button>
+            ) : (
+              <Link
+                href="/contact"
+                className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[12px] font-medium px-6 py-3 rounded-full transition-transform duration-200 hover:scale-[1.03]"
+                style={{ background: "#D9628A", color: "#FAF7F2" }}
+              >
+                Et la vôtre ? Demander un devis
+                <ArrowUpRight size={13} weight="bold" />
+              </Link>
+            )}
+            {decor > 1 && (
+              <button
+                type="button"
+                onClick={() => setDecor(1)}
+                className="font-sans text-[11px] uppercase tracking-[0.14em] transition-colors"
+                style={{ color: "rgba(42,35,32,0.4)" }}
+              >
+                Recommencer
+              </button>
+            )}
+          </div>
         </motion.div>
 
         {/* Onglets */}
