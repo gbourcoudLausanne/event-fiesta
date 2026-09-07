@@ -182,17 +182,23 @@ const CAROUSEL: CarouselType[] = [
     label: "Anniversaire",
     photos: [
       { src: "/Galerie/hero-slides/hero-slide-13.PNG", alt: "Arche ronde de ballons violet, lilas et or dans un jardin avec salon lounge", name: "Arche jardin · violet & or" },
+      { src: "/Galerie/hero-slides/hero-slide-12.JPG", alt: "Chiffre 30 lumineux et arche de ballons blanc et or en extérieur", name: "30 ans · blanc & or" },
       { src: "/Galerie/hero-slides/hero-slide-8.PNG", alt: "Arche de ballons dégradée fuchsia, corail et crème avec sweet table", name: "Dégradé fuchsia & corail" },
       { src: "/Galerie/hero-slides/hero-slide-9.PNG", alt: "Arche de ballons rose et blanc avec chiffre 6 et gâteau ballerine", name: "Anniversaire ballerine" },
-      { src: "/Galerie/hero-slides/hero-slide-12.JPG", alt: "Chiffre 30 lumineux et arche de ballons blanc et or en extérieur", name: "30 ans · blanc & or" },
+      { src: "/Galerie/hero-slides/hero-slide-6.PNG", alt: "Sweet table dorée avec gâteau et guirlande de ballons rose et pêche", name: "Sweet table rosée" },
+      { src: "/Galerie/hero-slides/hero-slide-4.PNG", alt: "Arche de ballons fleurs et rideau de franges terracotta avec chiffre 3", name: "Fleurs & franges · 3 ans" },
+      { src: "/Galerie/hero-slides/hero-slide-15.PNG", alt: "Bouquet de ballons chiffre 10 rose personnalisé avec cœur", name: "Bouquet · 10 ans" },
+      { src: "/Galerie/hero-slides/hero-slide-14.JPG", alt: "Bouquet de ballons chiffre 15 rose gold personnalisé", name: "Bouquet · 15 ans" },
+      { src: "/Galerie/hero-slides/hero-slide-18.webp", alt: "Fête pyjama d'anniversaire enfant avec arche pêche et corail", name: "Fête pyjama" },
+      { src: "/Galerie/hero-slides/hero-slide-1.PNG", alt: "Arche de ballons rose et blanc au-dessus d'une table nappée de tulle rose", name: "Arche rose & blanc" },
     ],
   },
   {
     label: "Baby shower",
     photos: [
       { src: "/Galerie/hero-slides/hero-slide-2.PNG", alt: "Arche organique de ballons rose poudré, crème et rose gold", name: "Arche rose poudré & rose gold" },
-      { src: "/Galerie/Baptemes/122219_01.jpg", alt: "Arche ronde de ballons rose avec guirlande et pampa", name: "Arche ronde & pampa" },
       { src: "/Galerie/hero-slides/hero-slide-5.PNG", alt: "Arche de ballons menthe, pêche et rose avec chiffre argenté", name: "Menthe & pêche" },
+      { src: "/Galerie/Baptemes/122219_01.jpg", alt: "Arche ronde de ballons rose avec guirlande et pampa", name: "Arche ronde & pampa" },
     ],
   },
   {
@@ -227,8 +233,8 @@ const CAROUSEL: CarouselType[] = [
     label: "Entreprise",
     photos: [
       { src: "/Galerie/hero-slides/hero-slide-3.PNG", alt: "Guirlande de ballons multicolore au-dessus d'une grazing table", name: "Soirée d'entreprise · grazing table" },
-      { src: "/Galerie/Corporate/Corporate_1.jpg", alt: "Arche de ballons colorée pour un événement d'entreprise", name: "Arche colorée" },
       { src: "/Galerie/hero-slides/hero-slide-10.PNG", alt: "Chiffres 50 noirs et bouquets de ballons or, argent et noir", name: "50 ans · noir & or" },
+      { src: "/Galerie/Corporate/Corporate_1.jpg", alt: "Arche de ballons colorée pour un événement d'entreprise", name: "Arche colorée" },
     ],
   },
 ];
