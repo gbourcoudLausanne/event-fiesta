@@ -39,7 +39,8 @@ const COLUMN_REVERSED = [false, true, false, true];
 const HERO_SERVICES = [
   "Mariage civil",
   "Anniversaires",
-  "Baby shower & gender reveal",
+  "Baby shower",
+  "Gender reveal",
   "Baptêmes",
   "Pique-niques",
   "Événement sur mesure",
@@ -67,7 +68,7 @@ function RotatingServices() {
       </p>
       <div
         className="relative overflow-hidden"
-        style={{ height: "1.9em", fontSize: "clamp(2rem, 3.2vw, 2.8rem)" }}
+        style={{ height: "1.9em", fontSize: "clamp(1.7rem, 6.5vw, 2.8rem)" }}
       >
         <AnimatePresence mode="wait">
           <motion.span
@@ -257,7 +258,8 @@ function PhotoWall({ columns = 3 }: { columns?: number }) {
 }
 
 /* ── Colonne texte ─────────────────────────────────────────────────────── */
-function HeroText() {
+// part: "intro" = filet + titre + sous-titre · "actions" = CTA + services · undefined = tout
+function HeroText({ part }: { part?: "intro" | "actions" }) {
   const { t } = useI18n();
   const reduce = useReducedMotion();
 
@@ -267,19 +269,25 @@ function HeroText() {
     transition: { duration: 0.8, delay, ease },
   });
 
+  const showIntro = part !== "actions";
+  const showActions = part !== "intro";
+
   return (
     <div className="max-w-[34rem]">
-      <motion.div {...item(0)} className="flex items-center gap-3 mb-7">
-        <span className="w-12 h-px" style={{ background: "#D9628A" }} />
-        <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
-          Décoration d&apos;événements · Suisse romande
+      {showIntro && (
+      <>
+      <motion.div {...item(0)} className="flex items-center gap-3 mb-5 sm:mb-7">
+        <span className="w-8 sm:w-12 h-px shrink-0" style={{ background: "#D9628A" }} />
+        <span className="font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.22em] sm:tracking-[0.3em]" style={{ color: "#B65572" }}>
+          <span className="sm:hidden">Décoration d&apos;événements</span>
+          <span className="hidden sm:inline">Décoration d&apos;événements · Suisse romande</span>
         </span>
       </motion.div>
 
       <motion.h1
         {...item(0.12)}
         className="font-serif font-light tracking-tight"
-        style={{ fontSize: "clamp(2.5rem, 4.4vw, 4.6rem)", lineHeight: 1.06, color: "#2A2320" }}
+        style={{ fontSize: "clamp(2.05rem, 6vw, 4.6rem)", lineHeight: 1.07, color: "#2A2320" }}
       >
         {t.hero.headline1}{" "}
         <span className="font-serif italic" style={{ color: "#B65572" }}>
@@ -289,16 +297,23 @@ function HeroText() {
 
       <motion.p
         {...item(0.26)}
-        className="font-sans font-light mt-7 text-[15px] leading-relaxed"
+        className="font-sans font-light mt-5 sm:mt-7 text-[14px] sm:text-[15px] leading-relaxed"
         style={{ color: "rgba(42,35,32,0.6)" }}
       >
         {t.hero.subtext}
       </motion.p>
+      </>
+      )}
 
-      <motion.div {...item(0.4)} className="mt-9 flex flex-wrap items-center gap-5">
+      {showActions && (
+      <>
+      <motion.div
+        {...item(0.4)}
+        className="mt-7 sm:mt-9 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3.5 sm:gap-5"
+      >
         <Link
           href="/contact"
-          className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[13px] font-medium px-8 py-4 rounded-full cursor-pointer transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
+          className="btn-gold-shimmer inline-flex items-center justify-center gap-2 font-sans text-[13px] font-medium px-8 py-4 rounded-full cursor-pointer transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
           style={{ background: "#D9628A", color: "#FAF7F2" }}
         >
           {t.hero.cta1}
@@ -306,7 +321,7 @@ function HeroText() {
         </Link>
         <Link
           href="/galerie"
-          className="group inline-flex items-center gap-1.5 font-sans text-[13px] font-medium tracking-wide transition-colors duration-200"
+          className="group inline-flex items-center justify-center sm:justify-start gap-1.5 font-sans text-[13px] font-medium tracking-wide transition-colors duration-200 py-2"
           style={{ color: "rgba(42,35,32,0.7)" }}
         >
           {t.hero.cta2}
@@ -316,11 +331,13 @@ function HeroText() {
 
       <motion.div
         {...item(0.55)}
-        className="mt-10 pt-7"
+        className="mt-8 pt-6 sm:mt-10 sm:pt-7"
         style={{ borderTop: "1px solid rgba(42,35,32,0.12)" }}
       >
         <RotatingServices />
       </motion.div>
+      </>
+      )}
     </div>
   );
 }
@@ -359,13 +376,16 @@ export function Hero() {
           </div>
         </div>
 
-        {/* ── Mobile / tablette ── */}
-        <div className="lg:hidden pt-[84px] pb-6 px-4 sm:px-6">
-          <div className="relative h-[52vh] min-h-[360px] mb-10">
+        {/* ── Mobile / tablette : texte d'intro → photos → CTA ── */}
+        <div className="lg:hidden pt-[92px] pb-12 px-5 sm:px-6">
+          <div className="px-1">
+            <HeroText part="intro" />
+          </div>
+          <div className="relative h-[42vh] min-h-[300px] max-h-[500px] my-8">
             <PhotoWall columns={2} />
           </div>
-          <div className="px-1 pb-6">
-            <HeroText />
+          <div className="px-1">
+            <HeroText part="actions" />
           </div>
         </div>
       </div>
