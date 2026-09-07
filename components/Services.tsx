@@ -137,7 +137,7 @@ export function Services({ preview = false }: { preview?: boolean }) {
   const items = preview ? t.services.items.slice(0, 6) : t.services.items;
 
   return (
-    <section id="services" className="pt-12 pb-24 lg:pt-16 lg:pb-32" style={{ background: "#FAF7F2" }}>
+    <section id="services" className="py-24 lg:py-32" style={{ background: "#FAF7F2" }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
         {/* Header */}
