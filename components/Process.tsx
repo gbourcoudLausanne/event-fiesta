@@ -116,7 +116,7 @@ function BalloonNumber() {
               shown: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.35, ease } },
             }}
           >
-           <g transform="translate(209 152) scale(0.82) translate(-209 -152)">
+           <g transform="translate(235 152) scale(0.82) translate(-209 -152)">
             {/* liseré sombre */}
             <g stroke="#C06985" strokeWidth="50" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.55">
               <path d="M86 100 L128 42 L128 248" />
@@ -145,9 +145,9 @@ function BalloonNumber() {
                 transition: { type: "spring", stiffness: 220, damping: 16, delay: 0.95 },
               },
             }}
-            style={{ transformOrigin: "262px 60px" }}
+            style={{ transformOrigin: "288px 60px" }}
           >
-            <g transform="translate(112 -50)">
+            <g transform="translate(138 -50)">
               <path d="M150 96 Q124 78 122 104 Q126 118 150 104 Z" fill="#F6CDD9" />
               <path d="M150 96 Q176 78 178 104 Q174 118 150 104 Z" fill="#F0BFCE" />
               <path d="M147 104 Q140 128 143 150 L150 144 L157 150 Q160 128 153 104 Z" fill="#F6CDD9" />
