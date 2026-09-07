@@ -498,7 +498,7 @@ export function Hero() {
           <div className="flex items-center pl-10 xl:pl-16 pr-12 py-16">
             <HeroText />
           </div>
-          <div className="relative py-10 pr-6 xl:pr-10">
+          <div className="relative pr-6 xl:pr-10">
             <motion.div
               initial={reduce ? false : { opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
