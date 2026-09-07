@@ -534,7 +534,7 @@ function ArchDecorButton({
     >
       <div
         className="absolute flex flex-col items-center gap-1.5 pointer-events-auto"
-        style={{ left: "50%", top: "54%", transform: "translate(-50%, -50%)" }}
+        style={{ left: "50%", top: "44%", transform: "translate(-50%, -50%)" }}
       >
         {level < 5 ? (
           <button
