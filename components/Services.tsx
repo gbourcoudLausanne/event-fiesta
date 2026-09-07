@@ -189,7 +189,7 @@ function Eucalyptus({
             ry={lr * 0.62}
             fill="url(#ba-euca)"
             opacity={0.52 + 0.32 * env}
-            transform={`rotate(${side * 34 * dir} ${anchorX} ${ly})`}
+            transform={`rotate(${-side * 40 * dir} ${anchorX} ${ly})`}
           />
         );
       })}
