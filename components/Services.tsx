@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
   AnimatePresence,
@@ -23,8 +23,8 @@ const TINTS = [
 ];
 
 /* ── Arche de ballons ──────────────────────────────────────────────────── */
-// g = clé de dégradé · b = arrière-plan flou (profondeur)
-type Balloon = { x: number; y: number; r: number; g: string; b?: boolean };
+const ARCH_D = "M28 420 C28 200 108 26 210 26 C312 26 392 200 392 420";
+const GRAD_KEYS = ["rose", "roseDeep", "gold", "blue", "cream"] as const;
 
 const BALLOON_GRADS: Record<string, [string, string, string]> = {
   rose:     ["#FCE2E9", "#F2A6B8", "#DE7C98"],
@@ -34,46 +34,59 @@ const BALLOON_GRADS: Record<string, [string, string, string]> = {
   cream:    ["#FFFDFA", "#F3EBDF", "#DFD2BF"],
 };
 
-// Garland le long de l'arche (viewBox 420×420), du bas-gauche au bas-droite.
-const BALLOONS: Balloon[] = [
-  { x: 34, y: 402, r: 20, g: "rose" }, { x: 16, y: 380, r: 13, g: "cream", b: true },
-  { x: 44, y: 372, r: 15, g: "gold" }, { x: 24, y: 350, r: 22, g: "roseDeep" },
-  { x: 50, y: 336, r: 12, g: "blue" }, { x: 30, y: 316, r: 17, g: "rose" },
-  { x: 15, y: 300, r: 11, g: "cream", b: true }, { x: 48, y: 296, r: 21, g: "gold" },
-  { x: 33, y: 272, r: 14, g: "blue" }, { x: 52, y: 254, r: 18, g: "roseDeep" },
-  { x: 37, y: 232, r: 12, g: "cream" }, { x: 58, y: 218, r: 22, g: "rose" },
-  { x: 44, y: 196, r: 15, g: "gold" }, { x: 66, y: 180, r: 12, g: "blue", b: true },
-  { x: 55, y: 160, r: 20, g: "roseDeep" }, { x: 78, y: 146, r: 14, g: "cream" },
-  { x: 70, y: 122, r: 21, g: "rose" }, { x: 96, y: 108, r: 13, g: "gold" },
-  { x: 92, y: 84, r: 18, g: "blue" }, { x: 122, y: 74, r: 22, g: "roseDeep" },
-  { x: 118, y: 50, r: 14, g: "cream", b: true }, { x: 152, y: 46, r: 20, g: "rose" },
-  { x: 150, y: 24, r: 12, g: "gold" }, { x: 188, y: 30, r: 23, g: "roseDeep" },
-  { x: 214, y: 20, r: 13, g: "blue" }, { x: 224, y: 40, r: 19, g: "cream" },
-  { x: 252, y: 26, r: 15, g: "rose" }, { x: 262, y: 48, r: 22, g: "gold" },
-  { x: 290, y: 40, r: 13, g: "roseDeep", b: true }, { x: 300, y: 66, r: 20, g: "blue" },
-  { x: 326, y: 62, r: 15, g: "rose" }, { x: 334, y: 90, r: 22, g: "roseDeep" },
-  { x: 356, y: 88, r: 12, g: "cream" }, { x: 352, y: 116, r: 19, g: "gold" },
-  { x: 374, y: 118, r: 13, g: "blue", b: true }, { x: 366, y: 146, r: 21, g: "rose" },
-  { x: 388, y: 152, r: 12, g: "cream" }, { x: 378, y: 180, r: 18, g: "roseDeep" },
-  { x: 396, y: 190, r: 13, g: "gold" }, { x: 384, y: 218, r: 22, g: "blue" },
-  { x: 402, y: 236, r: 12, g: "cream", b: true }, { x: 390, y: 258, r: 19, g: "rose" },
-  { x: 406, y: 276, r: 14, g: "roseDeep" }, { x: 392, y: 300, r: 21, g: "gold" },
-  { x: 408, y: 322, r: 12, g: "blue" }, { x: 394, y: 344, r: 18, g: "rose" },
-  { x: 410, y: 366, r: 14, g: "cream" }, { x: 398, y: 390, r: 21, g: "roseDeep" },
-  { x: 384, y: 406, r: 13, g: "gold" },
-];
+type PlacedBalloon = { x: number; y: number; r: number; g: string; blur: boolean };
+
+// bruit déterministe [0,1) par index
+const noise = (n: number) => {
+  const s = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+  return s - Math.floor(s);
+};
 
 function BalloonArch() {
   const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [70, -90]);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
+  const [balloons, setBalloons] = useState<PlacedBalloon[]>([]);
+
+  const { scrollYProgress } = useScroll({ target: wrapRef, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [50, -70]);
+
+  useEffect(() => {
+    const path = pathRef.current;
+    if (!path) return;
+    const len = path.getTotalLength();
+    const N = 44;
+    const arr: PlacedBalloon[] = [];
+    for (let i = 0; i < N; i++) {
+      const l = (i / (N - 1)) * len;
+      const p = path.getPointAtLength(l);
+      const p2 = path.getPointAtLength(Math.min(len, l + 2));
+      let nx = -(p2.y - p.y);
+      let ny = p2.x - p.x;
+      const m = Math.hypot(nx, ny) || 1;
+      nx /= m;
+      ny /= m;
+      // alterne intérieur / extérieur de l'arc + petite dispersion
+      const side = i % 2 === 0 ? 1 : -1;
+      const off = side * (3 + noise(i) * 15);
+      const jitter = (noise(i + 99) - 0.5) * 6;
+      const r = 8 + noise(i + 7) * 15;
+      arr.push({
+        x: p.x + nx * off + jitter,
+        y: p.y + ny * off,
+        r,
+        g: GRAD_KEYS[i % GRAD_KEYS.length],
+        blur: i % 6 === 4,
+      });
+    }
+    setBalloons(arr);
+  }, []);
 
   return (
     <motion.div
-      ref={ref}
+      ref={wrapRef}
       className="absolute pointer-events-none hidden lg:block"
-      style={{ top: "-6%", right: "-8%", width: "min(44vw, 680px)", y }}
+      style={{ top: "2%", right: "-7%", width: "min(42vw, 640px)", y }}
       aria-hidden
     >
       <motion.svg
@@ -85,20 +98,24 @@ function BalloonArch() {
         viewport={{ once: true, amount: 0.3 }}
       >
         <defs>
-          {Object.entries(BALLOON_GRADS).map(([k, [a, b, c]]) => (
-            <radialGradient key={k} id={`ba-${k}`} cx="34%" cy="28%" r="78%">
-              <stop offset="0%" stopColor={a} />
-              <stop offset="52%" stopColor={b} />
-              <stop offset="100%" stopColor={c} />
-            </radialGradient>
-          ))}
+          {GRAD_KEYS.map((k) => {
+            const [a, b, c] = BALLOON_GRADS[k];
+            return (
+              <radialGradient key={k} id={`ba-${k}`} cx="34%" cy="28%" r="78%">
+                <stop offset="0%" stopColor={a} />
+                <stop offset="52%" stopColor={b} />
+                <stop offset="100%" stopColor={c} />
+              </radialGradient>
+            );
+          })}
           <filter id="ba-blur" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="4" />
+            <feGaussianBlur stdDeviation="3.5" />
           </filter>
         </defs>
 
         <motion.path
-          d="M28 420 C28 200 108 26 210 26 C312 26 392 200 392 420"
+          ref={pathRef}
+          d={ARCH_D}
           stroke="rgba(217,98,138,0.16)"
           strokeWidth="1.4"
           strokeLinecap="round"
@@ -106,26 +123,25 @@ function BalloonArch() {
           transition={{ duration: 1.5, ease }}
         />
 
-        {/* Balancement lent de toute la guirlande */}
         <motion.g
           animate={reduce ? undefined : { y: [0, -6, 0], rotate: [0, 0.5, 0] }}
           transition={{ repeat: Infinity, duration: 7.5, ease: "easeInOut", delay: 2.4 }}
           style={{ transformOrigin: "210px 26px" }}
         >
-          <motion.g variants={{ shown: { transition: { staggerChildren: 0.028, delayChildren: 0.3 } } }}>
-            {BALLOONS.map((b, i) => (
+          <motion.g variants={{ shown: { transition: { staggerChildren: 0.026, delayChildren: 0.3 } } }}>
+            {balloons.map((b, i) => (
               <motion.g
                 key={i}
                 variants={{
                   hidden: { scale: 0, opacity: 0 },
                   shown: {
                     scale: 1,
-                    opacity: b.b ? 0.32 : 0.9,
+                    opacity: b.blur ? 0.3 : 0.9,
                     transition: { type: "spring", stiffness: 300, damping: 13 },
                   },
                 }}
                 style={{ transformOrigin: `${b.x}px ${b.y}px` }}
-                filter={b.b ? "url(#ba-blur)" : undefined}
+                filter={b.blur ? "url(#ba-blur)" : undefined}
               >
                 <circle cx={b.x} cy={b.y} r={b.r} fill={`url(#ba-${b.g})`} />
                 <ellipse
