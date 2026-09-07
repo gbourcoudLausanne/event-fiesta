@@ -296,7 +296,7 @@ function BalloonArch({ level }: { level: number }) {
     <motion.div
       ref={wrapRef}
       className="absolute pointer-events-none hidden lg:block"
-      style={{ top: "2%", right: "-7%", width: "min(42vw, 640px)", y }}
+      style={{ top: "8%", right: "-7%", width: "min(42vw, 640px)", y }}
     >
       <motion.svg viewBox="0 0 420 420" fill="none" style={{ overflow: "visible", width: "100%" }} aria-hidden>
         <defs>
@@ -526,7 +526,7 @@ function ArchDecorButton({
     <div
       className="absolute z-30 hidden lg:block pointer-events-none"
       style={{
-        top: "2%",
+        top: "8%",
         right: "-7%",
         width: "min(42vw, 640px)",
         height: "min(42vw, 640px)",
