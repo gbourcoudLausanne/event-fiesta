@@ -182,7 +182,7 @@ function Berry({ x, y }: { x: number; y: number }) {
 
 function BalloonShape({ b }: { b: Balloon }) {
   const fill = b.metal === 1 ? "url(#gd-chrome)" : b.metal === 2 ? "url(#gd-rosegold)" : `url(#gd-${b.g})`;
-  const mid = GRADS[b.g][2];
+  const mid = b.metal === 1 ? "#C77E9A" : b.metal === 2 ? "#C79066" : GRADS[b.g][2];
   return (
     <g>
       <line x1={b.x} y1={rnd(b.y - b.r, 3)} x2={b.sx} y2={b.sy} stroke="rgba(120,90,70,0.2)" strokeWidth="0.7" />
@@ -197,9 +197,9 @@ function BalloonShape({ b }: { b: Balloon }) {
         <>
           {/* petit nœud au bas du ballon */}
           <path
-            d={`M${rnd(b.x - b.r * 0.15, 3)} ${rnd(b.y + b.r * 0.95, 3)} L${rnd(b.x + b.r * 0.15, 3)} ${rnd(b.y + b.r * 0.95, 3)} L${b.x} ${rnd(b.y + b.r + b.r * 0.14 + 1.2, 3)} Z`}
+            d={`M${rnd(b.x - b.r * 0.11, 3)} ${rnd(b.y + b.r * 0.97, 3)} Q ${b.x} ${rnd(b.y + b.r + b.r * 0.1 + 1, 3)} ${rnd(b.x + b.r * 0.11, 3)} ${rnd(b.y + b.r * 0.97, 3)} Z`}
             fill={mid}
-            opacity="0.8"
+            opacity="0.7"
           />
           <ellipse
             cx={rnd(b.x - b.r * 0.32, 3)}
