@@ -118,9 +118,9 @@ export function GarlandDivider({ bg = "#FAF7F2" }: { bg?: string }) {
   const reduce = useReducedMotion();
 
   return (
-    <div style={{ background: bg, lineHeight: 0, paddingBottom: "56px" }} aria-hidden>
+    <div style={{ background: bg, lineHeight: 0 }} aria-hidden>
       <motion.svg
-        viewBox="0 0 1440 240"
+        viewBox="0 0 1440 210"
         xmlns="http://www.w3.org/2000/svg"
         style={{ display: "block", width: "100%", height: "auto", overflow: "visible" }}
         initial={reduce ? undefined : "hidden"}
