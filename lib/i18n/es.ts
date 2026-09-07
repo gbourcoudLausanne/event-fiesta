@@ -21,7 +21,7 @@ export const es = {
     ],
   },
   services: {
-    eyebrow: "Lo que creamos",
+    eyebrow: "Para cada ocasión",
     title: "Nuestros servicios",
     intro:
       "Desde una fiesta de cumpleaños hasta una velada de empresa, diseñamos y elaboramos cada decoración a medida. Dos universos, una misma exigencia: que todo esté perfecto cuando tus invitados entran en la sala.",

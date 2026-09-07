@@ -93,7 +93,7 @@ export function Testimonials() {
   };
 
   return (
-    <section className="py-24 lg:py-32" style={{ background: "#F3EDE6" }}>
+    <section className="py-20 lg:py-24" style={{ background: "#F3EDE6" }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
         {/* Header */}

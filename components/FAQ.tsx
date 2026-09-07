@@ -142,7 +142,7 @@ export function FAQ({ preview = false }: { preview?: boolean }) {
   const faqs = preview ? FAQS.slice(0, 4) : FAQS;
 
   return (
-    <section className="py-24 lg:py-32" style={{ background: "#F3EDE6" }}>
+    <section className="py-20 lg:py-24" style={{ background: "#F3EDE6" }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-12 lg:gap-20">
 

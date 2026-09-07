@@ -21,7 +21,7 @@ export const en = {
     ],
   },
   services: {
-    eyebrow: "What we create",
+    eyebrow: "For every occasion",
     title: "Our services",
     intro:
       "From a birthday party to a corporate evening, we design and handcraft every decoration to measure. Two worlds, one standard: everything perfect the moment your guests walk in.",

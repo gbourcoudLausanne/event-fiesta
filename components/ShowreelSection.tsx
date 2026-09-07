@@ -30,7 +30,7 @@ export function ShowreelSection() {
   }, []);
 
   return (
-    <section className="py-16 lg:py-24" style={{ background: "#F3EDE6" }}>
+    <section className="py-14 lg:py-20" style={{ background: "#F3EDE6" }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
         {/* Header */}

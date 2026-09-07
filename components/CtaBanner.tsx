@@ -11,7 +11,7 @@ export function CtaBanner() {
 
   return (
     <section
-      className="relative py-28 lg:py-36 overflow-hidden"
+      className="relative py-20 lg:py-28 overflow-hidden"
       style={{ background: "#F3EDE6" }}
     >
       {/* Radial gold glow */}
