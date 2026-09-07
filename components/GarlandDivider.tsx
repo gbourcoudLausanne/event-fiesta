@@ -21,9 +21,10 @@ function noise(n: number) {
 
 // Point + normale le long de la guirlande (bézier quadratique P0-P1-P2).
 function swag(t: number) {
-  const P0 = { x: -20, y: 40 };
-  const P1 = { x: 720, y: 232 };
-  const P2 = { x: 1460, y: 40 };
+  // Extrémités qui remontent hors-cadre → pas de segment horizontal net (« ligne »).
+  const P0 = { x: -60, y: -26 };
+  const P1 = { x: 720, y: 238 };
+  const P2 = { x: 1500, y: -26 };
   const mt = 1 - t;
   const x = mt * mt * P0.x + 2 * mt * t * P1.x + t * t * P2.x;
   const y = mt * mt * P0.y + 2 * mt * t * P1.y + t * t * P2.y;
@@ -35,7 +36,7 @@ function swag(t: number) {
 
 const N_BALLOONS = 34;
 const BALLOONS = Array.from({ length: N_BALLOONS }).map((_, i) => {
-  const t = i / (N_BALLOONS - 1);
+  const t = 0.05 + (i / (N_BALLOONS - 1)) * 0.9;
   const p = swag(t);
   const side = i % 2 === 0 ? 1 : -1;
   const bump = 0.55 + 0.75 * Math.sin(t * Math.PI); // plus gros au centre
@@ -44,13 +45,15 @@ const BALLOONS = Array.from({ length: N_BALLOONS }).map((_, i) => {
   return {
     x: p.x + p.nx * off,
     y: p.y + p.ny * off + r * 0.42,
+    sx: p.x,
+    sy: p.y,
     r,
     g: GKEYS[Math.floor(noise(i + 2) * GKEYS.length)],
     back: noise(i + 9) < 0.22,
   };
 });
 
-const STRING_D = "M-20 40 Q 720 232 1460 40";
+const STRING_D = "M-60 -26 Q 720 238 1500 -26";
 
 const PAMPA_AT = [0.12, 0.34, 0.5, 0.68, 0.88];
 const EUCA_AT = [0.2, 0.44, 0.62, 0.82];
@@ -118,9 +121,12 @@ export function GarlandDivider({ bg = "#FAF7F2" }: { bg?: string }) {
   const reduce = useReducedMotion();
 
   return (
-    <div style={{ background: bg, lineHeight: 0, paddingBottom: "56px" }} aria-hidden>
+    <div
+      style={{ background: bg, lineHeight: 0, padding: "44px 0 56px", margin: "-1px 0" }}
+      aria-hidden
+    >
       <motion.svg
-        viewBox="0 0 1440 240"
+        viewBox="0 0 1440 250"
         xmlns="http://www.w3.org/2000/svg"
         style={{ display: "block", width: "100%", height: "auto", overflow: "visible" }}
         initial={reduce ? undefined : "hidden"}
@@ -235,8 +241,8 @@ export function GarlandDivider({ bg = "#FAF7F2" }: { bg?: string }) {
               <line
                 x1={b.x}
                 y1={b.y - b.r}
-                x2={swag((i / (N_BALLOONS - 1)) * 0.999 + 0.0005).x}
-                y2={swag((i / (N_BALLOONS - 1)) * 0.999 + 0.0005).y}
+                x2={b.sx}
+                y2={b.sy}
                 stroke="rgba(120,90,70,0.22)"
                 strokeWidth="0.7"
               />
