@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { X, ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import { useI18n } from "@/lib/i18n";
@@ -173,61 +173,221 @@ const photos = [
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-/* ── Sélection éditoriale pour l'aperçu accueil ───────────────────────── */
-const PREVIEW = [
-  { src: "/Galerie/hero-slides/hero-slide-13.PNG", alt: "Arche ronde de ballons violet et or dans un jardin", cat: "Anniversaire", place: "au jardin", name: "Anniversaire au jardin" },
-  { src: "/Galerie/anniversaires/Anniv_1.webp", alt: "Arche de ballons rose gold Happy Birthday 50", cat: "Anniversaire", place: "50 ans", name: "Happy Birthday · 50 ans" },
-  { src: "/Galerie/Gender-Reveal/GenderReveal_1.webp", alt: "Gender reveal Oh Baby, arche dorée et fleurs", cat: "Gender reveal", place: "Renens", name: "Oh Baby !" },
-  { src: "/Galerie/hero-slides/hero-slide-6.PNG", alt: "Sweet table dorée avec gâteau et ballons rose et pêche", cat: "Sweet table", place: "sur mesure", name: "Sweet table rosée" },
-  { src: "/Galerie/hero-slides/hero-slide-17.webp", alt: "Pique-nique de luxe au bord de l'eau", cat: "Pique-nique", place: "au bord de l'eau", name: "Pique-nique de luxe" },
-  { src: "/Galerie/Corporate/Corporate_1.jpg", alt: "Arche de ballons colorée pour un événement d'entreprise", cat: "Entreprise", place: "corporate", name: "Événement corporate" },
+/* ── Carousel d'aperçu (accueil) : rolodex de types + pile photo ──────── */
+const CAROUSEL = [
+  { label: "Anniversaire",   src: "/Galerie/hero-slides/hero-slide-13.PNG", alt: "Arche ronde de ballons violet et or dans un jardin", name: "Arche jardin · violet & or" },
+  { label: "Baby shower",    src: "/Galerie/hero-slides/hero-slide-2.PNG",  alt: "Arche organique rose poudré, crème et rose gold", name: "Arche rose poudré" },
+  { label: "Gender reveal",  src: "/Galerie/Gender-Reveal/GenderReveal_1.webp", alt: "Gender reveal Oh Baby, arche dorée et fleurs", name: "Oh Baby !" },
+  { label: "Baptême",        src: "/Galerie/Baptemes/Bapteme.jpg", alt: "Arche dorée avec guirlande de ballons rose gold et pampas", name: "Arche dorée & pampa" },
+  { label: "Sweet table",    src: "/Galerie/hero-slides/hero-slide-6.PNG", alt: "Sweet table dorée avec gâteau et ballons rose et pêche", name: "Sweet table rosée" },
+  { label: "Pique-nique",    src: "/Galerie/hero-slides/hero-slide-17.webp", alt: "Pique-nique de luxe au bord de l'eau", name: "Pique-nique · au bord de l'eau" },
+  { label: "Entreprise",     src: "/Galerie/Corporate/Corporate_1.jpg", alt: "Arche de ballons colorée pour un événement d'entreprise", name: "Événement corporate" },
 ];
 
-function PreviewTile({
-  photo,
-  i,
-  onOpen,
-  className = "",
-}: {
-  photo: (typeof PREVIEW)[number];
-  i: number;
-  onOpen: (i: number) => void;
-  className?: string;
-}) {
+const wrap = (min: number, max: number, v: number) => {
+  const range = max - min;
+  return ((((v - min) % range) + range) % range) + min;
+};
+
+const ITEM_H = 56;
+
+function RealisationsCarousel() {
+  const { t } = useI18n();
   const reduce = useReducedMotion();
+  const [step, setStep] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [lb, setLb] = useState<number | null>(null);
+
+  const N = CAROUSEL.length;
+  const cur = ((step % N) + N) % N;
+
+  useEffect(() => {
+    if (paused || reduce || lb !== null) return;
+    const id = setInterval(() => setStep((s) => s + 1), 4200);
+    return () => clearInterval(id);
+  }, [paused, reduce, lb]);
+
+  const jump = (i: number) => {
+    const diff = (i - cur + N) % N;
+    if (diff) setStep((s) => s + diff);
+  };
+
+  const status = (i: number) => {
+    let d = i - cur;
+    if (d > N / 2) d -= N;
+    if (d < -N / 2) d += N;
+    if (d === 0) return "active";
+    if (d === -1) return "prev";
+    if (d === 1) return "next";
+    return "hidden";
+  };
+
   return (
-    <motion.button
-      type="button"
-      onClick={() => onOpen(i)}
-      initial={reduce ? false : { opacity: 0, y: 26 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.6, delay: (i % 3) * 0.08, ease }}
-      className={`group relative block w-full overflow-hidden cursor-pointer ${className}`}
-      style={{ background: "#E4D4CC" }}
-      aria-label={`Voir ${photo.name}`}
-    >
-      <Image
-        src={photo.src}
-        alt={photo.alt}
-        fill
-        className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
-        sizes="(max-width: 1024px) 50vw, 40vw"
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: "linear-gradient(180deg, rgba(13,11,8,0) 55%, rgba(13,11,8,0.66) 100%)" }}
-      />
-      <div className="absolute inset-4 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ border: "1px solid rgba(250,247,242,0.4)" }} />
-      <div className="absolute inset-x-0 bottom-0 p-4 lg:p-5 text-left">
-        <p className="font-sans text-[10px] uppercase tracking-[0.2em]" style={{ color: "#F4A8B8" }}>
-          {photo.cat}
-        </p>
-        <p className="font-serif font-light italic text-[15px] lg:text-lg leading-tight mt-0.5" style={{ color: "#FAF7F2" }}>
-          {photo.place}
-        </p>
+    <section id="realisations" className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#F3EDE6" }}>
+      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+        {/* En-tête */}
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.6, ease }}
+          className="max-w-2xl mb-10 lg:mb-14"
+        >
+          <div className="flex items-center gap-3 mb-5">
+            <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+            <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
+              {t.realisations.eyebrow}
+            </span>
+          </div>
+          <h2
+            className="font-serif font-light leading-tight tracking-tight"
+            style={{ fontSize: "clamp(2.3rem, 4.6vw, 3.8rem)", color: "#2A2320" }}
+          >
+            {t.realisations.title}
+          </h2>
+          <p className="font-sans font-light text-[14.5px] leading-relaxed mt-5" style={{ color: "rgba(42,35,32,0.55)" }}>
+            {t.realisations.subtitle}
+          </p>
+        </motion.div>
+
+        {/* Carousel */}
+        <div
+          className="relative flex flex-col lg:flex-row overflow-hidden"
+          style={{ boxShadow: "0 44px 100px -36px rgba(120,60,80,0.42)" }}
+        >
+          {/* Rolodex de types */}
+          <div
+            className="relative flex items-center overflow-hidden px-8 lg:px-12 min-h-[260px] lg:min-h-[540px] lg:w-[38%]"
+            style={{ background: "#F2D4D9" }}
+          >
+            <div className="absolute inset-x-0 top-0 h-16 z-10 pointer-events-none" style={{ background: "linear-gradient(#F2D4D9, rgba(242,212,217,0))" }} />
+            <div className="absolute inset-x-0 bottom-0 h-16 z-10 pointer-events-none" style={{ background: "linear-gradient(rgba(242,212,217,0), #F2D4D9)" }} />
+            <div className="relative flex h-full w-full items-center">
+              {CAROUSEL.map((it, i) => {
+                const wd = wrap(-(N / 2), N / 2, i - cur);
+                const on = i === cur;
+                return (
+                  <motion.div
+                    key={i}
+                    className="absolute"
+                    style={{ height: ITEM_H }}
+                    animate={{
+                      y: wd * ITEM_H,
+                      opacity: reduce ? (on ? 1 : 0) : 1 - Math.abs(wd) * 0.26,
+                    }}
+                    transition={reduce ? { duration: 0.2 } : { type: "spring", stiffness: 90, damping: 22 }}
+                  >
+                    <button
+                      onClick={() => jump(i)}
+                      onMouseEnter={() => setPaused(true)}
+                      onMouseLeave={() => setPaused(false)}
+                      className="flex items-center gap-3 rounded-full border px-6 py-3 transition-colors duration-500 cursor-pointer"
+                      style={
+                        on
+                          ? { background: "#FAF7F2", color: "#B65572", borderColor: "#FAF7F2" }
+                          : { background: "transparent", color: "rgba(42,35,32,0.5)", borderColor: "rgba(42,35,32,0.18)" }
+                      }
+                    >
+                      <span className="h-1.5 w-1.5 rounded-full" style={{ background: on ? "#D9628A" : "rgba(42,35,32,0.28)" }} />
+                      <span
+                        className="font-serif font-light text-[15px] whitespace-nowrap"
+                        style={{ fontStyle: on ? "italic" : "normal" }}
+                      >
+                        {it.label}
+                      </span>
+                    </button>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Pile photo */}
+          <div
+            className="relative flex flex-1 items-center justify-center overflow-hidden p-8 lg:p-12 min-h-[440px] lg:min-h-[540px]"
+            style={{ background: "#E7DED7" }}
+          >
+            <div className="relative w-full max-w-[400px]" style={{ aspectRatio: "4 / 5" }}>
+              {CAROUSEL.map((it, i) => {
+                const st = status(i);
+                const on = st === "active";
+                return (
+                  <motion.button
+                    key={i}
+                    type="button"
+                    onClick={() => on && setLb(i)}
+                    initial={false}
+                    animate={{
+                      x: on ? 0 : st === "prev" ? -92 : st === "next" ? 92 : 0,
+                      scale: on ? 1 : st === "prev" || st === "next" ? 0.86 : 0.72,
+                      opacity: on ? 1 : st === "prev" || st === "next" ? 0.32 : 0,
+                      rotate: reduce ? 0 : st === "prev" ? -3 : st === "next" ? 3 : 0,
+                      zIndex: on ? 20 : st === "prev" || st === "next" ? 10 : 0,
+                    }}
+                    transition={reduce ? { duration: 0.25 } : { type: "spring", stiffness: 260, damping: 26, mass: 0.8 }}
+                    className="absolute inset-0 overflow-hidden"
+                    style={{ pointerEvents: on ? "auto" : "none", cursor: on ? "zoom-in" : "default", boxShadow: "0 30px 60px -24px rgba(120,60,80,0.5)" }}
+                    aria-label={on ? `Agrandir — ${it.label}` : undefined}
+                  >
+                    <Image
+                      src={it.src}
+                      alt={it.alt}
+                      fill
+                      className="object-cover transition-[filter] duration-700"
+                      style={{ filter: on ? "none" : "grayscale(0.7) brightness(0.82)" }}
+                      sizes="440px"
+                    />
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{ background: "linear-gradient(180deg, rgba(13,11,8,0) 42%, rgba(13,11,8,0.78) 100%)" }}
+                    />
+                    <AnimatePresence>
+                      {on && (
+                        <motion.div
+                          initial={reduce ? false : { opacity: 0, y: 14 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.35, ease }}
+                          className="absolute inset-x-0 bottom-0 p-6 text-left"
+                        >
+                          <p className="font-sans text-[10px] uppercase tracking-[0.22em] mb-1" style={{ color: "rgba(250,247,242,0.6)" }}>
+                            {String(cur + 1).padStart(2, "0")} · {String(N).padStart(2, "0")} — {it.label}
+                          </p>
+                          <p className="font-serif font-light italic text-lg" style={{ color: "#FAF7F2" }}>
+                            {it.name}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <Link
+          href="/galerie"
+          className="group mt-10 lg:mt-12 inline-flex items-center gap-2 font-sans text-[12px] font-medium uppercase tracking-[0.18em]"
+          style={{ color: "#B65572" }}
+        >
+          {t.realisations.ctaAll}
+          <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
+        </Link>
       </div>
-    </motion.button>
+
+      <AnimatePresence>
+        {lb !== null && (
+          <Lightbox
+            photos={CAROUSEL as unknown as typeof photos}
+            activeIndex={lb}
+            onClose={() => setLb(null)}
+            onNext={() => setLb((v) => (v === null ? 0 : (v + 1) % N))}
+            onPrev={() => setLb((v) => (v === null ? 0 : (v - 1 + N) % N))}
+          />
+        )}
+      </AnimatePresence>
+    </section>
   );
 }
 
@@ -338,107 +498,14 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
   const [active, setActive] = useState<Category>("all");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const filtered = preview
-    ? photos.slice(0, 6)
-    : active === "all"
-      ? photos
-      : photos.filter((p) => p.category === active);
+  if (preview) return <RealisationsCarousel />;
+
+  const filtered =
+    active === "all" ? photos : photos.filter((p) => p.category === active);
 
   const closeLightbox = () => setLightboxIndex(null);
   const goNext = () => setLightboxIndex((i) => i === null ? 0 : (i + 1) % filtered.length);
   const goPrev = () => setLightboxIndex((i) => i === null ? 0 : (i - 1 + filtered.length) % filtered.length);
-
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const yA = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [34, -34]);
-  const yB = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [56, -22]);
-
-  if (preview) {
-    return (
-      <section
-        ref={sectionRef}
-        id="realisations"
-        className="relative overflow-hidden py-20 lg:py-28"
-        style={{ background: "#F3EDE6" }}
-      >
-        <div className="max-w-7xl mx-auto px-6 lg:px-10">
-          {/* En-tête */}
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.6, ease }}
-            className="max-w-2xl mb-12 lg:mb-16"
-          >
-            <div className="flex items-center gap-3 mb-5">
-              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
-              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
-                {t.realisations.eyebrow}
-              </span>
-            </div>
-            <h2
-              className="font-serif font-light leading-tight tracking-tight"
-              style={{ fontSize: "clamp(2.3rem, 4.6vw, 3.8rem)", color: "#2A2320" }}
-            >
-              {t.realisations.title}
-            </h2>
-            <p
-              className="font-sans font-light text-[14.5px] leading-relaxed mt-5"
-              style={{ color: "rgba(42,35,32,0.55)" }}
-            >
-              {t.realisations.subtitle}
-            </p>
-          </motion.div>
-
-          {/* Mosaïque éditoriale */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-3 lg:gap-4">
-            <PreviewTile
-              photo={PREVIEW[0]}
-              i={0}
-              onOpen={setLightboxIndex}
-              className="aspect-[4/5] lg:aspect-auto lg:h-full"
-            />
-            <motion.div style={{ y: yA }} className="grid gap-3 lg:gap-4">
-              <PreviewTile photo={PREVIEW[1]} i={1} onOpen={setLightboxIndex} className="aspect-[16/10]" />
-              <div className="grid grid-cols-2 gap-3 lg:gap-4">
-                <PreviewTile photo={PREVIEW[2]} i={2} onOpen={setLightboxIndex} className="aspect-[3/4]" />
-                <PreviewTile photo={PREVIEW[3]} i={3} onOpen={setLightboxIndex} className="aspect-[3/4]" />
-              </div>
-            </motion.div>
-          </div>
-
-          <motion.div style={{ y: yB }} className="grid grid-cols-2 gap-3 lg:gap-4 mt-3 lg:mt-4">
-            <PreviewTile photo={PREVIEW[4]} i={4} onOpen={setLightboxIndex} className="aspect-[16/10]" />
-            <PreviewTile photo={PREVIEW[5]} i={5} onOpen={setLightboxIndex} className="aspect-[16/10]" />
-          </motion.div>
-
-          <Link
-            href="/galerie"
-            className="group mt-10 lg:mt-14 inline-flex items-center gap-2 font-sans text-[12px] font-medium uppercase tracking-[0.18em]"
-            style={{ color: "#B65572" }}
-          >
-            {t.realisations.ctaAll}
-            <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
-          </Link>
-        </div>
-
-        <AnimatePresence>
-          {lightboxIndex !== null && (
-            <Lightbox
-              photos={PREVIEW as unknown as typeof photos}
-              activeIndex={lightboxIndex}
-              onClose={closeLightbox}
-              onNext={() => setLightboxIndex((n) => (n === null ? 0 : (n + 1) % PREVIEW.length))}
-              onPrev={() => setLightboxIndex((n) => (n === null ? 0 : (n - 1 + PREVIEW.length) % PREVIEW.length))}
-            />
-          )}
-        </AnimatePresence>
-      </section>
-    );
-  }
 
   return (
     <section id="realisations" className="py-20 lg:py-24" style={{ background: "#F3EDE6" }}>
