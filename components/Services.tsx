@@ -34,7 +34,7 @@ const BALLOON_GRADS: Record<string, [string, string, string]> = {
   cream:    ["#FFFDFA", "#F3EBDF", "#DFD2BF"],
 };
 
-type PlacedBalloon = { x: number; y: number; r: number; g: string; blur: boolean };
+type PlacedBalloon = { x: number; y: number; r: number; g: string };
 
 // bruit déterministe [0,1) par index
 const noise = (n: number) => {
@@ -55,7 +55,7 @@ function BalloonArch() {
     const path = pathRef.current;
     if (!path) return;
     const len = path.getTotalLength();
-    const N = 44;
+    const N = 58;
     const arr: PlacedBalloon[] = [];
     for (let i = 0; i < N; i++) {
       const l = (i / (N - 1)) * len;
@@ -66,17 +66,16 @@ function BalloonArch() {
       const m = Math.hypot(nx, ny) || 1;
       nx /= m;
       ny /= m;
-      // alterne intérieur / extérieur de l'arc + petite dispersion
+      // alterne intérieur / extérieur de l'arc, serré contre le tracé
       const side = i % 2 === 0 ? 1 : -1;
-      const off = side * (3 + noise(i) * 15);
-      const jitter = (noise(i + 99) - 0.5) * 6;
-      const r = 8 + noise(i + 7) * 15;
+      const off = side * (2 + noise(i) * 9);
+      const jitter = (noise(i + 99) - 0.5) * 3;
+      const r = 8 + noise(i + 7) * 14;
       arr.push({
         x: p.x + nx * off + jitter,
         y: p.y + ny * off,
         r,
         g: GRAD_KEYS[i % GRAD_KEYS.length],
-        blur: i % 6 === 4,
       });
     }
     setBalloons(arr);
@@ -108,9 +107,6 @@ function BalloonArch() {
               </radialGradient>
             );
           })}
-          <filter id="ba-blur" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="3.5" />
-          </filter>
         </defs>
 
         <motion.path
@@ -136,12 +132,11 @@ function BalloonArch() {
                   hidden: { scale: 0, opacity: 0 },
                   shown: {
                     scale: 1,
-                    opacity: b.blur ? 0.3 : 0.9,
+                    opacity: 0.92,
                     transition: { type: "spring", stiffness: 300, damping: 13 },
                   },
                 }}
                 style={{ transformOrigin: `${b.x}px ${b.y}px` }}
-                filter={b.blur ? "url(#ba-blur)" : undefined}
               >
                 <circle cx={b.x} cy={b.y} r={b.r} fill={`url(#ba-${b.g})`} />
                 <ellipse
