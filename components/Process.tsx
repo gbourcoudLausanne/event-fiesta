@@ -122,11 +122,6 @@ function BalloonNumber() {
               <path d="M196 48 L104 176 L250 176" />
               <path d="M212 42 L212 250" />
             </g>
-            {/* reflet lumineux */}
-            <g stroke="#FFFFFF" strokeOpacity="0.3" strokeWidth="7" strokeLinecap="round" fill="none">
-              <path d="M190 60 L112 168" />
-              <path d="M203 58 L203 238" />
-            </g>
            </g>
           </motion.g>
 
