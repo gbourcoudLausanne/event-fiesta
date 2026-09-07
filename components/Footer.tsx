@@ -1,20 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
-
-const ease = [0.16, 1, 0.3, 1] as const;
-
-const INSTAGRAM_FEED = [
-  "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=300&q=75",
-  "https://images.unsplash.com/photo-1557800636-894a64c1696f?auto=format&fit=crop&w=300&q=75",
-  "https://images.unsplash.com/photo-1478146059778-26028b07395a?auto=format&fit=crop&w=300&q=75",
-  "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=300&q=75",
-  "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=300&q=75",
-  "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=300&q=75",
-];
+import { GarlandDivider } from "@/components/GarlandDivider";
 
 function InstagramIcon() {
   return (
@@ -42,7 +30,6 @@ function PinterestIcon() {
 
 export function Footer() {
   const { t } = useI18n();
-  const reduce = useReducedMotion();
 
   const footerLinks: [string, string][] = [
     ["/a-propos", t.nav.about],
@@ -59,59 +46,8 @@ export function Footer() {
 
   return (
     <footer style={{ background: "#F3EDE6" }}>
-      {/* Instagram feed strip */}
-      <div className="border-b" style={{ borderColor: "rgba(217,98,138,0.1)" }}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 py-10">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <span style={{ color: "#D9628A" }}><InstagramIcon /></span>
-              <span className="font-sans text-sm" style={{ color: "rgba(13,11,8,0.6)" }}>
-                @eventfiesta.ch
-              </span>
-            </div>
-            <a
-              href={t.footer.social.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-sans text-[11px] uppercase tracking-[0.18em] transition-colors duration-200"
-              style={{ color: "#D9628A" }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#F4A8B8")}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#D9628A")}
-            >
-              Suivre →
-            </a>
-          </div>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-            {INSTAGRAM_FEED.map((src, i) => (
-              <motion.a
-                key={i}
-                href={t.footer.social.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={reduce ? false : { opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.05, ease }}
-                className="group relative aspect-square overflow-hidden rounded-lg block"
-              >
-                <Image
-                  src={src}
-                  alt={`Instagram post ${i + 1}`}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  sizes="(max-width: 640px) 33vw, 16vw"
-                />
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-                  style={{ background: "rgba(13,11,8,0.55)" }}
-                >
-                  <span style={{ color: "#F4A8B8" }}><InstagramIcon /></span>
-                </div>
-              </motion.a>
-            ))}
-          </div>
-        </div>
-      </div>
+      {/* Guirlande de ballons animée */}
+      <GarlandDivider bg="#F3EDE6" />
 
       {/* Main footer */}
       <div className="max-w-7xl mx-auto px-6 lg:px-10 py-16">
@@ -138,7 +74,7 @@ export function Footer() {
               {t.footer.tagline}
             </p>
             <p className="font-sans text-sm leading-relaxed mb-8 max-w-xs" style={{ color: "rgba(13,11,8,0.5)" }}>
-              Spécialistes de la décoration d'événements sur mesure à Lausanne et en Suisse romande depuis 2020.
+              Spécialistes de la décoration d&rsquo;événements sur mesure à Lausanne et en Suisse romande depuis 2020.
             </p>
 
             {/* Social icons */}
