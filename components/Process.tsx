@@ -40,6 +40,12 @@ export function Process() {
         }}
         aria-hidden
       />
+      {/* Fondu depuis la guirlande : la couleur crème continue puis révèle la photo */}
+      <div
+        className="absolute inset-x-0 top-0 h-48 lg:h-64"
+        style={{ background: "linear-gradient(#F3EDE6 0%, #F3EDE6 12%, rgba(243,237,230,0) 100%)" }}
+        aria-hidden
+      />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
         <motion.div
