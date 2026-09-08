@@ -723,7 +723,7 @@ export function Services() {
     <section
       ref={sectionRef}
       id="services"
-      className="relative overflow-hidden py-20 lg:py-28"
+      className="relative overflow-hidden pt-20 lg:pt-28 pb-12 lg:pb-14"
       style={{ background: "#FAF7F2" }}
     >
       {/* Grain */}
@@ -811,7 +811,7 @@ export function Services() {
 
         <Link
           href="/nos-services"
-          className="group mt-10 lg:mt-12 inline-flex items-center gap-2 font-sans text-[12px] font-medium uppercase tracking-[0.18em]"
+          className="group mt-8 lg:mt-10 inline-flex items-center gap-2 font-sans text-[12px] font-medium uppercase tracking-[0.18em]"
           style={{ color: "#B65572" }}
         >
           {t.services.ctaAll}
