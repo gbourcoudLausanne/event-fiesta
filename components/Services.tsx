@@ -662,7 +662,7 @@ function ServiceCard({
             </h3>
             <p
               className="mt-2.5 flex-1 font-sans text-[13.5px] leading-relaxed"
-              style={{ color: "rgba(38,32,28,0.64)" }}
+              style={{ color: "rgba(40,34,30,0.56)" }}
             >
               {card.desc}
             </p>
