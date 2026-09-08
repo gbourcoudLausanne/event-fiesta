@@ -154,10 +154,10 @@ export const en = {
     ],
   },
   process: {
-    eyebrow: "How it works",
+    eyebrow: "From idea to the big day",
     title: "Your project in 4 steps",
     intro:
-      "Simple, personal support — from the first idea to the big day.",
+      "You tell us about your event, we design and build the décor, we set it up on the day. All you have to do is enjoy it.",
     cta: "I'd like a quote",
     steps: [
       {

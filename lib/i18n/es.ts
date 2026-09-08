@@ -154,10 +154,10 @@ export const es = {
     ],
   },
   process: {
-    eyebrow: "Cómo funciona",
+    eyebrow: "De la idea al gran día",
     title: "Tu proyecto en 4 pasos",
     intro:
-      "Un acompañamiento sencillo y personalizado, desde la primera idea hasta el gran día.",
+      "Nos cuentas tu evento, imaginamos y creamos la decoración, la instalamos el día D. Tú solo tienes que disfrutar.",
     cta: "Quiero un presupuesto",
     steps: [
       {

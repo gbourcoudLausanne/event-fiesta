@@ -154,10 +154,10 @@ export const fr = {
     ],
   },
   process: {
-    eyebrow: "Comment ça se passe",
+    eyebrow: "De l'idée au grand jour",
     title: "Votre projet en 4 étapes",
     intro:
-      "Un accompagnement simple et personnalisé, de la première idée au jour J.",
+      "Vous nous racontez votre événement, on imagine et on fabrique le décor, on l'installe le jour J. Vous n'avez plus qu'à en profiter.",
     cta: "Je souhaite un devis",
     steps: [
       {
