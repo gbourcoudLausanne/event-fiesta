@@ -21,14 +21,14 @@ const ease = [0.16, 1, 0.3, 1] as const;
 const PARTICULIERS_KEYS = ["mariage", "anniversaire", "babyshower", "genderreveal", "bapteme", "piquenique"];
 
 const TINTS = [
-  { bg: "#FBEDF0", dot: "#F4A8B8" }, // rose
-  { bg: "#ECF3F6", dot: "#A8CEE0" }, // bleu
-  { bg: "#FBF1E7", dot: "#F0C29A" }, // pêche
-  { bg: "#F1EFF7", dot: "#C4B3E0" }, // lilas
-  { bg: "#ECF4EE", dot: "#A8CFB4" }, // sauge
-  { bg: "#FBF3E0", dot: "#E6C878" }, // doré
-  { bg: "#FBECEC", dot: "#EAA0A0" }, // corail
-  { bg: "#EEF2F7", dot: "#9FB4CE" }, // ardoise
+  { bg: "#FBEDF0", dot: "#F4A8B8" }, // rose clair
+  { bg: "#F9E6EC", dot: "#E79BAF" }, // rose poudré
+  { bg: "#FCEDE7", dot: "#EDB49E" }, // blush pêche
+  { bg: "#F5ECF2", dot: "#CBA5C4" }, // mauve rosé
+  { bg: "#FBE7EC", dot: "#DE7E9A" }, // rose profond
+  { bg: "#F8EBE8", dot: "#D89C93" }, // vieux rose
+  { bg: "#F3EEF6", dot: "#BFA9D8" }, // lilas doux
+  { bg: "#FBF0E6", dot: "#EEC79A" }, // rose doré
 ];
 
 /* ── Arche de ballons ──────────────────────────────────────────────────── */
