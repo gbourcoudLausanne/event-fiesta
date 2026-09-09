@@ -643,15 +643,18 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease }}
-            className="max-w-xl mb-14 lg:mb-20"
+            className="max-w-2xl mb-14 lg:mb-20"
           >
             <h2
               className="font-serif font-light leading-tight"
-              style={{ fontSize: "clamp(2rem, 4vw, 3rem)", color: "#2A2320" }}
+              style={{ fontSize: "clamp(2.2rem, 4.4vw, 3.4rem)", color: "#2A2320" }}
             >
               {t.about.storyTitle}
             </h2>
-            <p className="mt-4 font-sans font-light text-[14.5px] leading-relaxed" style={{ color: "rgba(42,35,32,0.58)" }}>
+            <p
+              className="mt-5 font-serif font-light italic leading-snug"
+              style={{ fontSize: "clamp(1.15rem, 1.9vw, 1.5rem)", color: "rgba(42,35,32,0.66)" }}
+            >
               {t.about.story}
             </p>
           </motion.div>
