@@ -55,7 +55,7 @@ const BALLOONS = [
 function PhotoFan() {
   const reduce = useReducedMotion();
   return (
-    <div className="relative w-full max-w-[360px] mx-auto lg:mr-0 lg:ml-auto" style={{ perspective: 1400 }}>
+    <div className="relative w-full max-w-[440px] mx-auto lg:mx-auto lg:-translate-x-6" style={{ perspective: 1400 }}>
       <div className="relative" style={{ aspectRatio: "1 / 1" }}>
         {FAN.map((p, i) => (
           <motion.div
@@ -77,6 +77,66 @@ function PhotoFan() {
           </motion.div>
         ))}
       </div>
+    </div>
+  );
+}
+
+/* ── Citation signature, révélée mot à mot ────────────────────── */
+function SignatureQuote({ text }: { text: string }) {
+  const reduce = useReducedMotion();
+  const words = text.split(" ");
+  return (
+    <div className="relative max-w-md">
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -left-3 -top-8 select-none font-serif leading-none"
+        style={{ fontSize: "5rem", color: "rgba(217,98,138,0.16)" }}
+      >
+        &ldquo;
+      </span>
+      <motion.p
+        className="relative font-serif italic leading-snug"
+        style={{ fontSize: "clamp(1.3rem, 2.1vw, 1.7rem)", color: "#B65572" }}
+        initial={reduce ? undefined : "hidden"}
+        whileInView={reduce ? undefined : "shown"}
+        viewport={{ once: true, amount: 0.6 }}
+        variants={{ shown: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } } }}
+      >
+        {words.map((w, i) => (
+          <motion.span
+            key={i}
+            className="inline-block"
+            style={{ marginRight: "0.28em" }}
+            variants={{
+              hidden: { opacity: 0, y: 12, filter: "blur(6px)" },
+              shown: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease } },
+            }}
+          >
+            {w}
+          </motion.span>
+        ))}
+      </motion.p>
+      <motion.svg
+        viewBox="0 0 300 12"
+        preserveAspectRatio="none"
+        className="mt-3 h-2.5 w-44"
+        aria-hidden
+        initial={reduce ? undefined : "hidden"}
+        whileInView={reduce ? undefined : "shown"}
+        viewport={{ once: true, amount: 0.6 }}
+      >
+        <motion.path
+          d="M4 7 C 60 1, 120 12, 176 6 S 264 2, 296 7"
+          fill="none"
+          stroke="#D9628A"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          variants={{
+            hidden: { pathLength: 0, opacity: 0 },
+            shown: { pathLength: 1, opacity: 0.7, transition: { duration: 0.9, delay: 0.5, ease } },
+          }}
+        />
+      </motion.svg>
     </div>
   );
 }
@@ -247,7 +307,7 @@ export default function AboutPage() {
           aria-hidden
         />
 
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-16 lg:gap-12 items-center">
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-16 lg:gap-10 items-center">
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
@@ -272,20 +332,9 @@ export default function AboutPage() {
               {t.about.lead}
             </p>
 
-            {/* Signature + repères chiffrés */}
-            <motion.div
-              initial={reduce ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.25, ease }}
-              className="mt-9"
-            >
-              <p
-                className="font-serif italic leading-snug max-w-md"
-                style={{ fontSize: "clamp(1.15rem, 1.8vw, 1.4rem)", color: "#B65572" }}
-              >
-                {t.whyus.quote}
-              </p>
-            </motion.div>
+            <div className="mt-10">
+              <SignatureQuote text={t.whyus.quote} />
+            </div>
           </motion.div>
 
           <PhotoFan />
