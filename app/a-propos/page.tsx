@@ -74,16 +74,26 @@ const STACK = [
 
 function PhotoFan() {
   const reduce = useReducedMotion();
-  const [lift, setLift] = useState(false);
-  const top = STACK.length - 1;
+  const N = FAN_POOL.length;
+  const topSlot = N - 1;
+  const [rot, setRot] = useState(0);
+  const [leaving, setLeaving] = useState<{ i: number; dir: number } | null>(null);
+  const busy = useRef(false);
+
+  const flick = (i: number) => {
+    if (busy.current) return;
+    busy.current = true;
+    const dir = rot % 2 === 0 ? 1 : -1;
+    if (!reduce) setLeaving({ i, dir });
+    setRot((r) => r + 1);
+    window.setTimeout(() => {
+      setLeaving(null);
+      busy.current = false;
+    }, reduce ? 0 : 640);
+  };
 
   return (
-    <div
-      className="relative w-full max-w-[560px] mx-auto lg:mx-auto lg:translate-x-4"
-      style={{ perspective: 1400 }}
-      onMouseEnter={() => setLift(true)}
-      onMouseLeave={() => setLift(false)}
-    >
+    <div className="relative w-full max-w-[560px] mx-auto lg:mx-auto lg:translate-x-4" style={{ perspective: 1400 }}>
       <div className="relative" style={{ aspectRatio: "1 / 1" }}>
         <motion.div
           className="absolute inset-0"
@@ -92,43 +102,79 @@ function PhotoFan() {
           style={{ transformOrigin: "50% 92%" }}
         >
           {FAN_POOL.map((p, i) => {
-            const s = STACK[i];
-            const isTop = i === top;
+            const slot = (i + rot) % N;
+            const s = STACK[slot];
+            const isTop = slot === topSlot;
+            const isLeaving = leaving?.i === i;
+            const prev = STACK[topSlot]; // emplacement d'où la carte part quand on la « pousse »
+            const dealDelay = rot === 0 ? i * 0.11 : 0;
+
             return (
-              <motion.div
+              <div
                 key={p.src}
-                className="absolute left-1/2 top-[5%] w-[66%]"
-                style={{ zIndex: i, aspectRatio: "4 / 5" }}
-                initial={reduce ? false : { x: "-50%", y: 90, rotate: 0, opacity: 0, scale: s.s * 0.94 }}
-                animate={{
-                  x: `calc(-50% + ${s.x}%)`,
-                  y: `${s.y + (isTop && lift ? -7 : 0)}%`,
-                  rotate: s.r + (isTop && lift ? -3 : 0),
-                  opacity: 1,
-                  scale: s.s + (isTop && lift ? 0.02 : 0),
-                }}
-                transition={{
-                  opacity: { duration: 0.5, delay: i * 0.11, ease },
-                  x: { type: "spring", stiffness: 150, damping: 18, delay: i * 0.11 },
-                  y: { type: "spring", stiffness: 150, damping: 18, delay: i * 0.11 },
-                  rotate: { type: "spring", stiffness: 150, damping: 16, delay: i * 0.11 },
-                  scale: { duration: 0.6, delay: i * 0.11, ease },
-                }}
+                className="absolute left-1/2 top-[5%] w-[66%] -translate-x-1/2"
+                style={{ zIndex: isLeaving ? 60 : slot, aspectRatio: "4 / 5" }}
               >
-                <div
-                  className="relative h-full w-full overflow-hidden"
-                  style={{ border: "5px solid #FAF7F2", boxShadow: "0 26px 54px -26px rgba(120,60,80,0.5)" }}
+                <motion.div
+                  className="h-full w-full"
+                  style={{
+                    cursor: isTop ? "pointer" : "default",
+                    pointerEvents: isTop ? "auto" : "none",
+                    outline: "none",
+                  }}
+                  initial={reduce ? false : { x: 0, y: "120%", rotate: 0, opacity: 0, scale: s.s * 0.94 }}
+                  animate={
+                    isLeaving && leaving
+                      ? {
+                          x: [`${prev.x}%`, `${leaving.dir * 118}%`, `${s.x}%`],
+                          y: [`${prev.y}%`, "-10%", `${s.y}%`],
+                          rotate: [prev.r, leaving.dir * 22, s.r],
+                          scale: [1, 1.03, s.s],
+                          opacity: 1,
+                        }
+                      : { x: `${s.x}%`, y: `${s.y}%`, rotate: s.r, opacity: 1, scale: s.s }
+                  }
+                  transition={
+                    isLeaving
+                      ? { duration: 0.62, times: [0, 0.42, 1], ease }
+                      : {
+                          opacity: { duration: 0.5, delay: dealDelay, ease },
+                          x: { type: "spring", stiffness: 170, damping: 20, delay: dealDelay },
+                          y: { type: "spring", stiffness: 170, damping: 20, delay: dealDelay },
+                          rotate: { type: "spring", stiffness: 170, damping: 18, delay: dealDelay },
+                          scale: { duration: 0.5, delay: dealDelay, ease },
+                        }
+                  }
+                  onClick={isTop ? () => flick(i) : undefined}
+                  onKeyDown={
+                    isTop
+                      ? (e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            flick(i);
+                          }
+                        }
+                      : undefined
+                  }
+                  role={isTop ? "button" : undefined}
+                  tabIndex={isTop ? 0 : undefined}
+                  aria-label={isTop ? "Photo suivante" : undefined}
                 >
-                  <Image
-                    src={p.src}
-                    alt={p.alt}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 55vw, 26vw"
-                    priority={isTop}
-                  />
-                </div>
-              </motion.div>
+                  <div
+                    className="relative h-full w-full overflow-hidden"
+                    style={{ border: "5px solid #FAF7F2", boxShadow: "0 26px 54px -26px rgba(120,60,80,0.5)" }}
+                  >
+                    <Image
+                      src={p.src}
+                      alt={p.alt}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 55vw, 26vw"
+                      priority={i === topSlot}
+                    />
+                  </div>
+                </motion.div>
+              </div>
             );
           })}
         </motion.div>
