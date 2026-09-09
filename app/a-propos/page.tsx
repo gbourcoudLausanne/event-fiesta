@@ -15,6 +15,7 @@ import {
 import { HeartStraight, Sparkle, Handshake, ArrowRight } from "@phosphor-icons/react";
 import { WhyUs } from "@/components/WhyUs";
 import { CtaBanner } from "@/components/CtaBanner";
+import { FloatingBalloons } from "@/components/FloatingBalloons";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -49,14 +50,6 @@ const CONFETTI = Array.from({ length: 12 }).map((_, i) => {
     dur: (7 + r * 5).toFixed(2),
   };
 });
-
-const BALLOONS = [
-  { x: 66, y: 60, r: 30, c: "#F4A8B8" },
-  { x: 116, y: 46, r: 24, c: "#F0C29A" },
-  { x: 40, y: 104, r: 20, c: "#A8CEE0" },
-  { x: 98, y: 108, r: 23, c: "#FBD5DE" },
-  { x: 150, y: 96, r: 18, c: "#C9B7E0" },
-];
 
 /* ── Pile de 9 photos qui s'empilent une à une (hero) ─────────── */
 // {r rotation, x %, y %, s scale} — index 0 = tout au fond, index 8 = photo de devant (centrée).
@@ -307,51 +300,6 @@ function SignatureQuote({ text }: { text: string }) {
   );
 }
 
-/* ── Bouquet de ballons animé (motif histoire) ────────────────── */
-function BalloonTuft() {
-  const reduce = useReducedMotion();
-  return (
-    <motion.svg
-      viewBox="0 0 190 210"
-      className="w-full"
-      aria-hidden
-      initial={reduce ? undefined : { opacity: 0, y: 16 }}
-      whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7, ease }}
-    >
-      <motion.g
-        style={{ transformOrigin: "92px 190px" }}
-        animate={reduce ? undefined : { rotate: [-2.6, 2.6, -2.6] }}
-        transition={{ repeat: Infinity, duration: 9, ease: "easeInOut" }}
-      >
-        {BALLOONS.map((b, i) => (
-          <motion.g
-            key={i}
-            initial={reduce ? false : { scale: 0, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ type: "spring", stiffness: 260, damping: 14, delay: 0.2 + i * 0.09 }}
-            style={{ transformOrigin: `${b.x}px ${b.y}px` }}
-          >
-            <line x1={b.x} y1={b.y + b.r} x2="92" y2="190" stroke="rgba(120,90,70,0.22)" strokeWidth="0.7" />
-            <circle cx={b.x} cy={b.y} r={b.r} fill={b.c} opacity="0.92" />
-            <ellipse
-              cx={b.x - b.r * 0.32}
-              cy={b.y - b.r * 0.36}
-              rx={b.r * 0.22}
-              ry={b.r * 0.3}
-              fill="rgba(255,255,255,0.55)"
-              transform={`rotate(-24 ${b.x - b.r * 0.32} ${b.y - b.r * 0.36})`}
-            />
-          </motion.g>
-        ))}
-        <circle cx="92" cy="190" r="4" fill="#D9628A" />
-      </motion.g>
-    </motion.svg>
-  );
-}
-
 /* ── Carte valeur avec tilt 3D ────────────────────────────────── */
 function ValueCard({
   v,
@@ -591,10 +539,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Notre histoire : jalons ──────────────────────────────── */}
+      {/* ── Mon histoire : jalons ────────────────────────────────── */}
       <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#F3EDE6" }}>
-        <div className="absolute hidden lg:block pointer-events-none" style={{ top: "1rem", right: "2%", width: 190 }}>
-          <BalloonTuft />
+        <div className="absolute hidden lg:block pointer-events-none" style={{ top: "-1rem", right: "1%", width: "min(22vw, 300px)" }}>
+          <FloatingBalloons className="w-full" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
