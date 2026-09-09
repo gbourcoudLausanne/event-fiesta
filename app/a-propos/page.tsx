@@ -79,7 +79,7 @@ function PhotoFan() {
 
   return (
     <div
-      className="relative w-full max-w-[430px] mx-auto lg:mx-auto lg:translate-x-4"
+      className="relative w-full max-w-[540px] mx-auto lg:mx-auto lg:translate-x-4"
       style={{ perspective: 1400 }}
       onMouseEnter={() => setLift(true)}
       onMouseLeave={() => setLift(false)}
@@ -97,7 +97,7 @@ function PhotoFan() {
             return (
               <motion.div
                 key={p.src}
-                className="absolute left-1/2 top-[8%] w-[58%]"
+                className="absolute left-1/2 top-[6%] w-[64%]"
                 style={{ zIndex: i, aspectRatio: "4 / 5" }}
                 initial={reduce ? false : { x: "-50%", y: 90, rotate: 0, opacity: 0, scale: s.s * 0.94 }}
                 animate={{
