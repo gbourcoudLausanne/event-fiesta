@@ -418,15 +418,15 @@ function ValueFeature({
   return (
     <li
       ref={ref}
-      className={`relative py-10 md:py-0 md:px-8 lg:px-10 first:md:pl-0 last:md:pr-0 ${
+      className={`relative py-7 md:py-1 md:px-7 lg:px-9 first:md:pl-0 last:md:pr-0 ${
         i < total - 1 ? "border-b md:border-b-0 md:border-r" : ""
       }`}
       style={{ borderColor: "rgba(250,247,242,0.22)" }}
     >
-      <div className="flex items-start gap-4">
+      <div className="flex items-center gap-3">
         <motion.span
           className="font-display italic leading-none select-none"
-          style={{ fontSize: "clamp(2.4rem, 3.6vw, 3.2rem)", color: "rgba(250,247,242,0.45)" }}
+          style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", color: "rgba(250,247,242,0.45)" }}
           initial={reduce ? false : { opacity: 0, x: -14 }}
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.5, ease }}
@@ -434,27 +434,27 @@ function ValueFeature({
           {String(i + 1).padStart(2, "0")}
         </motion.span>
         <motion.span
-          className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
           style={{ border: "1px solid rgba(250,247,242,0.55)" }}
           initial={reduce ? false : { scale: 0, opacity: 0 }}
           animate={inView ? { scale: 1, opacity: 1 } : {}}
           transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.15 }}
         >
-          <Ico size={16} weight="light" color="#FAF7F2" />
+          <Ico size={15} weight="light" color="#FAF7F2" />
         </motion.span>
       </div>
 
       <h3
-        className="mt-5 font-serif font-light leading-[1.05] flex flex-wrap gap-x-[0.25em]"
-        style={{ fontSize: "clamp(2rem, 3.4vw, 2.9rem)", color: "#FAF7F2" }}
+        className="mt-3.5 font-serif font-light leading-[1.05] flex flex-wrap gap-x-[0.25em]"
+        style={{ fontSize: "clamp(1.7rem, 2.8vw, 2.4rem)", color: "#FAF7F2" }}
       >
         {words.map((w, k) => (
           <motion.span
             key={k}
             className="inline-block"
-            initial={reduce ? false : { opacity: 0, y: 20, filter: "blur(7px)" }}
+            initial={reduce ? false : { opacity: 0, y: 18, filter: "blur(7px)" }}
             animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-            transition={{ duration: 0.55, delay: 0.2 + k * 0.08, ease }}
+            transition={{ duration: 0.5, delay: 0.18 + k * 0.07, ease }}
           >
             {w}
           </motion.span>
@@ -462,11 +462,11 @@ function ValueFeature({
       </h3>
 
       <motion.p
-        className="mt-4 max-w-[34ch] font-sans font-light leading-relaxed"
-        style={{ fontSize: "14px", color: "rgba(250,247,242,0.72)" }}
+        className="mt-2.5 max-w-[34ch] font-sans font-light leading-relaxed"
+        style={{ fontSize: "13.5px", color: "rgba(250,247,242,0.72)" }}
         initial={reduce ? false : { opacity: 0, y: 14 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.55, delay: 0.45, ease }}
+        transition={{ duration: 0.5, delay: 0.4, ease }}
       >
         {v.desc}
       </motion.p>
@@ -662,7 +662,7 @@ export default function AboutPage() {
 
       {/* ── Valeurs : bande manifeste ────────────────────────────── */}
       <section
-        className="relative overflow-hidden py-20 lg:py-28"
+        className="relative overflow-hidden py-16 lg:py-20"
         style={{ background: "linear-gradient(150deg, #D9628A 0%, #C25E7E 60%, #B0546F 130%)" }}
       >
         <div
@@ -682,7 +682,7 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease }}
-            className="mb-14 lg:mb-18 max-w-xl"
+            className="mb-10 lg:mb-12 max-w-xl"
           >
             <div className="flex items-center gap-3 mb-5">
               <span className="w-10 h-px" style={{ background: "rgba(250,247,242,0.7)" }} />
@@ -709,7 +709,7 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2, ease }}
-            className="mt-14 lg:mt-16"
+            className="mt-10 lg:mt-12"
           >
             <Link
               href="/contact"
