@@ -426,7 +426,7 @@ function ValueFeature({
       <div className="flex items-center gap-3">
         <motion.span
           className="font-display italic leading-none select-none"
-          style={{ fontSize: "clamp(2rem, 3vw, 2.6rem)", color: "rgba(250,247,242,0.45)" }}
+          style={{ fontSize: "clamp(2.2rem, 3.4vw, 3rem)", color: "rgba(250,247,242,0.45)" }}
           initial={reduce ? false : { opacity: 0, x: -14 }}
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.5, ease }}
@@ -445,8 +445,8 @@ function ValueFeature({
       </div>
 
       <h3
-        className="mt-3.5 font-serif font-light leading-[1.05] flex flex-wrap gap-x-[0.25em]"
-        style={{ fontSize: "clamp(1.7rem, 2.8vw, 2.4rem)", color: "#FAF7F2" }}
+        className="mt-4 font-serif font-light leading-[1.04] flex flex-wrap gap-x-[0.25em]"
+        style={{ fontSize: "clamp(2rem, 3.3vw, 2.9rem)", color: "#FAF7F2" }}
       >
         {words.map((w, k) => (
           <motion.span
@@ -462,8 +462,8 @@ function ValueFeature({
       </h3>
 
       <motion.p
-        className="mt-2.5 max-w-[34ch] font-sans font-light leading-relaxed"
-        style={{ fontSize: "13.5px", color: "rgba(250,247,242,0.72)" }}
+        className="mt-3 max-w-[36ch] font-sans font-light leading-relaxed"
+        style={{ fontSize: "15px", color: "rgba(250,247,242,0.75)" }}
         initial={reduce ? false : { opacity: 0, y: 14 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.5, delay: 0.4, ease }}
