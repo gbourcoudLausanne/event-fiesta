@@ -23,9 +23,9 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 const VALUE_ICONS = [HeartStraight, Sparkle, Handshake];
 const VALUE_TINTS = [
-  { bg: "#FCEEF1", dot: "#F4A8B8", ink: "#B65572" },
-  { bg: "#F3E7F0", dot: "#BF88B4", ink: "#8B5E85" },
-  { bg: "#FBF0E6", dot: "#EEC79A", ink: "#B98A55" },
+  { bg: "#FCEEF1", dot: "#F4A8B8", ink: "#B65572", glow: "244,168,184" },
+  { bg: "#F3E7F0", dot: "#BF88B4", ink: "#8B5E85", glow: "191,136,180" },
+  { bg: "#FBF0E6", dot: "#EEC79A", ink: "#B98A55", glow: "238,199,154" },
 ];
 
 // Réserve de 9 photos que l'éventail fait défiler.
@@ -407,7 +407,7 @@ function Timeline({
   );
 }
 
-/* ── Carte valeur avec tilt 3D ────────────────────────────────── */
+/* ── Carte valeur : tilt 3D, spotlight curseur, motif qui s'anime ── */
 function ValueCard({
   v,
   i,
@@ -419,69 +419,141 @@ function ValueCard({
   const ref = useRef<HTMLDivElement>(null);
   const rx = useMotionValue(0);
   const ry = useMotionValue(0);
-  const srx = useSpring(rx, { stiffness: 200, damping: 18 });
-  const sry = useSpring(ry, { stiffness: 200, damping: 18 });
+  const mx = useMotionValue(50);
+  const my = useMotionValue(50);
+  const srx = useSpring(rx, { stiffness: 180, damping: 16 });
+  const sry = useSpring(ry, { stiffness: 180, damping: 16 });
+  const spot = useMotionValue(0);
+  const sSpot = useSpring(spot, { stiffness: 200, damping: 24 });
   const Ico = VALUE_ICONS[i % VALUE_ICONS.length];
   const tint = VALUE_TINTS[i % VALUE_TINTS.length];
+
+  const glow = useTransform(
+    [mx, my, sSpot],
+    ([x, y, o]: number[]) =>
+      `radial-gradient(240px circle at ${x}% ${y}%, rgba(${tint.glow},${(0.5 * o).toFixed(3)}), transparent 70%)`,
+  );
 
   const onMove = (e: MouseEvent) => {
     if (reduce) return;
     const el = ref.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
-    ry.set(((e.clientX - r.left) / r.width - 0.5) * 8);
-    rx.set(-((e.clientY - r.top) / r.height - 0.5) * 8);
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    ry.set((px - 0.5) * 11);
+    rx.set(-(py - 0.5) * 11);
+    mx.set(px * 100);
+    my.set(py * 100);
+    spot.set(1);
   };
   const onLeave = () => {
     rx.set(0);
     ry.set(0);
+    spot.set(0);
   };
 
   return (
     <motion.li
-      initial={reduce ? false : { opacity: 0, y: 24, filter: "blur(6px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.55, delay: i * 0.1, ease }}
-      style={{ perspective: 1000 }}
+      initial={reduce ? false : { opacity: 0, y: 28, rotateX: -14, filter: "blur(7px)" }}
+      whileInView={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.65, delay: i * 0.12, ease }}
+      style={{ perspective: 1100 }}
+      className={i === 1 ? "md:mt-10" : ""}
     >
       <motion.div
         ref={ref}
         onMouseMove={onMove}
         onMouseLeave={onLeave}
-        whileHover={reduce ? undefined : { boxShadow: `0 36px 70px -28px ${tint.dot}99` }}
+        whileHover={reduce ? undefined : { y: -6 }}
         style={{
           rotateX: srx,
           rotateY: sry,
           transformStyle: "preserve-3d",
-          boxShadow: "0 2px 10px rgba(13,11,8,0.04)",
+          boxShadow: "0 10px 34px -18px rgba(13,11,8,0.12)",
         }}
-        className="group relative flex h-full flex-col overflow-hidden p-7 lg:p-8"
+        className="group relative flex h-full min-h-[320px] flex-col overflow-hidden rounded-[3px] p-8 lg:p-9"
       >
+        {/* fond dégradé + bord */}
         <div
-          className="absolute inset-0 -z-10"
+          className="absolute inset-0 -z-20"
           style={{
-            background: `linear-gradient(158deg, ${tint.bg} 0%, #FAF7F2 140%)`,
+            background: `linear-gradient(158deg, ${tint.bg} 0%, #FAF7F2 145%)`,
             border: `1px solid ${tint.dot}3d`,
           }}
         />
+        {/* spotlight curseur */}
+        <motion.div className="absolute inset-0 -z-10 pointer-events-none" style={{ background: glow }} aria-hidden />
+        {/* liseré lumineux au survol */}
+        <div
+          className="absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none"
+          style={{ border: `1px solid ${tint.dot}` }}
+          aria-hidden
+        />
+
+        {/* chiffre filigrane */}
         <span
           aria-hidden
-          className="pointer-events-none absolute -right-3 -top-6 select-none font-serif font-light leading-none transition-transform duration-500 group-hover:scale-110"
-          style={{ fontSize: "6rem", color: `${tint.dot}24` }}
+          className="pointer-events-none absolute -right-4 -top-8 select-none font-serif font-light leading-none transition-all duration-500 group-hover:-translate-y-1"
+          style={{ fontSize: "7rem", color: `${tint.dot}22`, transform: "translateZ(10px)" }}
         >
           {String(i + 1).padStart(2, "0")}
         </span>
-        <span
-          className="relative z-10 mb-5 flex h-11 w-11 items-center justify-center rounded-full"
-          style={{ border: `1px solid ${tint.dot}` }}
+
+        {/* icône dans un anneau qui tourne lentement */}
+        <div className="relative z-10 mb-6 h-14 w-14" style={{ transform: "translateZ(45px)" }}>
+          <motion.span
+            className="absolute inset-0 rounded-full"
+            style={{ border: `1.5px dashed ${tint.dot}` }}
+            animate={reduce ? undefined : { rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 22, ease: "linear" }}
+          />
+          <motion.span
+            className="absolute inset-[5px] flex items-center justify-center rounded-full"
+            style={{ background: "#FAF7F2", boxShadow: `0 8px 22px -12px ${tint.dot}` }}
+            animate={reduce ? undefined : { y: [0, -3, 0] }}
+            transition={{ repeat: Infinity, duration: 4 + i, ease: "easeInOut" }}
+          >
+            {Ico && <Ico size={22} weight="light" color={tint.ink} />}
+          </motion.span>
+        </div>
+
+        <h3
+          className="relative z-10 font-serif leading-tight"
+          style={{ fontSize: "clamp(1.4rem, 1.9vw, 1.7rem)", color: "#2A2320", transform: "translateZ(30px)" }}
         >
-          {Ico && <Ico size={20} weight="light" color={tint.ink} />}
-        </span>
-        <h3 className="relative z-10 font-serif leading-tight" style={{ fontSize: "1.4rem", color: "#2A2320" }}>
           {v.label}
         </h3>
-        <p className="relative z-10 mt-2.5 min-h-[64px] font-sans text-[13px] leading-relaxed" style={{ color: "rgba(40,34,30,0.58)" }}>
+
+        {/* soulignage qui se trace */}
+        <motion.svg
+          viewBox="0 0 120 8"
+          preserveAspectRatio="none"
+          className="relative z-10 mt-2 h-1.5 w-20"
+          aria-hidden
+          initial={reduce ? undefined : "hidden"}
+          whileInView={reduce ? undefined : "shown"}
+          viewport={{ once: true }}
+          style={{ transform: "translateZ(20px)" }}
+        >
+          <motion.path
+            d="M2 5 C 30 1, 60 8, 90 4 S 116 3, 118 5"
+            fill="none"
+            stroke={tint.dot}
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            variants={{
+              hidden: { pathLength: 0, opacity: 0 },
+              shown: { pathLength: 1, opacity: 0.85, transition: { duration: 0.8, delay: 0.3 + i * 0.12, ease } },
+            }}
+          />
+        </motion.svg>
+
+        <p
+          className="relative z-10 mt-4 flex-1 font-sans text-[13.5px] leading-relaxed"
+          style={{ color: "rgba(40,34,30,0.62)", transform: "translateZ(15px)" }}
+        >
           {v.desc}
         </p>
       </motion.div>
@@ -677,19 +749,40 @@ export default function AboutPage() {
 
       {/* ── Valeurs : cartes premium avec tilt ───────────────────── */}
       <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#FAF7F2" }}>
+        <div
+          className="absolute pointer-events-none rounded-full"
+          style={{
+            bottom: "-18%",
+            right: "-10%",
+            width: "min(44vw, 540px)",
+            aspectRatio: "1",
+            background: "radial-gradient(circle at 50% 50%, rgba(191,136,180,0.12), rgba(191,136,180,0) 70%)",
+          }}
+          aria-hidden
+        />
         <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
-          <motion.h2
+          <motion.div
             initial={reduce ? false : { opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease }}
-            className="font-serif font-light leading-tight mb-12 lg:mb-14"
-            style={{ fontSize: "clamp(2rem, 4vw, 3rem)", color: "#2A2320" }}
+            className="mb-14 lg:mb-16 max-w-xl"
           >
-            {t.about.valuesTitle}
-          </motion.h2>
+            <div className="flex items-center gap-3 mb-5">
+              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
+                Ce qui me guide
+              </span>
+            </div>
+            <h2
+              className="font-serif font-light leading-tight"
+              style={{ fontSize: "clamp(2rem, 4vw, 3rem)", color: "#2A2320" }}
+            >
+              {t.about.valuesTitle}
+            </h2>
+          </motion.div>
 
-          <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5">
+          <ul className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-start">
             {t.about.values.map((v, i) => (
               <ValueCard key={v.label} v={v} i={i} />
             ))}
