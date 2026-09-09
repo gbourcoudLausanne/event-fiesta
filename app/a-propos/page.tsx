@@ -281,33 +281,10 @@ export default function AboutPage() {
             >
               <p
                 className="font-serif italic leading-snug max-w-md"
-                style={{ fontSize: "clamp(1.1rem, 1.7vw, 1.35rem)", color: "#B65572" }}
+                style={{ fontSize: "clamp(1.15rem, 1.8vw, 1.4rem)", color: "#B65572" }}
               >
                 {t.whyus.quote}
               </p>
-              <ul className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-4">
-                {[t.whyus.stats[0], t.whyus.stats[2], t.whyus.stats[3]].map((s, i) => (
-                  <li key={s.label} className="flex items-center gap-8">
-                    {i > 0 && (
-                      <span className="h-8 w-px shrink-0" style={{ background: "rgba(42,35,32,0.16)" }} aria-hidden />
-                    )}
-                    <span className="flex flex-col">
-                      <span
-                        className="font-serif font-light leading-none"
-                        style={{ fontSize: "1.9rem", color: "#2A2320" }}
-                      >
-                        {s.value}
-                      </span>
-                      <span
-                        className="mt-1.5 font-sans text-[10px] uppercase tracking-[0.16em]"
-                        style={{ color: "rgba(42,35,32,0.5)" }}
-                      >
-                        {s.label}
-                      </span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
             </motion.div>
           </motion.div>
 
