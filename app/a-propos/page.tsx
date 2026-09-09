@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { MouseEvent } from "react";
 import {
-  AnimatePresence,
   motion,
   useReducedMotion,
   useScroll,
@@ -39,13 +38,6 @@ const FAN_POOL = [
   { src: "/Galerie/hero-slides/hero-slide-18.webp", alt: "Fête pyjama d'anniversaire enfant avec arche pêche et corail" },
   { src: "/Galerie/hero-slides/hero-slide-14.webp", alt: "Bouquet de ballons chiffre 15 rose gold personnalisé" },
 ];
-// 3 emplacements visibles de l'éventail.
-const FAN_SLOTS = [
-  { rot: -6, x: -15, y: 20, z: 1 },
-  { rot: 0, x: 0, y: 0, z: 3 },
-  { rot: 6, x: 15, y: 20, z: 1 },
-];
-const FAN_DUR = 3400;
 
 const CONFETTI = Array.from({ length: 12 }).map((_, i) => {
   const s = Math.sin(i * 71.3) * 10000;
@@ -66,72 +58,80 @@ const BALLOONS = [
   { x: 150, y: 96, r: 18, c: "#C9B7E0" },
 ];
 
-/* ── Éventail de photos animé (hero) : 3 emplacements, 9 photos qui défilent ── */
+/* ── Pile de 9 photos qui s'empilent une à une (hero) ─────────── */
+// {rot, x %, y %, scale} — dernière = photo de devant, neutre.
+const STACK = [
+  { r: -9, x: -13, y: -4, s: 0.85 },
+  { r: 8, x: 12, y: -7, s: 0.87 },
+  { r: -6, x: -9, y: 5, s: 0.89 },
+  { r: 7, x: 10, y: 2, s: 0.91 },
+  { r: -10, x: -6, y: -9, s: 0.93 },
+  { r: 5, x: 7, y: 7, s: 0.95 },
+  { r: -4, x: -4, y: -3, s: 0.97 },
+  { r: 6, x: 5, y: 4, s: 0.985 },
+  { r: 0, x: 0, y: 0, s: 1 },
+];
+
 function PhotoFan() {
   const reduce = useReducedMotion();
-  const [step, setStep] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const N = FAN_POOL.length;
-
-  useEffect(() => {
-    if (reduce || paused) return;
-    const id = setInterval(() => setStep((s) => s + 1), FAN_DUR);
-    return () => clearInterval(id);
-  }, [reduce, paused]);
+  const [lift, setLift] = useState(false);
+  const top = STACK.length - 1;
 
   return (
     <div
-      className="relative w-full max-w-[440px] mx-auto lg:mx-auto lg:translate-x-4"
+      className="relative w-full max-w-[430px] mx-auto lg:mx-auto lg:translate-x-4"
       style={{ perspective: 1400 }}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onMouseEnter={() => setLift(true)}
+      onMouseLeave={() => setLift(false)}
     >
       <div className="relative" style={{ aspectRatio: "1 / 1" }}>
-        {FAN_SLOTS.map((slot, i) => {
-          const idx = (step + i) % N;
-          const photo = FAN_POOL[idx];
-          return (
-            <motion.div
-              key={i}
-              className="absolute inset-0"
-              style={{ zIndex: slot.z }}
-              initial={reduce ? false : { opacity: 0, rotate: 0, x: 0, y: 40, scale: 0.9 }}
-              animate={{ opacity: 1, rotate: slot.rot, x: slot.x, y: slot.y, scale: 1 }}
-              transition={{ duration: 0.9, delay: 0.15 + i * 0.13, ease }}
-            >
+        <motion.div
+          className="absolute inset-0"
+          animate={reduce ? undefined : { rotate: [-1.4, 1.4, -1.4] }}
+          transition={{ repeat: Infinity, duration: 11, ease: "easeInOut" }}
+          style={{ transformOrigin: "50% 92%" }}
+        >
+          {FAN_POOL.map((p, i) => {
+            const s = STACK[i];
+            const isTop = i === top;
+            return (
               <motion.div
-                className="relative h-full w-full"
-                animate={reduce ? undefined : { y: [0, i === 1 ? -10 : -6, 0] }}
-                transition={{ repeat: Infinity, duration: 6 + i, ease: "easeInOut" }}
+                key={p.src}
+                className="absolute left-1/2 top-[8%] w-[58%]"
+                style={{ zIndex: i, aspectRatio: "4 / 5" }}
+                initial={reduce ? false : { x: "-50%", y: 90, rotate: 0, opacity: 0, scale: s.s * 0.94 }}
+                animate={{
+                  x: `calc(-50% + ${s.x}%)`,
+                  y: `${s.y + (isTop && lift ? -7 : 0)}%`,
+                  rotate: s.r + (isTop && lift ? -3 : 0),
+                  opacity: 1,
+                  scale: s.s + (isTop && lift ? 0.02 : 0),
+                }}
+                transition={{
+                  opacity: { duration: 0.5, delay: i * 0.11, ease },
+                  x: { type: "spring", stiffness: 150, damping: 18, delay: i * 0.11 },
+                  y: { type: "spring", stiffness: 150, damping: 18, delay: i * 0.11 },
+                  rotate: { type: "spring", stiffness: 150, damping: 16, delay: i * 0.11 },
+                  scale: { duration: 0.6, delay: i * 0.11, ease },
+                }}
               >
                 <div
                   className="relative h-full w-full overflow-hidden"
-                  style={{ boxShadow: "0 40px 80px -34px rgba(120,60,80,0.45)", border: "6px solid #FAF7F2" }}
+                  style={{ border: "5px solid #FAF7F2", boxShadow: "0 26px 54px -26px rgba(120,60,80,0.5)" }}
                 >
-                  <AnimatePresence initial={false}>
-                    <motion.div
-                      key={photo.src}
-                      className="absolute inset-0"
-                      initial={reduce ? false : { opacity: 0, scale: 1.06 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.97 }}
-                      transition={{ duration: 0.8, delay: i * 0.13, ease }}
-                    >
-                      <Image
-                        src={photo.src}
-                        alt={photo.alt}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 1024px) 90vw, 40vw"
-                        priority={i === 1 && step === 0}
-                      />
-                    </motion.div>
-                  </AnimatePresence>
+                  <Image
+                    src={p.src}
+                    alt={p.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 55vw, 26vw"
+                    priority={isTop}
+                  />
                 </div>
               </motion.div>
-            </motion.div>
-          );
-        })}
+            );
+          })}
+        </motion.div>
       </div>
     </div>
   );
