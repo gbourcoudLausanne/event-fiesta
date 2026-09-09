@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { MouseEvent } from "react";
@@ -72,28 +72,44 @@ const STACK = [
   { r: 0, x: 0, y: 0, s: 1 },
 ];
 
+const snatch = [0.3, 1.3, 0.5, 1] as const; // anticipation + léger dépassement
+const settle = [0.16, 1, 0.3, 1] as const;
+
 function PhotoFan() {
   const reduce = useReducedMotion();
   const N = FAN_POOL.length;
   const topSlot = N - 1;
   const [rot, setRot] = useState(0);
-  const [leaving, setLeaving] = useState<{ i: number; dir: number } | null>(null);
+  // phase 1 = soulevée + poussée sur le côté (au-dessus) ; phase 2 = contourne et se glisse au fond
+  const [leaving, setLeaving] = useState<{ i: number; dir: number; phase: 1 | 2 } | null>(null);
   const busy = useRef(false);
+  const timers = useRef<number[]>([]);
+
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   const flick = (i: number) => {
-    if (busy.current) return;
+    if (busy.current || reduce) {
+      if (reduce) setRot((r) => r + 1);
+      return;
+    }
     busy.current = true;
     const dir = rot % 2 === 0 ? 1 : -1;
-    if (!reduce) setLeaving({ i, dir });
-    setRot((r) => r + 1);
-    window.setTimeout(() => {
-      setLeaving(null);
-      busy.current = false;
-    }, reduce ? 0 : 640);
+    setLeaving({ i, dir, phase: 1 });
+    setRot((r) => r + 1); // la carte suivante apparaît dessous
+    timers.current.push(
+      window.setTimeout(() => setLeaving((l) => (l ? { ...l, phase: 2 } : l)), 260),
+      window.setTimeout(() => {
+        setLeaving(null);
+        busy.current = false;
+      }, 260 + 560),
+    );
   };
 
   return (
-    <div className="relative w-full max-w-[560px] mx-auto lg:mx-auto lg:translate-x-4" style={{ perspective: 1400 }}>
+    <div
+      className="relative w-full max-w-[560px] mx-auto lg:mx-auto lg:translate-x-4"
+      style={{ perspective: 1300 }}
+    >
       <div className="relative" style={{ aspectRatio: "1 / 1" }}>
         <motion.div
           className="absolute inset-0"
@@ -106,45 +122,63 @@ function PhotoFan() {
             const s = STACK[slot];
             const isTop = slot === topSlot;
             const isLeaving = leaving?.i === i;
-            const prev = STACK[topSlot]; // emplacement d'où la carte part quand on la « pousse »
-            const dealDelay = rot === 0 ? i * 0.11 : 0;
+            const from = STACK[topSlot]; // position d'origine (dessus) de la carte qui part
+            const dealDelay = rot === 0 ? i * 0.1 : 0;
+
+            // z : au-dessus de tout pendant qu'on la soulève, puis derrière la pile
+            const zIndex = isLeaving ? (leaving!.phase === 1 ? 90 : -1) : slot;
+
+            let target: Record<string, number | string>;
+            let trans: object;
+            let shadow: string;
+
+            if (isLeaving && leaving) {
+              const d = leaving.dir;
+              if (leaving.phase === 1) {
+                target = { x: `${from.x + d * 34}%`, y: `${from.y - 15}%`, rotate: from.r + d * 12, rotateY: d * -16, scale: 1.07 };
+                trans = { duration: 0.28, ease: snatch };
+                shadow = "0 46px 90px -30px rgba(120,60,80,0.6)";
+              } else {
+                target = { x: `${s.x}%`, y: `${s.y + 3}%`, rotate: s.r, rotateY: 0, scale: s.s };
+                trans = {
+                  x: { duration: 0.58, ease: settle },
+                  y: { duration: 0.58, ease: [0.5, 0, 0.3, 1] },
+                  rotate: { duration: 0.58, ease: settle },
+                  rotateY: { duration: 0.4, ease: settle },
+                  scale: { type: "spring", stiffness: 260, damping: 20, delay: 0.28 },
+                };
+                shadow = "0 26px 54px -26px rgba(120,60,80,0.5)";
+              }
+            } else {
+              target = { x: `${s.x}%`, y: `${s.y}%`, rotate: s.r, rotateY: 0, scale: s.s, opacity: 1 };
+              trans = {
+                opacity: { duration: 0.5, delay: dealDelay, ease },
+                x: { type: "spring", stiffness: 200, damping: 22, delay: dealDelay },
+                y: { type: "spring", stiffness: 200, damping: 22, delay: dealDelay },
+                rotate: { type: "spring", stiffness: 200, damping: 20, delay: dealDelay },
+                scale: { duration: 0.5, delay: dealDelay, ease },
+              };
+              shadow = "0 26px 54px -26px rgba(120,60,80,0.5)";
+            }
 
             return (
               <div
                 key={p.src}
                 className="absolute left-1/2 top-[5%] w-[66%] -translate-x-1/2"
-                style={{ zIndex: isLeaving ? 60 : slot, aspectRatio: "4 / 5" }}
+                style={{ zIndex, aspectRatio: "4 / 5" }}
               >
                 <motion.div
                   className="h-full w-full"
                   style={{
-                    cursor: isTop ? "pointer" : "default",
+                    transformPerspective: 1000,
+                    transformStyle: "preserve-3d",
+                    cursor: isTop && !leaving ? "pointer" : "default",
                     pointerEvents: isTop ? "auto" : "none",
                     outline: "none",
                   }}
-                  initial={reduce ? false : { x: 0, y: "120%", rotate: 0, opacity: 0, scale: s.s * 0.94 }}
-                  animate={
-                    isLeaving && leaving
-                      ? {
-                          x: [`${prev.x}%`, `${leaving.dir * 118}%`, `${s.x}%`],
-                          y: [`${prev.y}%`, "-10%", `${s.y}%`],
-                          rotate: [prev.r, leaving.dir * 22, s.r],
-                          scale: [1, 1.03, s.s],
-                          opacity: 1,
-                        }
-                      : { x: `${s.x}%`, y: `${s.y}%`, rotate: s.r, opacity: 1, scale: s.s }
-                  }
-                  transition={
-                    isLeaving
-                      ? { duration: 0.62, times: [0, 0.42, 1], ease }
-                      : {
-                          opacity: { duration: 0.5, delay: dealDelay, ease },
-                          x: { type: "spring", stiffness: 170, damping: 20, delay: dealDelay },
-                          y: { type: "spring", stiffness: 170, damping: 20, delay: dealDelay },
-                          rotate: { type: "spring", stiffness: 170, damping: 18, delay: dealDelay },
-                          scale: { duration: 0.5, delay: dealDelay, ease },
-                        }
-                  }
+                  initial={reduce ? false : { x: `${s.x}%`, y: "125%", rotate: 0, opacity: 0, scale: s.s * 0.94 }}
+                  animate={target}
+                  transition={trans}
                   onClick={isTop ? () => flick(i) : undefined}
                   onKeyDown={
                     isTop
@@ -160,9 +194,11 @@ function PhotoFan() {
                   tabIndex={isTop ? 0 : undefined}
                   aria-label={isTop ? "Photo suivante" : undefined}
                 >
-                  <div
+                  <motion.div
                     className="relative h-full w-full overflow-hidden"
-                    style={{ border: "5px solid #FAF7F2", boxShadow: "0 26px 54px -26px rgba(120,60,80,0.5)" }}
+                    style={{ border: "5px solid #FAF7F2" }}
+                    animate={{ boxShadow: shadow }}
+                    transition={{ duration: 0.35, ease }}
                   >
                     <Image
                       src={p.src}
@@ -172,7 +208,14 @@ function PhotoFan() {
                       sizes="(max-width: 1024px) 55vw, 26vw"
                       priority={i === topSlot}
                     />
-                  </div>
+                    {/* voile qui s'assombrit quand la carte passe derrière */}
+                    <motion.div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{ background: "#2A2320" }}
+                      animate={{ opacity: isLeaving && leaving?.phase === 2 ? 0.18 : 0 }}
+                      transition={{ duration: 0.4, ease }}
+                    />
+                  </motion.div>
                 </motion.div>
               </div>
             );
