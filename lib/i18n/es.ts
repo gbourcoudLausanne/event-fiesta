@@ -223,6 +223,33 @@ export const es = {
         desc: "Los plazos, los colores, la calidad: lo prometido se cumple.",
       },
     ],
+    goodToKnow: {
+      eyebrow: "Bueno saberlo",
+      title: "Antes de contactarme",
+      items: [
+        {
+          label: "Zona de intervención",
+          text: "Lausana y toda la Suiza romanda: Vaud, Ginebra, Friburgo, Neuchâtel. Más lejos, lo hablamos.",
+        },
+        {
+          label: "Cuándo reservar",
+          text: "Idealmente unas semanas antes, y con más margen para la temporada alta o las grandes instalaciones.",
+        },
+        {
+          label: "El presupuesto",
+          text: "Gratuito y sin compromiso: te propongo una paleta, un concepto y una estimación.",
+        },
+        {
+          label: "Todo incluido",
+          text: "Diseño, elaboración a mano, entrega, montaje el día D y desmontaje.",
+        },
+      ],
+    },
+    note: {
+      eyebrow: "Unas palabras para ti",
+      body: "Cada proyecto me importa como si fuera el mío. Cuéntame tu evento, tus colores, tu lugar, lo que te importa, e imaginamos juntas una decoración que te represente. Me hace ilusión ver tu cara cuando entres en la sala.",
+      sign: "Event Fiesta",
+    },
     cta: "Hablemos de tu evento",
   },
   realisations: {

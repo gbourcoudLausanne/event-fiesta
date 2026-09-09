@@ -223,6 +223,33 @@ export const fr = {
         desc: "Les délais, les couleurs, la qualité : ce qui est promis est tenu.",
       },
     ],
+    goodToKnow: {
+      eyebrow: "Bon à savoir",
+      title: "Avant de me contacter",
+      items: [
+        {
+          label: "Zone d'intervention",
+          text: "Lausanne et toute la Suisse romande : Vaud, Genève, Fribourg, Neuchâtel. Ailleurs, on en parle.",
+        },
+        {
+          label: "Quand réserver",
+          text: "Idéalement quelques semaines à l'avance, et plus tôt pour la haute saison ou les grandes installations.",
+        },
+        {
+          label: "Le devis",
+          text: "Gratuit et sans engagement : je vous propose une palette, un concept et une estimation.",
+        },
+        {
+          label: "Tout est inclus",
+          text: "Conception, fabrication à la main, livraison, installation le jour J et démontage.",
+        },
+      ],
+    },
+    note: {
+      eyebrow: "Un mot pour vous",
+      body: "Chaque projet me tient à cœur comme s'il était le mien. Racontez-moi votre événement, vos couleurs, votre lieu, ce qui compte pour vous, et on imagine ensemble un décor qui vous ressemble. J'ai hâte de voir vos yeux quand vous entrerez dans la salle.",
+      sign: "Event Fiesta",
+    },
     cta: "Discutons de votre événement",
   },
   realisations: {

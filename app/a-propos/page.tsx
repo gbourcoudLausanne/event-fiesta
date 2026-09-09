@@ -11,7 +11,6 @@ import {
   useTransform,
 } from "motion/react";
 import { HeartStraight, Scissors, Clock, ArrowRight } from "@phosphor-icons/react";
-import { WhyUs } from "@/components/WhyUs";
 import { CtaBanner } from "@/components/CtaBanner";
 import { FloatingBalloons } from "@/components/FloatingBalloons";
 import { useI18n } from "@/lib/i18n";
@@ -726,7 +725,100 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <WhyUs />
+      {/* ── Un mot + bon à savoir ────────────────────────────────── */}
+      <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#F3EDE6" }}>
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid gap-14 lg:grid-cols-[1fr_1fr] lg:gap-20">
+          {/* mot personnel */}
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 0.7, ease }}
+            className="relative"
+          >
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -left-4 -top-10 select-none font-serif leading-none"
+              style={{ fontSize: "6rem", color: "rgba(217,98,138,0.14)" }}
+            >
+              &ldquo;
+            </span>
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
+                {t.about.note.eyebrow}
+              </span>
+            </div>
+            <p
+              className="font-serif font-light italic leading-snug"
+              style={{ fontSize: "clamp(1.35rem, 2.2vw, 1.85rem)", color: "rgba(42,35,32,0.78)" }}
+            >
+              {t.about.note.body}
+            </p>
+            <div className="mt-8 flex items-center gap-4">
+              <motion.svg viewBox="0 0 120 30" className="h-8 w-28" aria-hidden>
+                <motion.path
+                  d="M6 20 C 18 4, 26 26, 38 14 C 46 6, 52 22, 62 12 C 70 5, 78 24, 90 12 S 110 6, 116 16"
+                  fill="none"
+                  stroke="#B65572"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  initial={reduce ? undefined : { pathLength: 0 }}
+                  whileInView={reduce ? undefined : { pathLength: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, delay: 0.3, ease }}
+                />
+              </motion.svg>
+              <span className="font-serif italic text-lg" style={{ color: "#B65572" }}>
+                {t.about.note.sign}
+              </span>
+            </div>
+          </motion.div>
+
+          {/* bon à savoir */}
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, delay: 0.1, ease }}
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
+                {t.about.goodToKnow.eyebrow}
+              </span>
+            </div>
+            <h2
+              className="font-serif font-light leading-tight mb-8"
+              style={{ fontSize: "clamp(1.7rem, 3vw, 2.4rem)", color: "#2A2320" }}
+            >
+              {t.about.goodToKnow.title}
+            </h2>
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-7">
+              {t.about.goodToKnow.items.map((it, i) => (
+                <motion.div
+                  key={it.label}
+                  initial={reduce ? false : { opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 0.5, delay: 0.1 + i * 0.08, ease }}
+                >
+                  <dt className="flex items-baseline gap-2.5">
+                    <span className="h-1.5 w-1.5 shrink-0 translate-y-[-2px] rounded-full" style={{ background: "#D9628A" }} aria-hidden />
+                    <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: "#B65572" }}>
+                      {it.label}
+                    </span>
+                  </dt>
+                  <dd className="mt-2 font-sans font-light text-[13.5px] leading-relaxed" style={{ color: "rgba(42,35,32,0.62)" }}>
+                    {it.text}
+                  </dd>
+                </motion.div>
+              ))}
+            </dl>
+          </motion.div>
+        </div>
+      </section>
+
       <CtaBanner />
     </>
   );

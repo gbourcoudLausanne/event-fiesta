@@ -223,6 +223,33 @@ export const en = {
         desc: "Deadlines, colours, quality: what's promised is delivered.",
       },
     ],
+    goodToKnow: {
+      eyebrow: "Good to know",
+      title: "Before you get in touch",
+      items: [
+        {
+          label: "Where I work",
+          text: "Lausanne and all of French-speaking Switzerland: Vaud, Geneva, Fribourg, Neuchâtel. Further afield, let's talk.",
+        },
+        {
+          label: "When to book",
+          text: "Ideally a few weeks ahead, and earlier for peak season or large installations.",
+        },
+        {
+          label: "The quote",
+          text: "Free and with no obligation: I put together a palette, a concept and an estimate.",
+        },
+        {
+          label: "Everything included",
+          text: "Design, handcrafting, delivery, set-up on the day and take-down.",
+        },
+      ],
+    },
+    note: {
+      eyebrow: "A word for you",
+      body: "Every project matters to me as if it were my own. Tell me about your event, your colours, your venue, what matters to you, and together we'll imagine a setting that feels like you. I can't wait to see your face when you walk into the room.",
+      sign: "Event Fiesta",
+    },
     cta: "Let's talk about your event",
   },
   realisations: {
