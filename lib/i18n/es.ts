@@ -184,7 +184,7 @@ export const es = {
     lead:
       "Event Fiesta es un equipo apasionado con base en Lausana, especializado en decoración de eventos desde 2020.",
     paragraphs: [
-      "Transformamos cada celebración — pequeña o grande — en un momento visual inolvidable. Todo se diseña y se elabora a mano: arcos de globos, muros florales, columnas decorativas, sweet tables, señalética y goodies personalizados.",
+      "Transformamos cada celebración, pequeña o grande, en un momento visual inolvidable. Todo se diseña y se elabora a mano: arcos de globos, muros florales, columnas decorativas, sweet tables, señalética y goodies personalizados.",
       "Tres idiomas hablados, decenas de temáticas dominadas y una sola obsesión: que te quedes sin palabras al entrar en la sala. Entregamos, instalamos y desmontamos todo — tú solo tienes que disfrutar.",
     ],
     storyTitle: "Nuestra historia",

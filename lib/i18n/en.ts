@@ -184,7 +184,7 @@ export const en = {
     lead:
       "Event Fiesta is a passionate team based in Lausanne, specialising in event decoration since 2020.",
     paragraphs: [
-      "We turn every celebration — big or small — into an unforgettable visual moment. Everything is designed and handcrafted: balloon arches, flower walls, decorative columns, sweet tables, signage and personalised goodies.",
+      "We turn every celebration, big or small, into an unforgettable visual moment. Everything is designed and handcrafted: balloon arches, flower walls, decorative columns, sweet tables, signage and personalised goodies.",
       "Three languages spoken, dozens of themes mastered, and a single obsession: that you are stunned the moment you walk into the room. We deliver, install and dismantle everything — all you have to do is enjoy.",
     ],
     storyTitle: "Our story",
