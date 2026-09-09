@@ -10,7 +10,7 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
-import { ArrowRight } from "@phosphor-icons/react";
+import { HeartStraight, Scissors, Clock, ArrowRight } from "@phosphor-icons/react";
 import { WhyUs } from "@/components/WhyUs";
 import { CtaBanner } from "@/components/CtaBanner";
 import { FloatingBalloons } from "@/components/FloatingBalloons";
@@ -403,12 +403,9 @@ function Timeline({
   );
 }
 
-/* ── Valeurs : grands spreads photo alternés ─────────────────── */
-const VALUE_SHOTS = [
-  { src: "/Galerie/hero-slides/hero-slide-13.webp", alt: "Arche ronde de ballons violet et or Joyeux anniversaire dans un jardin", kw: "Le soin du détail" },
-  { src: "/Galerie/hero-slides/hero-slide-4.webp", alt: "Arche de ballons fleurs et rideau de franges terracotta avec chiffre 3", kw: "Fait à la main, pour vous" },
-  { src: "/Galerie/hero-slides/hero-slide-16.webp", alt: "Table dressée élégante avec nappe rose vieilli et compositions de fleurs roses", kw: "Le jour J, tout est prêt" },
-];
+/* ── Valeurs : 3 blocs à icône ───────────────────────────────── */
+const VALUE_ICONS = [HeartStraight, Scissors, Clock];
+const VALUE_KW = ["Le soin du détail", "Fait main, pour vous", "Le jour J, tout est prêt"];
 
 function ValueFeature({
   v,
@@ -419,57 +416,85 @@ function ValueFeature({
 }) {
   const reduce = useReducedMotion();
   const tint = VALUE_TINTS[i % VALUE_TINTS.length];
-  const shot = VALUE_SHOTS[i % VALUE_SHOTS.length];
+  const Ico = VALUE_ICONS[i % VALUE_ICONS.length];
 
   return (
     <motion.li
-      className="group"
+      className="group relative flex h-full flex-col overflow-hidden p-8 lg:p-9"
+      style={{
+        background: `linear-gradient(160deg, ${tint.bg} 0%, #FAF7F2 155%)`,
+        border: `1px solid ${tint.dot}33`,
+        boxShadow: "0 6px 24px -14px rgba(13,11,8,0.1)",
+      }}
       initial={reduce ? false : { opacity: 0, y: 26, filter: "blur(6px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.6, delay: i * 0.12, ease }}
+      whileHover={reduce ? undefined : { y: -6, boxShadow: `0 30px 60px -26px ${tint.dot}88` }}
     >
-      <figure className="relative">
-        <div
-          className="relative overflow-hidden"
-          style={{ aspectRatio: "4 / 3", border: "6px solid #FAF7F2", boxShadow: "0 30px 60px -30px rgba(120,60,80,0.4)" }}
-        >
-          <Image
-            src={shot.src}
-            alt={shot.alt}
-            fill
-            className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]"
-            sizes="(max-width: 768px) 92vw, 32vw"
-          />
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: "linear-gradient(to top, rgba(13,11,8,0.42) 0%, rgba(13,11,8,0) 42%)" }}
-          />
-          <span
-            aria-hidden
-            className="absolute top-3 left-4 font-display italic leading-none"
-            style={{ fontSize: "2.4rem", color: "rgba(250,247,242,0.85)" }}
-          >
-            {String(i + 1).padStart(2, "0")}
-          </span>
-          <figcaption
-            className="absolute bottom-3 left-4 font-sans text-[10.5px] uppercase tracking-[0.16em]"
-            style={{ color: "#FAF7F2" }}
-          >
-            {shot.kw}
-          </figcaption>
-        </div>
-      </figure>
+      {/* chiffre filigrane */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -right-3 -top-5 select-none font-serif font-light leading-none transition-transform duration-500 group-hover:scale-110"
+        style={{ fontSize: "6rem", color: `${tint.dot}22` }}
+      >
+        {String(i + 1).padStart(2, "0")}
+      </span>
 
-      <div className="mt-5 flex items-baseline gap-2.5">
-        <span className="h-1.5 w-1.5 shrink-0 translate-y-[-2px] rounded-full" style={{ background: tint.dot }} aria-hidden />
-        <h3 className="font-serif font-light leading-tight" style={{ fontSize: "clamp(1.4rem, 2.2vw, 1.75rem)", color: "#2A2320" }}>
-          {v.label}
-        </h3>
+      {/* icône */}
+      <div className="relative mb-6 h-14 w-14">
+        <motion.span
+          className="absolute inset-0 rounded-full"
+          style={{ border: `1.5px dashed ${tint.dot}` }}
+          animate={reduce ? undefined : { rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 26, ease: "linear" }}
+        />
+        <span
+          className="absolute inset-[5px] flex items-center justify-center rounded-full"
+          style={{ background: "#FAF7F2", boxShadow: `0 8px 20px -12px ${tint.dot}` }}
+        >
+          <Ico size={22} weight="light" color={tint.ink} />
+        </span>
       </div>
+
+      <span
+        className="font-sans text-[10px] uppercase tracking-[0.22em]"
+        style={{ color: tint.ink }}
+      >
+        {VALUE_KW[i % VALUE_KW.length]}
+      </span>
+      <h3
+        className="mt-2 font-serif font-light leading-tight"
+        style={{ fontSize: "clamp(1.5rem, 2.3vw, 1.9rem)", color: "#2A2320" }}
+      >
+        {v.label}
+      </h3>
+
+      <motion.svg
+        viewBox="0 0 120 8"
+        preserveAspectRatio="none"
+        className="mt-3 h-1.5 w-20"
+        aria-hidden
+        initial={reduce ? undefined : "hidden"}
+        whileInView={reduce ? undefined : "shown"}
+        viewport={{ once: true }}
+      >
+        <motion.path
+          d="M2 5 C 30 1, 60 8, 90 4 S 116 3, 118 5"
+          fill="none"
+          stroke={tint.dot}
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          variants={{
+            hidden: { pathLength: 0, opacity: 0 },
+            shown: { pathLength: 1, opacity: 0.85, transition: { duration: 0.8, delay: 0.25 + i * 0.12, ease } },
+          }}
+        />
+      </motion.svg>
+
       <p
-        className="mt-2 font-sans font-light leading-relaxed"
-        style={{ fontSize: "13.5px", color: "rgba(40,34,30,0.6)" }}
+        className="mt-4 flex-1 font-sans font-light leading-relaxed"
+        style={{ fontSize: "13.5px", color: "rgba(40,34,30,0.62)" }}
       >
         {v.desc}
       </p>
@@ -698,7 +723,7 @@ export default function AboutPage() {
             </h2>
           </motion.div>
 
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 lg:gap-x-8">
+          <ul className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
             {t.about.values.map((v, i) => (
               <ValueFeature key={v.label} v={v} i={i} />
             ))}
