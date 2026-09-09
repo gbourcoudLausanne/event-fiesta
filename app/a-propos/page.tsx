@@ -3,15 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import type { MouseEvent } from "react";
 import {
   motion,
   useInView,
   useReducedMotion,
   useScroll,
   useTransform,
-  useMotionValue,
-  useSpring,
 } from "motion/react";
 import { HeartStraight, Sparkle, Handshake, ArrowRight } from "@phosphor-icons/react";
 import { WhyUs } from "@/components/WhyUs";
@@ -407,157 +404,83 @@ function Timeline({
   );
 }
 
-/* ── Carte valeur : tilt 3D, spotlight curseur, motif qui s'anime ── */
-function ValueCard({
+/* ── Valeur : ligne éditoriale numérotée ─────────────────────── */
+function ValueRow({
   v,
   i,
+  total,
 }: {
   v: { label: string; desc: string };
   i: number;
+  total: number;
 }) {
   const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const rx = useMotionValue(0);
-  const ry = useMotionValue(0);
-  const mx = useMotionValue(50);
-  const my = useMotionValue(50);
-  const srx = useSpring(rx, { stiffness: 180, damping: 16 });
-  const sry = useSpring(ry, { stiffness: 180, damping: 16 });
-  const spot = useMotionValue(0);
-  const sSpot = useSpring(spot, { stiffness: 200, damping: 24 });
+  const ref = useRef<HTMLLIElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.5 });
   const Ico = VALUE_ICONS[i % VALUE_ICONS.length];
   const tint = VALUE_TINTS[i % VALUE_TINTS.length];
 
-  const glow = useTransform(
-    [mx, my, sSpot],
-    ([x, y, o]: number[]) =>
-      `radial-gradient(240px circle at ${x}% ${y}%, rgba(${tint.glow},${(0.5 * o).toFixed(3)}), transparent 70%)`,
-  );
-
-  const onMove = (e: MouseEvent) => {
-    if (reduce) return;
-    const el = ref.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width;
-    const py = (e.clientY - r.top) / r.height;
-    ry.set((px - 0.5) * 11);
-    rx.set(-(py - 0.5) * 11);
-    mx.set(px * 100);
-    my.set(py * 100);
-    spot.set(1);
-  };
-  const onLeave = () => {
-    rx.set(0);
-    ry.set(0);
-    spot.set(0);
-  };
-
   return (
-    <motion.li
-      initial={reduce ? false : { opacity: 0, y: 28, rotateX: -14, filter: "blur(7px)" }}
-      whileInView={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.65, delay: i * 0.12, ease }}
-      style={{ perspective: 1100 }}
-      className={i === 1 ? "md:mt-10" : ""}
-    >
-      <motion.div
-        ref={ref}
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
-        whileHover={reduce ? undefined : { y: -6 }}
-        style={{
-          rotateX: srx,
-          rotateY: sry,
-          transformStyle: "preserve-3d",
-          boxShadow: "0 10px 34px -18px rgba(13,11,8,0.12)",
-        }}
-        className="group relative flex h-full min-h-[320px] flex-col overflow-hidden rounded-[3px] p-8 lg:p-9"
-      >
-        {/* fond dégradé + bord */}
-        <div
-          className="absolute inset-0 -z-20"
-          style={{
-            background: `linear-gradient(158deg, ${tint.bg} 0%, #FAF7F2 145%)`,
-            border: `1px solid ${tint.dot}3d`,
-          }}
-        />
-        {/* spotlight curseur */}
-        <motion.div className="absolute inset-0 -z-10 pointer-events-none" style={{ background: glow }} aria-hidden />
-        {/* liseré lumineux au survol */}
-        <div
-          className="absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none"
-          style={{ border: `1px solid ${tint.dot}` }}
-          aria-hidden
-        />
-
-        {/* chiffre filigrane */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute -right-4 -top-8 select-none font-serif font-light leading-none transition-all duration-500 group-hover:-translate-y-1"
-          style={{ fontSize: "7rem", color: `${tint.dot}22`, transform: "translateZ(10px)" }}
+    <li ref={ref} className="group relative">
+      <div className="grid grid-cols-[auto_1fr] gap-6 sm:gap-10 lg:gap-16 items-start py-9 lg:py-12">
+        {/* numéro */}
+        <motion.span
+          className="font-display italic leading-none select-none"
+          style={{ fontSize: "clamp(2.6rem, 5vw, 4.4rem)", color: `${tint.dot}` }}
+          initial={reduce ? false : { opacity: 0, x: -18, filter: "blur(6px)" }}
+          animate={inView ? { opacity: 0.55, x: 0, filter: "blur(0px)" } : {}}
+          transition={{ duration: 0.6, ease }}
         >
           {String(i + 1).padStart(2, "0")}
-        </span>
+        </motion.span>
 
-        {/* icône dans un anneau qui tourne lentement */}
-        <div className="relative z-10 mb-6 h-14 w-14" style={{ transform: "translateZ(45px)" }}>
-          <motion.span
-            className="absolute inset-0 rounded-full"
-            style={{ border: `1.5px dashed ${tint.dot}` }}
-            animate={reduce ? undefined : { rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 22, ease: "linear" }}
-          />
-          <motion.span
-            className="absolute inset-[5px] flex items-center justify-center rounded-full"
-            style={{ background: "#FAF7F2", boxShadow: `0 8px 22px -12px ${tint.dot}` }}
-            animate={reduce ? undefined : { y: [0, -3, 0] }}
-            transition={{ repeat: Infinity, duration: 4 + i, ease: "easeInOut" }}
+        <div>
+          <motion.div
+            className="flex items-center gap-3"
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.55, delay: 0.1, ease }}
           >
-            {Ico && <Ico size={22} weight="light" color={tint.ink} />}
-          </motion.span>
+            <motion.span
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+              style={{ border: `1px solid ${tint.dot}` }}
+              animate={reduce ? undefined : { y: [0, -3, 0] }}
+              transition={{ repeat: Infinity, duration: 4.5 + i, ease: "easeInOut" }}
+            >
+              {Ico && <Ico size={17} weight="light" color={tint.ink} />}
+            </motion.span>
+            <h3
+              className="font-serif font-light leading-tight"
+              style={{ fontSize: "clamp(1.5rem, 2.4vw, 2.15rem)", color: "#2A2320" }}
+            >
+              {v.label}
+            </h3>
+          </motion.div>
+
+          <motion.p
+            className="mt-4 max-w-xl font-sans font-light leading-relaxed"
+            style={{ fontSize: "14.5px", color: "rgba(40,34,30,0.62)" }}
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.55, delay: 0.2, ease }}
+          >
+            {v.desc}
+          </motion.p>
         </div>
+      </div>
 
-        <h3
-          className="relative z-10 font-serif leading-tight"
-          style={{ fontSize: "clamp(1.4rem, 1.9vw, 1.7rem)", color: "#2A2320", transform: "translateZ(30px)" }}
-        >
-          {v.label}
-        </h3>
-
-        {/* soulignage qui se trace */}
-        <motion.svg
-          viewBox="0 0 120 8"
-          preserveAspectRatio="none"
-          className="relative z-10 mt-2 h-1.5 w-20"
+      {/* filet séparateur qui se trace */}
+      {i < total - 1 && (
+        <motion.span
+          className="absolute bottom-0 left-0 right-0 h-px origin-left block"
+          style={{ background: "rgba(42,35,32,0.14)" }}
+          initial={reduce ? false : { scaleX: 0 }}
+          animate={inView ? { scaleX: 1 } : {}}
+          transition={{ duration: 0.9, delay: 0.15, ease }}
           aria-hidden
-          initial={reduce ? undefined : "hidden"}
-          whileInView={reduce ? undefined : "shown"}
-          viewport={{ once: true }}
-          style={{ transform: "translateZ(20px)" }}
-        >
-          <motion.path
-            d="M2 5 C 30 1, 60 8, 90 4 S 116 3, 118 5"
-            fill="none"
-            stroke={tint.dot}
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            variants={{
-              hidden: { pathLength: 0, opacity: 0 },
-              shown: { pathLength: 1, opacity: 0.85, transition: { duration: 0.8, delay: 0.3 + i * 0.12, ease } },
-            }}
-          />
-        </motion.svg>
-
-        <p
-          className="relative z-10 mt-4 flex-1 font-sans text-[13.5px] leading-relaxed"
-          style={{ color: "rgba(40,34,30,0.62)", transform: "translateZ(15px)" }}
-        >
-          {v.desc}
-        </p>
-      </motion.div>
-    </motion.li>
+        />
+      )}
+    </li>
   );
 }
 
@@ -782,9 +705,9 @@ export default function AboutPage() {
             </h2>
           </motion.div>
 
-          <ul className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-start">
+          <ul className="border-t" style={{ borderColor: "rgba(42,35,32,0.14)" }}>
             {t.about.values.map((v, i) => (
-              <ValueCard key={v.label} v={v} i={i} />
+              <ValueRow key={v.label} v={v} i={i} total={t.about.values.length} />
             ))}
           </ul>
 
