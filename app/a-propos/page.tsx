@@ -59,16 +59,17 @@ const BALLOONS = [
 ];
 
 /* ── Pile de 9 photos qui s'empilent une à une (hero) ─────────── */
-// {rot, x %, y %, scale} — dernière = photo de devant, neutre.
+// {r rotation, x %, y %, s scale} — index 0 = tout au fond, index 8 = photo de devant (centrée).
+// Les cartes du fond débordent davantage sur les côtés → pile large et étalée.
 const STACK = [
-  { r: -9, x: -13, y: -4, s: 0.85 },
-  { r: 8, x: 12, y: -7, s: 0.87 },
-  { r: -6, x: -9, y: 5, s: 0.89 },
-  { r: 7, x: 10, y: 2, s: 0.91 },
-  { r: -10, x: -6, y: -9, s: 0.93 },
-  { r: 5, x: 7, y: 7, s: 0.95 },
-  { r: -4, x: -4, y: -3, s: 0.97 },
-  { r: 6, x: 5, y: 4, s: 0.985 },
+  { r: -13, x: -46, y: -6, s: 0.82 },
+  { r: 12, x: 44, y: -10, s: 0.84 },
+  { r: -11, x: -34, y: 4, s: 0.87 },
+  { r: 10, x: 33, y: 1, s: 0.89 },
+  { r: -9, x: -22, y: -8, s: 0.92 },
+  { r: 8, x: 21, y: 6, s: 0.94 },
+  { r: -6, x: -11, y: -2, s: 0.965 },
+  { r: 6, x: 10, y: 3, s: 0.985 },
   { r: 0, x: 0, y: 0, s: 1 },
 ];
 
@@ -107,10 +108,10 @@ function PhotoFan() {
 
   return (
     <div
-      className="relative w-full max-w-[560px] mx-auto lg:mx-auto lg:translate-x-4"
+      className="relative w-full max-w-[620px] mx-auto lg:mx-auto lg:translate-x-2"
       style={{ perspective: 1300 }}
     >
-      <div className="relative" style={{ aspectRatio: "1 / 1" }}>
+      <div className="relative" style={{ aspectRatio: "5 / 4" }}>
         <motion.div
           className="absolute inset-0"
           animate={reduce ? undefined : { rotate: [-1.4, 1.4, -1.4] }}
@@ -135,7 +136,7 @@ function PhotoFan() {
             if (isLeaving && leaving) {
               const d = leaving.dir;
               if (leaving.phase === 1) {
-                target = { x: `${from.x + d * 34}%`, y: `${from.y - 15}%`, rotate: from.r + d * 12, rotateY: d * -16, scale: 1.07 };
+                target = { x: `${from.x + d * 55}%`, y: `${from.y - 16}%`, rotate: from.r + d * 13, rotateY: d * -18, scale: 1.08 };
                 trans = { duration: 0.28, ease: snatch };
                 shadow = "0 46px 90px -30px rgba(120,60,80,0.6)";
               } else {
@@ -164,7 +165,7 @@ function PhotoFan() {
             return (
               <div
                 key={p.src}
-                className="absolute left-1/2 top-[5%] w-[66%] -translate-x-1/2"
+                className="absolute left-1/2 top-[4%] w-[50%] -translate-x-1/2"
                 style={{ zIndex, aspectRatio: "4 / 5" }}
               >
                 <motion.div
