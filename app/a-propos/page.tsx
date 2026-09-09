@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  AnimatePresence,
   motion,
   useInView,
   useReducedMotion,
@@ -404,236 +403,129 @@ function Timeline({
   );
 }
 
-/* ── Motifs animés par valeur ─────────────────────────────────── */
-function HeartMotif({ c }: { c: string }) {
+/* ── Valeurs : grands spreads photo alternés ─────────────────── */
+const VALUE_SHOTS = [
+  { src: "/Galerie/hero-slides/hero-slide-13.webp", alt: "Arche ronde de ballons violet et or Joyeux anniversaire dans un jardin", kw: "Le soin du détail" },
+  { src: "/Galerie/hero-slides/hero-slide-4.webp", alt: "Arche de ballons fleurs et rideau de franges terracotta avec chiffre 3", kw: "Fait à la main, pour vous" },
+  { src: "/Galerie/hero-slides/hero-slide-16.webp", alt: "Table dressée élégante avec nappe rose vieilli et compositions de fleurs roses", kw: "Le jour J, tout est prêt" },
+];
+
+function ValueFeature({
+  v,
+  i,
+}: {
+  v: { label: string; desc: string };
+  i: number;
+}) {
   const reduce = useReducedMotion();
-  const balloons = [
-    { x: 60, y: 96, r: 12, col: "#F4A8B8" },
-    { x: 108, y: 108, r: 10, col: "#F0C29A" },
-    { x: 138, y: 90, r: 9, col: "#A8CEE0" },
-  ];
-  return (
-    <svg viewBox="0 0 200 200" className="h-full w-full" aria-hidden>
-      {!reduce &&
-        balloons.map((b, i) => (
-          <motion.g
-            key={i}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: [0, -14, 0], opacity: [0.9, 0.9, 0.9] }}
-            transition={{ repeat: Infinity, duration: 5 + i, ease: "easeInOut", delay: i * 0.5 }}
-          >
-            <line x1={b.x} y1={b.y + b.r} x2="100" y2="150" stroke="rgba(120,90,70,0.2)" strokeWidth="0.8" />
-            <circle cx={b.x} cy={b.y} r={b.r} fill={b.col} opacity="0.85" />
-          </motion.g>
-        ))}
-      <motion.path
-        d="M100 158 C 78 132 44 128 44 96 C 44 74 64 62 82 70 C 92 74 100 84 100 84 C 100 84 108 74 118 70 C 136 62 156 74 156 96 C 156 128 122 132 100 158 Z"
-        fill={c}
-        style={{ transformOrigin: "100px 110px" }}
-        animate={reduce ? undefined : { scale: [1, 1.09, 1] }}
-        transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-      />
-      <motion.circle
-        cx="100"
-        cy="110"
-        r="52"
-        fill="none"
-        stroke={c}
-        strokeWidth="1.5"
-        style={{ transformOrigin: "100px 110px" }}
-        animate={reduce ? undefined : { scale: [1, 1.5], opacity: [0.4, 0] }}
-        transition={{ repeat: Infinity, duration: 1.6, ease: "easeOut" }}
-      />
-    </svg>
-  );
-}
-
-function StitchMotif({ c }: { c: string }) {
-  const reduce = useReducedMotion();
-  return (
-    <svg viewBox="0 0 200 200" className="h-full w-full" aria-hidden>
-      <motion.path
-        d="M28 132 C 60 80, 96 168, 128 108 S 176 72, 178 96"
-        fill="none"
-        stroke={c}
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeDasharray="7 7"
-        initial={reduce ? undefined : { pathLength: 0 }}
-        animate={reduce ? undefined : { pathLength: [0, 1] }}
-        transition={{ repeat: Infinity, duration: 3.4, ease: "easeInOut", repeatDelay: 0.6 }}
-      />
-      {/* aiguille */}
-      <motion.g
-        animate={reduce ? undefined : { offsetDistance: ["0%", "100%"] }}
-        style={{
-          offsetPath: 'path("M28 132 C 60 80, 96 168, 128 108 S 176 72, 178 96")',
-        }}
-        transition={{ repeat: Infinity, duration: 3.4, ease: "easeInOut", repeatDelay: 0.6 }}
-      >
-        <line x1="-11" y1="0" x2="11" y2="0" stroke="#8B7355" strokeWidth="2.5" strokeLinecap="round" />
-        <circle cx="-11" cy="0" r="2.4" fill="#8B7355" />
-      </motion.g>
-      {!reduce &&
-        [40, 100, 160].map((x, i) => (
-          <motion.path
-            key={i}
-            d={`M${x} 44 l4 8 l8 -3 l-6 7 l6 7 l-8 -3 l-4 8 l-4 -8 l-8 3 l6 -7 l-6 -7 l8 3 Z`}
-            fill={c}
-            style={{ transformOrigin: `${x + 2}px 52px` }}
-            animate={{ scale: [0.4, 1, 0.4], opacity: [0.2, 0.9, 0.2] }}
-            transition={{ repeat: Infinity, duration: 2.4, delay: i * 0.5, ease: "easeInOut" }}
-          />
-        ))}
-    </svg>
-  );
-}
-
-function CheckMotif({ c }: { c: string }) {
-  const reduce = useReducedMotion();
-  return (
-    <svg viewBox="0 0 200 200" className="h-full w-full" aria-hidden>
-      <motion.circle
-        cx="100"
-        cy="100"
-        r="56"
-        fill="none"
-        stroke={c}
-        strokeWidth="2.5"
-        style={{ transformOrigin: "100px 100px", rotate: -90 }}
-        initial={reduce ? undefined : { pathLength: 0 }}
-        animate={reduce ? undefined : { pathLength: [0, 1] }}
-        transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", repeatDelay: 0.8 }}
-      />
-      <motion.path
-        d="M74 102 L94 122 L132 80"
-        fill="none"
-        stroke={c}
-        strokeWidth="6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        initial={reduce ? undefined : { pathLength: 0 }}
-        animate={reduce ? undefined : { pathLength: [0, 1] }}
-        transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", repeatDelay: 0.8, delay: 0.9 }}
-      />
-      <motion.circle
-        cx="100"
-        cy="100"
-        r="56"
-        fill={c}
-        style={{ transformOrigin: "100px 100px" }}
-        animate={reduce ? undefined : { scale: [1, 1.28], opacity: [0.12, 0] }}
-        transition={{ repeat: Infinity, duration: 3, ease: "easeOut" }}
-      />
-    </svg>
-  );
-}
-
-const VALUE_MOTIFS = [HeartMotif, StitchMotif, CheckMotif];
-
-/* ── Valeurs : panneau interactif ────────────────────────────── */
-function ValuesShowcase({ values }: { values: { label: string; desc: string }[] }) {
-  const reduce = useReducedMotion();
-  const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const n = values.length;
-  const DUR = 5200;
-
-  useEffect(() => {
-    if (reduce || paused) return;
-    const id = setInterval(() => setActive((a) => (a + 1) % n), DUR);
-    return () => clearInterval(id);
-  }, [reduce, paused, n]);
-
-  const tint = VALUE_TINTS[active % VALUE_TINTS.length];
-  const Motif = VALUE_MOTIFS[active % VALUE_MOTIFS.length];
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.35 });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const imgY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [50, -50]);
+  const tint = VALUE_TINTS[i % VALUE_TINTS.length];
+  const shot = VALUE_SHOTS[i % VALUE_SHOTS.length];
+  const flip = i % 2 === 1;
+  const words = v.label.split(" ");
 
   return (
-    <div
-      className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+    <article
+      ref={ref}
+      className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16"
     >
-      {/* liste */}
-      <ul className="flex flex-col">
-        {values.map((v, i) => {
-          const on = i === active;
-          const it = VALUE_TINTS[i % VALUE_TINTS.length];
-          return (
-            <li key={v.label}>
-              <button
-                type="button"
-                onClick={() => setActive(i)}
-                onMouseEnter={() => !reduce && setActive(i)}
-                className="group relative flex w-full items-center gap-4 py-5 text-left"
-              >
-                <span
-                  className="font-display italic leading-none transition-colors duration-300"
-                  style={{ fontSize: "clamp(1.5rem, 2.4vw, 2rem)", color: on ? it.dot : "rgba(42,35,32,0.28)" }}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span
-                  className="font-serif font-light leading-tight transition-all duration-300"
-                  style={{
-                    fontSize: on ? "clamp(1.7rem, 3vw, 2.5rem)" : "clamp(1.3rem, 2vw, 1.7rem)",
-                    color: on ? "#2A2320" : "rgba(42,35,32,0.4)",
-                    fontStyle: on ? "italic" : "normal",
-                  }}
-                >
-                  {v.label}
-                </span>
-                {/* barre de progression / soulignage */}
-                <span className="absolute bottom-0 left-0 right-0 h-px" style={{ background: "rgba(42,35,32,0.12)" }} />
-                {on && (
-                  <motion.span
-                    key={`${active}-${paused}`}
-                    className="absolute bottom-0 left-0 h-[2px] origin-left"
-                    style={{ background: it.dot, width: "100%" }}
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: reduce ? 1 : paused ? 0.001 : 1 }}
-                    transition={{ duration: reduce || paused ? 0 : DUR / 1000, ease: "linear" }}
-                  />
-                )}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-
-      {/* panneau */}
-      <div
-        className="relative overflow-hidden p-8 lg:p-10"
-        style={{ background: `linear-gradient(158deg, ${tint.bg} 0%, #FAF7F2 150%)`, border: `1px solid ${tint.dot}33`, minHeight: 340 }}
+      {/* photo */}
+      <motion.figure
+        className={`relative ${flip ? "lg:order-2" : ""}`}
+        initial={reduce ? false : { opacity: 0, x: flip ? 44 : -44 }}
+        animate={inView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.8, ease }}
       >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active}
-            initial={reduce ? false : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -12 }}
-            transition={{ duration: 0.45, ease }}
-            className="flex h-full flex-col"
-          >
-            <div className="mx-auto mb-6 h-28 w-28 lg:h-32 lg:w-32">
-              <Motif c={tint.dot} />
-            </div>
-            <h3
-              className="font-serif font-light leading-tight text-center"
-              style={{ fontSize: "clamp(1.6rem, 2.6vw, 2.1rem)", color: "#2A2320" }}
-            >
-              {values[active].label}
-            </h3>
-            <p
-              className="mx-auto mt-4 max-w-md text-center font-sans font-light leading-relaxed"
-              style={{ fontSize: "14.5px", color: "rgba(40,34,30,0.64)" }}
-            >
-              {values[active].desc}
-            </p>
+        <div
+          className="relative overflow-hidden"
+          style={{
+            aspectRatio: "5 / 4",
+            border: "8px solid #FAF7F2",
+            boxShadow: "0 48px 100px -40px rgba(120,60,80,0.42)",
+          }}
+        >
+          <motion.div className="absolute inset-0" style={{ y: imgY, scale: 1.12 }}>
+            <Image src={shot.src} alt={shot.alt} fill className="object-cover" sizes="(max-width: 1024px) 92vw, 46vw" />
           </motion.div>
-        </AnimatePresence>
+        </div>
+        {/* étiquette mot-clé */}
+        <motion.figcaption
+          className={`absolute -bottom-4 ${flip ? "right-6" : "left-6"} px-4 py-2 font-sans text-[11px] uppercase tracking-[0.14em]`}
+          style={{ background: tint.dot, color: "#FAF7F2" }}
+          initial={reduce ? false : { opacity: 0, y: 10 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.4, ease }}
+        >
+          {shot.kw}
+        </motion.figcaption>
+      </motion.figure>
+
+      {/* texte */}
+      <div className={`relative ${flip ? "lg:order-1 lg:pr-6" : "lg:pl-6"}`}>
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -top-16 select-none font-display italic leading-none"
+          style={{
+            [flip ? "right" : "left"]: -8,
+            fontSize: "clamp(6rem, 12vw, 11rem)",
+            color: `${tint.dot}1f`,
+          }}
+        >
+          {String(i + 1).padStart(2, "0")}
+        </span>
+
+        <h3
+          className="relative font-serif font-light leading-[1.02] flex flex-wrap gap-x-[0.28em]"
+          style={{ fontSize: "clamp(2.6rem, 6vw, 5rem)", color: "#2A2320" }}
+        >
+          {words.map((w, k) => (
+            <motion.span
+              key={k}
+              className="inline-block"
+              initial={reduce ? false : { opacity: 0, y: 22, filter: "blur(8px)" }}
+              animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+              transition={{ duration: 0.6, delay: 0.15 + k * 0.08, ease }}
+            >
+              {w}
+            </motion.span>
+          ))}
+        </h3>
+
+        <motion.svg
+          viewBox="0 0 200 10"
+          preserveAspectRatio="none"
+          className="mt-4 h-2.5 w-40"
+          aria-hidden
+          initial={reduce ? undefined : "hidden"}
+          animate={inView ? "shown" : undefined}
+        >
+          <motion.path
+            d="M3 6 C 40 1, 90 11, 140 5 S 190 2, 197 6"
+            fill="none"
+            stroke={tint.dot}
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            variants={{
+              hidden: { pathLength: 0, opacity: 0 },
+              shown: { pathLength: 1, opacity: 0.8, transition: { duration: 0.9, delay: 0.5, ease } },
+            }}
+          />
+        </motion.svg>
+
+        <motion.p
+          className="mt-6 max-w-md font-sans font-light leading-relaxed"
+          style={{ fontSize: "15px", color: "rgba(40,34,30,0.64)" }}
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.4, ease }}
+        >
+          {v.desc}
+        </motion.p>
       </div>
-    </div>
+    </article>
   );
 }
 
@@ -858,7 +750,11 @@ export default function AboutPage() {
             </h2>
           </motion.div>
 
-          <ValuesShowcase values={t.about.values} />
+          <div className="flex flex-col gap-24 lg:gap-36">
+            {t.about.values.map((v, i) => (
+              <ValueFeature key={v.label} v={v} i={i} />
+            ))}
+          </div>
 
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 16 }}
