@@ -108,7 +108,7 @@ function PhotoFan() {
 
   return (
     <div
-      className="relative w-full max-w-[700px] mx-auto lg:mx-auto lg:translate-x-2"
+      className="relative w-full max-w-[780px] mx-auto lg:mx-auto lg:translate-x-2"
       style={{ perspective: 1300 }}
     >
       <div className="relative" style={{ aspectRatio: "5 / 4" }}>
@@ -453,7 +453,7 @@ export default function AboutPage() {
           aria-hidden
         />
 
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-16 lg:gap-10 items-center">
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-[0.82fr_1.18fr] gap-16 lg:gap-8 items-center">
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
