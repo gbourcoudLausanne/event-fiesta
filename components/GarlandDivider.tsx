@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "motion/react";
+import { useRef } from "react";
+import { motion, useReducedMotion, useInView, type Variants } from "motion/react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -237,9 +238,13 @@ const popV: Variants = {
 
 export function GarlandDivider({ bg = "#FAF7F2" }: { bg?: string }) {
   const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  // les boucles infinies (sway, confettis, étincelles) ne tournent que
+  // lorsque le séparateur est proche de l'écran.
+  const live = useInView(ref, { margin: "200px 0px" }) && !reduce;
 
   return (
-    <div style={{ background: bg, lineHeight: 0 }} aria-hidden>
+    <div ref={ref} style={{ background: bg, lineHeight: 0 }} aria-hidden>
       <motion.svg
         viewBox="0 0 1440 250"
         xmlns="http://www.w3.org/2000/svg"
@@ -279,7 +284,7 @@ export function GarlandDivider({ bg = "#FAF7F2" }: { bg?: string }) {
         <ellipse cx="720" cy="216" rx="700" ry="20" fill="rgba(120,60,80,0.05)" style={{ filter: "blur(9px)" }} />
 
         {/* Confettis qui tombent */}
-        {!reduce &&
+        {live &&
           CONFETTI.map((f, i) => (
             <motion.g
               key={`c${i}`}
@@ -298,11 +303,10 @@ export function GarlandDivider({ bg = "#FAF7F2" }: { bg?: string }) {
           ))}
 
         <g
-          style={
-            reduce
-              ? { transformOrigin: "720px 24px" }
-              : { transformOrigin: "720px 24px", animation: "gd-sway 9s ease-in-out infinite" }
-          }
+          style={{
+            transformOrigin: "720px 24px",
+            animation: live ? "gd-sway 9s ease-in-out infinite" : undefined,
+          }}
         >
           {/* Verdure — arrière */}
           {PAMPA_AT.map((t, i) => {
@@ -370,7 +374,7 @@ export function GarlandDivider({ bg = "#FAF7F2" }: { bg?: string }) {
           ))}
 
           {/* Étincelles */}
-          {!reduce &&
+          {live &&
             SPARKLE_AT.map((t, i) => {
               const p = swag(t);
               return (

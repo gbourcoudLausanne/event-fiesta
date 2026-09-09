@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from "react";
 import { fr } from "./fr";
 import { es } from "./es";
 import { en } from "./en";
@@ -22,8 +22,31 @@ const I18nContext = createContext<I18nContextType>({
   setLang: () => {},
 });
 
+const HTML_LANG: Record<Lang, string> = { fr: "fr", es: "es", en: "en" };
+
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>("fr");
+  const [lang, setLangState] = useState<Lang>("fr");
+
+  // Restaure le choix de langue.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("ef-lang");
+      if (saved === "fr" || saved === "es" || saved === "en") setLangState(saved);
+    } catch {}
+  }, []);
+
+  // Garde <html lang> synchronisé pour les lecteurs d'écran / SEO.
+  useEffect(() => {
+    document.documentElement.lang = HTML_LANG[lang];
+  }, [lang]);
+
+  const setLang = useCallback((next: Lang) => {
+    setLangState(next);
+    try {
+      localStorage.setItem("ef-lang", next);
+    } catch {}
+  }, []);
+
   return (
     <I18nContext.Provider value={{ t: translations[lang], lang, setLang }}>
       {children}

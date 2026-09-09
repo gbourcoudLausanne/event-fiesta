@@ -130,13 +130,23 @@ function MarqueeColumn({
     };
     apply();
 
+    // Ne fait tourner la boucle rAF que quand le mur photo est à l'écran.
+    let onscreen = true;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onscreen = entry.isIntersecting;
+      },
+      { rootMargin: "150px" },
+    );
+    io.observe(box);
+
     let raf = 0;
     let last = performance.now();
     let manualUntil = 0;
     const tick = (now: number) => {
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
-      if (!reduce && !hovering.current && now > manualUntil) {
+      if (onscreen && !reduce && !hovering.current && now > manualUntil) {
         pos.current += (reverse ? -1 : 1) * (half() / duration) * dt;
         wrap();
         apply();
@@ -174,6 +184,7 @@ function MarqueeColumn({
 
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
       box.removeEventListener("wheel", onWheel);
       box.removeEventListener("touchstart", onTouchStart);
       box.removeEventListener("touchmove", onTouchMove);
