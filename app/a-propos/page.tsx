@@ -79,7 +79,7 @@ function PhotoFan() {
 
   return (
     <div
-      className="relative w-full max-w-[620px] mx-auto lg:mx-auto lg:translate-x-4"
+      className="relative w-full max-w-[560px] mx-auto lg:mx-auto lg:translate-x-4"
       style={{ perspective: 1400 }}
       onMouseEnter={() => setLift(true)}
       onMouseLeave={() => setLift(false)}
@@ -97,7 +97,7 @@ function PhotoFan() {
             return (
               <motion.div
                 key={p.src}
-                className="absolute left-1/2 top-[4%] w-[70%]"
+                className="absolute left-1/2 top-[5%] w-[66%]"
                 style={{ zIndex: i, aspectRatio: "4 / 5" }}
                 initial={reduce ? false : { x: "-50%", y: 90, rotate: 0, opacity: 0, scale: s.s * 0.94 }}
                 animate={{
@@ -335,7 +335,7 @@ export default function AboutPage() {
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden pt-[132px] pb-20 lg:pt-[164px] lg:pb-28" style={{ background: "#F3EDE6" }}>
+      <section className="relative overflow-hidden pt-[120px] pb-14 lg:pt-[140px] lg:pb-16" style={{ background: "#F3EDE6" }}>
         {/* confettis */}
         {!reduce &&
           CONFETTI.map((f, i) => (
