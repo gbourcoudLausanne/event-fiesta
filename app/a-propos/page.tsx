@@ -4,13 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
+  AnimatePresence,
   motion,
   useInView,
   useReducedMotion,
   useScroll,
   useTransform,
 } from "motion/react";
-import { HeartStraight, Sparkle, Handshake, ArrowRight } from "@phosphor-icons/react";
+import { ArrowRight } from "@phosphor-icons/react";
 import { WhyUs } from "@/components/WhyUs";
 import { CtaBanner } from "@/components/CtaBanner";
 import { FloatingBalloons } from "@/components/FloatingBalloons";
@@ -18,7 +19,6 @@ import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const VALUE_ICONS = [HeartStraight, Sparkle, Handshake];
 const VALUE_TINTS = [
   { bg: "#FCEEF1", dot: "#F4A8B8", ink: "#B65572", glow: "244,168,184" },
   { bg: "#F3E7F0", dot: "#BF88B4", ink: "#8B5E85", glow: "191,136,180" },
@@ -404,83 +404,236 @@ function Timeline({
   );
 }
 
-/* ── Valeur : ligne éditoriale numérotée ─────────────────────── */
-function ValueRow({
-  v,
-  i,
-  total,
-}: {
-  v: { label: string; desc: string };
-  i: number;
-  total: number;
-}) {
+/* ── Motifs animés par valeur ─────────────────────────────────── */
+function HeartMotif({ c }: { c: string }) {
   const reduce = useReducedMotion();
-  const ref = useRef<HTMLLIElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.5 });
-  const Ico = VALUE_ICONS[i % VALUE_ICONS.length];
-  const tint = VALUE_TINTS[i % VALUE_TINTS.length];
+  const balloons = [
+    { x: 60, y: 96, r: 12, col: "#F4A8B8" },
+    { x: 108, y: 108, r: 10, col: "#F0C29A" },
+    { x: 138, y: 90, r: 9, col: "#A8CEE0" },
+  ];
+  return (
+    <svg viewBox="0 0 200 200" className="h-full w-full" aria-hidden>
+      {!reduce &&
+        balloons.map((b, i) => (
+          <motion.g
+            key={i}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: [0, -14, 0], opacity: [0.9, 0.9, 0.9] }}
+            transition={{ repeat: Infinity, duration: 5 + i, ease: "easeInOut", delay: i * 0.5 }}
+          >
+            <line x1={b.x} y1={b.y + b.r} x2="100" y2="150" stroke="rgba(120,90,70,0.2)" strokeWidth="0.8" />
+            <circle cx={b.x} cy={b.y} r={b.r} fill={b.col} opacity="0.85" />
+          </motion.g>
+        ))}
+      <motion.path
+        d="M100 158 C 78 132 44 128 44 96 C 44 74 64 62 82 70 C 92 74 100 84 100 84 C 100 84 108 74 118 70 C 136 62 156 74 156 96 C 156 128 122 132 100 158 Z"
+        fill={c}
+        style={{ transformOrigin: "100px 110px" }}
+        animate={reduce ? undefined : { scale: [1, 1.09, 1] }}
+        transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+      />
+      <motion.circle
+        cx="100"
+        cy="110"
+        r="52"
+        fill="none"
+        stroke={c}
+        strokeWidth="1.5"
+        style={{ transformOrigin: "100px 110px" }}
+        animate={reduce ? undefined : { scale: [1, 1.5], opacity: [0.4, 0] }}
+        transition={{ repeat: Infinity, duration: 1.6, ease: "easeOut" }}
+      />
+    </svg>
+  );
+}
+
+function StitchMotif({ c }: { c: string }) {
+  const reduce = useReducedMotion();
+  return (
+    <svg viewBox="0 0 200 200" className="h-full w-full" aria-hidden>
+      <motion.path
+        d="M28 132 C 60 80, 96 168, 128 108 S 176 72, 178 96"
+        fill="none"
+        stroke={c}
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeDasharray="7 7"
+        initial={reduce ? undefined : { pathLength: 0 }}
+        animate={reduce ? undefined : { pathLength: [0, 1] }}
+        transition={{ repeat: Infinity, duration: 3.4, ease: "easeInOut", repeatDelay: 0.6 }}
+      />
+      {/* aiguille */}
+      <motion.g
+        animate={reduce ? undefined : { offsetDistance: ["0%", "100%"] }}
+        style={{
+          offsetPath: 'path("M28 132 C 60 80, 96 168, 128 108 S 176 72, 178 96")',
+        }}
+        transition={{ repeat: Infinity, duration: 3.4, ease: "easeInOut", repeatDelay: 0.6 }}
+      >
+        <line x1="-11" y1="0" x2="11" y2="0" stroke="#8B7355" strokeWidth="2.5" strokeLinecap="round" />
+        <circle cx="-11" cy="0" r="2.4" fill="#8B7355" />
+      </motion.g>
+      {!reduce &&
+        [40, 100, 160].map((x, i) => (
+          <motion.path
+            key={i}
+            d={`M${x} 44 l4 8 l8 -3 l-6 7 l6 7 l-8 -3 l-4 8 l-4 -8 l-8 3 l6 -7 l-6 -7 l8 3 Z`}
+            fill={c}
+            style={{ transformOrigin: `${x + 2}px 52px` }}
+            animate={{ scale: [0.4, 1, 0.4], opacity: [0.2, 0.9, 0.2] }}
+            transition={{ repeat: Infinity, duration: 2.4, delay: i * 0.5, ease: "easeInOut" }}
+          />
+        ))}
+    </svg>
+  );
+}
+
+function CheckMotif({ c }: { c: string }) {
+  const reduce = useReducedMotion();
+  return (
+    <svg viewBox="0 0 200 200" className="h-full w-full" aria-hidden>
+      <motion.circle
+        cx="100"
+        cy="100"
+        r="56"
+        fill="none"
+        stroke={c}
+        strokeWidth="2.5"
+        style={{ transformOrigin: "100px 100px", rotate: -90 }}
+        initial={reduce ? undefined : { pathLength: 0 }}
+        animate={reduce ? undefined : { pathLength: [0, 1] }}
+        transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", repeatDelay: 0.8 }}
+      />
+      <motion.path
+        d="M74 102 L94 122 L132 80"
+        fill="none"
+        stroke={c}
+        strokeWidth="6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={reduce ? undefined : { pathLength: 0 }}
+        animate={reduce ? undefined : { pathLength: [0, 1] }}
+        transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", repeatDelay: 0.8, delay: 0.9 }}
+      />
+      <motion.circle
+        cx="100"
+        cy="100"
+        r="56"
+        fill={c}
+        style={{ transformOrigin: "100px 100px" }}
+        animate={reduce ? undefined : { scale: [1, 1.28], opacity: [0.12, 0] }}
+        transition={{ repeat: Infinity, duration: 3, ease: "easeOut" }}
+      />
+    </svg>
+  );
+}
+
+const VALUE_MOTIFS = [HeartMotif, StitchMotif, CheckMotif];
+
+/* ── Valeurs : panneau interactif ────────────────────────────── */
+function ValuesShowcase({ values }: { values: { label: string; desc: string }[] }) {
+  const reduce = useReducedMotion();
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const n = values.length;
+  const DUR = 5200;
+
+  useEffect(() => {
+    if (reduce || paused) return;
+    const id = setInterval(() => setActive((a) => (a + 1) % n), DUR);
+    return () => clearInterval(id);
+  }, [reduce, paused, n]);
+
+  const tint = VALUE_TINTS[active % VALUE_TINTS.length];
+  const Motif = VALUE_MOTIFS[active % VALUE_MOTIFS.length];
 
   return (
-    <li ref={ref} className="group relative">
-      <div className="grid grid-cols-[auto_1fr] gap-6 sm:gap-10 lg:gap-16 items-start py-9 lg:py-12">
-        {/* numéro */}
-        <motion.span
-          className="font-display italic leading-none select-none"
-          style={{ fontSize: "clamp(2.6rem, 5vw, 4.4rem)", color: `${tint.dot}` }}
-          initial={reduce ? false : { opacity: 0, x: -18, filter: "blur(6px)" }}
-          animate={inView ? { opacity: 0.55, x: 0, filter: "blur(0px)" } : {}}
-          transition={{ duration: 0.6, ease }}
-        >
-          {String(i + 1).padStart(2, "0")}
-        </motion.span>
+    <div
+      className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {/* liste */}
+      <ul className="flex flex-col">
+        {values.map((v, i) => {
+          const on = i === active;
+          const it = VALUE_TINTS[i % VALUE_TINTS.length];
+          return (
+            <li key={v.label}>
+              <button
+                type="button"
+                onClick={() => setActive(i)}
+                onMouseEnter={() => !reduce && setActive(i)}
+                className="group relative flex w-full items-center gap-4 py-5 text-left"
+              >
+                <span
+                  className="font-display italic leading-none transition-colors duration-300"
+                  style={{ fontSize: "clamp(1.5rem, 2.4vw, 2rem)", color: on ? it.dot : "rgba(42,35,32,0.28)" }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span
+                  className="font-serif font-light leading-tight transition-all duration-300"
+                  style={{
+                    fontSize: on ? "clamp(1.7rem, 3vw, 2.5rem)" : "clamp(1.3rem, 2vw, 1.7rem)",
+                    color: on ? "#2A2320" : "rgba(42,35,32,0.4)",
+                    fontStyle: on ? "italic" : "normal",
+                  }}
+                >
+                  {v.label}
+                </span>
+                {/* barre de progression / soulignage */}
+                <span className="absolute bottom-0 left-0 right-0 h-px" style={{ background: "rgba(42,35,32,0.12)" }} />
+                {on && (
+                  <motion.span
+                    key={`${active}-${paused}`}
+                    className="absolute bottom-0 left-0 h-[2px] origin-left"
+                    style={{ background: it.dot, width: "100%" }}
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: reduce ? 1 : paused ? 0.001 : 1 }}
+                    transition={{ duration: reduce || paused ? 0 : DUR / 1000, ease: "linear" }}
+                  />
+                )}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
 
-        <div>
+      {/* panneau */}
+      <div
+        className="relative overflow-hidden p-8 lg:p-10"
+        style={{ background: `linear-gradient(158deg, ${tint.bg} 0%, #FAF7F2 150%)`, border: `1px solid ${tint.dot}33`, minHeight: 340 }}
+      >
+        <AnimatePresence mode="wait">
           <motion.div
-            className="flex items-center gap-3"
-            initial={reduce ? false : { opacity: 0, y: 14 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.55, delay: 0.1, ease }}
+            key={active}
+            initial={reduce ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -12 }}
+            transition={{ duration: 0.45, ease }}
+            className="flex h-full flex-col"
           >
-            <motion.span
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
-              style={{ border: `1px solid ${tint.dot}` }}
-              animate={reduce ? undefined : { y: [0, -3, 0] }}
-              transition={{ repeat: Infinity, duration: 4.5 + i, ease: "easeInOut" }}
-            >
-              {Ico && <Ico size={17} weight="light" color={tint.ink} />}
-            </motion.span>
+            <div className="mx-auto mb-6 h-28 w-28 lg:h-32 lg:w-32">
+              <Motif c={tint.dot} />
+            </div>
             <h3
-              className="font-serif font-light leading-tight"
-              style={{ fontSize: "clamp(1.5rem, 2.4vw, 2.15rem)", color: "#2A2320" }}
+              className="font-serif font-light leading-tight text-center"
+              style={{ fontSize: "clamp(1.6rem, 2.6vw, 2.1rem)", color: "#2A2320" }}
             >
-              {v.label}
+              {values[active].label}
             </h3>
+            <p
+              className="mx-auto mt-4 max-w-md text-center font-sans font-light leading-relaxed"
+              style={{ fontSize: "14.5px", color: "rgba(40,34,30,0.64)" }}
+            >
+              {values[active].desc}
+            </p>
           </motion.div>
-
-          <motion.p
-            className="mt-4 max-w-xl font-sans font-light leading-relaxed"
-            style={{ fontSize: "14.5px", color: "rgba(40,34,30,0.62)" }}
-            initial={reduce ? false : { opacity: 0, y: 14 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.55, delay: 0.2, ease }}
-          >
-            {v.desc}
-          </motion.p>
-        </div>
+        </AnimatePresence>
       </div>
-
-      {/* filet séparateur qui se trace */}
-      {i < total - 1 && (
-        <motion.span
-          className="absolute bottom-0 left-0 right-0 h-px origin-left block"
-          style={{ background: "rgba(42,35,32,0.14)" }}
-          initial={reduce ? false : { scaleX: 0 }}
-          animate={inView ? { scaleX: 1 } : {}}
-          transition={{ duration: 0.9, delay: 0.15, ease }}
-          aria-hidden
-        />
-      )}
-    </li>
+    </div>
   );
 }
 
@@ -705,11 +858,7 @@ export default function AboutPage() {
             </h2>
           </motion.div>
 
-          <ul className="border-t" style={{ borderColor: "rgba(42,35,32,0.14)" }}>
-            {t.about.values.map((v, i) => (
-              <ValueRow key={v.label} v={v} i={i} total={t.about.values.length} />
-            ))}
-          </ul>
+          <ValuesShowcase values={t.about.values} />
 
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 16 }}
