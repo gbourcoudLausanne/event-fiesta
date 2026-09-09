@@ -480,8 +480,8 @@ function PersonalNote({
           className="relative flex flex-wrap gap-x-[0.28em] gap-y-0.5"
           style={{
             fontFamily: "var(--font-caveat), ui-rounded, cursive",
-            fontSize: "clamp(1.5rem, 2.6vw, 2.05rem)",
-            lineHeight: 1.5,
+            fontSize: "clamp(1.3rem, 2vw, 1.65rem)",
+            lineHeight: 1.45,
             color: "#4A3B33",
           }}
           initial={reduce ? undefined : "hidden"}
@@ -518,7 +518,7 @@ function PersonalNote({
               className="block leading-none"
               style={{
                 fontFamily: "var(--font-caveat), cursive",
-                fontSize: "clamp(2rem, 3vw, 2.7rem)",
+                fontSize: "clamp(1.6rem, 2.3vw, 2.05rem)",
                 fontWeight: 600,
                 color: "#B65572",
               }}
@@ -531,7 +531,7 @@ function PersonalNote({
             </motion.span>
             <motion.svg
               viewBox="0 0 200 26"
-              className="absolute -bottom-3 left-0 h-5 w-40"
+              className="absolute -bottom-2.5 left-0 h-4 w-32"
               aria-hidden
               initial={reduce ? undefined : "hidden"}
               whileInView={reduce ? undefined : "shown"}
