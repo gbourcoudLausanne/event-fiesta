@@ -1002,7 +1002,7 @@ export default function AboutPage() {
 
       {/* ── Un mot + bon à savoir ────────────────────────────────── */}
       <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#F3EDE6" }}>
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid gap-14 lg:grid-cols-[1fr_1fr] lg:gap-20">
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16 items-start">
           {/* bon à savoir */}
           <GoodToKnow
             eyebrow={t.about.goodToKnow.eyebrow}
