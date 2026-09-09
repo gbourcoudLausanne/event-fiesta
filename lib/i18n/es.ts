@@ -189,7 +189,25 @@ export const es = {
     ],
     storyTitle: "Nuestra historia",
     story:
-      "Lo que empezó como unas decoraciones para la familia y los amigos se convirtió, año tras año, en un estudio propio. Más de 200 eventos después, el mismo equipo sigue tratando cada proyecto como si fuera suyo.",
+      "Lo que empezó como unas decoraciones para la familia y los amigos se convirtió, año tras año, en un estudio propio.",
+    milestones: [
+      {
+        year: "2020",
+        label: "Las primeras fiestas",
+        text: "Unos arcos montados para la familia y los amigos, entre pasión y pruebas de fin de semana.",
+      },
+      {
+        year: "2022",
+        label: "Un estudio de verdad",
+        text: "El taller crece, las temáticas se multiplican, el pequeño equipo se organiza.",
+      },
+      {
+        year: "Hoy",
+        label: "200+ eventos",
+        text: "El mismo equipo, la misma exigencia: cada proyecto se trata como si fuera suyo.",
+      },
+    ],
+    imageCaption: "Una mesa montada en nuestro taller, antes de la entrega",
     valuesTitle: "Nuestros valores",
     values: [
       {

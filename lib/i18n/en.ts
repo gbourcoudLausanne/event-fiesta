@@ -189,7 +189,25 @@ export const en = {
     ],
     storyTitle: "Our story",
     story:
-      "What began as a few decorations for family and friends grew, year after year, into a studio in its own right. More than 200 events later, the same team still treats every project as if it were its own.",
+      "What began as a few decorations for family and friends grew, year after year, into a studio in its own right.",
+    milestones: [
+      {
+        year: "2020",
+        label: "The first parties",
+        text: "A handful of arches for family and friends — equal parts passion and weekend experiments.",
+      },
+      {
+        year: "2022",
+        label: "A real studio",
+        text: "The workshop grows, the themes multiply, the small team gets organised.",
+      },
+      {
+        year: "Today",
+        label: "200+ events",
+        text: "The same team, the same standards: every project treated as if it were our own.",
+      },
+    ],
+    imageCaption: "A table styled in our workshop, before delivery",
     valuesTitle: "Our values",
     values: [
       {

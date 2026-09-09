@@ -189,7 +189,25 @@ export const fr = {
     ],
     storyTitle: "Notre histoire",
     story:
-      "Ce qui a commencé comme quelques décorations pour la famille et les amis est devenu, année après année, un studio à part entière. Plus de 200 événements plus tard, la même équipe conçoit toujours chaque projet comme si c'était le sien.",
+      "Ce qui a commencé comme quelques décorations pour la famille et les amis est devenu, année après année, un studio à part entière.",
+    milestones: [
+      {
+        year: "2020",
+        label: "Les premières fêtes",
+        text: "Quelques arches montées pour la famille et les amis, entre passion et essais du dimanche.",
+      },
+      {
+        year: "2022",
+        label: "Un vrai studio",
+        text: "L'atelier s'agrandit, les thèmes se multiplient, la petite équipe se structure.",
+      },
+      {
+        year: "Aujourd'hui",
+        label: "200+ événements",
+        text: "La même équipe, la même exigence : chaque projet est traité comme si c'était le sien.",
+      },
+    ],
+    imageCaption: "Une table dressée dans nos ateliers, avant livraison",
     valuesTitle: "Nos valeurs",
     values: [
       {
