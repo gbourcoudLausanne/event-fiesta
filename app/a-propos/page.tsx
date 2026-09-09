@@ -320,8 +320,8 @@ export default function AboutPage() {
               </span>
             </div>
             <h1
-              className="font-serif font-light leading-[1.05] tracking-tight"
-              style={{ fontSize: "clamp(2.5rem, 5.2vw, 4.2rem)", color: "#0D0B08" }}
+              className="font-serif font-light leading-[1.03] tracking-tight"
+              style={{ fontSize: "clamp(2.9rem, 6vw, 5rem)", color: "#0D0B08" }}
             >
               {t.about.title}
             </h1>
