@@ -27,9 +27,9 @@ const VALUE_TINTS = [
 ];
 
 const FAN = [
-  { src: "/Galerie/hero-slides/hero-slide-13.webp", alt: "Arche ronde de ballons violet et or Joyeux anniversaire dans un jardin", rot: -7, x: -18, y: 26, z: 1 },
+  { src: "/Galerie/hero-slides/hero-slide-13.webp", alt: "Arche ronde de ballons violet et or Joyeux anniversaire dans un jardin", rot: -6, x: -15, y: 20, z: 1 },
   { src: "/Galerie/hero-slides/hero-slide-16.webp", alt: "Table dressée élégante avec nappe rose vieilli et compositions de fleurs roses", rot: 0, x: 0, y: 0, z: 3 },
-  { src: "/Galerie/hero-slides/hero-slide-6.webp", alt: "Sweet table dorée avec gâteau et guirlande de ballons rose et pêche", rot: 7, x: 18, y: 26, z: 1 },
+  { src: "/Galerie/hero-slides/hero-slide-6.webp", alt: "Sweet table dorée avec gâteau et guirlande de ballons rose et pêche", rot: 6, x: 15, y: 20, z: 1 },
 ];
 
 const CONFETTI = Array.from({ length: 12 }).map((_, i) => {
@@ -55,7 +55,7 @@ const BALLOONS = [
 function PhotoFan() {
   const reduce = useReducedMotion();
   return (
-    <div className="relative mx-auto w-full max-w-[420px] lg:max-w-none" style={{ perspective: 1400 }}>
+    <div className="relative w-full max-w-[360px] mx-auto lg:mr-0 lg:ml-auto" style={{ perspective: 1400 }}>
       <div className="relative" style={{ aspectRatio: "1 / 1" }}>
         {FAN.map((p, i) => (
           <motion.div
@@ -247,7 +247,7 @@ export default function AboutPage() {
           aria-hidden
         />
 
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-16 lg:gap-10 items-center">
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-16 lg:gap-12 items-center">
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
@@ -261,7 +261,7 @@ export default function AboutPage() {
             </div>
             <h1
               className="font-serif font-light leading-[1.05] tracking-tight"
-              style={{ fontSize: "clamp(2.6rem, 5.5vw, 4.6rem)", color: "#0D0B08" }}
+              style={{ fontSize: "clamp(2.5rem, 5.2vw, 4.2rem)", color: "#0D0B08" }}
             >
               {t.about.title}
             </h1>
@@ -271,6 +271,44 @@ export default function AboutPage() {
             >
               {t.about.lead}
             </p>
+
+            {/* Signature + repères chiffrés */}
+            <motion.div
+              initial={reduce ? false : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.25, ease }}
+              className="mt-9"
+            >
+              <p
+                className="font-serif italic leading-snug max-w-md"
+                style={{ fontSize: "clamp(1.1rem, 1.7vw, 1.35rem)", color: "#B65572" }}
+              >
+                {t.whyus.quote}
+              </p>
+              <ul className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-4">
+                {[t.whyus.stats[0], t.whyus.stats[2], t.whyus.stats[3]].map((s, i) => (
+                  <li key={s.label} className="flex items-center gap-8">
+                    {i > 0 && (
+                      <span className="h-8 w-px shrink-0" style={{ background: "rgba(42,35,32,0.16)" }} aria-hidden />
+                    )}
+                    <span className="flex flex-col">
+                      <span
+                        className="font-serif font-light leading-none"
+                        style={{ fontSize: "1.9rem", color: "#2A2320" }}
+                      >
+                        {s.value}
+                      </span>
+                      <span
+                        className="mt-1.5 font-sans text-[10px] uppercase tracking-[0.16em]"
+                        style={{ color: "rgba(42,35,32,0.5)" }}
+                      >
+                        {s.label}
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
           </motion.div>
 
           <PhotoFan />
