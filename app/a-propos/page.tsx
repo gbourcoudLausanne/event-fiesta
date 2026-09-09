@@ -15,7 +15,6 @@ import {
 import { HeartStraight, Sparkle, Handshake, ArrowRight } from "@phosphor-icons/react";
 import { WhyUs } from "@/components/WhyUs";
 import { CtaBanner } from "@/components/CtaBanner";
-import { GarlandDivider } from "@/components/GarlandDivider";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -439,8 +438,6 @@ export default function AboutPage() {
           </ol>
         </div>
       </section>
-
-      <GarlandDivider from="#F3EDE6" to="#FAF7F2" />
 
       {/* ── Valeurs : cartes premium avec tilt ───────────────────── */}
       <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#FAF7F2" }}>
