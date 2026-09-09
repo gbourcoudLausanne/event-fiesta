@@ -844,6 +844,14 @@ export default function AboutPage() {
       {/* ── Un mot + bon à savoir ────────────────────────────────── */}
       <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#F3EDE6" }}>
         <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid gap-14 lg:grid-cols-[1fr_1fr] lg:gap-20">
+          {/* bon à savoir */}
+          <GoodToKnow
+            eyebrow={t.about.goodToKnow.eyebrow}
+            title={t.about.goodToKnow.title}
+            items={t.about.goodToKnow.items}
+            cta={t.about.cta}
+          />
+
           {/* mot personnel */}
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 22 }}
@@ -890,14 +898,6 @@ export default function AboutPage() {
               </span>
             </div>
           </motion.div>
-
-          {/* bon à savoir */}
-          <GoodToKnow
-            eyebrow={t.about.goodToKnow.eyebrow}
-            title={t.about.goodToKnow.title}
-            items={t.about.goodToKnow.items}
-            cta={t.about.cta}
-          />
         </div>
       </section>
 
