@@ -250,6 +250,10 @@ export const es = {
       body: "Cada proyecto me importa como si fuera el mío. Cuéntame tu evento, tus colores, tu lugar, lo que te importa, e imaginamos juntas una decoración que te represente. Me hace ilusión ver tu cara cuando entres en la sala.",
       sign: "Event Fiesta",
     },
+    finale: {
+      eyebrow: "¿Empezamos?",
+      line: "Cuéntame tu evento: tus colores, tu fecha, tu lugar. Yo me encargo del resto.",
+    },
     cta: "Hablemos de tu evento",
   },
   realisations: {

@@ -250,6 +250,10 @@ export const en = {
       body: "Every project matters to me as if it were my own. Tell me about your event, your colours, your venue, what matters to you, and together we'll imagine a setting that feels like you. I can't wait to see your face when you walk into the room.",
       sign: "Event Fiesta",
     },
+    finale: {
+      eyebrow: "Shall we begin?",
+      line: "Tell me about your event: your colours, your date, your venue. I'll take care of the rest.",
+    },
     cta: "Let's talk about your event",
   },
   realisations: {
