@@ -97,7 +97,7 @@ export const en = {
       {
         key: "gala",
         title: "Galas & award nights",
-        desc: "Arches, backdrops, table runners and signage for prestige evenings finished in every detail.",
+        desc: "Arches, backdrops, table runners and welcome signs for prestige evenings finished in every detail.",
       },
       {
         key: "opening",
@@ -184,8 +184,8 @@ export const en = {
     lead:
       "Event Fiesta is a passionate team based in Lausanne, specialising in event decoration since 2020.",
     paragraphs: [
-      "We turn every celebration, big or small, into an unforgettable visual moment. Everything is designed and handcrafted: balloon arches, flower walls, decorative columns, sweet tables, signage and personalised goodies.",
-      "Three languages spoken, dozens of themes mastered, and a single obsession: that you are stunned the moment you walk into the room. We deliver, install and dismantle everything — all you have to do is enjoy.",
+      "We turn every celebration, big or small, into an unforgettable visual moment. Everything is designed and handcrafted: balloon arches, flower walls, decorative columns, sweet tables, welcome signs and personalised goodies.",
+      "We speak three languages and have styled dozens of different themes. Every time, the same standard: a setting that feels like you, and one your guests remember. Delivery, set-up and take-down: we handle it all, so you can simply enjoy the moment.",
     ],
     storyTitle: "Our story",
     story:

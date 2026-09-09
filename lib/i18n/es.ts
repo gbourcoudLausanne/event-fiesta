@@ -97,7 +97,7 @@ export const es = {
       {
         key: "gala",
         title: "Galas y entregas de premios",
-        desc: "Arcos, backdrops, caminos de mesa y señalética para veladas de prestigio cuidadas al detalle.",
+        desc: "Arcos, backdrops, caminos de mesa y carteles de acogida para veladas de prestigio cuidadas al detalle.",
       },
       {
         key: "opening",
@@ -184,8 +184,8 @@ export const es = {
     lead:
       "Event Fiesta es un equipo apasionado con base en Lausana, especializado en decoración de eventos desde 2020.",
     paragraphs: [
-      "Transformamos cada celebración, pequeña o grande, en un momento visual inolvidable. Todo se diseña y se elabora a mano: arcos de globos, muros florales, columnas decorativas, sweet tables, señalética y goodies personalizados.",
-      "Tres idiomas hablados, decenas de temáticas dominadas y una sola obsesión: que te quedes sin palabras al entrar en la sala. Entregamos, instalamos y desmontamos todo — tú solo tienes que disfrutar.",
+      "Transformamos cada celebración, pequeña o grande, en un momento visual inolvidable. Todo se diseña y se elabora a mano: arcos de globos, muros florales, columnas decorativas, sweet tables, carteles de bienvenida y goodies personalizados.",
+      "Hablamos tres idiomas y hemos puesto en escena decenas de temáticas distintas. Cada vez, la misma exigencia: una decoración que os represente y que vuestros invitados recuerden. Entrega, montaje, desmontaje: nos ocupamos de todo, vosotros solo tenéis que disfrutar del momento.",
     ],
     storyTitle: "Nuestra historia",
     story:

@@ -97,7 +97,7 @@ export const fr = {
       {
         key: "gala",
         title: "Galas & remises de prix",
-        desc: "Arches, backdrops, chemins de table et signalétique pour des soirées de prestige soignées dans le détail.",
+        desc: "Arches, backdrops, chemins de table et panneaux d'accueil pour des soirées de prestige soignées dans le détail.",
       },
       {
         key: "opening",
@@ -184,8 +184,8 @@ export const fr = {
     lead:
       "Event Fiesta, c'est une équipe passionnée basée à Lausanne, spécialisée dans la décoration d'événements depuis 2020.",
     paragraphs: [
-      "Nous transformons chaque célébration, petite ou grande, en un moment visuel inoubliable. Tout est conçu et fabriqué à la main : arches de ballons, murs floraux, colonnes décoratives, sweet tables, signalétique et goodies personnalisés.",
-      "Trois langues parlées, des dizaines de thèmes maîtrisés, et une seule obsession : que vous soyez époustouflée au moment où vous entrez dans la salle. Nous livrons, installons et démontons tout — vous n'avez qu'à profiter.",
+      "Nous transformons chaque célébration, petite ou grande, en un moment visuel inoubliable. Tout est conçu et fabriqué à la main : arches de ballons, murs floraux, colonnes décoratives, sweet tables, panneaux de bienvenue et goodies personnalisés.",
+      "Nous parlons trois langues et avons mis en scène des dizaines de thèmes différents. À chaque fois, la même exigence : un décor qui vous ressemble, et dont vos invités se souviennent. Livraison, installation, démontage : on s'occupe de tout, vous n'avez qu'à savourer le moment.",
     ],
     storyTitle: "Notre histoire",
     story:
