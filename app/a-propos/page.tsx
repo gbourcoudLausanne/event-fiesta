@@ -55,7 +55,7 @@ const BALLOONS = [
 function PhotoFan() {
   const reduce = useReducedMotion();
   return (
-    <div className="relative w-full max-w-[440px] mx-auto lg:mx-auto lg:-translate-x-6" style={{ perspective: 1400 }}>
+    <div className="relative w-full max-w-[440px] mx-auto lg:mx-auto lg:-translate-x-2" style={{ perspective: 1400 }}>
       <div className="relative" style={{ aspectRatio: "1 / 1" }}>
         {FAN.map((p, i) => (
           <motion.div
