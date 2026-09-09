@@ -418,114 +418,62 @@ function ValueFeature({
   i: number;
 }) {
   const reduce = useReducedMotion();
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.35 });
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const imgY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [50, -50]);
   const tint = VALUE_TINTS[i % VALUE_TINTS.length];
   const shot = VALUE_SHOTS[i % VALUE_SHOTS.length];
-  const flip = i % 2 === 1;
-  const words = v.label.split(" ");
 
   return (
-    <article
-      ref={ref}
-      className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16"
+    <motion.li
+      className="group"
+      initial={reduce ? false : { opacity: 0, y: 26, filter: "blur(6px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.6, delay: i * 0.12, ease }}
     >
-      {/* photo */}
-      <motion.figure
-        className={`relative ${flip ? "lg:order-2" : ""}`}
-        initial={reduce ? false : { opacity: 0, x: flip ? 44 : -44 }}
-        animate={inView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.8, ease }}
-      >
+      <figure className="relative">
         <div
           className="relative overflow-hidden"
-          style={{
-            aspectRatio: "5 / 4",
-            border: "8px solid #FAF7F2",
-            boxShadow: "0 48px 100px -40px rgba(120,60,80,0.42)",
-          }}
+          style={{ aspectRatio: "4 / 3", border: "6px solid #FAF7F2", boxShadow: "0 30px 60px -30px rgba(120,60,80,0.4)" }}
         >
-          <motion.div className="absolute inset-0" style={{ y: imgY, scale: 1.12 }}>
-            <Image src={shot.src} alt={shot.alt} fill className="object-cover" sizes="(max-width: 1024px) 92vw, 46vw" />
-          </motion.div>
-        </div>
-        {/* étiquette mot-clé */}
-        <motion.figcaption
-          className={`absolute -bottom-4 ${flip ? "right-6" : "left-6"} px-4 py-2 font-sans text-[11px] uppercase tracking-[0.14em]`}
-          style={{ background: tint.dot, color: "#FAF7F2" }}
-          initial={reduce ? false : { opacity: 0, y: 10 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.4, ease }}
-        >
-          {shot.kw}
-        </motion.figcaption>
-      </motion.figure>
-
-      {/* texte */}
-      <div className={`relative ${flip ? "lg:order-1 lg:pr-6" : "lg:pl-6"}`}>
-        <span
-          aria-hidden
-          className="pointer-events-none absolute -top-16 select-none font-display italic leading-none"
-          style={{
-            [flip ? "right" : "left"]: -8,
-            fontSize: "clamp(6rem, 12vw, 11rem)",
-            color: `${tint.dot}1f`,
-          }}
-        >
-          {String(i + 1).padStart(2, "0")}
-        </span>
-
-        <h3
-          className="relative font-serif font-light leading-[1.02] flex flex-wrap gap-x-[0.28em]"
-          style={{ fontSize: "clamp(2.6rem, 6vw, 5rem)", color: "#2A2320" }}
-        >
-          {words.map((w, k) => (
-            <motion.span
-              key={k}
-              className="inline-block"
-              initial={reduce ? false : { opacity: 0, y: 22, filter: "blur(8px)" }}
-              animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-              transition={{ duration: 0.6, delay: 0.15 + k * 0.08, ease }}
-            >
-              {w}
-            </motion.span>
-          ))}
-        </h3>
-
-        <motion.svg
-          viewBox="0 0 200 10"
-          preserveAspectRatio="none"
-          className="mt-4 h-2.5 w-40"
-          aria-hidden
-          initial={reduce ? undefined : "hidden"}
-          animate={inView ? "shown" : undefined}
-        >
-          <motion.path
-            d="M3 6 C 40 1, 90 11, 140 5 S 190 2, 197 6"
-            fill="none"
-            stroke={tint.dot}
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            variants={{
-              hidden: { pathLength: 0, opacity: 0 },
-              shown: { pathLength: 1, opacity: 0.8, transition: { duration: 0.9, delay: 0.5, ease } },
-            }}
+          <Image
+            src={shot.src}
+            alt={shot.alt}
+            fill
+            className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]"
+            sizes="(max-width: 768px) 92vw, 32vw"
           />
-        </motion.svg>
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "linear-gradient(to top, rgba(13,11,8,0.42) 0%, rgba(13,11,8,0) 42%)" }}
+          />
+          <span
+            aria-hidden
+            className="absolute top-3 left-4 font-display italic leading-none"
+            style={{ fontSize: "2.4rem", color: "rgba(250,247,242,0.85)" }}
+          >
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <figcaption
+            className="absolute bottom-3 left-4 font-sans text-[10.5px] uppercase tracking-[0.16em]"
+            style={{ color: "#FAF7F2" }}
+          >
+            {shot.kw}
+          </figcaption>
+        </div>
+      </figure>
 
-        <motion.p
-          className="mt-6 max-w-md font-sans font-light leading-relaxed"
-          style={{ fontSize: "15px", color: "rgba(40,34,30,0.64)" }}
-          initial={reduce ? false : { opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.4, ease }}
-        >
-          {v.desc}
-        </motion.p>
+      <div className="mt-5 flex items-baseline gap-2.5">
+        <span className="h-1.5 w-1.5 shrink-0 translate-y-[-2px] rounded-full" style={{ background: tint.dot }} aria-hidden />
+        <h3 className="font-serif font-light leading-tight" style={{ fontSize: "clamp(1.4rem, 2.2vw, 1.75rem)", color: "#2A2320" }}>
+          {v.label}
+        </h3>
       </div>
-    </article>
+      <p
+        className="mt-2 font-sans font-light leading-relaxed"
+        style={{ fontSize: "13.5px", color: "rgba(40,34,30,0.6)" }}
+      >
+        {v.desc}
+      </p>
+    </motion.li>
   );
 }
 
@@ -750,11 +698,11 @@ export default function AboutPage() {
             </h2>
           </motion.div>
 
-          <div className="flex flex-col gap-24 lg:gap-36">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 lg:gap-x-8">
             {t.about.values.map((v, i) => (
               <ValueFeature key={v.label} v={v} i={i} />
             ))}
-          </div>
+          </ul>
 
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 16 }}
