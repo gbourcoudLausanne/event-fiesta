@@ -326,16 +326,16 @@ function Milestone({
     <li ref={ref} className="relative flex flex-col items-center text-center">
       {/* vignette photo */}
       <motion.div
-        className="relative overflow-hidden w-[240px] max-w-[82%] h-[180px]"
+        className="relative overflow-hidden w-[300px] max-w-[92%] h-[224px]"
         style={{
-          border: "6px solid #FAF7F2",
-          boxShadow: "0 26px 50px -24px rgba(120,60,80,0.45)",
+          border: "7px solid #FAF7F2",
+          boxShadow: "0 30px 58px -24px rgba(120,60,80,0.45)",
         }}
         initial={reduce ? false : { opacity: 0, y: 26, rotate: 0, scale: 0.94 }}
         animate={inView ? { opacity: 1, y: 0, rotate: tilt, scale: 1 } : {}}
         transition={{ duration: 0.6, delay: 0.05, ease }}
       >
-        <Image src={shot.src} alt={shot.alt} fill className="object-cover" sizes="280px" />
+        <Image src={shot.src} alt={shot.alt} fill className="object-cover" sizes="340px" />
       </motion.div>
 
       {/* pastille année, posée sur la ligne */}
@@ -389,7 +389,7 @@ function Timeline({
       {/* ligne horizontale reliant les pastilles (desktop) — alignée sur le centre des pastilles */}
       <div
         className="hidden md:block absolute left-[16.66%] right-[16.66%] pointer-events-none"
-        style={{ top: 232, height: 2, background: "rgba(217,98,138,0.2)" }}
+        style={{ top: 276, height: 2, background: "rgba(217,98,138,0.2)" }}
         aria-hidden
       >
         <motion.div
