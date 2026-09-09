@@ -230,60 +230,80 @@ function PhotoFan() {
 /* ── Citation signature, révélée mot à mot ────────────────────── */
 function SignatureQuote({ text }: { text: string }) {
   const reduce = useReducedMotion();
-  const words = text.split(" ");
+  const parts = text.split(/(?<=\.)\s+/); // 2 phrases si possible
+  const lead = parts.length > 1 ? parts[0] : "";
+  const punch = parts.length > 1 ? parts.slice(1).join(" ") : text;
+  const leadWords = lead ? lead.split(" ") : [];
+  const punchWords = punch.split(" ");
+
+  const wordV = {
+    hidden: { opacity: 0, y: 14, filter: "blur(7px)" },
+    shown: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.55, ease } },
+  };
+
   return (
-    <div className="relative max-w-md">
+    <motion.div
+      className="relative max-w-lg"
+      initial={reduce ? undefined : "hidden"}
+      whileInView={reduce ? undefined : "shown"}
+      viewport={{ once: true, amount: 0.5 }}
+      variants={{ shown: { transition: { staggerChildren: 0.055, delayChildren: 0.1 } } }}
+    >
       <span
         aria-hidden
-        className="pointer-events-none absolute -left-3 -top-8 select-none font-serif leading-none"
-        style={{ fontSize: "5rem", color: "rgba(217,98,138,0.16)" }}
+        className="pointer-events-none absolute -left-4 -top-9 select-none font-serif leading-none"
+        style={{ fontSize: "5.5rem", color: "rgba(217,98,138,0.14)" }}
       >
         &ldquo;
       </span>
-      <motion.p
-        className="relative font-serif italic leading-snug"
-        style={{ fontSize: "clamp(1.3rem, 2.1vw, 1.7rem)", color: "#B65572" }}
-        initial={reduce ? undefined : "hidden"}
-        whileInView={reduce ? undefined : "shown"}
-        viewport={{ once: true, amount: 0.6 }}
-        variants={{ shown: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } } }}
-      >
-        {words.map((w, i) => (
-          <motion.span
-            key={i}
-            className="inline-block"
-            style={{ marginRight: "0.28em" }}
-            variants={{
-              hidden: { opacity: 0, y: 12, filter: "blur(6px)" },
-              shown: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease } },
-            }}
-          >
-            {w}
-          </motion.span>
+
+      {lead && (
+        <p className="relative flex flex-wrap gap-x-[0.28em] gap-y-1 font-serif italic leading-snug"
+           style={{ fontSize: "clamp(1.05rem, 1.5vw, 1.25rem)", color: "rgba(182,85,114,0.75)" }}>
+          {leadWords.map((w, i) => (
+            <motion.span key={i} className="inline-block" variants={wordV}>{w}</motion.span>
+          ))}
+        </p>
+      )}
+
+      <p className={`relative flex flex-wrap gap-x-[0.3em] gap-y-1 font-serif italic leading-tight ${lead ? "mt-2.5" : ""}`}
+         style={{ fontSize: "clamp(1.5rem, 2.5vw, 2.1rem)", color: "#B65572" }}>
+        {punchWords.map((w, i) => (
+          <motion.span key={i} className="inline-block" variants={wordV}>{w}</motion.span>
         ))}
-      </motion.p>
+      </p>
+
       <motion.svg
-        viewBox="0 0 300 12"
+        viewBox="0 0 320 14"
         preserveAspectRatio="none"
-        className="mt-3 h-2.5 w-44"
+        className="mt-3.5 h-3 w-52"
         aria-hidden
-        initial={reduce ? undefined : "hidden"}
-        whileInView={reduce ? undefined : "shown"}
-        viewport={{ once: true, amount: 0.6 }}
+        variants={{ shown: {} }}
       >
         <motion.path
-          d="M4 7 C 60 1, 120 12, 176 6 S 264 2, 296 7"
+          d="M3 9 C 54 2, 104 13, 158 7 S 262 1, 317 8"
           fill="none"
           stroke="#D9628A"
           strokeWidth="2.5"
           strokeLinecap="round"
           variants={{
             hidden: { pathLength: 0, opacity: 0 },
-            shown: { pathLength: 1, opacity: 0.7, transition: { duration: 0.9, delay: 0.5, ease } },
+            shown: { pathLength: 1, opacity: 0.75, transition: { duration: 0.9, delay: 0.55, ease } },
+          }}
+        />
+        <motion.path
+          d="M3 12 C 60 7, 120 15, 176 10 S 268 5, 317 11"
+          fill="none"
+          stroke="#F0C29A"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          variants={{
+            hidden: { pathLength: 0, opacity: 0 },
+            shown: { pathLength: 1, opacity: 0.6, transition: { duration: 0.9, delay: 0.75, ease } },
           }}
         />
       </motion.svg>
-    </div>
+    </motion.div>
   );
 }
 
