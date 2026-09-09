@@ -182,32 +182,32 @@ export const fr = {
     eyebrow: "À propos",
     title: "Nées pour faire briller vos fêtes",
     lead:
-      "Event Fiesta, c'est une équipe passionnée basée à Lausanne, spécialisée dans la décoration d'événements depuis 2020.",
+      "Event Fiesta, c'est une passion de la décoration d'événements née en Colombie en 2018, aujourd'hui installée à Lausanne.",
     paragraphs: [
       "Nous transformons chaque célébration, petite ou grande, en un moment visuel inoubliable. Tout est conçu et fabriqué à la main : arches de ballons, murs floraux, colonnes décoratives, sweet tables, panneaux de bienvenue et goodies personnalisés.",
       "Nous parlons trois langues et avons mis en scène des dizaines de thèmes différents. À chaque fois, la même exigence : un décor qui vous ressemble, et dont vos invités se souviennent. Livraison, installation, démontage : on s'occupe de tout, vous n'avez qu'à savourer le moment.",
     ],
-    storyTitle: "Notre histoire",
+    storyTitle: "Mon histoire",
     story:
-      "Ce qui a commencé comme quelques décorations pour la famille et les amis est devenu, année après année, un studio à part entière.",
+      "Tout a commencé en 2018, en Colombie : avec ma sœur, nous transformions chaque fête en un moment inoubliable. Aujourd'hui, je poursuis cette aventure en Suisse.",
     milestones: [
       {
-        year: "2020",
-        label: "Les premières fêtes",
-        text: "Quelques arches montées pour la famille et les amis, entre passion et essais du dimanche.",
+        year: "2018",
+        label: "Les débuts, avec ma sœur",
+        text: "En Colombie, nous décorons d'abord les fêtes de la famille et des amis. Le bouche-à-oreille fait le reste : anniversaires, baby showers, mariages.",
       },
       {
-        year: "2022",
-        label: "Un vrai studio",
-        text: "L'atelier s'agrandit, les thèmes se multiplient, la petite équipe se structure.",
+        year: "Colombie",
+        label: "Une passion qui devient un métier",
+        text: "Des dizaines de célébrations plus tard, la méthode est là : partir d'une idée, cerner l'envie, imaginer un concept, et créer pour dépasser les attentes.",
       },
       {
-        year: "Aujourd'hui",
-        label: "200+ événements",
-        text: "La même équipe, la même exigence : chaque projet est traité comme si c'était le sien.",
+        year: "2024",
+        label: "Nouveau départ en Suisse",
+        text: "Installée ici depuis deux ans, je décore pour mes proches et les gens autour de moi. La même envie qu'au premier jour : transformer un lieu, et voir les sourires quand on découvre le décor.",
       },
     ],
-    imageCaption: "Une table dressée dans nos ateliers, avant livraison",
+    imageCaption: "Une table dressée à l'atelier, avant livraison",
     valuesTitle: "Nos valeurs",
     values: [
       {

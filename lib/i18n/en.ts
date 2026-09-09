@@ -182,32 +182,32 @@ export const en = {
     eyebrow: "About",
     title: "Born to make your parties shine",
     lead:
-      "Event Fiesta is a passionate team based in Lausanne, specialising in event decoration since 2020.",
+      "Event Fiesta is a passion for event decoration that began in Colombia in 2018, now based in Lausanne.",
     paragraphs: [
       "We turn every celebration, big or small, into an unforgettable visual moment. Everything is designed and handcrafted: balloon arches, flower walls, decorative columns, sweet tables, welcome signs and personalised goodies.",
       "We speak three languages and have styled dozens of different themes. Every time, the same standard: a setting that feels like you, and one your guests remember. Delivery, set-up and take-down: we handle it all, so you can simply enjoy the moment.",
     ],
-    storyTitle: "Our story",
+    storyTitle: "My story",
     story:
-      "What began as a few decorations for family and friends grew, year after year, into a studio in its own right.",
+      "It all began in 2018, in Colombia: with my sister, we turned every party into an unforgettable moment. Today I'm continuing that adventure in Switzerland.",
     milestones: [
       {
-        year: "2020",
-        label: "The first parties",
-        text: "A handful of arches for family and friends — equal parts passion and weekend experiments.",
+        year: "2018",
+        label: "The start, with my sister",
+        text: "In Colombia, we began by decorating parties for family and friends. Word of mouth did the rest: birthdays, baby showers, weddings.",
       },
       {
-        year: "2022",
-        label: "A real studio",
-        text: "The workshop grows, the themes multiply, the small team gets organised.",
+        year: "Colombia",
+        label: "A passion turned craft",
+        text: "Dozens of celebrations later, the method is clear: start from an idea, understand the wish, imagine a concept, and create to exceed expectations.",
       },
       {
-        year: "Today",
-        label: "200+ events",
-        text: "The same team, the same standards: every project treated as if it were our own.",
+        year: "2024",
+        label: "A fresh start in Switzerland",
+        text: "Here for two years now, I decorate for friends and people around me. The same drive as day one: transform a space, and see the smiles when the décor is revealed.",
       },
     ],
-    imageCaption: "A table styled in our workshop, before delivery",
+    imageCaption: "A table styled at the studio, before delivery",
     valuesTitle: "Our values",
     values: [
       {

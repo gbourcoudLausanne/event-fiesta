@@ -182,32 +182,32 @@ export const es = {
     eyebrow: "Nosotros",
     title: "Nacidas para hacer brillar tus fiestas",
     lead:
-      "Event Fiesta es un equipo apasionado con base en Lausana, especializado en decoración de eventos desde 2020.",
+      "Event Fiesta es una pasión por la decoración de eventos nacida en Colombia en 2018, hoy instalada en Lausana.",
     paragraphs: [
       "Transformamos cada celebración, pequeña o grande, en un momento visual inolvidable. Todo se diseña y se elabora a mano: arcos de globos, muros florales, columnas decorativas, sweet tables, carteles de bienvenida y goodies personalizados.",
       "Hablamos tres idiomas y hemos puesto en escena decenas de temáticas distintas. Cada vez, la misma exigencia: una decoración que os represente y que vuestros invitados recuerden. Entrega, montaje, desmontaje: nos ocupamos de todo, vosotros solo tenéis que disfrutar del momento.",
     ],
-    storyTitle: "Nuestra historia",
+    storyTitle: "Mi historia",
     story:
-      "Lo que empezó como unas decoraciones para la familia y los amigos se convirtió, año tras año, en un estudio propio.",
+      "Todo empezó en 2018, en Colombia: con mi hermana, transformábamos cada fiesta en un momento inolvidable. Hoy continúo esta aventura en Suiza.",
     milestones: [
       {
-        year: "2020",
-        label: "Las primeras fiestas",
-        text: "Unos arcos montados para la familia y los amigos, entre pasión y pruebas de fin de semana.",
+        year: "2018",
+        label: "Los inicios, con mi hermana",
+        text: "En Colombia, empezamos decorando las fiestas de la familia y los amigos. El boca a boca hace el resto: cumpleaños, baby showers, bodas.",
       },
       {
-        year: "2022",
-        label: "Un estudio de verdad",
-        text: "El taller crece, las temáticas se multiplican, el pequeño equipo se organiza.",
+        year: "Colombia",
+        label: "Una pasión que se vuelve oficio",
+        text: "Decenas de celebraciones después, el método está claro: partir de una idea, entender el deseo, imaginar un concepto y crear para superar las expectativas.",
       },
       {
-        year: "Hoy",
-        label: "200+ eventos",
-        text: "El mismo equipo, la misma exigencia: cada proyecto se trata como si fuera suyo.",
+        year: "2024",
+        label: "Nuevo comienzo en Suiza",
+        text: "Aquí desde hace dos años, decoro para mis allegados y la gente a mi alrededor. Las mismas ganas del primer día: transformar un lugar y ver las sonrisas al descubrir la decoración.",
       },
     ],
-    imageCaption: "Una mesa montada en nuestro taller, antes de la entrega",
+    imageCaption: "Una mesa montada en el taller, antes de la entrega",
     valuesTitle: "Nuestros valores",
     values: [
       {

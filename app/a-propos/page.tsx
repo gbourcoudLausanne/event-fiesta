@@ -557,7 +557,7 @@ export default function AboutPage() {
               className="absolute -top-5 -left-5 flex flex-col items-center justify-center rounded-full"
               style={{ width: 88, height: 88, background: "#D9628A", color: "#FAF7F2" }}
             >
-              <span className="font-serif italic text-xl leading-none">2020</span>
+              <span className="font-serif italic text-xl leading-none">2018</span>
               <span className="font-sans text-[8px] uppercase tracking-[0.18em] mt-1">Depuis</span>
             </span>
           </motion.figure>
