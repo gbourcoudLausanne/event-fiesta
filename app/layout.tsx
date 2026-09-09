@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     siteName: "Event Fiesta",
     images: [
       {
-        url: "/Galerie/Hero/Hero_3.jpg",
+        url: "/Galerie/Hero/Hero_3.webp",
         width: 1200,
         height: 630,
         alt: "Event Fiesta — Décoration événementielle Lausanne",
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Event Fiesta — Décoration sur mesure · Lausanne",
     description: "Décoration d'événements sur mesure à Lausanne et en Suisse romande.",
-    images: ["/Galerie/Hero/Hero_3.jpg"],
+    images: ["/Galerie/Hero/Hero_3.webp"],
   },
 };
 

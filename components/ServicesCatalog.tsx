@@ -13,15 +13,15 @@ import { useI18n } from "@/lib/i18n";
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const serviceImages: Record<string, string> = {
-  anniversary:  "/Galerie/anniversaires/80BA940E-3E31-4C3E-BD09-5C497C0F78FF.PNG",
-  baptism:      "/Galerie/Baptemes/Bapteme_1.jpeg",
+  anniversary:  "/Galerie/anniversaires/80BA940E-3E31-4C3E-BD09-5C497C0F78FF.webp",
+  baptism:      "/Galerie/Baptemes/Bapteme_1.webp",
   babyshower:   "/Galerie/anniversaires/Anniv_1.webp",
   themed:       "/Galerie/Soiree-a-theme/Soiree_1.avif",
-  communion:    "/Galerie/Baptemes/122219_01.jpg",
+  communion:    "/Galerie/Baptemes/122219_01.webp",
   genderreveal: "/Galerie/Gender-Reveal/GenderReveal_1.webp",
-  corporate:    "/Galerie/Corporate/Corporate_1.jpg",
-  creation:     "/Galerie/Creation-sur-mesure/IMG_6343.JPG",
-  goodies:      "/Galerie/goodies/Goodies_1.jpg",
+  corporate:    "/Galerie/Corporate/Corporate_1.webp",
+  creation:     "/Galerie/Creation-sur-mesure/IMG_6343.webp",
+  goodies:      "/Galerie/goodies/Goodies_1.webp",
 };
 
 const serviceIcons: Record<string, Icon> = {
