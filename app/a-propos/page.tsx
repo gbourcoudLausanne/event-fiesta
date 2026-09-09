@@ -277,45 +277,19 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Éditorial : texte + photo parallax ───────────────────── */}
+      {/* ── Éditorial : photo parallax + texte ───────────────────── */}
       <section ref={editorialRef} className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#FAF7F2" }}>
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-[1fr_0.8fr] gap-14 lg:gap-20 items-center">
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7, ease }}
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
-              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
-                L&rsquo;atelier
-              </span>
-            </div>
-            <p
-              className="font-serif font-light leading-snug"
-              style={{ fontSize: "clamp(1.5rem, 2.6vw, 2rem)", color: "#2A2320" }}
-            >
-              {t.about.paragraphs[0]}
-            </p>
-            <p
-              className="mt-6 font-sans font-light text-[15px] leading-relaxed"
-              style={{ color: "rgba(42,35,32,0.6)" }}
-            >
-              {t.about.paragraphs[1]}
-            </p>
-          </motion.div>
-
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-[0.8fr_1fr] gap-14 lg:gap-20 items-center">
           <motion.figure
             initial={reduce ? false : { opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.75, delay: 0.1, ease }}
-            className="relative"
+            transition={{ duration: 0.75, ease }}
+            className="relative order-1"
           >
             {/* photo arrière */}
             <div
-              className="absolute -left-6 -top-8 hidden sm:block w-2/3 overflow-hidden"
+              className="absolute -right-6 -top-8 hidden sm:block w-2/3 overflow-hidden"
               style={{ aspectRatio: "4 / 5", boxShadow: "0 30px 60px -34px rgba(120,60,80,0.35)" }}
             >
               <motion.div className="relative h-full w-full" style={{ y: imgY }}>
@@ -344,19 +318,46 @@ export default function AboutPage() {
               <div className="absolute inset-3 pointer-events-none" style={{ border: "1px solid rgba(250,247,242,0.5)" }} />
             </div>
             <figcaption
-              className="absolute -bottom-5 left-6 right-10 px-5 py-3 font-sans text-[11px] leading-snug"
+              className="absolute -bottom-5 right-6 left-10 px-5 py-3 font-sans text-[11px] leading-snug"
               style={{ background: "#FAF7F2", color: "rgba(42,35,32,0.6)", boxShadow: "0 14px 40px -18px rgba(120,60,80,0.35)" }}
             >
               {t.about.imageCaption}
             </figcaption>
             <span
-              className="absolute -top-5 -right-5 flex flex-col items-center justify-center rounded-full"
+              className="absolute -top-5 -left-5 flex flex-col items-center justify-center rounded-full"
               style={{ width: 88, height: 88, background: "#D9628A", color: "#FAF7F2" }}
             >
               <span className="font-serif italic text-xl leading-none">2020</span>
               <span className="font-sans text-[8px] uppercase tracking-[0.18em] mt-1">Depuis</span>
             </span>
           </motion.figure>
+
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, delay: 0.1, ease }}
+            className="order-2"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
+                L&rsquo;atelier
+              </span>
+            </div>
+            <p
+              className="font-serif font-light leading-snug"
+              style={{ fontSize: "clamp(1.5rem, 2.6vw, 2rem)", color: "#2A2320" }}
+            >
+              {t.about.paragraphs[0]}
+            </p>
+            <p
+              className="mt-6 font-sans font-light text-[15px] leading-relaxed"
+              style={{ color: "rgba(42,35,32,0.6)" }}
+            >
+              {t.about.paragraphs[1]}
+            </p>
+          </motion.div>
         </div>
       </section>
 
