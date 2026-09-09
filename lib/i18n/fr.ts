@@ -228,19 +228,19 @@ export const fr = {
       title: "Avant de me contacter",
       items: [
         {
-          label: "Zone d'intervention",
+          label: "Où est-ce que j'interviens ?",
           text: "Lausanne et toute la Suisse romande : Vaud, Genève, Fribourg, Neuchâtel. Ailleurs, on en parle.",
         },
         {
-          label: "Quand réserver",
+          label: "Quand faut-il réserver ?",
           text: "Idéalement quelques semaines à l'avance, et plus tôt pour la haute saison ou les grandes installations.",
         },
         {
-          label: "Le devis",
+          label: "Le devis, comment ça marche ?",
           text: "Gratuit et sans engagement : je vous propose une palette, un concept et une estimation.",
         },
         {
-          label: "Tout est inclus",
+          label: "Qu'est-ce qui est compris ?",
           text: "Conception, fabrication à la main, livraison, installation le jour J et démontage.",
         },
       ],

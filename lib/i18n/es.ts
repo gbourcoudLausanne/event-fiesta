@@ -228,19 +228,19 @@ export const es = {
       title: "Antes de contactarme",
       items: [
         {
-          label: "Zona de intervención",
+          label: "¿Dónde trabajo?",
           text: "Lausana y toda la Suiza romanda: Vaud, Ginebra, Friburgo, Neuchâtel. Más lejos, lo hablamos.",
         },
         {
-          label: "Cuándo reservar",
+          label: "¿Cuándo hay que reservar?",
           text: "Idealmente unas semanas antes, y con más margen para la temporada alta o las grandes instalaciones.",
         },
         {
-          label: "El presupuesto",
+          label: "¿Cómo funciona el presupuesto?",
           text: "Gratuito y sin compromiso: te propongo una paleta, un concepto y una estimación.",
         },
         {
-          label: "Todo incluido",
+          label: "¿Qué está incluido?",
           text: "Diseño, elaboración a mano, entrega, montaje el día D y desmontaje.",
         },
       ],

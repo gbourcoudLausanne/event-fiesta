@@ -228,19 +228,19 @@ export const en = {
       title: "Before you get in touch",
       items: [
         {
-          label: "Where I work",
+          label: "Where do I work?",
           text: "Lausanne and all of French-speaking Switzerland: Vaud, Geneva, Fribourg, Neuchâtel. Further afield, let's talk.",
         },
         {
-          label: "When to book",
+          label: "When should you book?",
           text: "Ideally a few weeks ahead, and earlier for peak season or large installations.",
         },
         {
-          label: "The quote",
+          label: "How does the quote work?",
           text: "Free and with no obligation: I put together a palette, a concept and an estimate.",
         },
         {
-          label: "Everything included",
+          label: "What's included?",
           text: "Design, handcrafting, delivery, set-up on the day and take-down.",
         },
       ],

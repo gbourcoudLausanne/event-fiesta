@@ -409,12 +409,111 @@ function Timeline({
 const VALUE_ICONS = [HeartStraight, Scissors, Clock];
 
 const GTK_ICONS = [MapPinLine, CalendarBlank, ChatCircleText, Package];
-const GTK_TINTS = [
-  { bg: "#FCEEF1", dot: "#F4A8B8", ink: "#B65572" },
-  { bg: "#ECF3F6", dot: "#A8CEE0", ink: "#5E86A0" },
-  { bg: "#F3E7F0", dot: "#BF88B4", ink: "#8B5E85" },
-  { bg: "#FBF0E6", dot: "#EEC79A", ink: "#B98A55" },
-];
+
+/* ── « Avant de me contacter » : accordéon ───────────────────── */
+function GoodToKnow({
+  eyebrow,
+  title,
+  items,
+  cta,
+}: {
+  eyebrow: string;
+  title: string;
+  items: { label: string; text: string }[];
+  cta: string;
+}) {
+  const reduce = useReducedMotion();
+  const [open, setOpen] = useState(0);
+
+  return (
+    <motion.div
+      initial={reduce ? false : { opacity: 0, y: 22 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.7, delay: 0.1, ease }}
+    >
+      <div className="flex items-center gap-3 mb-6">
+        <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+        <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
+          {eyebrow}
+        </span>
+      </div>
+      <h2
+        className="font-serif font-light leading-tight mb-7"
+        style={{ fontSize: "clamp(1.7rem, 3vw, 2.4rem)", color: "#2A2320" }}
+      >
+        {title}
+      </h2>
+
+      <ul className="border-t" style={{ borderColor: "rgba(42,35,32,0.14)" }}>
+        {items.map((it, i) => {
+          const on = i === open;
+          const Ico = GTK_ICONS[i % GTK_ICONS.length];
+          return (
+            <li key={it.label} className="border-b" style={{ borderColor: "rgba(42,35,32,0.14)" }}>
+              <button
+                type="button"
+                onClick={() => setOpen(on ? -1 : i)}
+                className="flex w-full items-center gap-4 py-5 text-left"
+                aria-expanded={on}
+              >
+                <span
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors duration-300"
+                  style={{
+                    background: on ? "#D9628A" : "transparent",
+                    border: `1px solid ${on ? "#D9628A" : "rgba(217,98,138,0.4)"}`,
+                  }}
+                >
+                  <Ico size={17} weight="light" color={on ? "#FAF7F2" : "#B65572"} />
+                </span>
+                <span
+                  className="flex-1 font-serif font-light leading-tight transition-colors duration-300"
+                  style={{ fontSize: "clamp(1.05rem, 1.7vw, 1.25rem)", color: on ? "#2A2320" : "rgba(42,35,32,0.62)" }}
+                >
+                  {it.label}
+                </span>
+                <motion.span
+                  className="shrink-0"
+                  animate={{ rotate: on ? 45 : 0 }}
+                  transition={{ duration: 0.3, ease }}
+                  aria-hidden
+                >
+                  <span className="block h-4 w-4 relative">
+                    <span className="absolute left-1/2 top-0 h-4 w-px -translate-x-1/2" style={{ background: "#B65572" }} />
+                    <span className="absolute top-1/2 left-0 h-px w-4 -translate-y-1/2" style={{ background: "#B65572" }} />
+                  </span>
+                </motion.span>
+              </button>
+
+              <motion.div
+                initial={false}
+                animate={{ height: on ? "auto" : 0, opacity: on ? 1 : 0 }}
+                transition={{ duration: reduce ? 0 : 0.35, ease }}
+                className="overflow-hidden"
+              >
+                <p
+                  className="pb-6 pl-13 font-sans font-light leading-relaxed"
+                  style={{ fontSize: "14px", color: "rgba(42,35,32,0.6)", paddingLeft: "3.25rem" }}
+                >
+                  {it.text}
+                </p>
+              </motion.div>
+            </li>
+          );
+        })}
+      </ul>
+
+      <Link
+        href="/contact"
+        className="group mt-7 inline-flex items-center gap-2 font-sans text-[12px] font-semibold uppercase tracking-[0.16em]"
+        style={{ color: "#B65572" }}
+      >
+        {cta}
+        <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
+      </Link>
+    </motion.div>
+  );
+}
 
 function ValueFeature({
   v,
@@ -793,83 +892,12 @@ export default function AboutPage() {
           </motion.div>
 
           {/* bon à savoir */}
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 22 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7, delay: 0.1, ease }}
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
-              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
-                {t.about.goodToKnow.eyebrow}
-              </span>
-            </div>
-            <h2
-              className="font-serif font-light leading-tight mb-8"
-              style={{ fontSize: "clamp(1.7rem, 3vw, 2.4rem)", color: "#2A2320" }}
-            >
-              {t.about.goodToKnow.title}
-            </h2>
-
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {t.about.goodToKnow.items.map((it, i) => {
-                const Ico = GTK_ICONS[i % GTK_ICONS.length];
-                const tint = GTK_TINTS[i % GTK_TINTS.length];
-                return (
-                  <motion.li
-                    key={it.label}
-                    className="group relative flex flex-col overflow-hidden p-5 lg:p-6"
-                    style={{
-                      background: `linear-gradient(160deg, ${tint.bg} 0%, #FAF7F2 150%)`,
-                      border: `1px solid ${tint.dot}3a`,
-                    }}
-                    initial={reduce ? false : { opacity: 0, y: 20, filter: "blur(5px)" }}
-                    whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                    viewport={{ once: true, amount: 0.4 }}
-                    transition={{ duration: 0.5, delay: 0.1 + i * 0.09, ease }}
-                    whileHover={reduce ? undefined : { y: -4, boxShadow: `0 22px 44px -24px ${tint.dot}aa` }}
-                  >
-                    <span
-                      className="mb-4 flex h-11 w-11 items-center justify-center rounded-full transition-transform duration-500 group-hover:-translate-y-0.5"
-                      style={{ background: "#FAF7F2", boxShadow: `0 8px 20px -12px ${tint.dot}` }}
-                    >
-                      <Ico size={20} weight="light" color={tint.ink} />
-                    </span>
-                    <span
-                      className="font-serif font-light leading-tight"
-                      style={{ fontSize: "1.05rem", color: "#2A2320" }}
-                    >
-                      {it.label}
-                    </span>
-                    <span
-                      className="mt-1.5 font-sans font-light text-[13px] leading-relaxed"
-                      style={{ color: "rgba(42,35,32,0.62)" }}
-                    >
-                      {it.text}
-                    </span>
-                  </motion.li>
-                );
-              })}
-            </ul>
-
-            <motion.div
-              initial={reduce ? false : { opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.5, ease }}
-              className="mt-7"
-            >
-              <Link
-                href="/contact"
-                className="group inline-flex items-center gap-2 font-sans text-[12px] font-semibold uppercase tracking-[0.16em]"
-                style={{ color: "#B65572" }}
-              >
-                {t.about.cta}
-                <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
-              </Link>
-            </motion.div>
-          </motion.div>
+          <GoodToKnow
+            eyebrow={t.about.goodToKnow.eyebrow}
+            title={t.about.goodToKnow.title}
+            items={t.about.goodToKnow.items}
+            cta={t.about.cta}
+          />
         </div>
       </section>
 
