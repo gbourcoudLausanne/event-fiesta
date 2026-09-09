@@ -319,83 +319,57 @@ function Milestone({
 }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLLIElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.5 });
-  const left = i % 2 === 0; // côté du contenu sur desktop
+  const inView = useInView(ref, { once: true, amount: 0.4 });
+  const tilt = i === 1 ? 0 : i === 0 ? -3 : 3;
 
   return (
-    <li ref={ref} className="relative lg:grid lg:grid-cols-2 lg:gap-14">
-      {/* nœud sur la colonne vertébrale */}
-      <span
-        className="absolute z-10 flex items-center justify-center"
-        style={{ left: 7, top: 4, transform: "translateX(-50%)" }}
-        aria-hidden
+    <li ref={ref} className="relative flex flex-col items-center text-center">
+      {/* vignette photo */}
+      <motion.div
+        className="relative overflow-hidden w-[240px] max-w-[82%] h-[180px]"
+        style={{
+          border: "6px solid #FAF7F2",
+          boxShadow: "0 26px 50px -24px rgba(120,60,80,0.45)",
+        }}
+        initial={reduce ? false : { opacity: 0, y: 26, rotate: 0, scale: 0.94 }}
+        animate={inView ? { opacity: 1, y: 0, rotate: tilt, scale: 1 } : {}}
+        transition={{ duration: 0.6, delay: 0.05, ease }}
       >
-        <motion.span
-          className="lg:hidden block rounded-full"
-          style={{ width: 15, height: 15, background: inView ? "#D9628A" : "#F3EDE6", border: "2px solid #D9628A" }}
-          animate={{ scale: inView ? [0.6, 1.25, 1] : 0.6 }}
-          transition={{ duration: 0.5, ease }}
-        />
-      </span>
+        <Image src={shot.src} alt={shot.alt} fill className="object-cover" sizes="280px" />
+      </motion.div>
 
-      <div
-        className={`relative pl-12 lg:pl-0 ${
-          left ? "lg:col-start-1 lg:pr-16 lg:text-right" : "lg:col-start-2 lg:pl-16 lg:row-start-1"
-        }`}
+      {/* pastille année, posée sur la ligne */}
+      <motion.div
+        className="relative z-10 mt-7 flex items-center justify-center rounded-full font-display italic"
+        style={{
+          minWidth: 92,
+          height: 48,
+          padding: "0 18px",
+          fontSize: "1.5rem",
+          color: "#FAF7F2",
+          background: "#D9628A",
+          boxShadow: "0 0 0 6px #F3EDE6, 0 12px 28px -12px rgba(217,98,138,0.6)",
+        }}
+        initial={reduce ? false : { scale: 0, opacity: 0 }}
+        animate={inView ? { scale: [0, 1.12, 1], opacity: 1 } : {}}
+        transition={{ duration: 0.55, delay: 0.18, ease }}
       >
-        {/* nœud desktop, centré sur la ligne */}
-        <motion.span
-          className="hidden lg:flex absolute top-1.5 items-center justify-center rounded-full"
-          style={{
-            [left ? "right" : "left"]: -38,
-            width: 18,
-            height: 18,
-            background: inView ? "#D9628A" : "#F3EDE6",
-            border: "2px solid #D9628A",
-            boxShadow: inView ? "0 0 0 6px rgba(217,98,138,0.14)" : "none",
-          }}
-          animate={{ scale: inView ? [0.5, 1.3, 1] : 0.5 }}
-          transition={{ duration: 0.55, ease }}
-          aria-hidden
-        />
+        {m.year}
+      </motion.div>
 
-        <motion.span
-          className="font-display italic block leading-[0.9]"
-          style={{ fontSize: "clamp(2.6rem, 4.4vw, 3.8rem)", color: "#B65572" }}
-          initial={reduce ? false : { opacity: 0, y: 18, filter: "blur(6px)" }}
-          animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-          transition={{ duration: 0.6, ease }}
-        >
-          {m.year}
-        </motion.span>
-
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, delay: 0.12, ease }}
-        >
-          <h3 className="mt-3 font-serif font-light text-xl" style={{ color: "#2A2320" }}>
-            {m.label}
-          </h3>
-          <p
-            className={`mt-2.5 font-sans font-light text-[13.5px] leading-relaxed ${left ? "lg:ml-auto" : ""}`}
-            style={{ color: "rgba(42,35,32,0.6)", maxWidth: "30ch" }}
-          >
-            {m.text}
-          </p>
-        </motion.div>
-
-        {/* vignette photo */}
-        <motion.div
-          className={`relative mt-5 overflow-hidden ${left ? "lg:ml-auto" : ""}`}
-          style={{ width: "min(220px, 70%)", aspectRatio: "4 / 3", border: "5px solid #FAF7F2", boxShadow: "0 22px 44px -22px rgba(120,60,80,0.4)" }}
-          initial={reduce ? false : { opacity: 0, scale: 0.94, rotate: 0 }}
-          animate={inView ? { opacity: 1, scale: 1, rotate: left ? -2.5 : 2.5 } : {}}
-          transition={{ duration: 0.6, delay: 0.22, ease }}
-        >
-          <Image src={shot.src} alt={shot.alt} fill className="object-cover" sizes="240px" />
-        </motion.div>
-      </div>
+      <motion.div
+        initial={reduce ? false : { opacity: 0, y: 16 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.55, delay: 0.3, ease }}
+        className="mt-5 max-w-[30ch]"
+      >
+        <h3 className="font-serif font-light text-xl" style={{ color: "#2A2320" }}>
+          {m.label}
+        </h3>
+        <p className="mt-2.5 font-sans font-light text-[13.5px] leading-relaxed" style={{ color: "rgba(42,35,32,0.6)" }}>
+          {m.text}
+        </p>
+      </motion.div>
     </li>
   );
 }
@@ -407,35 +381,24 @@ function Timeline({
 }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.7", "end 0.6"] });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.75", "end 0.7"] });
   const fill = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
     <div ref={ref} className="relative">
-      {/* colonne vertébrale — mobile (à gauche) */}
+      {/* ligne horizontale reliant les pastilles (desktop) — alignée sur le centre des pastilles */}
       <div
-        className="lg:hidden absolute top-0 bottom-0 pointer-events-none"
-        style={{ left: 7, width: 2, background: "rgba(217,98,138,0.18)", transform: "translateX(-50%)" }}
+        className="hidden md:block absolute left-[16.66%] right-[16.66%] pointer-events-none"
+        style={{ top: 232, height: 2, background: "rgba(217,98,138,0.2)" }}
         aria-hidden
       >
         <motion.div
-          className="w-full origin-top"
-          style={{ height: "100%", background: "#D9628A", scaleY: reduce ? 1 : fill }}
-        />
-      </div>
-      {/* même ligne, mais centrée en desktop */}
-      <div
-        className="hidden lg:block absolute top-0 bottom-0 left-1/2 pointer-events-none"
-        style={{ width: 2, background: "rgba(217,98,138,0.18)", transform: "translateX(-50%)" }}
-        aria-hidden
-      >
-        <motion.div
-          className="w-full origin-top"
-          style={{ height: "100%", background: "#D9628A", scaleY: reduce ? 1 : fill }}
+          className="h-full origin-left"
+          style={{ width: "100%", background: "#D9628A", scaleX: reduce ? 1 : fill }}
         />
       </div>
 
-      <ol className="relative flex flex-col gap-16 lg:gap-24">
+      <ol className="relative grid grid-cols-1 md:grid-cols-3 gap-14 md:gap-8">
         {milestones.map((m, i) => (
           <Milestone key={m.year} m={m} shot={HISTORY_SHOTS[i % HISTORY_SHOTS.length]} i={i} />
         ))}
