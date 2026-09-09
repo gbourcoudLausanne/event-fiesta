@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { MouseEvent } from "react";
 import {
+  AnimatePresence,
   motion,
   useReducedMotion,
   useScroll,
@@ -26,11 +27,25 @@ const VALUE_TINTS = [
   { bg: "#FBF0E6", dot: "#EEC79A", ink: "#B98A55" },
 ];
 
-const FAN = [
-  { src: "/Galerie/hero-slides/hero-slide-13.webp", alt: "Arche ronde de ballons violet et or Joyeux anniversaire dans un jardin", rot: -6, x: -15, y: 20, z: 1 },
-  { src: "/Galerie/hero-slides/hero-slide-16.webp", alt: "Table dressée élégante avec nappe rose vieilli et compositions de fleurs roses", rot: 0, x: 0, y: 0, z: 3 },
-  { src: "/Galerie/hero-slides/hero-slide-6.webp", alt: "Sweet table dorée avec gâteau et guirlande de ballons rose et pêche", rot: 6, x: 15, y: 20, z: 1 },
+// Réserve de 9 photos que l'éventail fait défiler.
+const FAN_POOL = [
+  { src: "/Galerie/hero-slides/hero-slide-13.webp", alt: "Arche ronde de ballons violet et or Joyeux anniversaire dans un jardin" },
+  { src: "/Galerie/hero-slides/hero-slide-16.webp", alt: "Table dressée élégante avec nappe rose vieilli et compositions de fleurs roses" },
+  { src: "/Galerie/hero-slides/hero-slide-6.webp", alt: "Sweet table dorée avec gâteau et guirlande de ballons rose et pêche" },
+  { src: "/Galerie/hero-slides/hero-slide-8.webp", alt: "Arche de ballons dégradée fuchsia, corail et crème avec sweet table" },
+  { src: "/Galerie/hero-slides/hero-slide-9.webp", alt: "Arche de ballons rose et blanc avec chiffre 6 et gâteau ballerine" },
+  { src: "/Galerie/hero-slides/hero-slide-5.webp", alt: "Arche menthe, pêche et rose avec chiffre 1 argenté" },
+  { src: "/Galerie/hero-slides/hero-slide-15.webp", alt: "Bouquet de ballons chiffre 10 rose personnalisé avec cœur" },
+  { src: "/Galerie/hero-slides/hero-slide-18.webp", alt: "Fête pyjama d'anniversaire enfant avec arche pêche et corail" },
+  { src: "/Galerie/hero-slides/hero-slide-14.webp", alt: "Bouquet de ballons chiffre 15 rose gold personnalisé" },
 ];
+// 3 emplacements visibles de l'éventail.
+const FAN_SLOTS = [
+  { rot: -6, x: -15, y: 20, z: 1 },
+  { rot: 0, x: 0, y: 0, z: 3 },
+  { rot: 6, x: 15, y: 20, z: 1 },
+];
+const FAN_DUR = 3400;
 
 const CONFETTI = Array.from({ length: 12 }).map((_, i) => {
   const s = Math.sin(i * 71.3) * 10000;
@@ -51,31 +66,72 @@ const BALLOONS = [
   { x: 150, y: 96, r: 18, c: "#C9B7E0" },
 ];
 
-/* ── Éventail de photos animé (hero) ──────────────────────────── */
+/* ── Éventail de photos animé (hero) : 3 emplacements, 9 photos qui défilent ── */
 function PhotoFan() {
   const reduce = useReducedMotion();
+  const [step, setStep] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const N = FAN_POOL.length;
+
+  useEffect(() => {
+    if (reduce || paused) return;
+    const id = setInterval(() => setStep((s) => s + 1), FAN_DUR);
+    return () => clearInterval(id);
+  }, [reduce, paused]);
+
   return (
-    <div className="relative w-full max-w-[440px] mx-auto lg:mx-auto lg:translate-x-4" style={{ perspective: 1400 }}>
+    <div
+      className="relative w-full max-w-[440px] mx-auto lg:mx-auto lg:translate-x-4"
+      style={{ perspective: 1400 }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
       <div className="relative" style={{ aspectRatio: "1 / 1" }}>
-        {FAN.map((p, i) => (
-          <motion.div
-            key={p.src}
-            className="absolute inset-0"
-            style={{ zIndex: p.z }}
-            initial={reduce ? false : { opacity: 0, rotate: 0, x: 0, y: 40, scale: 0.9 }}
-            animate={{ opacity: 1, rotate: p.rot, x: p.x, y: p.y, scale: 1 }}
-            transition={{ duration: 0.9, delay: 0.15 + i * 0.13, ease }}
-          >
+        {FAN_SLOTS.map((slot, i) => {
+          const idx = (step + i) % N;
+          const photo = FAN_POOL[idx];
+          return (
             <motion.div
-              className="relative h-full w-full overflow-hidden"
-              style={{ boxShadow: "0 40px 80px -34px rgba(120,60,80,0.45)", border: "6px solid #FAF7F2" }}
-              animate={reduce ? undefined : { y: [0, i === 1 ? -10 : -6, 0] }}
-              transition={{ repeat: Infinity, duration: 6 + i, ease: "easeInOut" }}
+              key={i}
+              className="absolute inset-0"
+              style={{ zIndex: slot.z }}
+              initial={reduce ? false : { opacity: 0, rotate: 0, x: 0, y: 40, scale: 0.9 }}
+              animate={{ opacity: 1, rotate: slot.rot, x: slot.x, y: slot.y, scale: 1 }}
+              transition={{ duration: 0.9, delay: 0.15 + i * 0.13, ease }}
             >
-              <Image src={p.src} alt={p.alt} fill className="object-cover" sizes="(max-width: 1024px) 90vw, 40vw" priority={i === 1} />
+              <motion.div
+                className="relative h-full w-full"
+                animate={reduce ? undefined : { y: [0, i === 1 ? -10 : -6, 0] }}
+                transition={{ repeat: Infinity, duration: 6 + i, ease: "easeInOut" }}
+              >
+                <div
+                  className="relative h-full w-full overflow-hidden"
+                  style={{ boxShadow: "0 40px 80px -34px rgba(120,60,80,0.45)", border: "6px solid #FAF7F2" }}
+                >
+                  <AnimatePresence initial={false}>
+                    <motion.div
+                      key={photo.src}
+                      className="absolute inset-0"
+                      initial={reduce ? false : { opacity: 0, scale: 1.06 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.97 }}
+                      transition={{ duration: 0.8, delay: i * 0.13, ease }}
+                    >
+                      <Image
+                        src={photo.src}
+                        alt={photo.alt}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 1024px) 90vw, 40vw"
+                        priority={i === 1 && step === 0}
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
