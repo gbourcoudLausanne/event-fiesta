@@ -108,7 +108,7 @@ function PhotoFan() {
 
   return (
     <div
-      className="relative w-full max-w-[620px] mx-auto lg:mx-auto lg:translate-x-2"
+      className="relative w-full max-w-[700px] mx-auto lg:mx-auto lg:translate-x-2"
       style={{ perspective: 1300 }}
     >
       <div className="relative" style={{ aspectRatio: "5 / 4" }}>
@@ -165,7 +165,7 @@ function PhotoFan() {
             return (
               <div
                 key={p.src}
-                className="absolute left-1/2 top-[4%] w-[50%] -translate-x-1/2"
+                className="absolute left-1/2 top-[3%] w-[54%] -translate-x-1/2"
                 style={{ zIndex, aspectRatio: "4 / 5" }}
               >
                 <motion.div
