@@ -236,15 +236,24 @@ const popV: Variants = {
   }),
 };
 
-export function GarlandDivider({ bg = "#FAF7F2" }: { bg?: string }) {
+export function GarlandDivider({
+  bg = "#FAF7F2",
+  from,
+  to,
+}: {
+  bg?: string;
+  from?: string;
+  to?: string;
+}) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   // les boucles infinies (sway, confettis, étincelles) ne tournent que
   // lorsque le séparateur est proche de l'écran.
   const live = useInView(ref, { margin: "200px 0px" }) && !reduce;
+  const background = from && to ? `linear-gradient(${from}, ${to})` : bg;
 
   return (
-    <div ref={ref} style={{ background: bg, lineHeight: 0 }} aria-hidden>
+    <div ref={ref} style={{ background, lineHeight: 0 }} aria-hidden>
       <motion.svg
         viewBox="0 0 1440 250"
         xmlns="http://www.w3.org/2000/svg"

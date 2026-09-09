@@ -120,6 +120,13 @@ body {
   50%      { transform: translateY(-3.5px); }
 }
 
+@keyframes about-fall {
+  0%   { transform: translateY(-10%) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.7; }
+  90%  { opacity: 0.7; }
+  100% { transform: translateY(320px) rotate(220deg); opacity: 0; }
+}
+
 @keyframes blink-cursor {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }

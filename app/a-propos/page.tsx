@@ -1,12 +1,21 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
+import type { MouseEvent } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  useMotionValue,
+  useSpring,
+} from "motion/react";
 import { HeartStraight, Sparkle, Handshake, ArrowRight } from "@phosphor-icons/react";
-import { PageHero } from "@/components/PageHero";
 import { WhyUs } from "@/components/WhyUs";
 import { CtaBanner } from "@/components/CtaBanner";
+import { GarlandDivider } from "@/components/GarlandDivider";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -18,18 +27,67 @@ const VALUE_TINTS = [
   { bg: "#FBF0E6", dot: "#EEC79A", ink: "#B98A55" },
 ];
 
-const BALLOONS = [
-  { x: 60, y: 66, r: 26, c: "#F4A8B8" },
-  { x: 104, y: 52, r: 22, c: "#F0C29A" },
-  { x: 40, y: 108, r: 18, c: "#A8CEE0" },
-  { x: 92, y: 104, r: 20, c: "#FBD5DE" },
+const FAN = [
+  { src: "/Galerie/hero-slides/hero-slide-13.webp", alt: "Arche ronde de ballons violet et or Joyeux anniversaire dans un jardin", rot: -7, x: -18, y: 26, z: 1 },
+  { src: "/Galerie/hero-slides/hero-slide-16.webp", alt: "Table dressée élégante avec nappe rose vieilli et compositions de fleurs roses", rot: 0, x: 0, y: 0, z: 3 },
+  { src: "/Galerie/hero-slides/hero-slide-6.webp", alt: "Sweet table dorée avec gâteau et guirlande de ballons rose et pêche", rot: 7, x: 18, y: 26, z: 1 },
 ];
 
+const CONFETTI = Array.from({ length: 12 }).map((_, i) => {
+  const s = Math.sin(i * 71.3) * 10000;
+  const r = s - Math.floor(s);
+  return {
+    left: `${(8 + r * 84).toFixed(2)}%`,
+    c: ["#F4A8B8", "#A8CEE0", "#F0C29A", "#FBD5DE", "#C9B7E0"][i % 5],
+    d: (r * 5).toFixed(2),
+    dur: (7 + r * 5).toFixed(2),
+  };
+});
+
+const BALLOONS = [
+  { x: 66, y: 60, r: 30, c: "#F4A8B8" },
+  { x: 116, y: 46, r: 24, c: "#F0C29A" },
+  { x: 40, y: 104, r: 20, c: "#A8CEE0" },
+  { x: 98, y: 108, r: 23, c: "#FBD5DE" },
+  { x: 150, y: 96, r: 18, c: "#C9B7E0" },
+];
+
+/* ── Éventail de photos animé (hero) ──────────────────────────── */
+function PhotoFan() {
+  const reduce = useReducedMotion();
+  return (
+    <div className="relative mx-auto w-full max-w-[420px] lg:max-w-none" style={{ perspective: 1400 }}>
+      <div className="relative" style={{ aspectRatio: "1 / 1" }}>
+        {FAN.map((p, i) => (
+          <motion.div
+            key={p.src}
+            className="absolute inset-0"
+            style={{ zIndex: p.z }}
+            initial={reduce ? false : { opacity: 0, rotate: 0, x: 0, y: 40, scale: 0.9 }}
+            animate={{ opacity: 1, rotate: p.rot, x: p.x, y: p.y, scale: 1 }}
+            transition={{ duration: 0.9, delay: 0.15 + i * 0.13, ease }}
+          >
+            <motion.div
+              className="relative h-full w-full overflow-hidden"
+              style={{ boxShadow: "0 40px 80px -34px rgba(120,60,80,0.45)", border: "6px solid #FAF7F2" }}
+              animate={reduce ? undefined : { y: [0, i === 1 ? -10 : -6, 0] }}
+              transition={{ repeat: Infinity, duration: 6 + i, ease: "easeInOut" }}
+            >
+              <Image src={p.src} alt={p.alt} fill className="object-cover" sizes="(max-width: 1024px) 90vw, 40vw" priority={i === 1} />
+            </motion.div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Bouquet de ballons animé (motif histoire) ────────────────── */
 function BalloonTuft() {
   const reduce = useReducedMotion();
   return (
     <motion.svg
-      viewBox="0 0 150 190"
+      viewBox="0 0 190 210"
       className="w-full"
       aria-hidden
       initial={reduce ? undefined : { opacity: 0, y: 16 }}
@@ -38,27 +96,116 @@ function BalloonTuft() {
       transition={{ duration: 0.7, ease }}
     >
       <motion.g
-        style={{ transformOrigin: "72px 174px" }}
-        animate={reduce ? undefined : { rotate: [-2.4, 2.4, -2.4] }}
+        style={{ transformOrigin: "92px 190px" }}
+        animate={reduce ? undefined : { rotate: [-2.6, 2.6, -2.6] }}
         transition={{ repeat: Infinity, duration: 9, ease: "easeInOut" }}
       >
         {BALLOONS.map((b, i) => (
-          <g key={i}>
-            <line x1={b.x} y1={b.y + b.r} x2="72" y2="174" stroke="rgba(120,90,70,0.22)" strokeWidth="0.7" />
-            <circle cx={b.x} cy={b.y} r={b.r} fill={b.c} opacity="0.9" />
+          <motion.g
+            key={i}
+            initial={reduce ? false : { scale: 0, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", stiffness: 260, damping: 14, delay: 0.2 + i * 0.09 }}
+            style={{ transformOrigin: `${b.x}px ${b.y}px` }}
+          >
+            <line x1={b.x} y1={b.y + b.r} x2="92" y2="190" stroke="rgba(120,90,70,0.22)" strokeWidth="0.7" />
+            <circle cx={b.x} cy={b.y} r={b.r} fill={b.c} opacity="0.92" />
             <ellipse
               cx={b.x - b.r * 0.32}
               cy={b.y - b.r * 0.36}
               rx={b.r * 0.22}
               ry={b.r * 0.3}
-              fill="rgba(255,255,255,0.5)"
+              fill="rgba(255,255,255,0.55)"
               transform={`rotate(-24 ${b.x - b.r * 0.32} ${b.y - b.r * 0.36})`}
             />
-          </g>
+          </motion.g>
         ))}
-        <circle cx="72" cy="174" r="4" fill="#D9628A" />
+        <circle cx="92" cy="190" r="4" fill="#D9628A" />
       </motion.g>
     </motion.svg>
+  );
+}
+
+/* ── Carte valeur avec tilt 3D ────────────────────────────────── */
+function ValueCard({
+  v,
+  i,
+}: {
+  v: { label: string; desc: string };
+  i: number;
+}) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const srx = useSpring(rx, { stiffness: 200, damping: 18 });
+  const sry = useSpring(ry, { stiffness: 200, damping: 18 });
+  const Ico = VALUE_ICONS[i % VALUE_ICONS.length];
+  const tint = VALUE_TINTS[i % VALUE_TINTS.length];
+
+  const onMove = (e: MouseEvent) => {
+    if (reduce) return;
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    ry.set(((e.clientX - r.left) / r.width - 0.5) * 8);
+    rx.set(-((e.clientY - r.top) / r.height - 0.5) * 8);
+  };
+  const onLeave = () => {
+    rx.set(0);
+    ry.set(0);
+  };
+
+  return (
+    <motion.li
+      initial={reduce ? false : { opacity: 0, y: 24, filter: "blur(6px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.55, delay: i * 0.1, ease }}
+      style={{ perspective: 1000 }}
+    >
+      <motion.div
+        ref={ref}
+        onMouseMove={onMove}
+        onMouseLeave={onLeave}
+        whileHover={reduce ? undefined : { boxShadow: `0 36px 70px -28px ${tint.dot}99` }}
+        style={{
+          rotateX: srx,
+          rotateY: sry,
+          transformStyle: "preserve-3d",
+          boxShadow: "0 2px 10px rgba(13,11,8,0.04)",
+        }}
+        className="group relative flex h-full flex-col overflow-hidden p-7 lg:p-8"
+      >
+        <div
+          className="absolute inset-0 -z-10"
+          style={{
+            background: `linear-gradient(158deg, ${tint.bg} 0%, #FAF7F2 140%)`,
+            border: `1px solid ${tint.dot}3d`,
+          }}
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-3 -top-6 select-none font-serif font-light leading-none transition-transform duration-500 group-hover:scale-110"
+          style={{ fontSize: "6rem", color: `${tint.dot}24` }}
+        >
+          {String(i + 1).padStart(2, "0")}
+        </span>
+        <span
+          className="relative z-10 mb-5 flex h-11 w-11 items-center justify-center rounded-full"
+          style={{ border: `1px solid ${tint.dot}` }}
+        >
+          {Ico && <Ico size={20} weight="light" color={tint.ink} />}
+        </span>
+        <h3 className="relative z-10 font-serif leading-tight" style={{ fontSize: "1.4rem", color: "#2A2320" }}>
+          {v.label}
+        </h3>
+        <p className="relative z-10 mt-2.5 min-h-[64px] font-sans text-[13px] leading-relaxed" style={{ color: "rgba(40,34,30,0.58)" }}>
+          {v.desc}
+        </p>
+      </motion.div>
+    </motion.li>
   );
 }
 
@@ -66,13 +213,74 @@ export default function AboutPage() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
 
+  const editorialRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: editorialRef, offset: ["start end", "end start"] });
+  const imgY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [60, -60]);
+
   return (
     <>
-      <PageHero eyebrow={t.about.eyebrow} title={t.about.title} subtitle={t.about.lead} />
+      {/* ── Hero ─────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden pt-[132px] pb-20 lg:pt-[164px] lg:pb-28" style={{ background: "#F3EDE6" }}>
+        {/* confettis */}
+        {!reduce &&
+          CONFETTI.map((f, i) => (
+            <span
+              key={i}
+              aria-hidden
+              className="pointer-events-none absolute top-0 block h-2.5 w-1.5 rounded-full"
+              style={{
+                left: f.left,
+                background: f.c,
+                opacity: 0.7,
+                animation: `about-fall ${f.dur}s linear ${f.d}s infinite`,
+              }}
+            />
+          ))}
+        <div
+          className="absolute pointer-events-none rounded-full"
+          style={{
+            top: "-24%",
+            left: "-10%",
+            width: "min(46vw, 560px)",
+            aspectRatio: "1",
+            background: "radial-gradient(circle at 60% 60%, rgba(244,168,184,0.2), rgba(244,168,184,0) 70%)",
+          }}
+          aria-hidden
+        />
 
-      {/* ── Éditorial : texte + photo ─────────────────────────────── */}
-      <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#FAF7F2" }}>
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-[1fr_0.85fr] gap-14 lg:gap-20 items-center">
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-16 lg:gap-10 items-center">
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease }}
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+              <span className="font-sans text-[10px] uppercase tracking-[0.32em]" style={{ color: "#D9628A" }}>
+                {t.about.eyebrow}
+              </span>
+            </div>
+            <h1
+              className="font-serif font-light leading-[1.05] tracking-tight"
+              style={{ fontSize: "clamp(2.6rem, 5.5vw, 4.6rem)", color: "#0D0B08" }}
+            >
+              {t.about.title}
+            </h1>
+            <p
+              className="font-sans font-light text-[15px] leading-relaxed mt-6 max-w-lg"
+              style={{ color: "rgba(13,11,8,0.55)" }}
+            >
+              {t.about.lead}
+            </p>
+          </motion.div>
+
+          <PhotoFan />
+        </div>
+      </section>
+
+      {/* ── Éditorial : texte + photo parallax ───────────────────── */}
+      <section ref={editorialRef} className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#FAF7F2" }}>
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-[1fr_0.8fr] gap-14 lg:gap-20 items-center">
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -82,7 +290,7 @@ export default function AboutPage() {
             <div className="flex items-center gap-3 mb-6">
               <span className="w-10 h-px" style={{ background: "#D9628A" }} />
               <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
-                {t.about.storyTitle}
+                L&rsquo;atelier
               </span>
             </div>
             <p
@@ -106,28 +314,45 @@ export default function AboutPage() {
             transition={{ duration: 0.75, delay: 0.1, ease }}
             className="relative"
           >
+            {/* photo arrière */}
+            <div
+              className="absolute -left-6 -top-8 hidden sm:block w-2/3 overflow-hidden"
+              style={{ aspectRatio: "4 / 5", boxShadow: "0 30px 60px -34px rgba(120,60,80,0.35)" }}
+            >
+              <motion.div className="relative h-full w-full" style={{ y: imgY }}>
+                <Image
+                  src="/Galerie/hero-slides/hero-slide-17.webp"
+                  alt="Pique-nique de luxe au bord de l'eau, table basse en bois et chemin de table d'eucalyptus"
+                  fill
+                  className="object-cover"
+                  style={{ filter: "sepia(0.2) saturate(0.85)" }}
+                  sizes="30vw"
+                />
+              </motion.div>
+            </div>
+            {/* photo avant */}
             <div
               className="relative w-full overflow-hidden"
-              style={{ aspectRatio: "4 / 5", boxShadow: "0 40px 90px -38px rgba(120,60,80,0.4)" }}
+              style={{ aspectRatio: "4 / 5", boxShadow: "0 44px 100px -38px rgba(120,60,80,0.42)" }}
             >
               <Image
-                src="/Galerie/hero-slides/hero-slide-16.webp"
-                alt="Table dressée élégante avec nappe rose vieilli et compositions de fleurs roses"
+                src="/Galerie/hero-slides/hero-slide-11.webp"
+                alt="Table dressée en extérieur, chemin de table blanc, sous-assiettes dorées et centre floral"
                 fill
                 className="object-cover"
-                sizes="(max-width: 1024px) 90vw, 40vw"
+                sizes="(max-width: 1024px) 90vw, 38vw"
               />
               <div className="absolute inset-3 pointer-events-none" style={{ border: "1px solid rgba(250,247,242,0.5)" }} />
             </div>
             <figcaption
-              className="absolute -bottom-5 left-5 right-8 px-5 py-3 font-sans text-[11px] leading-snug"
+              className="absolute -bottom-5 left-6 right-10 px-5 py-3 font-sans text-[11px] leading-snug"
               style={{ background: "#FAF7F2", color: "rgba(42,35,32,0.6)", boxShadow: "0 14px 40px -18px rgba(120,60,80,0.35)" }}
             >
               {t.about.imageCaption}
             </figcaption>
             <span
-              className="absolute -top-4 -left-4 flex flex-col items-center justify-center rounded-full"
-              style={{ width: 84, height: 84, background: "#D9628A", color: "#FAF7F2" }}
+              className="absolute -top-5 -right-5 flex flex-col items-center justify-center rounded-full"
+              style={{ width: 88, height: 88, background: "#D9628A", color: "#FAF7F2" }}
             >
               <span className="font-serif italic text-xl leading-none">2020</span>
               <span className="font-sans text-[8px] uppercase tracking-[0.18em] mt-1">Depuis</span>
@@ -136,9 +361,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Notre histoire : jalons ───────────────────────────────── */}
+      {/* ── Notre histoire : jalons ──────────────────────────────── */}
       <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#F3EDE6" }}>
-        <div className="absolute hidden lg:block pointer-events-none" style={{ top: "1.5rem", right: "3%", width: 150 }}>
+        <div className="absolute hidden lg:block pointer-events-none" style={{ top: "1rem", right: "2%", width: 190 }}>
           <BalloonTuft />
         </div>
 
@@ -148,7 +373,7 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease }}
-            className="max-w-xl mb-14 lg:mb-16"
+            className="max-w-xl mb-14 lg:mb-20"
           >
             <h2
               className="font-serif font-light leading-tight"
@@ -161,15 +386,18 @@ export default function AboutPage() {
             </p>
           </motion.div>
 
-          <ol className="relative grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6">
-            {/* fil de liaison */}
-            <span
-              className="hidden md:block absolute left-0 right-0 pointer-events-none"
+          <ol className="relative grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-6">
+            <motion.span
+              className="hidden md:block absolute left-0 right-0 origin-left pointer-events-none"
               style={{
-                top: 12,
+                top: 13,
                 height: 1,
-                background: "repeating-linear-gradient(to right, rgba(217,98,138,0.4) 0 6px, transparent 6px 12px)",
+                background: "repeating-linear-gradient(to right, rgba(217,98,138,0.45) 0 6px, transparent 6px 12px)",
               }}
+              initial={reduce ? false : { scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 1, ease }}
               aria-hidden
             />
             {t.about.milestones.map((m, i) => (
@@ -178,17 +406,28 @@ export default function AboutPage() {
                 initial={reduce ? false : { opacity: 0, y: 22 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.55, delay: i * 0.12, ease }}
-                className="relative md:pt-9"
+                transition={{ duration: 0.55, delay: 0.35 + i * 0.14, ease }}
+                className="relative md:pt-11"
               >
-                <span
+                <motion.span
                   className="hidden md:block absolute left-0 rounded-full"
-                  style={{ top: 6, width: 13, height: 13, background: "#D9628A", boxShadow: "0 0 0 5px #F3EDE6" }}
+                  style={{ top: 7, width: 14, height: 14, background: "#D9628A", boxShadow: "0 0 0 5px #F3EDE6" }}
+                  initial={reduce ? false : { scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 14, delay: 0.5 + i * 0.14 }}
                   aria-hidden
                 />
-                <span className="font-display italic block leading-none" style={{ fontSize: "2.6rem", color: "#B65572" }}>
+                <motion.span
+                  className="font-display italic block leading-none"
+                  style={{ fontSize: "clamp(2.4rem, 3.4vw, 3.1rem)", color: "#B65572" }}
+                  initial={reduce ? false : { opacity: 0, scale: 0.7 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ duration: 0.5, delay: 0.45 + i * 0.14, ease }}
+                >
                   {m.year}
-                </span>
+                </motion.span>
                 <h3 className="mt-3 font-serif font-light text-lg" style={{ color: "#2A2320" }}>
                   {m.label}
                 </h3>
@@ -201,7 +440,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Valeurs : cartes premium ──────────────────────────────── */}
+      <GarlandDivider from="#F3EDE6" to="#FAF7F2" />
+
+      {/* ── Valeurs : cartes premium avec tilt ───────────────────── */}
       <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#FAF7F2" }}>
         <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
           <motion.h2
@@ -216,54 +457,9 @@ export default function AboutPage() {
           </motion.h2>
 
           <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5">
-            {t.about.values.map((v, i) => {
-              const Ico = VALUE_ICONS[i % VALUE_ICONS.length];
-              const tint = VALUE_TINTS[i % VALUE_TINTS.length];
-              return (
-                <motion.li
-                  key={v.label}
-                  initial={reduce ? false : { opacity: 0, y: 24, filter: "blur(6px)" }}
-                  whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  viewport={{ once: true, amount: 0.25 }}
-                  transition={{ duration: 0.55, delay: i * 0.1, ease }}
-                >
-                  <motion.div
-                    whileHover={reduce ? undefined : { y: -6, boxShadow: `0 34px 66px -30px ${tint.dot}99` }}
-                    transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                    className="group relative flex h-full flex-col overflow-hidden p-7 lg:p-8"
-                    style={{
-                      background: `linear-gradient(158deg, ${tint.bg} 0%, #FAF7F2 140%)`,
-                      border: `1px solid ${tint.dot}3d`,
-                      minHeight: 220,
-                      boxShadow: "0 2px 10px rgba(13,11,8,0.04)",
-                    }}
-                  >
-                    <span
-                      aria-hidden
-                      className="pointer-events-none absolute -right-3 -top-6 select-none font-serif font-light leading-none"
-                      style={{ fontSize: "6rem", color: `${tint.dot}24` }}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span
-                      className="relative z-10 mb-5 flex h-11 w-11 items-center justify-center rounded-full"
-                      style={{ border: `1px solid ${tint.dot}` }}
-                    >
-                      {Ico && <Ico size={20} weight="light" color={tint.ink} />}
-                    </span>
-                    <h3 className="relative z-10 font-serif leading-tight" style={{ fontSize: "1.4rem", color: "#2A2320" }}>
-                      {v.label}
-                    </h3>
-                    <p
-                      className="relative z-10 mt-2.5 font-sans text-[13px] leading-relaxed"
-                      style={{ color: "rgba(40,34,30,0.58)" }}
-                    >
-                      {v.desc}
-                    </p>
-                  </motion.div>
-                </motion.li>
-              );
-            })}
+            {t.about.values.map((v, i) => (
+              <ValueCard key={v.label} v={v} i={i} />
+            ))}
           </ul>
 
           <motion.div
