@@ -211,16 +211,16 @@ export const es = {
     valuesTitle: "Nuestros valores",
     values: [
       {
-        label: "Pasión",
-        desc: "Cada globo, cada flor, cada detalle se coloca con amor.",
+        label: "Cero plantillas",
+        desc: "Tu decoración se piensa para tu evento, nunca reciclada de otra fiesta.",
       },
       {
-        label: "A medida",
-        desc: "Cero plantillas. Cada decoración es única y pensada para ti.",
+        label: "Hecho a mano",
+        desc: "Cada globo, cada flor, cada detalle se coloca uno a uno, con cuidado.",
       },
       {
-        label: "Fiabilidad",
-        desc: "Nos comprometemos con los plazos, los colores y la calidad. Siempre.",
+        label: "Puntual, siempre",
+        desc: "Los plazos, los colores, la calidad: lo prometido se cumple.",
       },
     ],
     cta: "Hablemos de tu evento",

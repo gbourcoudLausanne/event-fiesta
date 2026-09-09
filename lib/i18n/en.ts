@@ -211,16 +211,16 @@ export const en = {
     valuesTitle: "Our values",
     values: [
       {
-        label: "Passion",
-        desc: "Every balloon, every flower, every detail is placed with love.",
+        label: "No templates",
+        desc: "Your décor is designed for your event, never recycled from another party.",
       },
       {
-        label: "Bespoke",
-        desc: "Zero templates. Every decoration is unique and designed for you.",
+        label: "Made by hand",
+        desc: "Every balloon, every flower, every detail placed one by one, with care.",
       },
       {
-        label: "Reliability",
-        desc: "We commit to deadlines, colours and quality. Always.",
+        label: "On time, always",
+        desc: "Deadlines, colours, quality: what's promised is delivered.",
       },
     ],
     cta: "Let's talk about your event",

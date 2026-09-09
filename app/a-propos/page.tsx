@@ -18,12 +18,6 @@ import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const VALUE_TINTS = [
-  { bg: "#FCEEF1", dot: "#F4A8B8", ink: "#B65572", glow: "244,168,184" },
-  { bg: "#F3E7F0", dot: "#BF88B4", ink: "#8B5E85", glow: "191,136,180" },
-  { bg: "#FBF0E6", dot: "#EEC79A", ink: "#B98A55", glow: "238,199,154" },
-];
-
 // Réserve de 9 photos que l'éventail fait défiler.
 const FAN_POOL = [
   { src: "/Galerie/hero-slides/hero-slide-13.webp", alt: "Arche ronde de ballons violet et or Joyeux anniversaire dans un jardin" },
@@ -405,100 +399,78 @@ function Timeline({
 
 /* ── Valeurs : 3 blocs à icône ───────────────────────────────── */
 const VALUE_ICONS = [HeartStraight, Scissors, Clock];
-const VALUE_KW = ["Le soin du détail", "Fait main, pour vous", "Le jour J, tout est prêt"];
 
 function ValueFeature({
   v,
   i,
+  total,
 }: {
   v: { label: string; desc: string };
   i: number;
+  total: number;
 }) {
   const reduce = useReducedMotion();
-  const tint = VALUE_TINTS[i % VALUE_TINTS.length];
+  const ref = useRef<HTMLLIElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.4 });
   const Ico = VALUE_ICONS[i % VALUE_ICONS.length];
+  const words = v.label.split(" ");
 
   return (
-    <motion.li
-      className="group relative flex h-full flex-col overflow-hidden p-8 lg:p-9"
-      style={{
-        background: `linear-gradient(160deg, ${tint.bg} 0%, #FAF7F2 155%)`,
-        border: `1px solid ${tint.dot}33`,
-        boxShadow: "0 6px 24px -14px rgba(13,11,8,0.1)",
-      }}
-      initial={reduce ? false : { opacity: 0, y: 26, filter: "blur(6px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.6, delay: i * 0.12, ease }}
-      whileHover={reduce ? undefined : { y: -6, boxShadow: `0 30px 60px -26px ${tint.dot}88` }}
+    <li
+      ref={ref}
+      className={`relative py-10 md:py-0 md:px-8 lg:px-10 first:md:pl-0 last:md:pr-0 ${
+        i < total - 1 ? "border-b md:border-b-0 md:border-r" : ""
+      }`}
+      style={{ borderColor: "rgba(250,247,242,0.22)" }}
     >
-      {/* chiffre filigrane */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -right-3 -top-5 select-none font-serif font-light leading-none transition-transform duration-500 group-hover:scale-110"
-        style={{ fontSize: "6rem", color: `${tint.dot}22` }}
-      >
-        {String(i + 1).padStart(2, "0")}
-      </span>
-
-      {/* icône */}
-      <div className="relative mb-6 h-14 w-14">
+      <div className="flex items-start gap-4">
         <motion.span
-          className="absolute inset-0 rounded-full"
-          style={{ border: `1.5px dashed ${tint.dot}` }}
-          animate={reduce ? undefined : { rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 26, ease: "linear" }}
-        />
-        <span
-          className="absolute inset-[5px] flex items-center justify-center rounded-full"
-          style={{ background: "#FAF7F2", boxShadow: `0 8px 20px -12px ${tint.dot}` }}
+          className="font-display italic leading-none select-none"
+          style={{ fontSize: "clamp(2.4rem, 3.6vw, 3.2rem)", color: "rgba(250,247,242,0.45)" }}
+          initial={reduce ? false : { opacity: 0, x: -14 }}
+          animate={inView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.5, ease }}
         >
-          <Ico size={22} weight="light" color={tint.ink} />
-        </span>
+          {String(i + 1).padStart(2, "0")}
+        </motion.span>
+        <motion.span
+          className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+          style={{ border: "1px solid rgba(250,247,242,0.55)" }}
+          initial={reduce ? false : { scale: 0, opacity: 0 }}
+          animate={inView ? { scale: 1, opacity: 1 } : {}}
+          transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.15 }}
+        >
+          <Ico size={16} weight="light" color="#FAF7F2" />
+        </motion.span>
       </div>
 
-      <span
-        className="font-sans text-[10px] uppercase tracking-[0.22em]"
-        style={{ color: tint.ink }}
-      >
-        {VALUE_KW[i % VALUE_KW.length]}
-      </span>
       <h3
-        className="mt-2 font-serif font-light leading-tight"
-        style={{ fontSize: "clamp(1.5rem, 2.3vw, 1.9rem)", color: "#2A2320" }}
+        className="mt-5 font-serif font-light leading-[1.05] flex flex-wrap gap-x-[0.25em]"
+        style={{ fontSize: "clamp(2rem, 3.4vw, 2.9rem)", color: "#FAF7F2" }}
       >
-        {v.label}
+        {words.map((w, k) => (
+          <motion.span
+            key={k}
+            className="inline-block"
+            initial={reduce ? false : { opacity: 0, y: 20, filter: "blur(7px)" }}
+            animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+            transition={{ duration: 0.55, delay: 0.2 + k * 0.08, ease }}
+          >
+            {w}
+          </motion.span>
+        ))}
       </h3>
 
-      <motion.svg
-        viewBox="0 0 120 8"
-        preserveAspectRatio="none"
-        className="mt-3 h-1.5 w-20"
-        aria-hidden
-        initial={reduce ? undefined : "hidden"}
-        whileInView={reduce ? undefined : "shown"}
-        viewport={{ once: true }}
-      >
-        <motion.path
-          d="M2 5 C 30 1, 60 8, 90 4 S 116 3, 118 5"
-          fill="none"
-          stroke={tint.dot}
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          variants={{
-            hidden: { pathLength: 0, opacity: 0 },
-            shown: { pathLength: 1, opacity: 0.85, transition: { duration: 0.8, delay: 0.25 + i * 0.12, ease } },
-          }}
-        />
-      </motion.svg>
-
-      <p
-        className="mt-4 flex-1 font-sans font-light leading-relaxed"
-        style={{ fontSize: "13.5px", color: "rgba(40,34,30,0.62)" }}
+      <motion.p
+        className="mt-4 max-w-[34ch] font-sans font-light leading-relaxed"
+        style={{ fontSize: "14px", color: "rgba(250,247,242,0.72)" }}
+        initial={reduce ? false : { opacity: 0, y: 14 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.55, delay: 0.45, ease }}
       >
         {v.desc}
-      </p>
-    </motion.li>
+      </motion.p>
+    </li>
   );
 }
 
@@ -688,16 +660,19 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Valeurs : cartes premium avec tilt ───────────────────── */}
-      <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#FAF7F2" }}>
+      {/* ── Valeurs : bande manifeste ────────────────────────────── */}
+      <section
+        className="relative overflow-hidden py-20 lg:py-28"
+        style={{ background: "linear-gradient(150deg, #D9628A 0%, #C25E7E 60%, #B0546F 130%)" }}
+      >
         <div
-          className="absolute pointer-events-none rounded-full"
+          className="absolute pointer-events-none rounded-full mix-blend-soft-light"
           style={{
-            bottom: "-18%",
-            right: "-10%",
-            width: "min(44vw, 540px)",
+            top: "-30%",
+            left: "-12%",
+            width: "min(50vw, 620px)",
             aspectRatio: "1",
-            background: "radial-gradient(circle at 50% 50%, rgba(191,136,180,0.12), rgba(191,136,180,0) 70%)",
+            background: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.5), rgba(255,255,255,0) 70%)",
           }}
           aria-hidden
         />
@@ -707,25 +682,25 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease }}
-            className="mb-14 lg:mb-16 max-w-xl"
+            className="mb-14 lg:mb-18 max-w-xl"
           >
             <div className="flex items-center gap-3 mb-5">
-              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
-              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
+              <span className="w-10 h-px" style={{ background: "rgba(250,247,242,0.7)" }} />
+              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "rgba(250,247,242,0.85)" }}>
                 Ce qui me guide
               </span>
             </div>
             <h2
-              className="font-serif font-light leading-tight"
-              style={{ fontSize: "clamp(2rem, 4vw, 3rem)", color: "#2A2320" }}
+              className="font-serif font-light italic leading-tight"
+              style={{ fontSize: "clamp(2rem, 4vw, 3rem)", color: "#FAF7F2" }}
             >
               {t.about.valuesTitle}
             </h2>
           </motion.div>
 
-          <ul className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
+          <ul className="grid grid-cols-1 md:grid-cols-3 border-t md:border-t-0" style={{ borderColor: "rgba(250,247,242,0.22)" }}>
             {t.about.values.map((v, i) => (
-              <ValueFeature key={v.label} v={v} i={i} />
+              <ValueFeature key={v.label} v={v} i={i} total={t.about.values.length} />
             ))}
           </ul>
 
@@ -734,12 +709,12 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2, ease }}
-            className="mt-12 lg:mt-14"
+            className="mt-14 lg:mt-16"
           >
             <Link
               href="/contact"
-              className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[13px] font-medium px-8 py-3.5 rounded-full transition-transform duration-200 hover:scale-[1.03]"
-              style={{ background: "#D9628A", color: "#FAF7F2" }}
+              className="inline-flex items-center gap-2 font-sans text-[13px] font-medium px-8 py-3.5 rounded-full transition-transform duration-200 hover:scale-[1.03]"
+              style={{ background: "#FAF7F2", color: "#B0546F" }}
             >
               {t.about.cta}
               <ArrowRight size={14} weight="bold" />

@@ -211,16 +211,16 @@ export const fr = {
     valuesTitle: "Nos valeurs",
     values: [
       {
-        label: "Passion",
-        desc: "Chaque ballon, chaque fleur, chaque détail est posé avec amour.",
+        label: "Zéro template",
+        desc: "Votre décoration est imaginée pour votre événement, jamais recyclée d'une autre fête.",
       },
       {
-        label: "Sur mesure",
-        desc: "Zéro template. Chaque décoration est unique et pensée pour vous.",
+        label: "Fait à la main",
+        desc: "Chaque ballon, chaque fleur, chaque détail est posé un à un, avec soin.",
       },
       {
-        label: "Fiabilité",
-        desc: "On s'engage sur les délais, les couleurs et la qualité. Toujours.",
+        label: "À l'heure, toujours",
+        desc: "Les délais, les couleurs, la qualité : ce qui est promis est tenu.",
       },
     ],
     cta: "Discutons de votre événement",
