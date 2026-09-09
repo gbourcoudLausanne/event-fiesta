@@ -410,6 +410,165 @@ const VALUE_ICONS = [HeartStraight, Scissors, Clock];
 
 const GTK_ICONS = [MapPinLine, CalendarBlank, ChatCircleText, Package];
 
+/* ── « Un mot pour vous » : carte-note ───────────────────────── */
+function PersonalNote({
+  eyebrow,
+  body,
+  sign,
+}: {
+  eyebrow: string;
+  body: string;
+  sign: string;
+}) {
+  const reduce = useReducedMotion();
+  const words = body.split(" ");
+
+  return (
+    <motion.div
+      className="relative"
+      initial={reduce ? false : { opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.7, ease }}
+    >
+      {/* halo derrière la carte */}
+      <div
+        className="absolute -inset-6 -z-10 rounded-[40px] pointer-events-none"
+        style={{ background: "radial-gradient(circle at 40% 30%, rgba(244,168,184,0.28), rgba(244,168,184,0) 70%)" }}
+        aria-hidden
+      />
+
+      <motion.div
+        className="relative overflow-hidden px-8 py-10 lg:px-11 lg:py-12"
+        style={{
+          background: "linear-gradient(155deg, #FFFDFB 0%, #FBF1F0 120%)",
+          border: "1px solid rgba(217,98,138,0.22)",
+          boxShadow: "0 40px 80px -40px rgba(120,60,80,0.4)",
+          rotate: reduce ? 0 : -1.4,
+        }}
+        whileHover={reduce ? undefined : { rotate: 0, y: -4 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+      >
+        {/* ruban washi en haut */}
+        <span
+          aria-hidden
+          className="absolute left-1/2 top-0 h-6 w-28 -translate-x-1/2 -translate-y-1/2 rotate-[-3deg]"
+          style={{ background: "rgba(217,98,138,0.28)", backdropFilter: "blur(1px)" }}
+        />
+
+        {/* guillemet géant animé */}
+        <motion.span
+          aria-hidden
+          className="pointer-events-none absolute -left-2 top-1 select-none font-serif leading-none"
+          style={{ fontSize: "8rem", color: "rgba(217,98,138,0.12)" }}
+          initial={reduce ? false : { scale: 0.4, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ type: "spring", stiffness: 180, damping: 16, delay: 0.15 }}
+        >
+          &ldquo;
+        </motion.span>
+
+        <div className="relative flex items-center gap-3 mb-6">
+          <span className="w-8 h-px" style={{ background: "#D9628A" }} />
+          <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
+            {eyebrow}
+          </span>
+        </div>
+
+        <motion.p
+          className="relative font-serif font-light italic leading-snug flex flex-wrap gap-x-[0.26em] gap-y-1"
+          style={{ fontSize: "clamp(1.35rem, 2.2vw, 1.9rem)", color: "rgba(42,35,32,0.82)" }}
+          initial={reduce ? undefined : "hidden"}
+          whileInView={reduce ? undefined : "shown"}
+          viewport={{ once: true, amount: 0.4 }}
+          variants={{ shown: { transition: { staggerChildren: 0.025, delayChildren: 0.25 } } }}
+        >
+          {words.map((w, i) => (
+            <motion.span
+              key={i}
+              className="inline-block"
+              variants={{
+                hidden: { opacity: 0, y: 10, filter: "blur(5px)" },
+                shown: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.4, ease } },
+              }}
+            >
+              {w}
+            </motion.span>
+          ))}
+        </motion.p>
+
+        {/* signature */}
+        <div className="relative mt-9 flex items-end gap-4">
+          <div className="relative">
+            <span
+              className="font-display italic leading-none"
+              style={{ fontSize: "clamp(1.7rem, 2.6vw, 2.3rem)", color: "#B65572" }}
+            >
+              {sign}
+            </span>
+            <motion.svg
+              viewBox="0 0 200 26"
+              className="absolute -bottom-3 left-0 h-5 w-40"
+              aria-hidden
+              initial={reduce ? undefined : "hidden"}
+              whileInView={reduce ? undefined : "shown"}
+              viewport={{ once: true }}
+            >
+              <motion.path
+                d="M4 15 C 26 3, 44 24, 66 12 C 82 4, 96 22, 116 12 C 130 5, 146 21, 168 12 C 180 7, 192 15, 196 11"
+                fill="none"
+                stroke="#D9628A"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                variants={{
+                  hidden: { pathLength: 0, opacity: 0 },
+                  shown: { pathLength: 1, opacity: 0.9, transition: { duration: 1, delay: 0.5, ease } },
+                }}
+              />
+            </motion.svg>
+          </div>
+          {/* petit cœur dessiné */}
+          <motion.svg
+            viewBox="0 0 24 24"
+            className="h-5 w-5 mb-1"
+            aria-hidden
+            initial={reduce ? undefined : "hidden"}
+            whileInView={reduce ? undefined : "shown"}
+            viewport={{ once: true }}
+          >
+            <motion.path
+              d="M12 20 C 6 15 3 12 3 8 C 3 5 5 3.5 7.5 4 C 9 4.3 11 6 12 7 C 13 6 15 4.3 16.5 4 C 19 3.5 21 5 21 8 C 21 12 18 15 12 20 Z"
+              fill="none"
+              stroke="#D9628A"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              variants={{
+                hidden: { pathLength: 0, opacity: 0 },
+                shown: { pathLength: 1, opacity: 0.8, transition: { duration: 0.8, delay: 1.3, ease } },
+              }}
+            />
+          </motion.svg>
+        </div>
+
+        {/* brin décoratif dans le coin */}
+        <svg viewBox="0 0 90 90" className="pointer-events-none absolute -bottom-3 -right-3 h-24 w-24 opacity-70" aria-hidden>
+          <g stroke="#CBB994" strokeLinecap="round" fill="none" strokeWidth="1.2">
+            <path d="M78 84 C 70 60 54 48 34 44" />
+            {Array.from({ length: 6 }).map((_, k) => {
+              const t = k / 5;
+              const x = 78 - t * 44;
+              const y = 84 - t * 40;
+              return <path key={k} d={`M${x} ${y} q -8 -6 -14 -3 M${x} ${y} q -3 -9 -9 -12`} strokeWidth="0.9" opacity={0.8 - t * 0.4} />;
+            })}
+          </g>
+        </svg>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 /* ── « Avant de me contacter » : accordéon ───────────────────── */
 function GoodToKnow({
   eyebrow,
@@ -853,51 +1012,11 @@ export default function AboutPage() {
           />
 
           {/* mot personnel */}
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 22 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 0.7, ease }}
-            className="relative"
-          >
-            <span
-              aria-hidden
-              className="pointer-events-none absolute -left-4 -top-10 select-none font-serif leading-none"
-              style={{ fontSize: "6rem", color: "rgba(217,98,138,0.14)" }}
-            >
-              &ldquo;
-            </span>
-            <div className="flex items-center gap-3 mb-6">
-              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
-              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
-                {t.about.note.eyebrow}
-              </span>
-            </div>
-            <p
-              className="font-serif font-light italic leading-snug"
-              style={{ fontSize: "clamp(1.35rem, 2.2vw, 1.85rem)", color: "rgba(42,35,32,0.78)" }}
-            >
-              {t.about.note.body}
-            </p>
-            <div className="mt-8 flex items-center gap-4">
-              <motion.svg viewBox="0 0 120 30" className="h-8 w-28" aria-hidden>
-                <motion.path
-                  d="M6 20 C 18 4, 26 26, 38 14 C 46 6, 52 22, 62 12 C 70 5, 78 24, 90 12 S 110 6, 116 16"
-                  fill="none"
-                  stroke="#B65572"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  initial={reduce ? undefined : { pathLength: 0 }}
-                  whileInView={reduce ? undefined : { pathLength: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1, delay: 0.3, ease }}
-                />
-              </motion.svg>
-              <span className="font-serif italic text-lg" style={{ color: "#B65572" }}>
-                {t.about.note.sign}
-              </span>
-            </div>
-          </motion.div>
+          <PersonalNote
+            eyebrow={t.about.note.eyebrow}
+            body={t.about.note.body}
+            sign={t.about.note.sign}
+          />
         </div>
       </section>
 
