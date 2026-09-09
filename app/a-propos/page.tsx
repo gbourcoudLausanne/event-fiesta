@@ -10,7 +10,16 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
-import { HeartStraight, Scissors, Clock, ArrowRight } from "@phosphor-icons/react";
+import {
+  HeartStraight,
+  Scissors,
+  Clock,
+  ArrowRight,
+  MapPinLine,
+  CalendarBlank,
+  ChatCircleText,
+  Package,
+} from "@phosphor-icons/react";
 import { CtaBanner } from "@/components/CtaBanner";
 import { FloatingBalloons } from "@/components/FloatingBalloons";
 import { useI18n } from "@/lib/i18n";
@@ -398,6 +407,14 @@ function Timeline({
 
 /* ── Valeurs : 3 blocs à icône ───────────────────────────────── */
 const VALUE_ICONS = [HeartStraight, Scissors, Clock];
+
+const GTK_ICONS = [MapPinLine, CalendarBlank, ChatCircleText, Package];
+const GTK_TINTS = [
+  { bg: "#FCEEF1", dot: "#F4A8B8", ink: "#B65572" },
+  { bg: "#ECF3F6", dot: "#A8CEE0", ink: "#5E86A0" },
+  { bg: "#F3E7F0", dot: "#BF88B4", ink: "#8B5E85" },
+  { bg: "#FBF0E6", dot: "#EEC79A", ink: "#B98A55" },
+];
 
 function ValueFeature({
   v,
@@ -794,27 +811,64 @@ export default function AboutPage() {
             >
               {t.about.goodToKnow.title}
             </h2>
-            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-7">
-              {t.about.goodToKnow.items.map((it, i) => (
-                <motion.div
-                  key={it.label}
-                  initial={reduce ? false : { opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.4 }}
-                  transition={{ duration: 0.5, delay: 0.1 + i * 0.08, ease }}
-                >
-                  <dt className="flex items-baseline gap-2.5">
-                    <span className="h-1.5 w-1.5 shrink-0 translate-y-[-2px] rounded-full" style={{ background: "#D9628A" }} aria-hidden />
-                    <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: "#B65572" }}>
+
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {t.about.goodToKnow.items.map((it, i) => {
+                const Ico = GTK_ICONS[i % GTK_ICONS.length];
+                const tint = GTK_TINTS[i % GTK_TINTS.length];
+                return (
+                  <motion.li
+                    key={it.label}
+                    className="group relative flex flex-col overflow-hidden p-5 lg:p-6"
+                    style={{
+                      background: `linear-gradient(160deg, ${tint.bg} 0%, #FAF7F2 150%)`,
+                      border: `1px solid ${tint.dot}3a`,
+                    }}
+                    initial={reduce ? false : { opacity: 0, y: 20, filter: "blur(5px)" }}
+                    whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    viewport={{ once: true, amount: 0.4 }}
+                    transition={{ duration: 0.5, delay: 0.1 + i * 0.09, ease }}
+                    whileHover={reduce ? undefined : { y: -4, boxShadow: `0 22px 44px -24px ${tint.dot}aa` }}
+                  >
+                    <span
+                      className="mb-4 flex h-11 w-11 items-center justify-center rounded-full transition-transform duration-500 group-hover:-translate-y-0.5"
+                      style={{ background: "#FAF7F2", boxShadow: `0 8px 20px -12px ${tint.dot}` }}
+                    >
+                      <Ico size={20} weight="light" color={tint.ink} />
+                    </span>
+                    <span
+                      className="font-serif font-light leading-tight"
+                      style={{ fontSize: "1.05rem", color: "#2A2320" }}
+                    >
                       {it.label}
                     </span>
-                  </dt>
-                  <dd className="mt-2 font-sans font-light text-[13.5px] leading-relaxed" style={{ color: "rgba(42,35,32,0.62)" }}>
-                    {it.text}
-                  </dd>
-                </motion.div>
-              ))}
-            </dl>
+                    <span
+                      className="mt-1.5 font-sans font-light text-[13px] leading-relaxed"
+                      style={{ color: "rgba(42,35,32,0.62)" }}
+                    >
+                      {it.text}
+                    </span>
+                  </motion.li>
+                );
+              })}
+            </ul>
+
+            <motion.div
+              initial={reduce ? false : { opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.5, ease }}
+              className="mt-7"
+            >
+              <Link
+                href="/contact"
+                className="group inline-flex items-center gap-2 font-sans text-[12px] font-semibold uppercase tracking-[0.16em]"
+                style={{ color: "#B65572" }}
+              >
+                {t.about.cta}
+                <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
       </section>
