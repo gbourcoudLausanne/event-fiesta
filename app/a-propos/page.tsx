@@ -108,7 +108,7 @@ function PhotoFan() {
 
   return (
     <div
-      className="relative w-full max-w-[780px] mx-auto lg:mx-auto lg:translate-x-2"
+      className="relative w-full max-w-[780px] mx-auto lg:mx-auto lg:translate-x-10"
       style={{ perspective: 1300 }}
     >
       <div className="relative" style={{ aspectRatio: "5 / 4" }}>
