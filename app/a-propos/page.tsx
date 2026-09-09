@@ -477,20 +477,33 @@ function PersonalNote({
         </div>
 
         <motion.p
-          className="relative font-serif font-light italic leading-snug flex flex-wrap gap-x-[0.26em] gap-y-1"
-          style={{ fontSize: "clamp(1.35rem, 2.2vw, 1.9rem)", color: "rgba(42,35,32,0.82)" }}
+          className="relative flex flex-wrap gap-x-[0.28em] gap-y-0.5"
+          style={{
+            fontFamily: "var(--font-caveat), ui-rounded, cursive",
+            fontSize: "clamp(1.5rem, 2.6vw, 2.05rem)",
+            lineHeight: 1.5,
+            color: "#4A3B33",
+          }}
           initial={reduce ? undefined : "hidden"}
           whileInView={reduce ? undefined : "shown"}
           viewport={{ once: true, amount: 0.4 }}
-          variants={{ shown: { transition: { staggerChildren: 0.025, delayChildren: 0.25 } } }}
+          variants={{ shown: { transition: { staggerChildren: 0.058, delayChildren: 0.35 } } }}
         >
           {words.map((w, i) => (
             <motion.span
               key={i}
               className="inline-block"
+              style={{ transformOrigin: "left bottom" }}
               variants={{
-                hidden: { opacity: 0, y: 10, filter: "blur(5px)" },
-                shown: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.4, ease } },
+                hidden: { opacity: 0, x: -6, y: 3, rotate: -4, filter: "blur(2px)" },
+                shown: {
+                  opacity: 1,
+                  x: 0,
+                  y: 0,
+                  rotate: i % 2 ? 0.6 : -0.6,
+                  filter: "blur(0px)",
+                  transition: { duration: 0.28, ease: [0.3, 0.7, 0.4, 1] },
+                },
               }}
             >
               {w}
@@ -501,12 +514,21 @@ function PersonalNote({
         {/* signature */}
         <div className="relative mt-9 flex items-end gap-4">
           <div className="relative">
-            <span
-              className="font-display italic leading-none"
-              style={{ fontSize: "clamp(1.7rem, 2.6vw, 2.3rem)", color: "#B65572" }}
+            <motion.span
+              className="block leading-none"
+              style={{
+                fontFamily: "var(--font-caveat), cursive",
+                fontSize: "clamp(2rem, 3vw, 2.7rem)",
+                fontWeight: 600,
+                color: "#B65572",
+              }}
+              initial={reduce ? false : { opacity: 0, x: -8 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4, ease }}
             >
               {sign}
-            </span>
+            </motion.span>
             <motion.svg
               viewBox="0 0 200 26"
               className="absolute -bottom-3 left-0 h-5 w-40"

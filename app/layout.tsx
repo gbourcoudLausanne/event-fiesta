@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Montserrat, DM_Serif_Display } from "next/font/google";
+import { Cormorant_Garamond, Montserrat, DM_Serif_Display, Caveat } from "next/font/google";
 import "./globals.css";
 import { I18nProvider } from "@/lib/i18n";
 import { SplashScreen } from "@/components/SplashScreen";
@@ -28,6 +28,13 @@ const dmSerif = DM_Serif_Display({
   weight: ["400"],
   style: ["normal", "italic"],
   variable: "--font-dm-serif",
+  display: "swap",
+});
+
+const caveat = Caveat({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-caveat",
   display: "swap",
 });
 
@@ -73,7 +80,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${cormorant.variable} ${montserrat.variable} ${dmSerif.variable} antialiased`}
+      className={`${cormorant.variable} ${montserrat.variable} ${dmSerif.variable} ${caveat.variable} antialiased`}
     >
       <body className="bg-creme text-noir font-sans min-h-screen">
         <I18nProvider>
