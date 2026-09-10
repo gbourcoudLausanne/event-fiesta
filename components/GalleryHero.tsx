@@ -3,11 +3,20 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion, type Variants } from "motion/react";
 import { ArrowRight } from "@phosphor-icons/react";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
+
+const cardStack: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.45 } },
+};
+const cardItem: Variants = {
+  hidden: { opacity: 0, y: 12, filter: "blur(5px)" },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease } },
+};
 
 const WALL = [
   { src: "/Galerie/hero-slides/hero-slide-8.webp", name: "Dégradé fuchsia" },
@@ -102,49 +111,106 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
         <div className="pointer-events-none absolute inset-0 z-30 flex items-center">
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10">
             <motion.div
-              initial={reduce ? false : { opacity: 0, x: -24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease }}
-              className="pointer-events-auto max-w-[440px] rounded-[4px] bg-[#FAF7F2] p-8 sm:p-11 lg:p-14"
-              style={{ boxShadow: "0 60px 120px -50px rgba(0,0,0,0.5)" }}
+              initial={reduce ? false : { opacity: 0, x: -28, filter: "blur(6px)" }}
+              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.85, delay: 0.2, ease }}
+              whileHover={reduce ? undefined : { y: -5 }}
+              className="group pointer-events-auto relative max-w-[440px] overflow-hidden rounded-[6px] p-8 sm:p-11 lg:p-14"
+              style={{
+                background: "rgba(250,247,242,0.86)",
+                backdropFilter: "blur(26px)",
+                WebkitBackdropFilter: "blur(26px)",
+                boxShadow: "0 60px 130px -48px rgba(0,0,0,0.58)",
+                border: "1px solid rgba(255,255,255,0.35)",
+              }}
             >
-              <div className="mb-5 flex items-center gap-3">
-                <span className="h-px w-10" style={{ background: "#D9628A" }} />
-                <span
-                  className="font-sans text-[10px] uppercase tracking-[0.32em]"
-                  style={{ color: "#B65572" }}
-                >
-                  {t.realisations.heroEyebrow}
-                </span>
-              </div>
-              <h1
-                className="font-serif font-light leading-[1.07] tracking-tight"
-                style={{ fontSize: "clamp(2rem, 3.6vw, 3rem)", color: "#2A2320" }}
+              {/* Accent rose qui grandit */}
+              <motion.span
+                className="absolute left-0 top-10 bottom-10 w-[3px] origin-top"
+                style={{ background: "linear-gradient(#F2879E, #C24B72)" }}
+                initial={reduce ? false : { scaleY: 0 }}
+                animate={{ scaleY: 1 }}
+                transition={{ duration: 0.7, delay: 0.55, ease }}
+                aria-hidden
+              />
+              {/* Halo qui suit au survol */}
+              <div
+                className="pointer-events-none absolute -inset-px rounded-[6px] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                style={{ boxShadow: "inset 0 0 0 1px rgba(217,98,138,0.4)" }}
+                aria-hidden
+              />
+
+              <motion.div
+                variants={reduce ? undefined : cardStack}
+                initial={reduce ? false : "hidden"}
+                animate={reduce ? undefined : "visible"}
               >
-                {t.realisations.heroTitle}
-              </h1>
-              <p
-                className="mt-5 font-sans font-light text-[14px] leading-relaxed"
-                style={{ color: "rgba(42,35,32,0.6)" }}
-              >
-                {t.realisations.heroText}
-              </p>
-              <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
-                <Link
-                  href="/contact"
-                  className="btn-gold-shimmer inline-flex items-center gap-2 rounded-full px-7 py-3 font-sans text-[13px] font-medium transition-transform duration-200 hover:scale-[1.03]"
-                  style={{ background: "#D9628A", color: "#FAF7F2" }}
+                <motion.div variants={reduce ? undefined : cardItem} className="mb-6">
+                  <svg width="48" height="30" viewBox="0 0 48 30" fill="none" aria-hidden>
+                    <motion.path
+                      d="M4 28 C 4 6 44 6 44 28"
+                      stroke="#D9628A"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                      initial={reduce ? undefined : { pathLength: 0 }}
+                      animate={reduce ? undefined : { pathLength: 1 }}
+                      transition={{ duration: 1, delay: 0.7, ease }}
+                    />
+                    <circle cx="4" cy="28" r="3" fill="#D9628A" />
+                    <circle cx="24" cy="5" r="3" fill="#D9628A" />
+                    <circle cx="44" cy="28" r="3" fill="#D9628A" />
+                  </svg>
+                </motion.div>
+
+                <motion.div
+                  variants={reduce ? undefined : cardItem}
+                  className="mb-5 flex items-center gap-3"
                 >
-                  {t.realisations.heroCta}
-                  <ArrowRight size={14} weight="bold" />
-                </Link>
-                <span
-                  className="font-sans text-[11px] uppercase tracking-[0.2em]"
-                  style={{ color: "rgba(42,35,32,0.4)" }}
+                  <span className="h-px w-10" style={{ background: "#D9628A" }} />
+                  <span
+                    className="font-sans text-[10px] uppercase tracking-[0.32em]"
+                    style={{ color: "#B65572" }}
+                  >
+                    {t.realisations.heroEyebrow}
+                  </span>
+                </motion.div>
+
+                <motion.h1
+                  variants={reduce ? undefined : cardItem}
+                  className="font-serif font-light leading-[1.07] tracking-tight"
+                  style={{ fontSize: "clamp(2rem, 3.6vw, 3rem)", color: "#2A2320" }}
                 >
-                  {worlds} univers · {pieces} décors
-                </span>
-              </div>
+                  {t.realisations.heroTitle}
+                </motion.h1>
+
+                <motion.p
+                  variants={reduce ? undefined : cardItem}
+                  className="mt-5 font-sans font-light text-[14px] leading-relaxed"
+                  style={{ color: "rgba(42,35,32,0.6)" }}
+                >
+                  {t.realisations.heroText}
+                </motion.p>
+
+                <motion.div
+                  variants={reduce ? undefined : cardItem}
+                  className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3"
+                >
+                  <Link
+                    href="/contact"
+                    className="btn-gold-shimmer inline-flex items-center gap-2 rounded-full px-7 py-3 font-sans text-[13px] font-medium transition-transform duration-200 hover:scale-[1.03]"
+                    style={{ background: "#D9628A", color: "#FAF7F2" }}
+                  >
+                    {t.realisations.heroCta}
+                    <ArrowRight size={14} weight="bold" />
+                  </Link>
+                  <span
+                    className="font-sans text-[11px] uppercase tracking-[0.2em]"
+                    style={{ color: "rgba(42,35,32,0.4)" }}
+                  >
+                    {worlds} univers · {pieces} décors
+                  </span>
+                </motion.div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
