@@ -2,136 +2,131 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { ArrowRight } from "@phosphor-icons/react";
+import Image from "next/image";
+import { ArrowRight, WhatsappLogo, Phone } from "@phosphor-icons/react";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
-
-const ANCHORS = [
-  { cx: 40, cy: 208 },
-  { cx: 360, cy: 40 },
-  { cx: 680, cy: 208 },
-];
 
 export function ContactCta() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
 
   return (
-    <section
-      className="relative overflow-hidden py-24 lg:py-36"
-      style={{
-        background:
-          "linear-gradient(150deg, #D9628A 0%, #C25E7E 55%, #B0546F 120%)",
-      }}
-    >
-      {/* Halo */}
+    <section className="relative overflow-hidden" style={{ background: "#F3EDE6" }}>
       <div
-        className="absolute pointer-events-none rounded-full"
+        className="pointer-events-none absolute -right-32 -top-32 hidden rounded-full lg:block"
         style={{
-          top: "-34%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "min(94vw, 940px)",
-          aspectRatio: "1",
-          background:
-            "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.16), rgba(255,255,255,0) 62%)",
+          width: 460,
+          height: 460,
+          background: "radial-gradient(circle, rgba(217,98,138,0.1) 0%, transparent 70%)",
         }}
         aria-hidden
       />
 
-      {/* Arche qui se dessine */}
-      <motion.svg
-        className="absolute left-1/2 -translate-x-1/2 pointer-events-none"
-        style={{ top: "9%", width: "min(82vw, 720px)" }}
-        viewBox="0 0 720 220"
-        fill="none"
-        aria-hidden
-        initial={reduce ? undefined : "hidden"}
-        whileInView={reduce ? undefined : "shown"}
-        viewport={{ once: true, amount: 0.4 }}
-      >
-        <motion.path
-          d="M40 208 C 66 30 654 30 680 208"
-          stroke="rgba(250,247,242,0.45)"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          variants={{
-            hidden: { pathLength: 0 },
-            shown: { pathLength: 1, transition: { duration: 1.7, ease } },
-          }}
-        />
-        {ANCHORS.map((p, i) => (
-          <motion.circle
-            key={i}
-            cx={p.cx}
-            cy={p.cy}
-            r="7"
-            fill="rgba(250,247,242,0.92)"
-            style={{ transformOrigin: `${p.cx}px ${p.cy}px` }}
-            variants={{
-              hidden: { scale: 0, opacity: 0 },
-              shown: {
-                scale: 1,
-                opacity: 1,
-                transition: { type: "spring", stiffness: 260, damping: 14, delay: 0.7 + i * 0.16 },
-              },
+      <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 lg:grid-cols-[0.85fr_1fr] lg:gap-20 lg:px-10 lg:py-28">
+        {/* Photo */}
+        <motion.div
+          initial={reduce ? false : { opacity: 0, x: -24 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.7, ease }}
+          className="relative mx-auto w-full max-w-sm lg:mx-0"
+        >
+          <div
+            className="relative overflow-hidden rounded-[24px]"
+            style={{
+              aspectRatio: "4 / 5",
+              boxShadow: "0 40px 90px -50px rgba(120,60,80,0.5)",
             }}
-          />
-        ))}
-      </motion.svg>
-
-      <motion.div
-        initial={reduce ? false : { opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7, delay: 0.15, ease }}
-        className="relative z-10 mx-auto max-w-2xl px-6 text-center"
-      >
-        <p
-          className="font-sans text-[11px] uppercase tracking-[0.34em] mb-6"
-          style={{ color: "rgba(250,247,242,0.72)" }}
-        >
-          {t.cta.eyebrow}
-        </p>
-        <h2
-          className="font-serif font-light italic leading-[1.12]"
-          style={{ fontSize: "clamp(2.2rem, 5vw, 3.9rem)", color: "#FAF7F2" }}
-        >
-          {t.cta.title}
-        </h2>
-        <p
-          className="mt-6 mx-auto max-w-md font-sans font-light text-[14.5px] leading-relaxed"
-          style={{ color: "rgba(250,247,242,0.82)" }}
-        >
-          {t.cta.text}
-        </p>
-
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
-          <Link
-            href="/contact"
-            className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-sm font-medium px-9 py-4 rounded-full transition-transform duration-200 hover:scale-[1.03]"
-            style={{ background: "#FAF7F2", color: "#B0546F" }}
           >
-            {t.cta.button}
-            <ArrowRight size={15} weight="bold" />
-          </Link>
+            <Image
+              src="/Galerie/hero-slides/hero-slide-2.webp"
+              alt="Arche de ballons rose poudré et rose gold sur backdrop crème"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 90vw, 380px"
+            />
+          </div>
+          <div
+            className="absolute -bottom-4 left-5 rounded-full px-5 py-2.5 font-sans text-[11px] tracking-wide"
+            style={{
+              background: "#FAF7F2",
+              color: "#B0546F",
+              boxShadow: "0 20px 40px -22px rgba(120,60,80,0.4)",
+            }}
+          >
+            {t.cta.note}
+          </div>
+        </motion.div>
+
+        {/* Texte + actions */}
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.7, delay: 0.1, ease }}
+        >
+          <div className="flex items-center gap-3">
+            <span className="h-px w-10" style={{ background: "#D9628A" }} />
+            <span
+              className="font-sans text-[10px] uppercase tracking-[0.32em]"
+              style={{ color: "#B65572" }}
+            >
+              {t.cta.eyebrow}
+            </span>
+          </div>
+
+          <h2
+            className="mt-5 font-serif font-light leading-[1.1] tracking-tight"
+            style={{ fontSize: "clamp(2.1rem, 4.6vw, 3.5rem)", color: "#2A2320" }}
+          >
+            {t.cta.title}
+          </h2>
+
+          <p
+            className="mt-5 max-w-md font-sans font-light text-[14.5px] leading-relaxed"
+            style={{ color: "rgba(42,35,32,0.6)" }}
+          >
+            {t.cta.text}
+          </p>
+
+          <div className="mt-9 flex flex-wrap items-center gap-4">
+            <Link
+              href="/contact"
+              className="btn-gold-shimmer inline-flex items-center gap-2 rounded-full px-8 py-4 font-sans text-[13px] font-medium transition-transform duration-200 hover:scale-[1.03]"
+              style={{ background: "#D9628A", color: "#FAF7F2" }}
+            >
+              {t.cta.button}
+              <ArrowRight size={15} weight="bold" />
+            </Link>
+
+            <a
+              href="https://wa.me/41779143855"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full px-6 py-4 font-sans text-[13px] font-medium transition-transform duration-200 hover:scale-[1.03]"
+              style={{
+                background: "#FAF7F2",
+                color: "#2A2320",
+                border: "1px solid rgba(42,35,32,0.14)",
+              }}
+            >
+              <WhatsappLogo size={16} weight="fill" style={{ color: "#25D366" }} />
+              {t.cta.whatsapp}
+            </a>
+          </div>
+
           <a
-            href="tel:0779143855"
-            className="font-sans text-sm font-light transition-colors duration-200"
-            style={{ color: "rgba(250,247,242,0.72)" }}
-            onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLAnchorElement).style.color = "#FAF7F2")
-            }
-            onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLAnchorElement).style.color =
-                "rgba(250,247,242,0.72)")
-            }
+            href="tel:+41779143855"
+            className="mt-6 inline-flex items-center gap-2 font-sans text-[13px] font-light transition-colors duration-200 hover:opacity-70"
+            style={{ color: "rgba(42,35,32,0.55)" }}
           >
+            <Phone size={14} weight="bold" />
             {t.cta.phone}
           </a>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </section>
   );
 }

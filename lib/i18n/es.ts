@@ -295,9 +295,11 @@ export const es = {
   cta: {
     eyebrow: "¿Lo hablamos?",
     title: "¿Y si imaginamos el tuyo?",
-    text: "Cuéntame la fecha, el lugar, el ambiente que tienes en mente. Te respondo en 24 h con una primera idea y una estimación — gratuita y sin compromiso.",
+    text: "Cuéntame la fecha, el lugar, el ambiente que tienes en mente. Te respondo en 24 h con una primera idea y una estimación.",
     button: "Pedir presupuesto",
-    phone: "o 077 914 38 55",
+    whatsapp: "Escribir por WhatsApp",
+    phone: "077 914 38 55",
+    note: "Respuesta en 24 h · Presupuesto gratuito y sin compromiso",
   },
   faq: {
     eyebrow: "Tus preguntas",

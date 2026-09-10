@@ -296,9 +296,11 @@ export const en = {
   cta: {
     eyebrow: "Shall we talk?",
     title: "What if we imagined yours?",
-    text: "Tell me the date, the venue, the mood you have in mind. I'll get back to you within 24 h with a first idea and an estimate — free and with no obligation.",
+    text: "Tell me the date, the venue, the mood you have in mind. I'll get back to you within 24 h with a first idea and an estimate.",
     button: "Request a quote",
-    phone: "or 077 914 38 55",
+    whatsapp: "Message on WhatsApp",
+    phone: "077 914 38 55",
+    note: "Reply within 24 h · Free quote, no obligation",
   },
   faq: {
     eyebrow: "Your questions",
