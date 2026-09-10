@@ -16,9 +16,9 @@ const PHOTOS: Record<string, string> = {
   genderreveal: "/Galerie/Gender-Reveal/GenderReveal_2.webp",
   bapteme: "/Galerie/hero-slides/hero-slide-16.webp",
   piquenique: "/Galerie/hero-slides/hero-slide-17.webp",
-  theme: "/Galerie/Hero/Hero_4.webp",
+  theme: "/Galerie/Soiree-a-theme/photo-1769038932067-6183daa327ad.webp",
   surmesure: "/Galerie/hero-slides/hero-slide-8.webp",
-  goodies: "/Galerie/goodies/Goodies_1.webp",
+  goodies: "/Galerie/goodies/Goodies_3.webp",
   // Professionnels
   corporate: "/Galerie/Corporate/Corporate_1.webp",
   yearend: "/Galerie/hero-slides/hero-slide-10.webp",
@@ -49,7 +49,7 @@ function ServiceRow({ row, index }: { row: Row; index: number }) {
         <div
           className="group relative overflow-hidden rounded-[20px]"
           style={{
-            aspectRatio: "4 / 3",
+            aspectRatio: "4 / 5",
             border: "1px solid rgba(42,35,32,0.08)",
             boxShadow: "0 30px 60px -34px rgba(120,60,80,0.4)",
           }}

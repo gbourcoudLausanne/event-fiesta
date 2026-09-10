@@ -29,16 +29,16 @@ const photos = [
     aspectClass: "aspect-[4/3]",
   },
   {
-    src: "/Galerie/anniversaires/photo-1562967005-a3c85514d3e9.avif",
-    thumb: "/Galerie/anniversaires/photo-1562967005-a3c85514d3e9.avif",
+    src: "/Galerie/anniversaires/photo-1562967005-a3c85514d3e9.webp",
+    thumb: "/Galerie/anniversaires/photo-1562967005-a3c85514d3e9.webp",
     alt: "Sweet table avec ballons bleus et candy bar",
     name: "Sweet Table Candy",
     category: "anniversary" as Category,
     aspectClass: "aspect-[3/2]",
   },
   {
-    src: "/Galerie/anniversaires/photo-1741969494307-55394e3e4071.avif",
-    thumb: "/Galerie/anniversaires/photo-1741969494307-55394e3e4071.avif",
+    src: "/Galerie/anniversaires/photo-1741969494307-55394e3e4071.webp",
+    thumb: "/Galerie/anniversaires/photo-1741969494307-55394e3e4071.webp",
     alt: "Arche ballons rose avec néon Happy Birthday",
     name: "Arche Rose Néon",
     category: "anniversary" as Category,
@@ -88,16 +88,16 @@ const photos = [
   },
   // ── Soirées à thème ────────────────────────────────────────────────────────
   {
-    src: "/Galerie/Soiree-a-theme/Soiree_1.avif",
-    thumb: "/Galerie/Soiree-a-theme/Soiree_1.avif",
+    src: "/Galerie/Soiree-a-theme/Soiree_1.webp",
+    thumb: "/Galerie/Soiree-a-theme/Soiree_1.webp",
     alt: "Décoration romantique chambre rose gold I Love You",
     name: "Soirée Romantique",
     category: "themed" as Category,
-    aspectClass: "aspect-[2/3]",
+    aspectClass: "aspect-[4/5]",
   },
   {
-    src: "/Galerie/Soiree-a-theme/photo-1769038932067-6183daa327ad.avif",
-    thumb: "/Galerie/Soiree-a-theme/photo-1769038932067-6183daa327ad.avif",
+    src: "/Galerie/Soiree-a-theme/photo-1769038932067-6183daa327ad.webp",
+    thumb: "/Galerie/Soiree-a-theme/photo-1769038932067-6183daa327ad.webp",
     alt: "Décoration bride party rose et or",
     name: "Bride Party",
     category: "themed" as Category,
@@ -112,12 +112,12 @@ const photos = [
     aspectClass: "aspect-[4/3]",
   },
   {
-    src: "/Galerie/Hero/Hero_1.avif",
-    thumb: "/Galerie/Hero/Hero_1.avif",
+    src: "/Galerie/Hero/Hero_1.webp",
+    thumb: "/Galerie/Hero/Hero_1.webp",
     alt: "Décor de fête avec arche de ballons",
     name: "Décor Signature",
     category: "themed" as Category,
-    aspectClass: "aspect-[1/1]",
+    aspectClass: "aspect-[3/2]",
   },
   // ── Corporate ──────────────────────────────────────────────────────────────
   {
