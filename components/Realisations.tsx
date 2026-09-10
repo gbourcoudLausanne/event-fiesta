@@ -646,34 +646,41 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
 
   return (
     <section id="realisations" className="pb-24 lg:pb-32" style={{ background: "#FAF7F2" }}>
-      {/* Ouverture de section */}
+      {/* En-tête — centré, aligné sur les onglets */}
       <motion.div
-        initial={reduce ? false : { opacity: 0, y: 16 }}
+        initial={reduce ? false : { opacity: 0, y: 14 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6, ease }}
-        className="mx-auto max-w-7xl px-6 pt-24 pb-6 lg:px-10 lg:pt-36 lg:pb-8"
+        transition={{ duration: 0.55, ease }}
+        className="mx-auto flex max-w-7xl flex-col items-center px-6 pt-20 text-center lg:px-10 lg:pt-32"
       >
         <div className="flex items-center gap-3">
-          <span className="h-px w-10" style={{ background: "#D9628A" }} />
+          <span className="h-px w-8" style={{ background: "#D9628A" }} />
           <span
             className="font-sans text-[10px] uppercase tracking-[0.3em]"
             style={{ color: "#B65572" }}
           >
             Toutes les créations
           </span>
+          <span className="h-px w-8" style={{ background: "#D9628A" }} />
         </div>
         <h2
-          className="mt-4 font-serif font-light leading-tight tracking-tight"
-          style={{ fontSize: "clamp(1.9rem, 3.6vw, 3rem)", color: "#2A2320" }}
+          className="mt-3 font-serif font-light leading-tight tracking-tight"
+          style={{ fontSize: "clamp(1.7rem, 3vw, 2.5rem)", color: "#2A2320" }}
         >
           Explorez par collection
         </h2>
+        <p
+          className="mt-2 font-sans text-[11px] uppercase tracking-[0.2em]"
+          style={{ color: "rgba(42,35,32,0.4)" }}
+        >
+          {GALLERY_PIECES} décors · {GALLERY_WORLDS} collections
+        </p>
       </motion.div>
 
       {/* Onglets collants */}
       <div
-        className="sticky top-[68px] z-30"
+        className="sticky top-[68px] z-30 mt-6"
         style={{
           background: "rgba(250,247,242,0.94)",
           backdropFilter: "blur(12px)",
@@ -684,7 +691,7 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
           className="mx-auto max-w-7xl px-6 lg:px-10"
           style={{ borderBottom: "1px solid rgba(42,35,32,0.1)" }}
         >
-          <div className="no-scrollbar -mr-6 flex gap-7 overflow-x-auto pr-6 lg:mr-0 lg:pr-0">
+          <div className="no-scrollbar -mr-6 flex gap-7 overflow-x-auto pr-6 lg:mr-0 lg:justify-center lg:pr-0">
             <TabItem label="Tout voir" active={filter === "all"} onClick={() => setFilter("all")} />
             {COLLECTIONS.map((c) => (
               <TabItem
