@@ -8,170 +8,6 @@ import { X, ArrowLeft, ArrowRight, MagnifyingGlassPlus } from "@phosphor-icons/r
 import { FloatingBalloons } from "@/components/FloatingBalloons";
 import { useI18n } from "@/lib/i18n";
 
-type Category = "all" | "anniversary" | "baptism" | "babyshower" | "themed" | "corporate" | "creation" | "goodies";
-
-const photos = [
-  // ── Anniversaires ──────────────────────────────────────────────────────────
-  {
-    src: "/Galerie/anniversaires/80BA940E-3E31-4C3E-BD09-5C497C0F78FF.webp",
-    thumb: "/Galerie/anniversaires/80BA940E-3E31-4C3E-BD09-5C497C0F78FF.webp",
-    alt: "Arche ballons violet et or en extérieur",
-    name: "Arche Violette Extérieur",
-    category: "anniversary" as Category,
-    aspectClass: "aspect-[3/4]",
-  },
-  {
-    src: "/Galerie/anniversaires/Anniv_1.webp",
-    thumb: "/Galerie/anniversaires/Anniv_1.webp",
-    alt: "Arche rose gold Happy Birthday 50",
-    name: "Happy Birthday 50",
-    category: "anniversary" as Category,
-    aspectClass: "aspect-[4/3]",
-  },
-  {
-    src: "/Galerie/anniversaires/photo-1562967005-a3c85514d3e9.webp",
-    thumb: "/Galerie/anniversaires/photo-1562967005-a3c85514d3e9.webp",
-    alt: "Sweet table avec ballons bleus et candy bar",
-    name: "Sweet Table Candy",
-    category: "anniversary" as Category,
-    aspectClass: "aspect-[3/2]",
-  },
-  {
-    src: "/Galerie/anniversaires/photo-1741969494307-55394e3e4071.webp",
-    thumb: "/Galerie/anniversaires/photo-1741969494307-55394e3e4071.webp",
-    alt: "Arche ballons rose avec néon Happy Birthday",
-    name: "Arche Rose Néon",
-    category: "anniversary" as Category,
-    aspectClass: "aspect-[3/2]",
-  },
-  // ── Baptêmes ───────────────────────────────────────────────────────────────
-  {
-    src: "/Galerie/Baptemes/Bapteme_1.webp",
-    thumb: "/Galerie/Baptemes/Bapteme_1.webp",
-    alt: "Décoration baptême beige et or avec arche ballons",
-    name: "Baptême Élégance",
-    category: "baptism" as Category,
-    aspectClass: "aspect-[3/4]",
-  },
-  {
-    src: "/Galerie/Baptemes/122219_01.webp",
-    thumb: "/Galerie/Baptemes/122219_01.webp",
-    alt: "Arche ronde rose avec guirlande ballons et pampas",
-    name: "Arche Ronde Pampas",
-    category: "baptism" as Category,
-    aspectClass: "aspect-[1/1]",
-  },
-  {
-    src: "/Galerie/Baptemes/Bapteme.webp",
-    thumb: "/Galerie/Baptemes/Bapteme.webp",
-    alt: "Arche dorée avec guirlande ballons rose gold et pampas",
-    name: "Arche Dorée Luxe",
-    category: "baptism" as Category,
-    aspectClass: "aspect-[1/1]",
-  },
-  {
-    src: "/Galerie/Hero/Hero_3.webp",
-    thumb: "/Galerie/Hero/Hero_3.webp",
-    alt: "Installation boho extérieure avec panneaux et ballons",
-    name: "Boho Garden",
-    category: "baptism" as Category,
-    aspectClass: "aspect-[4/3]",
-  },
-  // ── Baby Shower / Gender Reveal ────────────────────────────────────────────
-  {
-    src: "/Galerie/Gender-Reveal/GenderReveal_1.webp",
-    thumb: "/Galerie/Gender-Reveal/GenderReveal_1.webp",
-    alt: "Gender reveal Oh Baby! arche or et beige avec fleurs",
-    name: "Oh Baby! Reveal",
-    category: "babyshower" as Category,
-    aspectClass: "aspect-[1/1]",
-  },
-  // ── Soirées à thème ────────────────────────────────────────────────────────
-  {
-    src: "/Galerie/Soiree-a-theme/Soiree_1.webp",
-    thumb: "/Galerie/Soiree-a-theme/Soiree_1.webp",
-    alt: "Décoration romantique chambre rose gold I Love You",
-    name: "Soirée Romantique",
-    category: "themed" as Category,
-    aspectClass: "aspect-[4/5]",
-  },
-  {
-    src: "/Galerie/Soiree-a-theme/photo-1769038932067-6183daa327ad.webp",
-    thumb: "/Galerie/Soiree-a-theme/photo-1769038932067-6183daa327ad.webp",
-    alt: "Décoration bride party rose et or",
-    name: "Bride Party",
-    category: "themed" as Category,
-    aspectClass: "aspect-[2/3]",
-  },
-  {
-    src: "/Galerie/Hero/Hero_4.webp",
-    thumb: "/Galerie/Hero/Hero_4.webp",
-    alt: "Bride to Be néon avec guirlande ballons rose",
-    name: "Bride to Be",
-    category: "themed" as Category,
-    aspectClass: "aspect-[4/3]",
-  },
-  {
-    src: "/Galerie/Hero/Hero_1.webp",
-    thumb: "/Galerie/Hero/Hero_1.webp",
-    alt: "Décor de fête avec arche de ballons",
-    name: "Décor Signature",
-    category: "themed" as Category,
-    aspectClass: "aspect-[3/2]",
-  },
-  // ── Corporate ──────────────────────────────────────────────────────────────
-  {
-    src: "/Galerie/Corporate/Corporate_1.webp",
-    thumb: "/Galerie/Corporate/Corporate_1.webp",
-    alt: "Arche ballons colorée pour événement Disney Crowned",
-    name: "Disney Crowned Event",
-    category: "corporate" as Category,
-    aspectClass: "aspect-[3/4]",
-  },
-  // ── Créations sur mesure ───────────────────────────────────────────────────
-  {
-    src: "/Galerie/Creation-sur-mesure/IMG_6343.webp",
-    thumb: "/Galerie/Creation-sur-mesure/IMG_6343.webp",
-    alt: "Composition ballons chiffre 15 rose gold sur mesure",
-    name: "Bouquet Chiffre 15",
-    category: "creation" as Category,
-    aspectClass: "aspect-[2/3]",
-  },
-  {
-    src: "/Galerie/Creation-sur-mesure/IMG_6345.webp",
-    thumb: "/Galerie/Creation-sur-mesure/IMG_6345.webp",
-    alt: "Composition ballons chiffre 30 rose gold",
-    name: "Bouquet Chiffre 30",
-    category: "creation" as Category,
-    aspectClass: "aspect-[2/3]",
-  },
-  {
-    src: "/Galerie/Hero/Hero_2.webp",
-    thumb: "/Galerie/Hero/Hero_2.webp",
-    alt: "Guirlande ballons or et noir dans un restaurant",
-    name: "Déco Restaurant Or",
-    category: "creation" as Category,
-    aspectClass: "aspect-[4/3]",
-  },
-  // ── Goodies ────────────────────────────────────────────────────────────────
-  {
-    src: "/Galerie/goodies/Goodies_1.webp",
-    thumb: "/Galerie/goodies/Goodies_1.webp",
-    alt: "Porte-clés personnalisés avec croix et perles",
-    name: "Porte-clés Baptême",
-    category: "goodies" as Category,
-    aspectClass: "aspect-[4/3]",
-  },
-  {
-    src: "/Galerie/goodies/Goodies_3.webp",
-    thumb: "/Galerie/goodies/Goodies_3.webp",
-    alt: "Pochette souvenir personnalisée avec ballon bulle",
-    name: "Pochette Souvenir",
-    category: "goodies" as Category,
-    aspectClass: "aspect-[2/3]",
-  },
-];
-
 const ease = [0.16, 1, 0.3, 1] as const;
 
 /* ── Carousel d'aperçu (accueil) : rolodex de types + pile photo ──────── */
@@ -613,7 +449,7 @@ function RealisationsCarousel() {
       <AnimatePresence>
         {lb !== null && (
           <Lightbox
-            photos={CAROUSEL[lb.t].photos as unknown as typeof photos}
+            photos={CAROUSEL[lb.t].photos}
             activeIndex={lb.i}
             onClose={() => setLb(null)}
             onNext={() => setLb((v) => (v === null ? null : { ...v, i: (v.i + 1) % CAROUSEL[v.t].photos.length }))}
@@ -632,7 +468,7 @@ function Lightbox({
   onPrev,
   onNext,
 }: {
-  photos: typeof photos;
+  photos: readonly { src: string; alt: string; name: string }[];
   activeIndex: number;
   onClose: () => void;
   onPrev: () => void;
@@ -715,49 +551,158 @@ function Lightbox({
   );
 }
 
-const FILTERS: { key: Category; labelKey: keyof ReturnType<typeof useI18n>["t"]["realisations"]["filters"] }[] = [
-  { key: "all", labelKey: "all" },
-  { key: "anniversary", labelKey: "anniversary" },
-  { key: "baptism", labelKey: "baptism" },
-  { key: "babyshower", labelKey: "babyshower" },
-  { key: "themed", labelKey: "themed" },
-  { key: "corporate", labelKey: "corporate" },
-  { key: "creation", labelKey: "creation" },
-  { key: "goodies", labelKey: "goodies" },
-];
+/* ── Un « chapitre » de la galerie : une collection ────────────────────── */
+function CollectionSpread({
+  col,
+  index,
+  onOpen,
+}: {
+  col: CarouselType;
+  index: number;
+  onOpen: (photoIndex: number) => void;
+}) {
+  const reduce = useReducedMotion();
+  const flip = index % 2 === 1;
+  const num = String(index + 1).padStart(2, "0");
+  const [hero, ...rest] = col.photos;
+  const shown = rest.slice(0, 5);
+  const extra = rest.length - shown.length;
+
+  return (
+    <motion.div
+      initial={reduce ? false : { opacity: 0, y: 44 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.7, ease }}
+      className="relative"
+    >
+      {/* Nom de la collection en filigrane géant */}
+      <span
+        aria-hidden
+        className={`pointer-events-none absolute -top-8 select-none font-serif font-light uppercase leading-none lg:-top-14 ${
+          flip ? "right-5 lg:right-14" : "left-5 lg:left-14"
+        }`}
+        style={{ fontSize: "clamp(3rem, 11vw, 8.5rem)", color: "rgba(217,98,138,0.07)" }}
+      >
+        {col.label}
+      </span>
+
+      <div className="relative mx-auto grid max-w-7xl items-center gap-7 px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:px-10">
+        {/* Grande photo */}
+        <button
+          type="button"
+          onClick={() => onOpen(0)}
+          className={`group relative overflow-hidden rounded-[18px] ${flip ? "lg:order-2" : ""}`}
+          style={{ aspectRatio: "4 / 5", boxShadow: "0 44px 90px -44px rgba(120,60,80,0.5)" }}
+          aria-label={`${col.label} — ${hero.name}`}
+        >
+          <Image
+            src={hero.src}
+            alt={hero.alt}
+            fill
+            className="object-cover transition-transform duration-[1200ms] group-hover:scale-[1.05]"
+            sizes="(max-width: 1024px) 100vw, 46vw"
+          />
+          <div
+            className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            style={{ background: "linear-gradient(to top, rgba(13,11,8,0.55), transparent 55%)" }}
+          />
+          <span
+            className="absolute bottom-4 left-4 font-serif font-light italic opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 translate-y-2"
+            style={{ fontSize: "1.05rem", color: "#FAF7F2" }}
+          >
+            {hero.name}
+          </span>
+        </button>
+
+        {/* Colonne texte + mosaïque */}
+        <div className={flip ? "lg:order-1" : ""}>
+          <span className="font-display italic leading-none" style={{ fontSize: "1.15rem", color: "rgba(217,98,138,0.5)" }}>
+            {num}
+          </span>
+          <h2
+            className="mt-2 font-serif font-light leading-[1.08] tracking-tight"
+            style={{ fontSize: "clamp(2rem, 4vw, 3.1rem)", color: "#2A2320" }}
+          >
+            {col.label}
+          </h2>
+          <p className="mt-3 font-sans text-[11px] uppercase tracking-[0.2em]" style={{ color: "rgba(42,35,32,0.4)" }}>
+            {col.photos.length} {col.photos.length > 1 ? "décors" : "décor"}
+          </p>
+
+          {rest.length > 0 && (
+            <div className="mt-7 grid grid-cols-3 gap-2.5 sm:gap-3">
+              {shown.map((p, i) => (
+                <button
+                  key={p.src}
+                  type="button"
+                  onClick={() => onOpen(i + 1)}
+                  className="group relative overflow-hidden rounded-[10px]"
+                  style={{ aspectRatio: "1" }}
+                  aria-label={p.name}
+                >
+                  <Image
+                    src={p.src}
+                    alt={p.alt}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.12]"
+                    sizes="20vw"
+                  />
+                </button>
+              ))}
+              {extra > 0 && (
+                <button
+                  type="button"
+                  onClick={() => onOpen(shown.length + 1)}
+                  className="flex items-center justify-center rounded-[10px]"
+                  style={{ aspectRatio: "1", background: "rgba(217,98,138,0.09)", color: "#B65572" }}
+                  aria-label={`Voir ${extra} de plus`}
+                >
+                  <span className="font-sans text-sm font-medium">+{extra}</span>
+                </button>
+              )}
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => onOpen(0)}
+            className="group mt-7 inline-flex items-center gap-2 font-sans text-[11px] font-semibold uppercase tracking-[0.16em]"
+            style={{ color: "#B65572" }}
+          >
+            Voir la série
+            <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export function Realisations({ preview = false }: { preview?: boolean }) {
   const { t } = useI18n();
   const reduce = useReducedMotion();
-  const [active, setActive] = useState<Category>("all");
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [lb, setLb] = useState<{ c: number; i: number } | null>(null);
 
   if (preview) return <RealisationsCarousel />;
 
-  const filtered =
-    active === "all" ? photos : photos.filter((p) => p.category === active);
-
-  const closeLightbox = () => setLightboxIndex(null);
-  const goNext = () => setLightboxIndex((i) => i === null ? 0 : (i + 1) % filtered.length);
-  const goPrev = () => setLightboxIndex((i) => i === null ? 0 : (i - 1 + filtered.length) % filtered.length);
+  const total = CAROUSEL.reduce((n, c) => n + c.photos.length, 0);
 
   return (
     <section
       id="realisations"
-      className="pt-[116px] pb-20 lg:pt-[148px] lg:pb-28"
+      className="overflow-hidden pt-[116px] pb-24 lg:pt-[148px] lg:pb-32"
       style={{ background: "#FAF7F2" }}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
-
-        {/* Bandeau galerie */}
+      <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease }}
-          className="mb-12 lg:mb-16 max-w-3xl"
+          className="max-w-3xl"
         >
-          <div className="flex items-center gap-3 mb-5">
-            <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+          <div className="mb-5 flex items-center gap-3">
+            <span className="h-px w-10" style={{ background: "#D9628A" }} />
             <span className="font-sans text-[10px] uppercase tracking-[0.32em]" style={{ color: "#B65572" }}>
               {t.realisations.heroEyebrow}
             </span>
@@ -769,110 +714,40 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
             {t.realisations.heroTitle}
           </h1>
           <p
-            className="mt-6 font-sans font-light text-[15px] leading-relaxed max-w-lg"
+            className="mt-6 max-w-lg font-sans font-light text-[15px] leading-relaxed"
             style={{ color: "rgba(42,35,32,0.58)" }}
           >
             {t.realisations.heroText}
           </p>
         </motion.div>
-
-        {/* Category filters */}
-        {!preview && (
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, ease }}
-          className="flex flex-wrap gap-2 mb-10"
+        <p
+          className="mt-8 font-sans text-[11px] uppercase tracking-[0.22em]"
+          style={{ color: "rgba(42,35,32,0.38)" }}
         >
-          {FILTERS.map(({ key, labelKey }) => (
-            <button
-              key={key}
-              onClick={() => setActive(key)}
-              className="font-sans text-sm px-4 py-2 rounded-full transition-all duration-250 cursor-pointer"
-              style={{
-                background: active === key ? "#D9628A" : "transparent",
-                color: active === key ? "#FAF7F2" : "rgba(42,35,32,0.55)",
-                border: active === key ? "1px solid #D9628A" : "1px solid rgba(42,35,32,0.18)",
-                fontWeight: active === key ? 500 : 300,
-              }}
-            >
-              {t.realisations.filters[labelKey]}
-            </button>
-          ))}
-        </motion.div>
-        )}
+          {CAROUSEL.length} univers · {total} décors
+        </p>
+      </div>
 
-        {/* Masonry grid */}
-        <div key={active} className="columns-1 sm:columns-2 lg:columns-3 gap-3">
-            {filtered.map((photo, i) => (
-              <motion.button
-                key={photo.src}
-                initial={reduce ? false : { opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.1 }}
-                transition={{ duration: 0.45, delay: Math.min(i, 8) * 0.05, ease }}
-                onClick={() => setLightboxIndex(i)}
-                className="break-inside-avoid mb-3 group relative overflow-hidden cursor-pointer block w-full text-left focus-visible:outline-2"
-                style={{ borderRadius: 14 }}
-                aria-label={`Voir ${photo.name}`}
-              >
-                <div className={`relative w-full ${photo.aspectClass}`} style={{ background: "#C8B4A8" }}>
-                  <Image
-                    src={photo.thumb}
-                    alt={photo.alt}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-350 flex flex-col justify-end p-4 md:p-5"
-                    style={{ background: "linear-gradient(to top, rgba(42,35,32,0.78) 0%, rgba(42,35,32,0.1) 60%, transparent 100%)" }}
-                  >
-                    <p
-                      className="font-sans text-[10px] uppercase tracking-[0.18em] mb-1 translate-y-3 group-hover:translate-y-0 transition-transform duration-300"
-                      style={{ color: "#F4A8B8", transitionDelay: "0.04s" }}
-                    >
-                      {t.realisations.filters[photo.category]}
-                    </p>
-                    <p
-                      className="font-serif text-lg translate-y-3 group-hover:translate-y-0 transition-transform duration-300"
-                      style={{ color: "#FAF7F2", transitionDelay: "0.06s" }}
-                    >
-                      {photo.name}
-                    </p>
-                  </div>
-                  {/* Border reveal */}
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                    style={{ border: "1px solid rgba(217,98,138,0.4)", borderRadius: 14 }}
-                  />
-                </div>
-              </motion.button>
-            ))}
-        </div>
-
-        {preview && (
-          <div className="mt-12 flex justify-center">
-            <Link
-              href="/galerie"
-              className="btn-gold-shimmer font-sans text-[13px] font-medium px-8 py-3.5 rounded-full cursor-pointer transition-transform duration-200 hover:scale-[1.03]"
-              style={{ background: "#D9628A", color: "#FAF7F2" }}
-            >
-              {t.realisations.ctaAll}
-            </Link>
-          </div>
-        )}
+      <div className="mt-16 flex flex-col gap-24 lg:mt-28 lg:gap-40">
+        {CAROUSEL.map((col, ci) => (
+          <CollectionSpread key={col.label} col={col} index={ci} onOpen={(i) => setLb({ c: ci, i })} />
+        ))}
       </div>
 
       <AnimatePresence>
-        {lightboxIndex !== null && (
+        {lb && (
           <Lightbox
-            photos={filtered}
-            activeIndex={lightboxIndex}
-            onClose={closeLightbox}
-            onNext={goNext}
-            onPrev={goPrev}
+            photos={CAROUSEL[lb.c].photos}
+            activeIndex={lb.i}
+            onClose={() => setLb(null)}
+            onNext={() =>
+              setLb((v) => (v === null ? null : { ...v, i: (v.i + 1) % CAROUSEL[v.c].photos.length }))
+            }
+            onPrev={() =>
+              setLb((v) =>
+                v === null ? null : { ...v, i: (v.i - 1 + CAROUSEL[v.c].photos.length) % CAROUSEL[v.c].photos.length },
+              )
+            }
           />
         )}
       </AnimatePresence>
