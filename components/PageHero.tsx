@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -8,10 +9,12 @@ export function PageHero({
   eyebrow,
   title,
   subtitle,
+  decor,
 }: {
   eyebrow: string;
   title: string;
   subtitle?: string;
+  decor?: ReactNode;
 }) {
   const reduce = useReducedMotion();
 
@@ -34,6 +37,7 @@ export function PageHero({
       />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
+        {decor}
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

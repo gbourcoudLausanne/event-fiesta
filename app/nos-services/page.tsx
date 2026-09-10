@@ -1,6 +1,7 @@
 "use client";
 
 import { PageHero } from "@/components/PageHero";
+import { HeroDecor } from "@/components/HeroDecor";
 import { ServicesCatalog } from "@/components/ServicesCatalog";
 import { ContactCta } from "@/components/ContactCta";
 import { useI18n } from "@/lib/i18n";
@@ -14,6 +15,7 @@ export default function ServicesPage() {
         eyebrow={t.services.eyebrow}
         title={t.services.title}
         subtitle={t.services.intro}
+        decor={<HeroDecor />}
       />
       <ServicesCatalog />
       <ContactCta />
