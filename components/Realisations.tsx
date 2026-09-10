@@ -646,7 +646,7 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
 
   return (
     <section id="realisations" className="pb-24 lg:pb-32" style={{ background: "#FAF7F2" }}>
-      <div className="pt-10 lg:pt-14" />
+      <div className="pt-28 lg:pt-32" />
 
       {/* Barre de filtres — collante, intitulé intégré */}
       <div
