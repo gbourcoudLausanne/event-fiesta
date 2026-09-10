@@ -602,14 +602,12 @@ export const GALLERY_WORLDS = CAROUSEL.length;
 export const GALLERY_PIECES = ALL_PHOTOS.length;
 const TILE_AR = ["3 / 4", "4 / 5", "1 / 1", "4 / 3", "3 / 4", "5 / 6"];
 
-function Chip({
+function TabItem({
   label,
-  count,
   active,
   onClick,
 }: {
   label: string;
-  count: number;
   active: boolean;
   onClick: () => void;
 }) {
@@ -617,16 +615,21 @@ function Chip({
     <button
       type="button"
       onClick={onClick}
-      className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 font-sans text-[12px] transition-colors duration-200 cursor-pointer"
+      className="relative shrink-0 whitespace-nowrap py-4 font-serif font-light transition-colors duration-200 cursor-pointer"
       style={{
-        background: active ? "#D9628A" : "transparent",
-        color: active ? "#FAF7F2" : "rgba(42,35,32,0.62)",
-        border: `1px solid ${active ? "#D9628A" : "rgba(42,35,32,0.16)"}`,
-        fontWeight: active ? 500 : 400,
+        fontSize: "clamp(0.95rem, 1.5vw, 1.15rem)",
+        color: active ? "#B65572" : "rgba(42,35,32,0.4)",
+        fontStyle: active ? "italic" : "normal",
       }}
     >
       {label}
-      <span style={{ opacity: 0.55, marginLeft: 6 }}>{count}</span>
+      {active && (
+        <motion.span
+          layoutId="gal-tab-underline"
+          className="absolute inset-x-0 -bottom-px h-[2px]"
+          style={{ background: "#D9628A" }}
+        />
+      )}
     </button>
   );
 }
@@ -643,30 +646,25 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
 
   return (
     <section id="realisations" className="pb-24 lg:pb-32" style={{ background: "#FAF7F2" }}>
-      {/* Barre de filtres collante */}
+      {/* Onglets collants */}
       <div
         className="sticky top-[68px] z-30"
         style={{
           background: "rgba(250,247,242,0.94)",
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
-          boxShadow: "0 1px 0 rgba(42,35,32,0.08), 0 14px 28px -22px rgba(42,35,32,0.3)",
         }}
       >
-        <div className="mx-auto flex max-w-7xl items-center gap-4 px-6 lg:px-10">
-          <span
-            className="hidden shrink-0 font-sans text-[10px] uppercase tracking-[0.24em] lg:block"
-            style={{ color: "rgba(42,35,32,0.4)" }}
-          >
-            Collections
-          </span>
-          <div className="no-scrollbar -mr-6 flex gap-2 overflow-x-auto py-3.5 pr-6 lg:mr-0 lg:pr-0">
-            <Chip label="Tout voir" count={ALL_PHOTOS.length} active={filter === "all"} onClick={() => setFilter("all")} />
+        <div
+          className="mx-auto max-w-7xl px-6 lg:px-10"
+          style={{ borderBottom: "1px solid rgba(42,35,32,0.1)" }}
+        >
+          <div className="no-scrollbar -mr-6 flex gap-7 overflow-x-auto pr-6 lg:mr-0 lg:pr-0">
+            <TabItem label="Tout voir" active={filter === "all"} onClick={() => setFilter("all")} />
             {COLLECTIONS.map((c) => (
-              <Chip
+              <TabItem
                 key={c.key}
                 label={c.key}
-                count={c.count}
                 active={filter === c.key}
                 onClick={() => setFilter(c.key)}
               />
@@ -676,7 +674,7 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
       </div>
 
       {/* Mosaïque */}
-      <div className="mx-auto max-w-7xl px-6 pt-7 lg:px-10 lg:pt-9">
+      <div className="mx-auto max-w-7xl px-6 pt-9 lg:px-10 lg:pt-12">
         <motion.div key={filter} className="columns-1 gap-3 sm:columns-2 lg:columns-3 xl:columns-4">
           {list.map((p, i) => (
             <motion.button
