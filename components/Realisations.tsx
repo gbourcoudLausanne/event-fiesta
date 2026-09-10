@@ -713,9 +713,9 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
                 />
                 <div
                   className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                  style={{ background: "linear-gradient(to top, rgba(13,11,8,0.74), rgba(13,11,8,0.05) 52%, transparent)" }}
+                  style={{ background: "linear-gradient(to top, rgba(42,35,32,0.62), rgba(42,35,32,0.04) 58%, transparent)" }}
                 >
-                  <span className="font-sans text-[9px] uppercase tracking-[0.2em]" style={{ color: "#F4A8B8" }}>
+                  <span className="font-sans text-[9px] uppercase tracking-[0.2em]" style={{ color: "rgba(250,247,242,0.75)" }}>
                     {p.collection}
                   </span>
                   <span className="font-serif font-light text-[15px] leading-snug" style={{ color: "#FAF7F2" }}>
