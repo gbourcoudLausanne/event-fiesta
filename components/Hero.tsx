@@ -233,7 +233,7 @@ function PhotoWall({ columns = 3 }: { columns?: number }) {
   return (
     <div
       className="relative h-full w-full overflow-hidden"
-      style={{ boxShadow: "0 40px 90px -35px rgba(120,60,80,0.32), 0 10px 30px rgba(13,11,8,0.05)" }}
+      style={{ boxShadow: "0 40px 90px -35px rgba(120,60,80,0.5), 0 10px 30px rgba(13,11,8,0.08)" }}
     >
       <div className="absolute inset-0 flex justify-center py-3">
         {splitColumns(PHOTOS, columns).map((photos, i) => (
@@ -247,29 +247,21 @@ function PhotoWall({ columns = 3 }: { columns?: number }) {
         ))}
       </div>
 
-      {/* Fondu haut */}
+      {/* Fondu haut / bas */}
       <div
         className="absolute inset-x-0 top-0 h-24 pointer-events-none"
         style={{ background: "linear-gradient(#FAF7F2, rgba(250,247,242,0))" }}
         aria-hidden
       />
-      {/* Fondu bas — long et progressif, les photos se dissolvent dans le crème */}
       <div
-        className="absolute inset-x-0 bottom-0 h-52 lg:h-64 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(rgba(250,247,242,0) 0%, rgba(250,247,242,0.5) 48%, #FAF7F2 88%)",
-        }}
+        className="absolute inset-x-0 bottom-0 h-24 pointer-events-none"
+        style={{ background: "linear-gradient(rgba(250,247,242,0), #FAF7F2)" }}
         aria-hidden
       />
-      {/* Filet intérieur — s'estompe vers le bas */}
+      {/* Filet intérieur */}
       <div
         className="absolute inset-3 lg:inset-4 pointer-events-none"
-        style={{
-          border: "1px solid rgba(217,98,138,0.14)",
-          maskImage: "linear-gradient(#000 52%, transparent 88%)",
-          WebkitMaskImage: "linear-gradient(#000 52%, transparent 88%)",
-        }}
+        style={{ border: "1px solid rgba(217,98,138,0.14)" }}
         aria-hidden
       />
     </div>
