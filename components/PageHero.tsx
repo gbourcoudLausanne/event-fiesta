@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -9,40 +8,37 @@ export function PageHero({
   eyebrow,
   title,
   subtitle,
-  decor,
 }: {
   eyebrow: string;
   title: string;
   subtitle?: string;
-  decor?: ReactNode;
 }) {
   const reduce = useReducedMotion();
 
   return (
-    <div className="relative">
-      <section
-        className="relative overflow-hidden pt-[136px] pb-16 lg:pt-[168px] lg:pb-24"
-        style={{ background: "#F3EDE6" }}
-      >
-        {/* Orb décoratif */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            top: "-30%",
-            right: "-8%",
-            width: 560,
-            height: 560,
-            background: "radial-gradient(circle, rgba(217,98,138,0.07) 0%, transparent 70%)",
-          }}
-          aria-hidden
-        />
+    <section
+      className="relative overflow-hidden pt-[136px] pb-16 lg:pt-[168px] lg:pb-24"
+      style={{ background: "#F3EDE6" }}
+    >
+      {/* Orb décoratif */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          top: "-30%",
+          right: "-8%",
+          width: 560,
+          height: 560,
+          background: "radial-gradient(circle, rgba(217,98,138,0.07) 0%, transparent 70%)",
+        }}
+        aria-hidden
+      />
 
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease }}
-          >
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease }}
+        >
           <div className="flex items-center gap-3 mb-5">
             <div className="w-10 h-px shrink-0" style={{ background: "#D9628A" }} />
             <span
@@ -66,11 +62,8 @@ export function PageHero({
               {subtitle}
             </p>
           )}
-          </motion.div>
-        </div>
-      </section>
-
-      {decor}
-    </div>
+        </motion.div>
+      </div>
+    </section>
   );
 }
