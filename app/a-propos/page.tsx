@@ -714,7 +714,7 @@ function ValueFeature({
   return (
     <li
       ref={ref}
-      className={`relative py-7 md:py-1 md:px-7 lg:px-9 first:md:pl-0 last:md:pr-0 ${
+      className={`relative py-6 md:py-0 md:px-7 lg:px-9 first:md:pl-0 last:md:pr-0 ${
         i < total - 1 ? "border-b md:border-b-0 md:border-r" : ""
       }`}
       style={{ borderColor: "rgba(250,247,242,0.22)" }}
@@ -961,7 +961,7 @@ export default function AboutPage() {
 
       {/* ── Valeurs : bande manifeste ────────────────────────────── */}
       <section
-        className="relative overflow-hidden py-16 lg:py-20"
+        className="relative overflow-hidden py-14 lg:py-16"
         style={{ background: "linear-gradient(150deg, #D9628A 0%, #C25E7E 60%, #B0546F 130%)" }}
       >
         <div
@@ -981,7 +981,7 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease }}
-            className="mb-10 lg:mb-12 max-w-xl"
+            className="mb-8 lg:mb-10 max-w-xl"
           >
             <div className="flex items-center gap-3 mb-5">
               <span className="w-10 h-px" style={{ background: "rgba(250,247,242,0.7)" }} />
@@ -1008,7 +1008,7 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2, ease }}
-            className="mt-10 lg:mt-12"
+            className="mt-9 lg:mt-10"
           >
             <Link
               href="/contact"
