@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { Phone, EnvelopeSimple, Clock, MapPinLine } from "@phosphor-icons/react";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -172,7 +173,7 @@ export function FAQ({ preview = false }: { preview?: boolean }) {
               {t.faq.title}
             </h2>
             <p
-              className="font-sans font-light text-[14px] leading-relaxed mb-7 max-w-xs"
+              className="font-sans font-light text-[14px] leading-relaxed mb-6 max-w-xs"
               style={{ color: "rgba(42,35,32,0.55)" }}
             >
               {t.faq.note}
@@ -203,6 +204,64 @@ export function FAQ({ preview = false }: { preview?: boolean }) {
               </span>
               {t.faq.cta}
             </motion.a>
+
+            {/* Coordonnées directes */}
+            <div
+              className="mt-8 pt-7"
+              style={{ borderTop: "1px solid rgba(42,35,32,0.12)" }}
+            >
+              <p
+                className="font-sans text-[10px] uppercase tracking-[0.24em] mb-4"
+                style={{ color: "rgba(42,35,32,0.4)" }}
+              >
+                {t.faq.directTitle}
+              </p>
+              <ul className="flex flex-col gap-3">
+                {[
+                  { Icon: Phone, label: t.contact.info.phone, href: "tel:0779143855" },
+                  { Icon: EnvelopeSimple, label: t.contact.info.email, href: "mailto:contact@eventfiesta.ch" },
+                  { Icon: Clock, label: t.contact.info.hours },
+                  { Icon: MapPinLine, label: t.faq.zone },
+                ].map(({ Icon, label, href }) => {
+                  const inner = (
+                    <>
+                      <span
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
+                        style={{ background: "rgba(217,98,138,0.10)", color: "#B65572" }}
+                      >
+                        <Icon size={13} weight="bold" />
+                      </span>
+                      <span
+                        className="font-sans text-[13px]"
+                        style={{ color: "rgba(42,35,32,0.7)" }}
+                      >
+                        {label}
+                      </span>
+                    </>
+                  );
+                  return (
+                    <li key={label}>
+                      {href ? (
+                        <a
+                          href={href}
+                          className="flex items-center gap-3 transition-opacity duration-200 hover:opacity-70"
+                        >
+                          {inner}
+                        </a>
+                      ) : (
+                        <span className="flex items-center gap-3">{inner}</span>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+              <p
+                className="mt-5 font-sans font-light text-[12px] leading-relaxed max-w-[16rem]"
+                style={{ color: "rgba(42,35,32,0.42)" }}
+              >
+                {t.faq.reassure}
+              </p>
+            </div>
           </motion.div>
 
           {/* Accordéon */}

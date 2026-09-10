@@ -283,6 +283,9 @@ export const fr = {
     title: "Questions fréquentes",
     note: "Une question sans réponse ? Écrivez-moi directement.",
     cta: "Poser ma question",
+    directTitle: "En direct",
+    zone: "Lausanne & Suisse romande",
+    reassure: "Devis gratuit et sans engagement — réponse sous 24 h.",
     items: [
       {
         q: "Dans quelles zones intervenez-vous ?",

@@ -283,6 +283,9 @@ export const es = {
     title: "Preguntas frecuentes",
     note: "¿Una pregunta sin respuesta? Escríbeme directamente.",
     cta: "Hacer mi pregunta",
+    directTitle: "En directo",
+    zone: "Lausana y Suiza romanda",
+    reassure: "Presupuesto gratis y sin compromiso — respuesta en 24 h.",
     items: [
       {
         q: "¿En qué zonas trabajas?",
