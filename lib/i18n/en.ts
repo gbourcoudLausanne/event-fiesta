@@ -269,6 +269,7 @@ export const en = {
   realisations: {
     eyebrow: "Portfolio",
     title: "Our work",
+    previewTitle: "A few of our creations",
     subtitle:
       "A glimpse of my creations in Lausanne and French-speaking Switzerland.",
     ctaAll: "See the full gallery",

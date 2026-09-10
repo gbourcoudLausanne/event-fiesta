@@ -322,7 +322,7 @@ function RealisationsCarousel() {
             className="font-serif font-light leading-tight tracking-tight"
             style={{ fontSize: "clamp(2.3rem, 4.6vw, 3.8rem)", color: "#2A2320" }}
           >
-            {t.realisations.title}
+            {t.realisations.previewTitle}
           </h2>
           <p
             className="font-sans font-light text-[14.5px] leading-relaxed mt-5 lg:ml-auto max-w-md"

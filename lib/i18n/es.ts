@@ -269,6 +269,7 @@ export const es = {
   realisations: {
     eyebrow: "Portfolio",
     title: "Nuestras realizaciones",
+    previewTitle: "Algunas realizaciones",
     subtitle: "Una muestra de mis creaciones en Lausana y la Suiza romanda.",
     ctaAll: "Ver la galería completa",
     filters: {

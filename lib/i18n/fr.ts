@@ -269,6 +269,7 @@ export const fr = {
   realisations: {
     eyebrow: "Portfolio",
     title: "Nos réalisations",
+    previewTitle: "Quelques réalisations",
     subtitle: "Un aperçu de mes créations à Lausanne et en Suisse romande.",
     ctaAll: "Voir la galerie complète",
     filters: {
