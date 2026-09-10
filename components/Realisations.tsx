@@ -686,30 +686,34 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
         </div>
       </div>
 
-      {/* Mosaïque */}
+      {/* Mosaïque justifiée — rangées de hauteur égale, bord inférieur aligné */}
       <div className="mx-auto max-w-7xl px-6 pt-9 lg:px-10 lg:pt-12">
-        <motion.div key={filter} className="columns-1 gap-3 sm:columns-2 lg:columns-3 xl:columns-4">
-          {list.map((p, i) => (
-            <motion.button
-              key={`${filter}-${p.src}-${i}`}
-              type="button"
-              initial={reduce ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: Math.min(i, 14) * 0.035, ease }}
-              onClick={() => setLbIndex(i)}
-              className="group relative mb-3 block w-full overflow-hidden rounded-[14px] text-left"
-              aria-label={p.name}
-            >
-              <div
-                className="relative w-full"
-                style={{ aspectRatio: TILE_AR[i % TILE_AR.length], background: "#EBE2D8" }}
+        <motion.div key={filter} className="flex flex-wrap gap-3">
+          {list.map((p, i) => {
+            const [rw, rh] = TILE_AR[i % TILE_AR.length].split("/").map(Number);
+            const ratio = rw / rh;
+            return (
+              <motion.button
+                key={`${filter}-${p.src}-${i}`}
+                type="button"
+                initial={reduce ? false : { opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: Math.min(i, 14) * 0.035, ease }}
+                onClick={() => setLbIndex(i)}
+                className="group relative block h-[46vw] overflow-hidden rounded-[14px] text-left sm:h-[230px] lg:h-[270px]"
+                style={{
+                  flexGrow: ratio,
+                  flexBasis: `${ratio * 240}px`,
+                  background: "#EBE2D8",
+                }}
+                aria-label={p.name}
               >
                 <Image
                   src={p.src}
                   alt={p.alt}
                   fill
                   className="object-cover transition-transform duration-[900ms] group-hover:scale-[1.06]"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 40vw, 25vw"
                 />
                 <div
                   className="absolute inset-x-0 bottom-0 flex flex-col gap-0.5 p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -726,8 +730,12 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
                   className="pointer-events-none absolute inset-0 rounded-[14px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   style={{ border: "1px solid rgba(217,98,138,0.45)" }}
                 />
-              </div>
-            </motion.button>
+              </motion.button>
+            );
+          })}
+          {/* Cales invisibles : empêchent la dernière rangée de trop s'étirer */}
+          {[0, 1, 2].map((s) => (
+            <i key={s} aria-hidden style={{ flexGrow: 10, flexBasis: "240px", height: 0 }} />
           ))}
         </motion.div>
       </div>
