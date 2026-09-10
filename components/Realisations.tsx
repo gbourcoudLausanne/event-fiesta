@@ -742,8 +742,39 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
   const goPrev = () => setLightboxIndex((i) => i === null ? 0 : (i - 1 + filtered.length) % filtered.length);
 
   return (
-    <section id="realisations" className="pt-8 pb-20 lg:pt-10 lg:pb-24" style={{ background: "#F3EDE6" }}>
+    <section
+      id="realisations"
+      className="pt-[116px] pb-20 lg:pt-[148px] lg:pb-28"
+      style={{ background: "#FAF7F2" }}
+    >
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
+
+        {/* Bandeau galerie */}
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease }}
+          className="mb-12 lg:mb-16 max-w-3xl"
+        >
+          <div className="flex items-center gap-3 mb-5">
+            <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+            <span className="font-sans text-[10px] uppercase tracking-[0.32em]" style={{ color: "#B65572" }}>
+              {t.realisations.heroEyebrow}
+            </span>
+          </div>
+          <h1
+            className="font-serif font-light leading-[1.06] tracking-tight"
+            style={{ fontSize: "clamp(2.6rem, 6.2vw, 4.8rem)", color: "#2A2320" }}
+          >
+            {t.realisations.heroTitle}
+          </h1>
+          <p
+            className="mt-6 font-sans font-light text-[15px] leading-relaxed max-w-lg"
+            style={{ color: "rgba(42,35,32,0.58)" }}
+          >
+            {t.realisations.heroText}
+          </p>
+        </motion.div>
 
         {/* Category filters */}
         {!preview && (
