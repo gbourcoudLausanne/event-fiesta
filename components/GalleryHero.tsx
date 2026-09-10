@@ -18,7 +18,7 @@ const rise: Variants = {
   visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease } },
 };
 
-const WALL = [
+const STRIP = [
   { src: "/Galerie/hero-slides/hero-slide-8.webp", name: "Dégradé fuchsia" },
   { src: "/Galerie/hero-slides/hero-slide-13.webp", name: "Arche jardin" },
   { src: "/Galerie/hero-slides/hero-slide-2.webp", name: "Rose poudré" },
@@ -36,7 +36,8 @@ const WALL = [
 export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number }) {
   const { t } = useI18n();
   const reduce = useReducedMotion();
-  const [hovered, setHovered] = useState<number | null>(null);
+  const [paused, setPaused] = useState(false);
+  const loop = [...STRIP, ...STRIP];
 
   return (
     <section className="relative w-full overflow-hidden pt-[68px]" style={{ background: "#FAF7F2" }}>
@@ -98,61 +99,61 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
         </motion.div>
       </motion.div>
 
-      {/* Mur de tuiles pleine largeur */}
-      <div
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
-        style={{ gap: "2px" }}
-        onMouseLeave={() => setHovered(null)}
+      {/* Bande photo qui défile */}
+      <motion.div
+        initial={reduce ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.9, delay: 0.35, ease }}
+        className="relative overflow-hidden"
+        style={{
+          maskImage:
+            "linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent)",
+          WebkitMaskImage:
+            "linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent)",
+        }}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
       >
-        {WALL.map((tile, i) => (
-          <motion.a
-            key={tile.src}
-            href="#realisations"
-            onMouseEnter={() => setHovered(i)}
-            className={`group relative block overflow-hidden ${
-              i >= 9 ? "hidden lg:block" : i >= 6 ? "hidden sm:block" : ""
-            }`}
-            style={{ aspectRatio: "4 / 3" }}
-            initial={reduce ? false : { opacity: 0, scale: 1.05 }}
-            animate={
-              reduce
-                ? { opacity: 1 }
-                : {
-                    opacity: 1,
-                    scale: hovered === i ? 1.05 : hovered !== null ? 0.985 : 1,
-                    filter:
-                      hovered === i
-                        ? "brightness(1.06)"
-                        : hovered !== null
-                          ? "brightness(0.5)"
-                          : "brightness(1)",
-                    zIndex: hovered === i ? 10 : 1,
-                  }
-            }
-            transition={{
-              opacity: { duration: 0.6, delay: 0.1 + i * 0.04, ease },
-              scale: { duration: 0.4, ease },
-              filter: { duration: 0.4, ease },
-            }}
-          >
-            <Image
-              src={tile.src}
-              alt=""
-              fill
-              priority={i < 4}
-              className="object-cover"
-              style={{ objectPosition: "center 38%" }}
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            />
-            <span
-              className="absolute bottom-2.5 left-3 font-serif font-light italic opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              style={{ fontSize: "0.95rem", color: "#FAF7F2", textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}
+        <div
+          className="flex gap-2.5 py-4"
+          style={{
+            width: "max-content",
+            animation: reduce ? undefined : "gallery-marquee 55s linear infinite",
+            animationPlayState: paused ? "paused" : "running",
+          }}
+        >
+          {loop.map((p, i) => (
+            <a
+              key={i}
+              href="#realisations"
+              className="group relative block h-[34vh] min-h-[240px] shrink-0 overflow-hidden rounded-[10px] lg:h-[44vh]"
+              style={{ aspectRatio: "3 / 4" }}
+              aria-label={p.name}
             >
-              {tile.name}
-            </span>
-          </motion.a>
-        ))}
-      </div>
+              <Image
+                src={p.src}
+                alt=""
+                fill
+                priority={i < 4}
+                className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                style={{ objectPosition: "center 38%" }}
+                sizes="30vw"
+              />
+              <div
+                className="absolute inset-0 flex items-end p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                style={{ background: "linear-gradient(to top, rgba(13,11,8,0.6), transparent 55%)" }}
+              >
+                <span
+                  className="font-serif font-light italic"
+                  style={{ fontSize: "0.95rem", color: "#FAF7F2" }}
+                >
+                  {p.name}
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </motion.div>
     </section>
   );
 }
