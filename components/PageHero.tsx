@@ -6,12 +6,6 @@ import { ArrowRight } from "@phosphor-icons/react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const ARCH_ANCHORS = [
-  { cx: 40, cy: 150 },
-  { cx: 360, cy: 30 },
-  { cx: 680, cy: 150 },
-];
-
 export function PageHero({
   eyebrow,
   title,
@@ -49,60 +43,19 @@ export function PageHero({
       }}
     >
       {rose ? (
-        <>
-          <div
-            className="absolute pointer-events-none rounded-full"
-            style={{
-              top: "-40%",
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "min(94vw, 940px)",
-              aspectRatio: "1",
-              background:
-                "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.16), rgba(255,255,255,0) 62%)",
-            }}
-            aria-hidden
-          />
-          <motion.svg
-            className="absolute left-1/2 -translate-x-1/2 pointer-events-none"
-            style={{ top: "14%", width: "min(78vw, 700px)" }}
-            viewBox="0 0 720 170"
-            fill="none"
-            aria-hidden
-            initial={reduce ? undefined : "hidden"}
-            whileInView={reduce ? undefined : "shown"}
-            viewport={{ once: true, amount: 0.4 }}
-          >
-            <motion.path
-              d="M40 150 C 66 24 654 24 680 150"
-              stroke="rgba(250,247,242,0.4)"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-              variants={{
-                hidden: { pathLength: 0 },
-                shown: { pathLength: 1, transition: { duration: 1.6, ease } },
-              }}
-            />
-            {ARCH_ANCHORS.map((p, i) => (
-              <motion.circle
-                key={i}
-                cx={p.cx}
-                cy={p.cy}
-                r="6.5"
-                fill="rgba(250,247,242,0.92)"
-                style={{ transformOrigin: `${p.cx}px ${p.cy}px` }}
-                variants={{
-                  hidden: { scale: 0, opacity: 0 },
-                  shown: {
-                    scale: 1,
-                    opacity: 1,
-                    transition: { type: "spring", stiffness: 260, damping: 14, delay: 0.7 + i * 0.15 },
-                  },
-                }}
-              />
-            ))}
-          </motion.svg>
-        </>
+        <div
+          className="absolute pointer-events-none rounded-full"
+          style={{
+            top: "-40%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "min(94vw, 940px)",
+            aspectRatio: "1",
+            background:
+              "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.16), rgba(255,255,255,0) 62%)",
+          }}
+          aria-hidden
+        />
       ) : (
         <div
           className="absolute pointer-events-none"
