@@ -6,20 +6,34 @@ import { ArrowRight } from "@phosphor-icons/react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
+const ARCH_ANCHORS = [
+  { cx: 40, cy: 150 },
+  { cx: 360, cy: 30 },
+  { cx: 680, cy: 150 },
+];
+
 export function PageHero({
   eyebrow,
   title,
   subtitle,
   centered = false,
   cta,
+  tone = "cream",
 }: {
   eyebrow: string;
   title: string;
   subtitle?: string;
   centered?: boolean;
   cta?: { label: string; href: string };
+  tone?: "cream" | "rose";
 }) {
   const reduce = useReducedMotion();
+  const rose = tone === "rose";
+
+  const ink = rose ? "#FAF7F2" : "#2A2320";
+  const sub = rose ? "rgba(250,247,242,0.82)" : "rgba(42,35,32,0.55)";
+  const eye = rose ? "rgba(250,247,242,0.7)" : "#B65572";
+  const line = rose ? "rgba(250,247,242,0.5)" : "#D9628A";
 
   return (
     <section
@@ -28,37 +42,94 @@ export function PageHero({
           ? "pt-[116px] pb-12 text-center lg:pt-[132px] lg:pb-16"
           : "pt-[136px] pb-16 lg:pt-[168px] lg:pb-24"
       }`}
-      style={{ background: "#F3EDE6" }}
+      style={{
+        background: rose
+          ? "linear-gradient(150deg, #D9628A 0%, #C25E7E 55%, #B0546F 120%)"
+          : "#F3EDE6",
+      }}
     >
-      {/* Orb décoratif */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          top: "-30%",
-          right: "-8%",
-          width: 560,
-          height: 560,
-          background: "radial-gradient(circle, rgba(217,98,138,0.07) 0%, transparent 70%)",
-        }}
-        aria-hidden
-      />
+      {rose ? (
+        <>
+          <div
+            className="absolute pointer-events-none rounded-full"
+            style={{
+              top: "-40%",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "min(94vw, 940px)",
+              aspectRatio: "1",
+              background:
+                "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.16), rgba(255,255,255,0) 62%)",
+            }}
+            aria-hidden
+          />
+          <motion.svg
+            className="absolute left-1/2 -translate-x-1/2 pointer-events-none"
+            style={{ top: "14%", width: "min(78vw, 700px)" }}
+            viewBox="0 0 720 170"
+            fill="none"
+            aria-hidden
+            initial={reduce ? undefined : "hidden"}
+            whileInView={reduce ? undefined : "shown"}
+            viewport={{ once: true, amount: 0.4 }}
+          >
+            <motion.path
+              d="M40 150 C 66 24 654 24 680 150"
+              stroke="rgba(250,247,242,0.4)"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+              variants={{
+                hidden: { pathLength: 0 },
+                shown: { pathLength: 1, transition: { duration: 1.6, ease } },
+              }}
+            />
+            {ARCH_ANCHORS.map((p, i) => (
+              <motion.circle
+                key={i}
+                cx={p.cx}
+                cy={p.cy}
+                r="6.5"
+                fill="rgba(250,247,242,0.92)"
+                style={{ transformOrigin: `${p.cx}px ${p.cy}px` }}
+                variants={{
+                  hidden: { scale: 0, opacity: 0 },
+                  shown: {
+                    scale: 1,
+                    opacity: 1,
+                    transition: { type: "spring", stiffness: 260, damping: 14, delay: 0.7 + i * 0.15 },
+                  },
+                }}
+              />
+            ))}
+          </motion.svg>
+        </>
+      ) : (
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            top: "-30%",
+            right: "-8%",
+            width: 560,
+            height: 560,
+            background: "radial-gradient(circle, rgba(217,98,138,0.07) 0%, transparent 70%)",
+          }}
+          aria-hidden
+        />
+      )}
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease }}
+          transition={{ duration: 0.7, delay: rose ? 0.1 : 0, ease }}
           className={centered ? "mx-auto max-w-3xl" : ""}
         >
           <div className={`flex items-center gap-3 mb-5 ${centered ? "justify-center" : ""}`}>
-            <div className="w-10 h-px shrink-0" style={{ background: "#D9628A" }} />
-            <span
-              className="font-sans text-[10px] uppercase tracking-[0.28em]"
-              style={{ color: "#B65572" }}
-            >
+            <div className="w-10 h-px shrink-0" style={{ background: line }} />
+            <span className="font-sans text-[10px] uppercase tracking-[0.28em]" style={{ color: eye }}>
               {eyebrow}
             </span>
-            {centered && <div className="w-10 h-px shrink-0" style={{ background: "#D9628A" }} />}
+            {centered && <div className="w-10 h-px shrink-0" style={{ background: line }} />}
           </div>
 
           <h1
@@ -69,7 +140,7 @@ export function PageHero({
             }
             style={{
               fontSize: centered ? "clamp(1.7rem, 3.6vw, 2.8rem)" : "clamp(2.6rem, 5.5vw, 4.6rem)",
-              color: "#2A2320",
+              color: ink,
             }}
           >
             {title}
@@ -80,7 +151,7 @@ export function PageHero({
               className={`font-sans font-light text-[15px] leading-relaxed mt-6 ${
                 centered ? "mx-auto max-w-xl" : "max-w-xl"
               }`}
-              style={{ color: "rgba(42,35,32,0.55)" }}
+              style={{ color: sub }}
             >
               {subtitle}
             </p>
@@ -91,7 +162,10 @@ export function PageHero({
               <Link
                 href={cta.href}
                 className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[13px] font-medium px-9 py-4 rounded-full transition-transform duration-200 hover:scale-[1.03]"
-                style={{ background: "#D9628A", color: "#FAF7F2" }}
+                style={{
+                  background: rose ? "#FAF7F2" : "#D9628A",
+                  color: rose ? "#B0546F" : "#FAF7F2",
+                }}
               >
                 {cta.label}
                 <ArrowRight size={15} weight="bold" />

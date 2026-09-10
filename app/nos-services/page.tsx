@@ -12,6 +12,7 @@ export default function ServicesPage() {
     <>
       <PageHero
         centered
+        tone="rose"
         eyebrow={t.services.heroEyebrow}
         title={t.services.heroTitle}
         subtitle={t.services.heroText}
