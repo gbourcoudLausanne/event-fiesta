@@ -111,7 +111,7 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
             transition={{ duration: 0.8, delay: 0.25, ease }}
             className="pointer-events-auto w-full max-w-[820px] rounded-[6px] bg-[#FAF7F2] px-8 py-9 text-center sm:px-16 sm:py-11 lg:px-24 lg:py-12"
             style={{
-              boxShadow: "0 30px 70px -44px rgba(90,50,60,0.3)",
+              boxShadow: "0 18px 44px -34px rgba(90,50,60,0.18)",
               border: "1px solid rgba(217,98,138,0.14)",
             }}
           >
