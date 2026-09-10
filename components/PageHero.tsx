@@ -43,21 +43,21 @@ export function PageHero({
             <div className="w-10 h-px shrink-0" style={{ background: "#D9628A" }} />
             <span
               className="font-sans text-[10px] uppercase tracking-[0.32em]"
-              style={{ color: "#D9628A" }}
+              style={{ color: "#B65572" }}
             >
               {eyebrow}
             </span>
           </div>
           <h1
             className="font-serif font-light leading-[1.05] tracking-tight"
-            style={{ fontSize: "clamp(2.6rem, 5.5vw, 4.6rem)", color: "#0D0B08" }}
+            style={{ fontSize: "clamp(2.6rem, 5.5vw, 4.6rem)", color: "#2A2320" }}
           >
             {title}
           </h1>
           {subtitle && (
             <p
               className="font-sans font-light text-[15px] leading-relaxed mt-6 max-w-xl"
-              style={{ color: "rgba(13,11,8,0.55)" }}
+              style={{ color: "rgba(42,35,32,0.55)" }}
             >
               {subtitle}
             </p>

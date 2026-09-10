@@ -26,6 +26,8 @@ export const fr = {
     intro:
       "De la fête d'anniversaire à la soirée d'entreprise, je conçois et je fabrique chaque décoration sur mesure. Deux univers, une même exigence : que tout soit parfait au moment où vos invités entrent dans la salle.",
     ctaAll: "Voir tous nos services",
+    learnMore: "En savoir plus",
+    discuss: "En parler",
     index: [
       {
         key: "mariage",
@@ -58,9 +60,19 @@ export const fr = {
         desc: "Pique-nique de luxe clé en main : table basse, coussins, vaisselle, chemin de fleurs. J'installe au parc, au bord de l'eau ou dans votre jardin.",
       },
       {
+        key: "theme",
+        name: "Soirée à thème",
+        desc: "Voyage, années folles, bal masqué : je construis un décor immersif autour de votre thème, du plafond aux détails de table.",
+      },
+      {
         key: "surmesure",
         name: "Événement sur mesure",
         desc: "Une idée précise, un thème inhabituel, une contrainte de lieu ? Je conçois et je fabrique le décor à la main, rien que pour votre événement.",
+      },
+      {
+        key: "goodies",
+        name: "Goodies & cadeaux",
+        desc: "Paniers personnalisés, pochons, petits cadeaux pour vos invités : la touche finale qu'ils repartent avec en souvenir.",
       },
       {
         key: "entreprise",
@@ -103,53 +115,6 @@ export const fr = {
         key: "opening",
         title: "Inaugurations",
         desc: "Ouverture de boutique, de bureaux ou de restaurant : une décoration festive qui marque l'événement.",
-      },
-    ],
-    items: [
-      {
-        key: "anniversary",
-        title: "Anniversaire",
-        desc: "Une fête à votre image, du concept à la décoration finale. Chaque anniversaire devient une expérience inoubliable.",
-      },
-      {
-        key: "baptism",
-        title: "Baptême",
-        desc: "Accueillez le nouveau-né avec une décoration douce et raffinée. Un jour précieux, magnifié.",
-      },
-      {
-        key: "babyshower",
-        title: "Baby Shower",
-        desc: "Célébrez l'arrivée de bébé avec tendresse et créativité. Des décors pastel et poétiques.",
-      },
-      {
-        key: "themed",
-        title: "Soirée à thème",
-        desc: "Voyage, bal masqué, rétro — votre thème, notre expertise. Une immersion totale.",
-      },
-      {
-        key: "communion",
-        title: "Communion",
-        desc: "Une journée spirituelle et festive, magnifiée par notre décoration. Souvenirs éternels.",
-      },
-      {
-        key: "genderreveal",
-        title: "Gender Reveal",
-        desc: "Le moment de la révélation, rendu magique et mémorable. Rose ou bleu, toujours élégant.",
-      },
-      {
-        key: "corporate",
-        title: "Corporate",
-        desc: "Séminaires, galas et lancements produits avec une touche d'élégance. L'excellence au service de votre image.",
-      },
-      {
-        key: "creation",
-        title: "Création sur mesure",
-        desc: "Arches florales, colonnes décoratives, murs de ballons... Des décors uniques conçus et fabriqués à la main pour chaque événement.",
-      },
-      {
-        key: "goodies",
-        title: "Goodies & Cadeaux",
-        desc: "Paniers personnalisés, kits cadeaux, surprises pour invités... La touche finale qui rend chaque événement inoubliable.",
       },
     ],
   },

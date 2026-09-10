@@ -26,6 +26,8 @@ export const en = {
     intro:
       "From a birthday party to a corporate evening, I design and handcraft every decoration to measure. Two worlds, one standard: everything perfect the moment your guests walk in.",
     ctaAll: "See all our services",
+    learnMore: "Learn more",
+    discuss: "Let's talk",
     index: [
       {
         key: "mariage",
@@ -58,9 +60,19 @@ export const en = {
         desc: "A fully managed luxury picnic: low table, cushions, tableware, flower runner. I set up in the park, by the water or in your garden.",
       },
       {
+        key: "theme",
+        name: "Themed party",
+        desc: "Travel, roaring twenties, masquerade: I build an immersive setting around your theme, from the ceiling to the table details.",
+      },
+      {
         key: "surmesure",
         name: "Bespoke event",
         desc: "A precise idea, an unusual theme, a tricky venue? I design and handcraft the decor, just for your event.",
+      },
+      {
+        key: "goodies",
+        name: "Goodies & gifts",
+        desc: "Personalised baskets, favour bags, little gifts for your guests: the finishing touch they take home as a keepsake.",
       },
       {
         key: "entreprise",
@@ -103,53 +115,6 @@ export const en = {
         key: "opening",
         title: "Openings",
         desc: "Shop, office or restaurant opening: festive decoration that marks the occasion.",
-      },
-    ],
-    items: [
-      {
-        key: "anniversary",
-        title: "Birthday",
-        desc: "A celebration in your image, from concept to final decoration. Every birthday becomes an unforgettable experience.",
-      },
-      {
-        key: "baptism",
-        title: "Christening",
-        desc: "Welcome your newborn with soft, refined decoration. A precious day, made even more beautiful.",
-      },
-      {
-        key: "babyshower",
-        title: "Baby Shower",
-        desc: "Celebrate the arrival of your baby with tenderness and creativity. Poetic, pastel-coloured decors.",
-      },
-      {
-        key: "themed",
-        title: "Themed Party",
-        desc: "Travel, masquerade, retro — your theme, our expertise. A total immersion.",
-      },
-      {
-        key: "communion",
-        title: "Communion",
-        desc: "A spiritual and festive day, elevated by our decoration. Eternal memories.",
-      },
-      {
-        key: "genderreveal",
-        title: "Gender Reveal",
-        desc: "The moment of revelation, made magical and memorable. Pink or blue, always elegant.",
-      },
-      {
-        key: "corporate",
-        title: "Corporate",
-        desc: "Seminars, galas and product launches with a touch of elegance. Excellence at the service of your image.",
-      },
-      {
-        key: "creation",
-        title: "Custom Creations",
-        desc: "Floral arches, decorative columns, balloon walls... Unique decors designed and handcrafted for every event.",
-      },
-      {
-        key: "goodies",
-        title: "Goodies & Gifts",
-        desc: "Personalised baskets, gift kits, guest surprises... The finishing touch that makes every event unforgettable.",
       },
     ],
   },

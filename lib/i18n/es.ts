@@ -26,6 +26,8 @@ export const es = {
     intro:
       "Desde una fiesta de cumpleaños hasta una velada de empresa, diseño y elaboro cada decoración a medida. Dos universos, una misma exigencia: que todo esté perfecto cuando tus invitados entran en la sala.",
     ctaAll: "Ver todos nuestros servicios",
+    learnMore: "Ver más",
+    discuss: "Hablarlo",
     index: [
       {
         key: "mariage",
@@ -58,9 +60,19 @@ export const es = {
         desc: "Pícnic de lujo llave en mano: mesa baja, cojines, vajilla, camino de flores. Monto en el parque, junto al agua o en tu jardín.",
       },
       {
+        key: "theme",
+        name: "Fiesta temática",
+        desc: "Viaje, años locos, mascarada: construyo un decorado inmersivo en torno a tu tema, desde el techo hasta los detalles de mesa.",
+      },
+      {
         key: "surmesure",
         name: "Evento a medida",
         desc: "¿Una idea concreta, un tema poco común, una limitación de lugar? Diseño y elaboro la decoración a mano, solo para tu evento.",
+      },
+      {
+        key: "goodies",
+        name: "Goodies y regalos",
+        desc: "Cestas personalizadas, bolsitas, pequeños regalos para tus invitados: el toque final que se llevan de recuerdo.",
       },
       {
         key: "entreprise",
@@ -103,53 +115,6 @@ export const es = {
         key: "opening",
         title: "Inauguraciones",
         desc: "Apertura de tienda, oficinas o restaurante: una decoración festiva que marca el evento.",
-      },
-    ],
-    items: [
-      {
-        key: "anniversary",
-        title: "Cumpleaños",
-        desc: "Una fiesta a tu imagen, desde el concepto hasta la decoración final. Cada cumpleaños se convierte en una experiencia inolvidable.",
-      },
-      {
-        key: "baptism",
-        title: "Bautizo",
-        desc: "Recibe al recién nacido con una decoración suave y refinada. Un día precioso, embellecido.",
-      },
-      {
-        key: "babyshower",
-        title: "Baby Shower",
-        desc: "Celebra la llegada del bebé con ternura y creatividad. Decoraciones pastel y poéticas.",
-      },
-      {
-        key: "themed",
-        title: "Fiesta temática",
-        desc: "Viaje, mascarada, retro — tu tema, nuestra expertise. Una inmersión total.",
-      },
-      {
-        key: "communion",
-        title: "Comunión",
-        desc: "Un día espiritual y festivo, embellecido por nuestra decoración. Recuerdos eternos.",
-      },
-      {
-        key: "genderreveal",
-        title: "Gender Reveal",
-        desc: "El momento de la revelación, convertido en magia y recuerdo. Rosa o azul, siempre elegante.",
-      },
-      {
-        key: "corporate",
-        title: "Corporativo",
-        desc: "Seminarios, galas y lanzamientos con un toque de elegancia. La excelencia al servicio de tu imagen.",
-      },
-      {
-        key: "creation",
-        title: "Creaciones a medida",
-        desc: "Arcos florales, columnas decorativas, muros de globos... Decoraciones únicas diseñadas y elaboradas a mano para cada evento.",
-      },
-      {
-        key: "goodies",
-        title: "Goodies & Regalos",
-        desc: "Cestas personalizadas, kits de regalo, sorpresas para invitados... El toque final que hace cada evento inolvidable.",
       },
     ],
   },
