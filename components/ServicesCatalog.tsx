@@ -12,9 +12,9 @@ const PHOTOS: Record<string, string> = {
   // Particuliers
   mariage: "/Galerie/hero-slides/hero-slide-7.webp",
   anniversaire: "/Galerie/hero-slides/hero-slide-9.webp",
-  babyshower: "/Galerie/Baptemes/122219_01.webp",
+  babyshower: "/Galerie/hero-slides/hero-slide-1.webp",
   genderreveal: "/Galerie/Gender-Reveal/GenderReveal_2.webp",
-  bapteme: "/Galerie/Baptemes/Bapteme_1.webp",
+  bapteme: "/Galerie/hero-slides/hero-slide-16.webp",
   piquenique: "/Galerie/hero-slides/hero-slide-17.webp",
   theme: "/Galerie/Hero/Hero_4.webp",
   surmesure: "/Galerie/hero-slides/hero-slide-8.webp",
