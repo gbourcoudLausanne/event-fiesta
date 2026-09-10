@@ -41,9 +41,60 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
 
   return (
     <section className="relative w-full overflow-hidden pt-[68px]" style={{ background: "#FAF7F2" }}>
+      {/* Bande photo qui défile */}
+      <motion.div
+        initial={reduce ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.9, delay: 0.1, ease }}
+        className="relative overflow-hidden pt-6"
+        style={{
+          maskImage: "linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent)",
+          WebkitMaskImage: "linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent)",
+        }}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        <div
+          className="flex gap-2.5"
+          style={{
+            width: "max-content",
+            animation: reduce ? undefined : "gallery-marquee 55s linear infinite",
+            animationPlayState: paused ? "paused" : "running",
+          }}
+        >
+          {loop.map((p, i) => (
+            <a
+              key={i}
+              href="#realisations"
+              className="group relative block h-[32vh] min-h-[230px] shrink-0 overflow-hidden rounded-[10px] lg:h-[42vh]"
+              style={{ aspectRatio: "3 / 4" }}
+              aria-label={p.name}
+            >
+              <Image
+                src={p.src}
+                alt=""
+                fill
+                priority={i < 4}
+                className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                style={{ objectPosition: "center 38%" }}
+                sizes="30vw"
+              />
+              <div
+                className="absolute inset-0 flex items-end p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                style={{ background: "linear-gradient(to top, rgba(13,11,8,0.6), transparent 55%)" }}
+              >
+                <span className="font-serif font-light italic" style={{ fontSize: "0.95rem", color: "#FAF7F2" }}>
+                  {p.name}
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </motion.div>
+
       {/* Texte centré */}
       <motion.div
-        className="mx-auto max-w-2xl px-6 pt-16 pb-12 text-center lg:pt-24 lg:pb-16"
+        className="mx-auto max-w-2xl px-6 pt-12 pb-16 text-center lg:pt-16 lg:pb-20"
         variants={reduce ? undefined : stack}
         initial={reduce ? false : "hidden"}
         animate={reduce ? undefined : "visible"}
@@ -97,62 +148,6 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
             {worlds} univers · {pieces} décors
           </span>
         </motion.div>
-      </motion.div>
-
-      {/* Bande photo qui défile */}
-      <motion.div
-        initial={reduce ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.9, delay: 0.35, ease }}
-        className="relative overflow-hidden"
-        style={{
-          maskImage:
-            "linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent)",
-          WebkitMaskImage:
-            "linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent)",
-        }}
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-      >
-        <div
-          className="flex gap-2.5 py-4"
-          style={{
-            width: "max-content",
-            animation: reduce ? undefined : "gallery-marquee 55s linear infinite",
-            animationPlayState: paused ? "paused" : "running",
-          }}
-        >
-          {loop.map((p, i) => (
-            <a
-              key={i}
-              href="#realisations"
-              className="group relative block h-[34vh] min-h-[240px] shrink-0 overflow-hidden rounded-[10px] lg:h-[44vh]"
-              style={{ aspectRatio: "3 / 4" }}
-              aria-label={p.name}
-            >
-              <Image
-                src={p.src}
-                alt=""
-                fill
-                priority={i < 4}
-                className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
-                style={{ objectPosition: "center 38%" }}
-                sizes="30vw"
-              />
-              <div
-                className="absolute inset-0 flex items-end p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                style={{ background: "linear-gradient(to top, rgba(13,11,8,0.6), transparent 55%)" }}
-              >
-                <span
-                  className="font-serif font-light italic"
-                  style={{ fontSize: "0.95rem", color: "#FAF7F2" }}
-                >
-                  {p.name}
-                </span>
-              </div>
-            </a>
-          ))}
-        </div>
       </motion.div>
     </section>
   );
