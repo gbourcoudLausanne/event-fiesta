@@ -42,8 +42,19 @@ function ServiceRow({ row, index }: { row: Row; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.65, ease }}
-      className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16"
+      className="relative grid items-center gap-8 lg:grid-cols-2 lg:gap-16"
     >
+      {/* Nom en filigrane géant */}
+      <span
+        aria-hidden
+        className={`pointer-events-none absolute -top-7 select-none font-serif font-light uppercase leading-none lg:-top-12 ${
+          flip ? "right-3 lg:right-8" : "left-3 lg:left-8"
+        }`}
+        style={{ fontSize: "clamp(2.1rem, 6.5vw, 5.2rem)", color: "rgba(217,98,138,0.07)" }}
+      >
+        {row.name}
+      </span>
+
       {/* Photo */}
       <div className={`relative ${flip ? "lg:order-2" : ""}`}>
         <div
