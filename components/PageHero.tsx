@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight } from "@phosphor-icons/react";
+import { RisingBalloons } from "@/components/RisingBalloons";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -43,19 +44,22 @@ export function PageHero({
       }}
     >
       {rose ? (
-        <div
-          className="absolute pointer-events-none rounded-full"
-          style={{
-            top: "-40%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "min(94vw, 940px)",
-            aspectRatio: "1",
-            background:
-              "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.16), rgba(255,255,255,0) 62%)",
-          }}
-          aria-hidden
-        />
+        <>
+          <div
+            className="absolute pointer-events-none rounded-full"
+            style={{
+              top: "-40%",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "min(94vw, 940px)",
+              aspectRatio: "1",
+              background:
+                "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.16), rgba(255,255,255,0) 62%)",
+            }}
+            aria-hidden
+          />
+          {!reduce && <RisingBalloons opacity={0.5} />}
+        </>
       ) : (
         <div
           className="absolute pointer-events-none"
