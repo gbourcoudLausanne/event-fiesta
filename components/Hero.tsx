@@ -230,38 +230,63 @@ function MarqueeColumn({
 
 /* ── Fenêtre : plusieurs colonnes qui défilent ─────────────────────────── */
 function PhotoWall({ columns = 3 }: { columns?: number }) {
+  // masque : rectangle dont le bas se termine par un arc doux (fin organique)
+  const curveMask =
+    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' preserveAspectRatio='none'%3E%3Cpath d='M0 0 H400 V352 C 268 400 132 400 0 352 Z' fill='%23000'/%3E%3C/svg%3E\")";
+
   return (
-    <div
-      className="relative h-full w-full overflow-hidden"
-      style={{ boxShadow: "0 40px 90px -35px rgba(120,60,80,0.5), 0 10px 30px rgba(13,11,8,0.08)" }}
-    >
-      <div className="absolute inset-0 flex justify-center py-3">
-        {splitColumns(PHOTOS, columns).map((photos, i) => (
-          <MarqueeColumn
-            key={i}
-            photos={photos}
-            duration={photos.length * SECONDS_PER_PHOTO}
-            reverse={COLUMN_REVERSED[i % COLUMN_REVERSED.length]}
-            priority={i === 0}
-          />
-        ))}
+    <div className="relative h-full w-full">
+      <div
+        className="relative h-full w-full overflow-hidden"
+        style={{
+          maskImage: curveMask,
+          WebkitMaskImage: curveMask,
+          maskSize: "100% 100%",
+          WebkitMaskSize: "100% 100%",
+          maskRepeat: "no-repeat",
+          WebkitMaskRepeat: "no-repeat",
+        }}
+      >
+        <div className="absolute inset-0 flex justify-center py-3">
+          {splitColumns(PHOTOS, columns).map((photos, i) => (
+            <MarqueeColumn
+              key={i}
+              photos={photos}
+              duration={photos.length * SECONDS_PER_PHOTO}
+              reverse={COLUMN_REVERSED[i % COLUMN_REVERSED.length]}
+              priority={i === 0}
+            />
+          ))}
+        </div>
+
+        {/* Fondu haut */}
+        <div
+          className="absolute inset-x-0 top-0 h-24 pointer-events-none"
+          style={{ background: "linear-gradient(#FAF7F2, rgba(250,247,242,0))" }}
+          aria-hidden
+        />
+        {/* Fondu bas — accompagne l'arc */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-28 pointer-events-none"
+          style={{ background: "linear-gradient(rgba(250,247,242,0), rgba(250,247,242,0.6))" }}
+          aria-hidden
+        />
+        {/* Filet intérieur — s'estompe vers le bas pour suivre l'arc */}
+        <div
+          className="absolute inset-3 lg:inset-4 pointer-events-none"
+          style={{
+            border: "1px solid rgba(217,98,138,0.14)",
+            maskImage: "linear-gradient(#000 58%, transparent 90%)",
+            WebkitMaskImage: "linear-gradient(#000 58%, transparent 90%)",
+          }}
+          aria-hidden
+        />
       </div>
 
-      {/* Fondu haut / bas */}
+      {/* Ombre douce sous l'arc */}
       <div
-        className="absolute inset-x-0 top-0 h-24 pointer-events-none"
-        style={{ background: "linear-gradient(#FAF7F2, rgba(250,247,242,0))" }}
-        aria-hidden
-      />
-      <div
-        className="absolute inset-x-0 bottom-0 h-24 pointer-events-none"
-        style={{ background: "linear-gradient(rgba(250,247,242,0), #FAF7F2)" }}
-        aria-hidden
-      />
-      {/* Filet intérieur */}
-      <div
-        className="absolute inset-3 lg:inset-4 pointer-events-none"
-        style={{ border: "1px solid rgba(217,98,138,0.14)" }}
+        className="absolute inset-x-8 -bottom-2 h-10 pointer-events-none"
+        style={{ boxShadow: "0 34px 70px -32px rgba(120,60,80,0.4)" }}
         aria-hidden
       />
     </div>
