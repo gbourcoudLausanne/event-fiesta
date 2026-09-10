@@ -700,10 +700,10 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: Math.min(i, 14) * 0.035, ease }}
                 onClick={() => setLbIndex(i)}
-                className="group relative block h-[46vw] overflow-hidden rounded-[14px] text-left sm:h-[230px] lg:h-[270px]"
+                className="group relative block h-[52vw] overflow-hidden rounded-[14px] text-left sm:h-[280px] lg:h-[330px]"
                 style={{
                   flexGrow: ratio,
-                  flexBasis: `${ratio * 240}px`,
+                  flexBasis: `${ratio * 300}px`,
                   background: "#EBE2D8",
                 }}
                 aria-label={p.name}
@@ -735,7 +735,7 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
           })}
           {/* Cales invisibles : empêchent la dernière rangée de trop s'étirer */}
           {[0, 1, 2].map((s) => (
-            <i key={s} aria-hidden style={{ flexGrow: 10, flexBasis: "240px", height: 0 }} />
+            <i key={s} aria-hidden style={{ flexGrow: 10, flexBasis: "300px", height: 0 }} />
           ))}
         </motion.div>
       </div>
