@@ -74,7 +74,7 @@ export function Footer() {
               {t.footer.tagline}
             </p>
             <p className="font-sans text-sm leading-relaxed mb-8 max-w-xs" style={{ color: "rgba(13,11,8,0.5)" }}>
-              Spécialistes de la décoration d&rsquo;événements sur mesure à Lausanne et en Suisse romande depuis 2020.
+              Décoration d&rsquo;événements sur mesure à Lausanne et en Suisse romande. Une passion née en Colombie en 2018.
             </p>
 
             {/* Social icons */}

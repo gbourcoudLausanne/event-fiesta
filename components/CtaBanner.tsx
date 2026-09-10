@@ -112,8 +112,8 @@ export function CtaBanner() {
           className="flex items-center justify-center gap-8 mt-14"
         >
           {[
-            { value: "200+", label: "événements" },
-            { value: "5★", label: "satisfaction" },
+            { value: "2018", label: "depuis" },
+            { value: "3", label: "langues" },
             { value: "100%", label: "sur mesure" },
           ].map(({ value, label }) => (
             <div key={label} className="flex flex-col items-center gap-1">

@@ -8,7 +8,7 @@ export const en = {
     cta: "Request a quote",
   },
   hero: {
-    eyebrow: "Lausanne · French Switzerland · Since 2020",
+    eyebrow: "Lausanne · French-speaking Switzerland",
     headline1: "Let's create an event",
     headline2: "as unforgettable as you are",
     subtext: "Bespoke event decoration · French-speaking Switzerland",
@@ -184,8 +184,8 @@ export const en = {
     lead:
       "Event Fiesta is a passion for event decoration that began in Colombia in 2018, now based in Lausanne.",
     paragraphs: [
-      "We turn every celebration, big or small, into an unforgettable visual moment. Everything is designed and handcrafted: balloon arches, flower walls, decorative columns, sweet tables, welcome signs and personalised goodies.",
-      "We speak three languages and have styled dozens of different themes. Every time, the same standard: a setting that feels like you, and one your guests remember. Delivery, set-up and take-down: we handle it all, so you can simply enjoy the moment.",
+      "It all comes out of my workshop, in Lausanne. That's where I design and handcraft every piece: balloon arches, flower walls, columns, sweet tables, welcome signs and little gifts for your guests.",
+      "I speak three languages and have already styled dozens of different worlds. Every time, the same standard: a setting that feels like you, and one your guests remember. Delivery, set-up, take-down: I handle it all, so you can simply enjoy the moment.",
     ],
     storyTitle: "My story",
     story:
@@ -279,9 +279,9 @@ export const en = {
     quote:
       "Every event tells a story. We create the settings that make it unforgettable.",
     stats: [
-      { value: "200+", label: "Events completed" },
-      { value: "5★", label: "Client satisfaction" },
+      { value: "2018", label: "Since" },
       { value: "3", label: "Languages spoken" },
+      { value: "0", label: "Templates" },
       { value: "100%", label: "Bespoke" },
     ],
   },

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "À propos — Event Fiesta · Lausanne",
   description:
-    "Event Fiesta, équipe passionnée de décoration d'événements à Lausanne depuis 2020. Notre histoire, nos valeurs, notre savoir-faire sur mesure.",
+    "Event Fiesta — décoration d'événements sur mesure à Lausanne et en Suisse romande. Mon histoire, mes valeurs, un savoir-faire né en Colombie en 2018.",
   alternates: { canonical: "https://event-fiesta.ch/a-propos" },
 };
 

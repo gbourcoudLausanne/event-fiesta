@@ -8,7 +8,7 @@ export const es = {
     cta: "Pedir presupuesto",
   },
   hero: {
-    eyebrow: "Lausana · Suiza Romanda · Desde 2020",
+    eyebrow: "Lausana · Suiza romanda",
     headline1: "Creemos juntos un evento",
     headline2: "inolvidable y a tu imagen",
     subtext: "Decoración de eventos a medida · Suiza romanda",
@@ -179,13 +179,13 @@ export const es = {
     ],
   },
   about: {
-    eyebrow: "Nosotros",
-    title: "Nacidas para hacer brillar tus fiestas",
+    eyebrow: "Sobre mí",
+    title: "Nacida para hacer brillar tus fiestas",
     lead:
       "Event Fiesta es una pasión por la decoración de eventos nacida en Colombia en 2018, hoy instalada en Lausana.",
     paragraphs: [
-      "Transformamos cada celebración, pequeña o grande, en un momento visual inolvidable. Todo se diseña y se elabora a mano: arcos de globos, muros florales, columnas decorativas, sweet tables, carteles de bienvenida y goodies personalizados.",
-      "Hablamos tres idiomas y hemos puesto en escena decenas de temáticas distintas. Cada vez, la misma exigencia: una decoración que os represente y que vuestros invitados recuerden. Entrega, montaje, desmontaje: nos ocupamos de todo, vosotros solo tenéis que disfrutar del momento.",
+      "Todo sale de mi taller, en Lausana. Ahí diseño y elaboro a mano cada decoración: arcos de globos, muros florales, columnas, sweet tables, carteles de bienvenida y pequeños regalos para tus invitados.",
+      "Hablo tres idiomas y ya he puesto en escena decenas de universos distintos. Cada vez, la misma exigencia: una decoración que te represente y que tus invitados recuerden. Entrega, montaje, desmontaje: me ocupo de todo, tú solo tienes que disfrutar del momento.",
     ],
     storyTitle: "Mi historia",
     story:
@@ -278,9 +278,9 @@ export const es = {
     quote:
       "Cada evento cuenta una historia. Nosotros creamos los escenarios que la hacen inolvidable.",
     stats: [
-      { value: "200+", label: "Eventos realizados" },
-      { value: "5★", label: "Satisfacción del cliente" },
+      { value: "2018", label: "Desde" },
       { value: "3", label: "Idiomas hablados" },
+      { value: "0", label: "Plantillas" },
       { value: "100%", label: "A medida" },
     ],
   },

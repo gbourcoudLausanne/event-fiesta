@@ -8,7 +8,7 @@ export const fr = {
     cta: "Demander un devis",
   },
   hero: {
-    eyebrow: "Lausanne · Suisse Romande · Depuis 2020",
+    eyebrow: "Lausanne · Suisse romande",
     headline1: "Créons ensemble un événement",
     headline2: "inoubliable à votre image",
     subtext: "Décoration d'événements sur mesure · Suisse romande",
@@ -180,12 +180,12 @@ export const fr = {
   },
   about: {
     eyebrow: "À propos",
-    title: "Nées pour faire briller vos fêtes",
+    title: "Née pour faire briller vos fêtes",
     lead:
       "Event Fiesta, c'est une passion de la décoration d'événements née en Colombie en 2018, aujourd'hui installée à Lausanne.",
     paragraphs: [
-      "Nous transformons chaque célébration, petite ou grande, en un moment visuel inoubliable. Tout est conçu et fabriqué à la main : arches de ballons, murs floraux, colonnes décoratives, sweet tables, panneaux de bienvenue et goodies personnalisés.",
-      "Nous parlons trois langues et avons mis en scène des dizaines de thèmes différents. À chaque fois, la même exigence : un décor qui vous ressemble, et dont vos invités se souviennent. Livraison, installation, démontage : on s'occupe de tout, vous n'avez qu'à savourer le moment.",
+      "Tout part de mon atelier, à Lausanne. J'y conçois et j'y fabrique chaque décor à la main : arches de ballons, murs floraux, colonnes, sweet tables, panneaux de bienvenue et petits cadeaux pour vos invités.",
+      "Je parle trois langues et j'ai déjà mis en scène des dizaines d'univers différents. À chaque fois, la même exigence : un décor qui vous ressemble, et dont vos invités se souviennent. Livraison, installation, démontage : je m'occupe de tout, vous n'avez qu'à savourer le moment.",
     ],
     storyTitle: "Mon histoire",
     story:
@@ -278,9 +278,9 @@ export const fr = {
     quote:
       "Chaque événement raconte une histoire. Nous créons les décors qui la rendent inoubliable.",
     stats: [
-      { value: "200+", label: "Événements réalisés" },
-      { value: "5★", label: "Satisfaction client" },
+      { value: "2018", label: "Depuis" },
       { value: "3", label: "Langues parlées" },
+      { value: "0", label: "Template" },
       { value: "100%", label: "Sur mesure" },
     ],
   },

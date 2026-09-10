@@ -35,10 +35,10 @@ export function WhyUs() {
   const reduce = useReducedMotion();
 
   const statConfigs = [
-    { numeric: 200, suffix: "+", isCounter: true },
-    { numeric: 5,   suffix: "★", isCounter: false, display: "5★" },
-    { numeric: 3,   suffix: "",  isCounter: true },
-    { numeric: 100, suffix: "%", isCounter: false, display: "100%" },
+    { numeric: 2018, suffix: "", isCounter: false, display: "2018" },
+    { numeric: 3,    suffix: "", isCounter: true },
+    { numeric: 0,    suffix: "", isCounter: false, display: "0" },
+    { numeric: 100,  suffix: "%", isCounter: false, display: "100%" },
   ];
 
   return (
