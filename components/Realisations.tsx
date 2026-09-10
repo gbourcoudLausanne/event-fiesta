@@ -646,41 +646,11 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
 
   return (
     <section id="realisations" className="pb-24 lg:pb-32" style={{ background: "#FAF7F2" }}>
-      {/* En-tête — centré, aligné sur les onglets */}
-      <motion.div
-        initial={reduce ? false : { opacity: 0, y: 14 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.55, ease }}
-        className="mx-auto flex max-w-7xl flex-col items-center px-6 pt-20 text-center lg:px-10 lg:pt-32"
-      >
-        <div className="flex items-center gap-3">
-          <span className="h-px w-8" style={{ background: "#D9628A" }} />
-          <span
-            className="font-sans text-[10px] uppercase tracking-[0.3em]"
-            style={{ color: "#B65572" }}
-          >
-            Toutes les créations
-          </span>
-          <span className="h-px w-8" style={{ background: "#D9628A" }} />
-        </div>
-        <h2
-          className="mt-3 font-serif font-light leading-tight tracking-tight"
-          style={{ fontSize: "clamp(1.7rem, 3vw, 2.5rem)", color: "#2A2320" }}
-        >
-          Explorez par collection
-        </h2>
-        <p
-          className="mt-2 font-sans text-[11px] uppercase tracking-[0.2em]"
-          style={{ color: "rgba(42,35,32,0.4)" }}
-        >
-          {GALLERY_PIECES} décors · {GALLERY_WORLDS} collections
-        </p>
-      </motion.div>
+      <div className="pt-10 lg:pt-14" />
 
-      {/* Onglets collants */}
+      {/* Barre de filtres — collante, intitulé intégré */}
       <div
-        className="sticky top-[68px] z-30 mt-6"
+        className="sticky top-[68px] z-30"
         style={{
           background: "rgba(250,247,242,0.94)",
           backdropFilter: "blur(12px)",
@@ -691,16 +661,27 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
           className="mx-auto max-w-7xl px-6 lg:px-10"
           style={{ borderBottom: "1px solid rgba(42,35,32,0.1)" }}
         >
-          <div className="no-scrollbar -mr-6 flex gap-7 overflow-x-auto pr-6 lg:mr-0 lg:justify-center lg:pr-0">
-            <TabItem label="Tout voir" active={filter === "all"} onClick={() => setFilter("all")} />
-            {COLLECTIONS.map((c) => (
-              <TabItem
-                key={c.key}
-                label={c.key}
-                active={filter === c.key}
-                onClick={() => setFilter(c.key)}
-              />
-            ))}
+          <div className="flex flex-col gap-2 py-1 lg:flex-row lg:items-center lg:gap-10">
+            <div className="flex shrink-0 items-center gap-3 pt-3 lg:pt-0">
+              <span className="h-px w-8" style={{ background: "#D9628A" }} />
+              <span
+                className="font-serif font-light italic leading-none"
+                style={{ fontSize: "clamp(1.1rem, 1.7vw, 1.45rem)", color: "#B65572" }}
+              >
+                Explorez par collection
+              </span>
+            </div>
+            <div className="no-scrollbar -mr-6 flex gap-7 overflow-x-auto pr-6 lg:mr-0 lg:pr-0">
+              <TabItem label="Tout voir" active={filter === "all"} onClick={() => setFilter("all")} />
+              {COLLECTIONS.map((c) => (
+                <TabItem
+                  key={c.key}
+                  label={c.key}
+                  active={filter === c.key}
+                  onClick={() => setFilter(c.key)}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
