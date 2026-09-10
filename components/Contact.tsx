@@ -46,6 +46,7 @@ const fmtMB = (b: number) => (b / 1024 / 1024).toFixed(1);
 /* ── petits composants ──────────────────────────────────────────────── */
 
 function Field({
+  id,
   name,
   label,
   type = "text",
@@ -57,7 +58,8 @@ function Field({
   rows,
   readOnly,
 }: {
-  name: string;
+  id: string;
+  name?: string;
   label: string;
   type?: string;
   required?: boolean;
@@ -72,7 +74,7 @@ function Field({
   const border = focused ? "#D9628A" : "rgba(42,35,32,0.16)";
   const shared = {
     name,
-    id: name,
+    id,
     required,
     placeholder: placeholder ?? " ",
     readOnly,
@@ -91,7 +93,7 @@ function Field({
     } as const,
   };
   return (
-    <label htmlFor={name} className="block">
+    <label htmlFor={id} className="block">
       <span
         className="mb-1.5 block font-sans text-[11px] uppercase tracking-[0.16em]"
         style={{ color: "rgba(42,35,32,0.5)" }}
@@ -190,6 +192,10 @@ export function Contact() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
 
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [venue, setVenue] = useState("");
   const [eventType, setEventType] = useState("");
   const [guests, setGuests] = useState("");
   const [budget, setBudget] = useState("");
@@ -399,20 +405,53 @@ export function Contact() {
             onSubmit={handleSubmit}
             className="flex flex-col gap-14"
           >
-            <input type="hidden" name="_subject" value={`Nouvelle demande — ${eventType || "événement"}`} />
+            <input
+              type="hidden"
+              name="_subject"
+              value={`Nouvelle demande — ${eventType || "événement"}${venue ? ` · ${venue}` : ""}`}
+            />
             <input type="hidden" name="_captcha" value="false" />
-            <input type="hidden" name="_template" value="table" />
+            <input type="hidden" name="_template" value="box" />
             <input type="hidden" name="_next" value={MERCI_URL} />
+            {email && <input type="hidden" name="_replyto" value={email} />}
             <input type="text" name="_honey" tabIndex={-1} autoComplete="off" style={{ display: "none" }} />
+
+            {/* Champs transmis — ordre maîtrisé pour l'e-mail */}
+            <input type="hidden" name="Type d'événement" value={eventType} />
+            <input type="hidden" name="Nom" value={fullName} />
+            <input type="hidden" name="Email" value={email} />
+            {phone && <input type="hidden" name="Téléphone" value={phone} />}
+            {(dateTbd || date) && (
+              <input type="hidden" name="Date souhaitée" value={dateTbd ? t.contact.event.dateTbd : date} />
+            )}
+            {venue && <input type="hidden" name="Lieu" value={venue} />}
+            {guests && <input type="hidden" name="Nombre d'invités" value={guests} />}
+            {budget && <input type="hidden" name="Budget indicatif" value={budget} />}
+            {message && <input type="hidden" name="Message" value={message} />}
+            {moods.length > 0 && <input type="hidden" name="Ambiance souhaitée" value={moods.join(" · ")} />}
+            {palette.length > 0 && <input type="hidden" name="Couleurs" value={palette.join(" · ")} />}
+            {links
+              .map((l) => l.trim())
+              .filter(Boolean)
+              .map((l, i) => (
+                <input key={l + i} type="hidden" name={`Inspiration ${i + 1}`} value={l} />
+              ))}
 
             {/* 1 — Vous */}
             <StepBlock id="step-0" n={1} title={t.contact.you.heading} refEl={(el) => { stepEls.current[0] = el; }}>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field name="Nom" label={t.contact.you.name} required />
-                <Field name="Email" label={t.contact.you.email} type="email" required />
+                <Field id="nom" label={t.contact.you.name} required value={fullName} onChange={setFullName} />
+                <Field id="email" label={t.contact.you.email} type="email" required value={email} onChange={setEmail} />
               </div>
               <div className="mt-4">
-                <Field name="Téléphone" label={t.contact.you.phone} type="tel" hint={t.contact.you.phoneHint} />
+                <Field
+                  id="tel"
+                  label={t.contact.you.phone}
+                  type="tel"
+                  hint={t.contact.you.phoneHint}
+                  value={phone}
+                  onChange={setPhone}
+                />
               </div>
             </StepBlock>
 
@@ -441,7 +480,7 @@ export function Contact() {
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 <div>
                   <Field
-                    name="Date"
+                    id="date"
                     label={t.contact.event.date}
                     type={dateTbd ? "text" : "date"}
                     value={dateTbd ? t.contact.event.dateTbd : date}
@@ -463,7 +502,13 @@ export function Contact() {
                     {t.contact.event.dateTbd}
                   </button>
                 </div>
-                <Field name="Lieu" label={t.contact.event.venue} placeholder={t.contact.event.venuePlaceholder} />
+                <Field
+                  id="lieu"
+                  label={t.contact.event.venue}
+                  placeholder={t.contact.event.venuePlaceholder}
+                  value={venue}
+                  onChange={setVenue}
+                />
               </div>
 
               <p className="mb-3 mt-6 font-sans text-[11px] uppercase tracking-[0.16em]" style={{ color: "rgba(42,35,32,0.5)" }}>
@@ -476,7 +521,6 @@ export function Contact() {
                   </Choice>
                 ))}
               </div>
-              <input type="hidden" name="Invités" value={guests} />
             </StepBlock>
 
             {/* 3 — Budget */}
@@ -519,14 +563,13 @@ export function Contact() {
                   {t.contact.budget.unsure}
                 </Choice>
               </div>
-              <input type="hidden" name="Budget" value={budget} />
             </StepBlock>
 
             {/* 4 — Vision */}
             <StepBlock id="step-3" n={4} title={t.contact.vision.heading} refEl={(el) => { stepEls.current[3] = el; }}>
               <div className="relative">
                 <Field
-                  name="Message"
+                  id="message"
                   label={t.contact.vision.message}
                   placeholder={t.contact.vision.messagePlaceholder}
                   rows={5}
@@ -548,7 +591,6 @@ export function Contact() {
                   </Choice>
                 ))}
               </div>
-              <input type="hidden" name="Ambiance" value={moods.join(", ")} />
 
               <p className="mb-1 mt-6 font-sans text-[11px] uppercase tracking-[0.16em]" style={{ color: "rgba(42,35,32,0.5)" }}>
                 {t.contact.vision.palette}
@@ -582,7 +624,6 @@ export function Contact() {
                   );
                 })}
               </div>
-              <input type="hidden" name="Couleurs" value={palette.join(", ")} />
             </StepBlock>
 
             {/* 5 — Inspirations */}
@@ -674,7 +715,6 @@ export function Contact() {
                     />
                     <input
                       type="url"
-                      name={`Inspiration ${i + 1}`}
                       value={v}
                       onChange={(e) => setLinks(links.map((x, j) => (j === i ? e.target.value : x)))}
                       placeholder={t.contact.inspiration.linksPlaceholder}
