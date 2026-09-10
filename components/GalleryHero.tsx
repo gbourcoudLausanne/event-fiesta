@@ -40,8 +40,8 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
   const loop = [...STRIP, ...STRIP];
 
   return (
-    <section className="relative w-full overflow-hidden pt-[68px]" style={{ background: "#FAF7F2" }}>
-      <div className="relative h-[66vh] min-h-[460px] lg:h-[82vh]">
+    <section className="relative z-10 w-full pt-[68px]" style={{ background: "#FAF7F2" }}>
+      <div className="relative h-[46vh] min-h-[380px] lg:h-[56vh]">
         {/* Bande photo qui défile */}
         <motion.div
           initial={reduce ? false : { opacity: 0 }}
@@ -103,8 +103,8 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
           aria-hidden
         />
 
-        {/* Carte texte centrale */}
-        <div className="absolute inset-0 z-10 flex items-center justify-center px-4 sm:px-6">
+        {/* Carte texte — centrée, dépasse en bas */}
+        <div className="absolute inset-x-0 top-0 z-10 flex justify-center px-4 pt-[12vh] sm:px-6 lg:pt-[14vh]">
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 22, filter: "blur(6px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}

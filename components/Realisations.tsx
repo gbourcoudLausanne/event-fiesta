@@ -652,7 +652,7 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease }}
-        className="mx-auto max-w-7xl px-6 pt-16 pb-6 lg:px-10 lg:pt-24 lg:pb-8"
+        className="mx-auto max-w-7xl px-6 pt-24 pb-6 lg:px-10 lg:pt-36 lg:pb-8"
       >
         <div className="flex items-center gap-3">
           <span className="h-px w-10" style={{ background: "#D9628A" }} />
