@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Contact & devis gratuit — Event Fiesta",
   description:
     "Demandez votre devis gratuit et sans engagement pour la décoration de votre événement à Lausanne et en Suisse romande.",
-  alternates: { canonical: "https://event-fiesta.ch/contact" },
+  alternates: { canonical: "https://eventfiesta.ch/contact" },
 };
 
 export default function ContactPage() {

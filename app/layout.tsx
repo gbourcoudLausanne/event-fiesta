@@ -39,7 +39,7 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://event-fiesta.ch"),
+  metadataBase: new URL("https://eventfiesta.ch"),
   title: "Event Fiesta — Décoration sur mesure · Lausanne",
   description:
     "Décoration d'événements sur mesure à Lausanne et en Suisse romande. Anniversaires, baptêmes, baby showers, gender reveals, soirées à thème et goodies personnalisés.",
@@ -54,13 +54,13 @@ export const metadata: Metadata = {
     "Event Fiesta",
   ],
   alternates: {
-    canonical: "https://event-fiesta.ch",
+    canonical: "https://eventfiesta.ch",
   },
   openGraph: {
     title: "Event Fiesta — Décoration sur mesure · Lausanne",
     description:
       "Décoration d'événements sur mesure à Lausanne et en Suisse romande. Anniversaires, baptêmes, baby showers, soirées à thème et plus.",
-    url: "https://event-fiesta.ch",
+    url: "https://eventfiesta.ch",
     locale: "fr_CH",
     type: "website",
     siteName: "Event Fiesta",

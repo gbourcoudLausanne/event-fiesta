@@ -32,7 +32,7 @@ const spring = { type: "spring", stiffness: 300, damping: 24 } as const;
 const WA_NUMBER = "41779143855";
 const WA_LINK = `https://wa.me/${WA_NUMBER}`;
 const FORM_ENDPOINT = "https://formsubmit.co/contact@eventfiesta.ch";
-const MERCI_URL = "https://event-fiesta.ch/contact/merci";
+const MERCI_URL = "https://eventfiesta.ch/contact/merci";
 const MAX_BYTES = 5 * 1024 * 1024;
 const MAX_FILES = 5;
 

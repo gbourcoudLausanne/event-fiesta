@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: { userAgent: "*", allow: "/" },
-    sitemap: "https://event-fiesta.ch/sitemap.xml",
-    host: "https://event-fiesta.ch",
+    sitemap: "https://eventfiesta.ch/sitemap.xml",
+    host: "https://eventfiesta.ch",
   };
 }
