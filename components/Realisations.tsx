@@ -618,7 +618,7 @@ function TabItem({
       className="relative shrink-0 whitespace-nowrap py-4 font-serif font-light transition-colors duration-200 cursor-pointer"
       style={{
         fontSize: "clamp(1rem, 1.5vw, 1.2rem)",
-        color: active ? "#B65572" : "rgba(42,35,32,0.7)",
+        color: active ? "#B65572" : "rgba(42,35,32,0.55)",
         fontStyle: active ? "italic" : "normal",
       }}
     >
