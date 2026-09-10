@@ -90,13 +90,9 @@ export function PageHero({
           </div>
 
           <h1
-            className={
-              centered
-                ? "font-serif font-normal uppercase leading-[1.12] tracking-[0.015em]"
-                : "font-serif font-light leading-[1.05] tracking-tight"
-            }
+            className="font-serif font-light leading-[1.08] tracking-tight"
             style={{
-              fontSize: centered ? "clamp(1.7rem, 3.6vw, 2.8rem)" : "clamp(2.6rem, 5.5vw, 4.6rem)",
+              fontSize: centered ? "clamp(2.1rem, 4.6vw, 3.6rem)" : "clamp(2.6rem, 5.5vw, 4.6rem)",
               color: ink,
             }}
           >

@@ -25,6 +25,50 @@ const WASH = "/Galerie/hero-slides/hero-slide-13.webp";
 const PRIMARY = "/Galerie/hero-slides/hero-slide-8.webp";
 const SECONDARY = "/Galerie/hero-slides/hero-slide-2.webp";
 
+// Paillettes — positions déterministes (%), taille, couleur, délai
+const SPARKLES = [
+  { x: 6, y: 30, s: 8, c: "#E8C870", d: 0 },
+  { x: 15, y: 72, s: 5, c: "rgba(255,255,255,0.95)", d: 1.6 },
+  { x: 26, y: 18, s: 10, c: "#F0D9A0", d: 2.9 },
+  { x: 33, y: 88, s: 6, c: "#F4A8B8", d: 0.8 },
+  { x: 44, y: 40, s: 5, c: "#E8C870", d: 3.6 },
+  { x: 52, y: 76, s: 9, c: "rgba(255,255,255,0.9)", d: 1.1 },
+  { x: 58, y: 14, s: 7, c: "#F0D9A0", d: 4.2 },
+  { x: 64, y: 55, s: 11, c: "#E8C870", d: 2.2 },
+  { x: 70, y: 84, s: 6, c: "#F4A8B8", d: 3.1 },
+  { x: 76, y: 26, s: 9, c: "rgba(255,255,255,0.95)", d: 0.5 },
+  { x: 82, y: 62, s: 7, c: "#F0D9A0", d: 4.8 },
+  { x: 88, y: 12, s: 6, c: "#E8C870", d: 1.9 },
+  { x: 91, y: 46, s: 10, c: "#F4C99A", d: 3.4 },
+  { x: 95, y: 78, s: 5, c: "rgba(255,255,255,0.9)", d: 2.6 },
+  { x: 48, y: 8, s: 6, c: "#E8C870", d: 5.1 },
+  { x: 20, y: 48, s: 7, c: "#F0D9A0", d: 4.0 },
+];
+
+function Sparkles() {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-[5] overflow-hidden" aria-hidden>
+      {SPARKLES.map((sp, i) => (
+        <motion.svg
+          key={i}
+          viewBox="0 0 24 24"
+          width={sp.s}
+          height={sp.s}
+          className="absolute"
+          style={{ left: `${sp.x}%`, top: `${sp.y}%` }}
+          animate={{ opacity: [0, 0.95, 0], scale: [0.3, 1, 0.3], rotate: [0, 60] }}
+          transition={{ repeat: Infinity, duration: 3.4 + (i % 4) * 0.6, delay: sp.d, ease: "easeInOut" }}
+        >
+          <path
+            d="M12 0 L13.6 8.4 L24 12 L13.6 15.6 L12 24 L10.4 15.6 L0 12 L10.4 8.4 Z"
+            fill={sp.c}
+          />
+        </motion.svg>
+      ))}
+    </div>
+  );
+}
+
 export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number }) {
   const { t } = useI18n();
   const reduce = useReducedMotion();
@@ -32,8 +76,12 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
   return (
     <section
       className="relative isolate w-full overflow-hidden pt-[68px]"
-      style={{ background: "#EFE1DB" }}
+      style={{
+        background: "linear-gradient(158deg, #F4E5E0 0%, #EBD4CF 55%, #E1C4C3 120%)",
+      }}
     >
+      {!reduce && <Sparkles />}
+
       {/* Wash flou en fond */}
       <div
         aria-hidden
