@@ -251,10 +251,6 @@ export const fr = {
       body: "Chaque projet me tient à cœur comme s'il était le mien. Racontez-moi votre événement, vos couleurs, votre lieu, ce qui compte pour vous, et on imagine ensemble un décor qui vous ressemble. J'ai hâte de voir vos yeux quand vous entrerez dans la salle.",
       sign: "Event Fiesta",
     },
-    finale: {
-      eyebrow: "On se lance ?",
-      line: "Racontez-moi votre événement : vos couleurs, votre date, votre lieu. Je m'occupe du reste.",
-    },
     cta: "Discutons de votre événement",
   },
   realisations: {

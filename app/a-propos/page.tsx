@@ -1042,55 +1042,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── CTA final, léger ─────────────────────────────────────── */}
-      <section className="relative overflow-hidden py-16 lg:py-20" style={{ background: "#FAF7F2" }}>
-        <div
-          className="absolute pointer-events-none rounded-full"
-          style={{
-            bottom: "-40%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "min(70vw, 720px)",
-            aspectRatio: "1",
-            background: "radial-gradient(circle at 50% 50%, rgba(244,168,184,0.16), rgba(244,168,184,0) 70%)",
-          }}
-          aria-hidden
-        />
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.7, ease }}
-          className="relative max-w-2xl mx-auto px-6 text-center"
-        >
-          <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
-            {t.about.finale.eyebrow}
-          </span>
-          <p
-            className="mx-auto mt-4 max-w-lg font-serif font-light italic leading-snug"
-            style={{ fontSize: "clamp(1.4rem, 2.6vw, 2rem)", color: "#2A2320" }}
-          >
-            {t.about.finale.line}
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/contact"
-              className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[13px] font-medium px-8 py-3.5 rounded-full transition-transform duration-200 hover:scale-[1.03]"
-              style={{ background: "#D9628A", color: "#FAF7F2" }}
-            >
-              {t.about.cta}
-              <ArrowRight size={14} weight="bold" />
-            </Link>
-            <a
-              href={`tel:${t.contact.info.phone.replace(/\s/g, "")}`}
-              className="font-sans text-[13px] font-light transition-colors duration-200"
-              style={{ color: "rgba(42,35,32,0.5)" }}
-            >
-              {t.contact.info.phone}
-            </a>
-          </div>
-        </motion.div>
-      </section>
     </>
   );
 }
