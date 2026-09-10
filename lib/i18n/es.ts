@@ -33,51 +33,81 @@ export const es = {
         key: "mariage",
         name: "Boda civil",
         desc: "La ceremonia civil merece tanto cuidado como la fiesta. Arco floral, pasillo, rincón de fotos — una decoración que os representa, en el ayuntamiento o en el jardín.",
+        detail:
+          "La ceremonia civil merece tanto cuidado como la fiesta. Instalo un arco floral, visto el pasillo, creo un rincón de fotos — una decoración que os representa, en el ayuntamiento o en el jardín. Me ocupo del montaje antes de vuestra llegada y del desmontaje después.",
+        elements: ["Arco de ceremonia", "Pasillo y camino", "Composiciones florales", "Rincón de fotos"],
       },
       {
         key: "anniversaire",
         name: "Cumpleaños",
         desc: "De la primera vela a los 50: arco de globos, sweet table, número gigante. La decoración se adapta a la edad, al tema y a la persona que se celebra.",
+        detail:
+          "De la primera vela a los 50. Arco de globos en degradado, sweet table golosa, número gigante, cartel personalizado: la decoración se adapta a la edad, al tema y a la persona que se celebra. Pastel y poético para los peques, más gráfico para los mayores.",
+        elements: ["Arco de globos", "Sweet table", "Número gigante", "Cartel personalizado"],
       },
       {
         key: "babyshower",
         name: "Baby shower",
         desc: "Una decoración suave para recibir al bebé — pasteles, flores, nubes de globos. Pensada también para las fotos que guardaréis mucho tiempo.",
+        detail:
+          "Una decoración suave para recibir al bebé: tonos pastel, flores, nubes de globos, mesa de fiesta cuidada. Pensada también para las fotos que guardaréis mucho tiempo — cada detalle está para verse de cerca.",
+        elements: ["Arco pastel", "Nube de globos", "Mesa de fiesta", "Rincón de regalos"],
       },
       {
         key: "genderreveal",
         name: "Gender reveal",
         desc: "El momento de la revelación, escenificado: arco neutro, caja de globos o humo. Rosa o azul, la sorpresa se mantiene hasta el final.",
+        detail:
+          "El momento de la revelación, escenificado. Arco neutro a la espera, y luego caja de globos, humo de color o backdrop para el anuncio. Rosa o azul, la sorpresa se mantiene hasta el final — y el momento queda inmortalizado.",
+        elements: ["Arco neutro", "Caja de globos", "Humo de color", "Backdrop de revelación"],
       },
       {
         key: "bapteme",
-        name: "Bautizos",
+        name: "Bautizos y comuniones",
         desc: "Bautizo, comunión o bautizo civil: una decoración sobria y luminosa, en la iglesia, en una sala o en casa.",
+        detail:
+          "Bautizo, comunión o bautizo civil: una decoración sobria y luminosa, en la iglesia, en una sala o en casa. Arco discreto, decoración de mesa, cartel de bienvenida y rincón dulce — en tonos claros e intemporales.",
+        elements: ["Arco sobrio", "Decoración de mesa", "Cartel de bienvenida", "Rincón dulce"],
       },
       {
         key: "piquenique",
-        name: "Pícnics",
+        name: "Pícnics de lujo",
         desc: "Pícnic de lujo llave en mano: mesa baja, cojines, vajilla, camino de flores. Monto en el parque, junto al agua o en tu jardín.",
+        detail:
+          "Un pícnic llave en mano, listo a la llegada: mesa baja y cojines de suelo, vajilla y mantelería, camino de flores, velo y guirnaldas de luz. Monto en el parque, junto al agua o en tu jardín, y lo recojo todo después.",
+        elements: ["Mesa baja y cojines", "Vajilla y mantelería", "Camino de flores", "Velo y guirnaldas"],
       },
       {
         key: "theme",
         name: "Fiesta temática",
         desc: "Viaje, años locos, mascarada: construyo un decorado inmersivo en torno a tu tema, desde el techo hasta los detalles de mesa.",
+        detail:
+          "Viaje, años locos, mascarada, universo de película: construyo un decorado inmersivo en torno a tu tema, desde el techo hasta los detalles de mesa. Backdrop, neón, atrezo e iluminación — te lo crees al cruzar la puerta.",
+        elements: ["Escenografía completa", "Backdrop y neón", "Atrezo", "Iluminación"],
       },
       {
         key: "surmesure",
         name: "Evento a medida",
         desc: "¿Una idea concreta, un tema poco común, una limitación de lugar? Diseño y elaboro la decoración a mano, solo para tu evento.",
+        detail:
+          "¿Una idea concreta, un tema poco común, una limitación de lugar? Partimos de una hoja en blanco: dibujo un concepto a medida y luego fabrico la decoración a mano — columnas, estructuras, piezas únicas que no verás en ningún otro sitio.",
+        elements: ["Concepto a medida", "Fabricación a mano", "Columnas y estructuras", "Piezas únicas"],
       },
       {
         key: "goodies",
         name: "Goodies y regalos",
         desc: "Cestas personalizadas, bolsitas, pequeños regalos para tus invitados: el toque final que se llevan de recuerdo.",
+        detail:
+          "El toque final que tus invitados se llevan: cestas surtidas, bolsitas personalizadas, etiquetas y tarjetas a juego con la decoración. Un pequeño regalo pensado en los mismos colores que el resto de la fiesta.",
+        elements: ["Cestas surtidas", "Bolsitas personalizadas", "Etiquetas y tarjetas", "Regalos para invitados"],
       },
       {
         key: "entreprise",
         name: "Evento de empresa",
         desc: "Seminarios, fiestas de fin de año, inauguraciones, lanzamientos: una decoración que lleva tu imagen de marca, montada y desmontada sin que tengas que pensarlo.",
+        detail:
+          "Seminarios, fiestas de fin de año, inauguraciones, lanzamientos: una decoración que lleva tu imagen de marca, montada y desmontada sin que tengas que pensarlo.",
+        elements: ["Coherencia de marca", "Mesa de recepción", "Señalética", "Montaje y desmontaje"],
       },
     ],
     particuliers: {
@@ -95,26 +125,41 @@ export const es = {
         key: "corporate",
         title: "Eventos de empresa",
         desc: "Seminarios, juntas y jornadas de equipo escenificados con elegancia y coherencia de marca.",
+        detail:
+          "Seminarios, juntas y jornadas de equipo escenificados con elegancia y coherencia de marca. Mesa de recepción, señalética, decoración de sala: entrego, instalo y desmonto sin que tus equipos tengan que ocuparse.",
+        elements: ["Coherencia de marca", "Mesa de recepción", "Señalética", "Montaje y desmontaje"],
       },
       {
         key: "yearend",
         title: "Fiestas de fin de año",
         desc: "Una velada de Navidad o Año Nuevo memorable para tus equipos: escenografía, photobooth, mesa de bienvenida.",
+        detail:
+          "Una velada de Navidad o Año Nuevo memorable para tus equipos: escenografía completa, photobooth, decoración de mesas y ambiente luminoso. Transformamos la sala en un lugar donde apetece quedarse.",
+        elements: ["Escenografía de velada", "Photobooth", "Decoración de mesas", "Ambiente luminoso"],
       },
       {
         key: "launch",
         title: "Lanzamientos de producto",
         desc: "Un escenario que pone tu producto en el centro y hace el evento instagrameable.",
+        detail:
+          "Un escenario que pone tu producto en el centro y hace el evento instagrameable: backdrop de prensa, puesta en escena del producto, atrezo con los colores de la marca.",
+        elements: ["Producto destacado", "Backdrop de prensa", "Decoración instagrameable", "Atrezo de marca"],
       },
       {
         key: "gala",
         title: "Galas y entregas de premios",
         desc: "Arcos, backdrops, caminos de mesa y carteles de acogida para veladas de prestigio cuidadas al detalle.",
+        detail:
+          "Arcos, backdrops, caminos de mesa y carteles de acogida para veladas de prestigio cuidadas al mínimo detalle. Materiales y acabados a la altura de la ocasión.",
+        elements: ["Arcos y backdrops", "Caminos de mesa", "Carteles de acogida", "Acabados cuidados"],
       },
       {
         key: "opening",
         title: "Inauguraciones",
         desc: "Apertura de tienda, oficinas o restaurante: una decoración festiva que marca el evento.",
+        detail:
+          "Apertura de tienda, oficinas o restaurante: una decoración festiva que marca el evento. Decoración de fachada, cinta inaugural, globos y guirnaldas, rincón de fotos para tus primeros visitantes.",
+        elements: ["Decoración de fachada", "Cinta inaugural", "Globos y guirnaldas", "Rincón de fotos"],
       },
     ],
   },

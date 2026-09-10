@@ -33,51 +33,81 @@ export const en = {
         key: "mariage",
         name: "Civil wedding",
         desc: "The civil ceremony deserves as much care as the party. Flower arch, aisle, photo corner — decor that feels like you, in a town hall or a garden.",
+        detail:
+          "The civil ceremony deserves as much care as the party. I set up a flower arch, dress the aisle, create a photo corner — decor that feels like you, in a town hall or a garden. I handle set-up before you arrive and take-down afterwards.",
+        elements: ["Ceremony arch", "Aisle & walkway", "Floral arrangements", "Photo corner"],
       },
       {
         key: "anniversaire",
         name: "Birthdays",
         desc: "From the first candle to the 50th: balloon arch, sweet table, giant number. The decor fits the age, the theme and the person being celebrated.",
+        detail:
+          "From the first candle to the 50th. Gradient balloon arch, a generous sweet table, giant number, custom sign: the decor fits the age, the theme and the person being celebrated. Pastel and poetic for the little ones, bolder for the grown-ups.",
+        elements: ["Balloon arch", "Sweet table", "Giant number", "Custom sign"],
       },
       {
         key: "babyshower",
         name: "Baby shower",
         desc: "A soft setting to welcome the baby — pastels, flowers, clouds of balloons. Designed for the photos you'll keep for years, too.",
+        detail:
+          "A soft setting to welcome the baby: pastel tones, flowers, clouds of balloons, a carefully styled party table. Designed for the photos you'll keep for years — every detail is there to be seen up close.",
+        elements: ["Pastel arch", "Balloon cloud", "Party table", "Gift corner"],
       },
       {
         key: "genderreveal",
         name: "Gender reveal",
         desc: "The moment of the reveal, staged: neutral arch, balloon box or smoke. Pink or blue, the surprise holds right to the end.",
+        detail:
+          "The moment of the reveal, staged. A neutral arch while you wait, then a balloon box, colour smoke or a backdrop for the announcement. Pink or blue, the surprise holds right to the end — and the moment is captured properly.",
+        elements: ["Neutral arch", "Balloon box", "Colour smoke", "Reveal backdrop"],
       },
       {
         key: "bapteme",
-        name: "Christenings",
+        name: "Christenings & communions",
         desc: "Christening, communion or civil naming: a quiet, luminous decoration, at church, in a hall or at home.",
+        detail:
+          "Christening, communion or civil naming: a quiet, luminous decoration, at church, in a hall or at home. An understated arch, table styling, a welcome sign and a sweet corner — in light, timeless tones.",
+        elements: ["Understated arch", "Table styling", "Welcome sign", "Sweet corner"],
       },
       {
         key: "piquenique",
-        name: "Picnics",
+        name: "Luxury picnics",
         desc: "A fully managed luxury picnic: low table, cushions, tableware, flower runner. I set up in the park, by the water or in your garden.",
+        detail:
+          "A picnic ready and waiting when you arrive: low table and floor cushions, tableware and linen, flower runner, drape and string lights. I set up in the park, by the water or in your garden, and clear everything away afterwards.",
+        elements: ["Low table & cushions", "Tableware & linen", "Flower runner", "Drape & string lights"],
       },
       {
         key: "theme",
         name: "Themed party",
         desc: "Travel, roaring twenties, masquerade: I build an immersive setting around your theme, from the ceiling to the table details.",
+        detail:
+          "Travel, roaring twenties, masquerade, a film world: I build an immersive setting around your theme, from the ceiling to the table details. Backdrop, neon, props and lighting — you believe it the moment you walk in.",
+        elements: ["Full scenography", "Backdrop & neon", "Props", "Lighting"],
       },
       {
         key: "surmesure",
         name: "Bespoke event",
         desc: "A precise idea, an unusual theme, a tricky venue? I design and handcraft the decor, just for your event.",
+        detail:
+          "A precise idea, an unusual theme, a tricky venue? We start from a blank page: I draw a dedicated concept, then handcraft the decor — columns, structures, one-off pieces you won't see anywhere else.",
+        elements: ["Dedicated concept", "Handcrafted build", "Columns & structures", "One-off pieces"],
       },
       {
         key: "goodies",
         name: "Goodies & gifts",
         desc: "Personalised baskets, favour bags, little gifts for your guests: the finishing touch they take home as a keepsake.",
+        detail:
+          "The finishing touch your guests take home: filled baskets, personalised favour bags, tags and cards matched to the decor. A small gift designed in the same colours as the rest of the party.",
+        elements: ["Filled baskets", "Personalised favour bags", "Tags & cards", "Guest gifts"],
       },
       {
         key: "entreprise",
         name: "Corporate event",
         desc: "Seminars, end-of-year parties, openings, launches: decor that carries your brand image, set up and taken down without you thinking about it.",
+        detail:
+          "Seminars, end-of-year parties, openings, launches: decor that carries your brand image, set up and taken down without you thinking about it.",
+        elements: ["Brand consistency", "Welcome desk", "Signage", "Set-up & take-down"],
       },
     ],
     particuliers: {
@@ -95,26 +125,41 @@ export const en = {
         key: "corporate",
         title: "Corporate events",
         desc: "Seminars, meetings and team days staged with elegance and brand consistency.",
+        detail:
+          "Seminars, meetings and team days staged with elegance and brand consistency. Welcome desk, signage, room decor: I deliver, install and take everything down so your teams don't have to.",
+        elements: ["Brand consistency", "Welcome desk", "Signage", "Set-up & take-down"],
       },
       {
         key: "yearend",
         title: "End-of-year parties",
         desc: "A memorable Christmas or New Year evening for your teams: scenography, photobooth, welcome table.",
+        detail:
+          "A memorable Christmas or New Year evening for your teams: full scenography, photobooth, table styling and a lighting mood. We turn the room into a place people want to stay in.",
+        elements: ["Evening scenography", "Photobooth", "Table styling", "Lighting mood"],
       },
       {
         key: "launch",
         title: "Product launches",
         desc: "A setting that puts your product centre stage and makes the event instagrammable.",
+        detail:
+          "A setting that puts your product centre stage and makes the event instagrammable: press backdrop, product staging, props in your brand colours.",
+        elements: ["Product spotlight", "Press backdrop", "Instagrammable set", "Branded props"],
       },
       {
         key: "gala",
         title: "Galas & award nights",
         desc: "Arches, backdrops, table runners and welcome signs for prestige evenings finished in every detail.",
+        detail:
+          "Arches, backdrops, table runners and welcome signs for prestige evenings finished in every last detail. Materials and finishes to match the occasion.",
+        elements: ["Arches & backdrops", "Table runners", "Welcome boards", "Refined finishes"],
       },
       {
         key: "opening",
         title: "Openings",
         desc: "Shop, office or restaurant opening: festive decoration that marks the occasion.",
+        detail:
+          "Shop, office or restaurant opening: festive decoration that marks the occasion. Storefront decor, ribbon-cutting, balloons and garlands, a photo corner for your first visitors.",
+        elements: ["Storefront decor", "Ribbon-cutting", "Balloons & garlands", "Photo corner"],
       },
     ],
   },

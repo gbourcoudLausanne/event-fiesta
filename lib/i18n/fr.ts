@@ -33,51 +33,81 @@ export const fr = {
         key: "mariage",
         name: "Mariage civil",
         desc: "La cérémonie civile mérite autant de soin que la fête. Arche fleurie, chemin, coin photos — un décor qui vous ressemble, en salle communale comme au jardin.",
+        detail:
+          "La cérémonie civile mérite autant de soin que la fête. J'installe une arche fleurie, j'habille le chemin, je crée un coin photo — un décor qui vous ressemble, en salle communale comme au jardin. Je m'occupe du montage avant votre arrivée et du démontage après.",
+        elements: ["Arche de cérémonie", "Chemin & allée", "Compositions florales", "Coin photo"],
       },
       {
         key: "anniversaire",
         name: "Anniversaires",
         desc: "De la première bougie aux 50 ans : arche de ballons, sweet table, chiffre géant. Le décor s'adapte à l'âge, au thème et à la personne qu'on célèbre.",
+        detail:
+          "De la première bougie aux 50 ans. Arche de ballons dégradée, sweet table gourmande, chiffre géant, panneau personnalisé : le décor s'adapte à l'âge, au thème et à la personne qu'on célèbre. Pastel et poétique pour les petits, plus graphique pour les grands.",
+        elements: ["Arche de ballons", "Sweet table", "Chiffre géant", "Panneau personnalisé"],
       },
       {
         key: "babyshower",
         name: "Baby shower",
         desc: "Un décor tout en douceur pour accueillir bébé — tons pastel, fleurs, nuages de ballons. Pensé aussi pour les photos que vous garderez longtemps.",
+        detail:
+          "Un décor tout en douceur pour accueillir bébé : tons pastel, fleurs, nuages de ballons, table de fête soignée. Pensé aussi pour les photos que vous garderez longtemps — chaque détail est là pour être vu de près.",
+        elements: ["Arche pastel", "Nuage de ballons", "Table de fête", "Coin cadeaux"],
       },
       {
         key: "genderreveal",
         name: "Gender reveal",
         desc: "Le moment de la révélation, mis en scène : arche neutre, boîte à ballons ou fumigènes. Rose ou bleu, la surprise reste entière jusqu'au bout.",
+        detail:
+          "Le moment de la révélation, mis en scène. Arche neutre en attendant, puis boîte à ballons, fumigènes ou backdrop coloré pour l'annonce. Rose ou bleu, la surprise reste entière jusqu'au bout — et le moment est immortalisé comme il faut.",
+        elements: ["Arche neutre", "Boîte à ballons", "Fumigènes", "Backdrop révélation"],
       },
       {
         key: "bapteme",
-        name: "Baptêmes",
+        name: "Baptêmes & communions",
         desc: "Baptême, communion ou baptême civil : une décoration sobre et lumineuse, à l'église, en salle ou à la maison.",
+        detail:
+          "Baptême, communion ou baptême civil : une décoration sobre et lumineuse, à l'église, en salle ou à la maison. Arche discrète, décor de table, panneau de bienvenue et coin sucré — dans des tons clairs et intemporels.",
+        elements: ["Arche sobre", "Décor de table", "Panneau de bienvenue", "Coin sucré"],
       },
       {
         key: "piquenique",
-        name: "Pique-niques",
+        name: "Pique-niques de luxe",
         desc: "Pique-nique de luxe clé en main : table basse, coussins, vaisselle, chemin de fleurs. J'installe au parc, au bord de l'eau ou dans votre jardin.",
+        detail:
+          "Un pique-nique clé en main, prêt à l'arrivée : table basse et coussins de sol, vaisselle et nappage, chemin de fleurs, voile et guirlandes lumineuses. J'installe au parc, au bord de l'eau ou dans votre jardin, et je récupère tout après.",
+        elements: ["Table basse & coussins", "Vaisselle & nappage", "Chemin de fleurs", "Voile & guirlandes"],
       },
       {
         key: "theme",
         name: "Soirée à thème",
         desc: "Voyage, années folles, bal masqué : je construis un décor immersif autour de votre thème, du plafond aux détails de table.",
+        detail:
+          "Voyage, années folles, bal masqué, univers de film : je construis un décor immersif autour de votre thème, du plafond aux détails de table. Backdrop, néon, accessoires et mise en lumière — on y croit dès qu'on passe la porte.",
+        elements: ["Scénographie complète", "Backdrop & néon", "Accessoires de décor", "Mise en lumière"],
       },
       {
         key: "surmesure",
         name: "Événement sur mesure",
         desc: "Une idée précise, un thème inhabituel, une contrainte de lieu ? Je conçois et je fabrique le décor à la main, rien que pour votre événement.",
+        detail:
+          "Une idée précise, un thème inhabituel, une contrainte de lieu ? On part d'une feuille blanche : je dessine un concept dédié, puis je fabrique le décor à la main — colonnes, structures, pièces uniques que vous ne verrez nulle part ailleurs.",
+        elements: ["Concept dédié", "Fabrication à la main", "Colonnes & structures", "Pièces uniques"],
       },
       {
         key: "goodies",
         name: "Goodies & cadeaux",
         desc: "Paniers personnalisés, pochons, petits cadeaux pour vos invités : la touche finale qu'ils repartent avec en souvenir.",
+        detail:
+          "La touche finale que vos invités emportent : paniers garnis, pochons personnalisés, étiquettes et cartes assorties au décor. Un petit cadeau pensé dans les mêmes couleurs que le reste de la fête.",
+        elements: ["Paniers garnis", "Pochons personnalisés", "Étiquettes & cartes", "Cadeaux invités"],
       },
       {
         key: "entreprise",
         name: "Événement d'entreprise",
         desc: "Séminaires, soirées de fin d'année, inaugurations, lancements : un décor qui porte votre image de marque, monté et démonté sans que vous ayez à y penser.",
+        detail:
+          "Séminaires, soirées de fin d'année, inaugurations, lancements : un décor qui porte votre image de marque, monté et démonté sans que vous ayez à y penser.",
+        elements: ["Cohérence de marque", "Table d'accueil", "Signalétique", "Montage & démontage"],
       },
     ],
     particuliers: {
@@ -95,26 +125,41 @@ export const fr = {
         key: "corporate",
         title: "Événements d'entreprise",
         desc: "Séminaires, assemblées et journées collaborateurs mis en scène avec élégance et cohérence de marque.",
+        detail:
+          "Séminaires, assemblées et journées collaborateurs mis en scène avec élégance et cohérence de marque. Table d'accueil, signalétique, décor de salle : je livre, j'installe et je démonte sans que vos équipes aient à s'en occuper.",
+        elements: ["Cohérence de marque", "Table d'accueil", "Signalétique", "Montage & démontage"],
       },
       {
         key: "yearend",
         title: "Soirées de fin d'année",
         desc: "Une soirée de Noël ou de nouvel an mémorable pour vos équipes : scénographie, photobooth, table d'accueil.",
+        detail:
+          "Une soirée de Noël ou de nouvel an mémorable pour vos équipes : scénographie complète, photobooth, décor de tables et ambiance lumineuse. On transforme la salle en un lieu où l'on a envie de rester.",
+        elements: ["Scénographie de soirée", "Photobooth", "Décor de tables", "Ambiance lumineuse"],
       },
       {
         key: "launch",
         title: "Lancements de produit",
         desc: "Un décor qui met votre produit au centre de l'attention et rend l'événement instagrammable.",
+        detail:
+          "Un décor qui met votre produit au centre de l'attention et rend l'événement instagrammable : backdrop presse, mise en scène du produit, accessoires aux couleurs de la marque.",
+        elements: ["Mise en avant produit", "Backdrop presse", "Décor instagrammable", "Accessoires de marque"],
       },
       {
         key: "gala",
         title: "Galas & remises de prix",
         desc: "Arches, backdrops, chemins de table et panneaux d'accueil pour des soirées de prestige soignées dans le détail.",
+        detail:
+          "Arches, backdrops, chemins de table et panneaux d'accueil pour des soirées de prestige soignées dans le moindre détail. Des matières et des finitions à la hauteur de l'occasion.",
+        elements: ["Arches & backdrops", "Chemins de table", "Panneaux d'accueil", "Finitions soignées"],
       },
       {
         key: "opening",
         title: "Inaugurations",
         desc: "Ouverture de boutique, de bureaux ou de restaurant : une décoration festive qui marque l'événement.",
+        detail:
+          "Ouverture de boutique, de bureaux ou de restaurant : une décoration festive qui marque l'événement. Décor de façade, ruban inaugural, ballons et guirlandes, coin photo pour vos premiers visiteurs.",
+        elements: ["Décor de façade", "Ruban inaugural", "Ballons & guirlandes", "Coin photo"],
       },
     ],
   },

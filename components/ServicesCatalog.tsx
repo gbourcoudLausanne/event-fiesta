@@ -1,42 +1,148 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "@phosphor-icons/react";
-import { ServiceCard, SERVICE_TINTS, type ServiceCardData } from "@/components/ServiceCard";
+import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
+
+const PHOTOS: Record<string, string> = {
+  // Particuliers
+  mariage: "/Galerie/hero-slides/hero-slide-7.webp",
+  anniversaire: "/Galerie/hero-slides/hero-slide-9.webp",
+  babyshower: "/Galerie/hero-slides/hero-slide-2.webp",
+  genderreveal: "/Galerie/Gender-Reveal/GenderReveal_2.webp",
+  bapteme: "/Galerie/Baptemes/Bapteme.webp",
+  piquenique: "/Galerie/hero-slides/hero-slide-17.webp",
+  theme: "/Galerie/Soiree-a-theme/Soiree_1.avif",
+  surmesure: "/Galerie/hero-slides/hero-slide-8.webp",
+  goodies: "/Galerie/goodies/Goodies_1.webp",
+  // Professionnels
+  corporate: "/Galerie/Corporate/Corporate_1.webp",
+  yearend: "/Galerie/hero-slides/hero-slide-10.webp",
+  launch: "/Galerie/hero-slides/hero-slide-3.webp",
+  gala: "/Galerie/hero-slides/hero-slide-12.webp",
+  opening: "/Galerie/hero-slides/hero-slide-6.webp",
+};
+
+type Row = { key: string; name: string; detail: string; elements: readonly string[] };
+
+function ServiceRow({ row, index }: { row: Row; index: number }) {
+  const { t } = useI18n();
+  const reduce = useReducedMotion();
+  const flip = index % 2 === 1;
+  const num = String(index + 1).padStart(2, "0");
+  const photo = PHOTOS[row.key];
+
+  return (
+    <motion.div
+      initial={reduce ? false : { opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.65, ease }}
+      className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16"
+    >
+      {/* Photo */}
+      <div className={`relative ${flip ? "lg:order-2" : ""}`}>
+        <div
+          className="group relative overflow-hidden rounded-[20px]"
+          style={{
+            aspectRatio: "4 / 3",
+            border: "1px solid rgba(42,35,32,0.08)",
+            boxShadow: "0 30px 60px -34px rgba(120,60,80,0.4)",
+          }}
+        >
+          {photo && (
+            <Image
+              src={photo}
+              alt={row.name}
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+              sizes="(max-width: 1024px) 100vw, 46vw"
+            />
+          )}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute left-4 top-3 font-display italic leading-none"
+            style={{ fontSize: "2.4rem", color: "rgba(250,247,242,0.9)", textShadow: "0 2px 12px rgba(13,11,8,0.35)" }}
+          >
+            {num}
+          </span>
+        </div>
+      </div>
+
+      {/* Texte */}
+      <div className={flip ? "lg:order-1" : ""}>
+        <h3
+          className="font-serif font-light leading-[1.12] tracking-tight"
+          style={{ fontSize: "clamp(1.7rem, 3.1vw, 2.5rem)", color: "#2A2320" }}
+        >
+          {row.name}
+        </h3>
+        <p
+          className="mt-4 font-sans font-light leading-relaxed"
+          style={{ fontSize: "14.5px", color: "rgba(42,35,32,0.62)" }}
+        >
+          {row.detail}
+        </p>
+
+        <ul className="mt-5 flex flex-wrap gap-2">
+          {row.elements.map((el) => (
+            <li
+              key={el}
+              className="font-sans text-[10.5px] uppercase tracking-[0.12em] px-3 py-1.5 rounded-full"
+              style={{ background: "rgba(217,98,138,0.08)", color: "#B0546F" }}
+            >
+              {el}
+            </li>
+          ))}
+        </ul>
+
+        <Link
+          href="/contact"
+          className="group mt-6 inline-flex items-center gap-1.5 font-sans text-[11px] font-semibold uppercase tracking-[0.16em]"
+          style={{ color: "#B65572" }}
+        >
+          {t.services.discuss}
+          <ArrowUpRight
+            size={13}
+            weight="bold"
+            className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          />
+        </Link>
+      </div>
+    </motion.div>
+  );
+}
 
 function CategoryBlock({
   label,
   title,
   desc,
-  items,
+  rows,
   bg,
-  tintOffset,
   footer,
 }: {
   label: string;
   title: string;
   desc: string;
-  items: ServiceCardData[];
+  rows: Row[];
   bg: string;
-  tintOffset: number;
   footer?: React.ReactNode;
 }) {
-  const { t } = useI18n();
   const reduce = useReducedMotion();
 
   return (
     <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: bg }}>
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
+      <div className="relative max-w-6xl mx-auto px-6 lg:px-10">
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, ease }}
-          className="mb-10 lg:mb-14 max-w-2xl"
+          className="mb-14 lg:mb-20 max-w-2xl"
         >
           <div className="flex items-center gap-3 mb-5">
             <span className="w-10 h-px" style={{ background: "#D9628A" }} />
@@ -61,18 +167,11 @@ function CategoryBlock({
           </p>
         </motion.div>
 
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
-          {items.map((item, i) => (
-            <ServiceCard
-              key={item.key}
-              card={item}
-              i={i}
-              tint={SERVICE_TINTS[(i + tintOffset) % SERVICE_TINTS.length]}
-              href="/contact"
-              cta={t.services.discuss}
-            />
+        <div className="space-y-16 lg:space-y-24">
+          {rows.map((row, i) => (
+            <ServiceRow key={row.key} row={row} index={i} />
           ))}
-        </ul>
+        </div>
 
         {footer}
       </div>
@@ -83,13 +182,15 @@ function CategoryBlock({
 export function ServicesCatalog() {
   const { t } = useI18n();
 
-  const particuliers: ServiceCardData[] = t.services.index.filter(
-    (i) => i.key !== "entreprise",
-  );
-  const professionnels: ServiceCardData[] = t.services.proItems.map((p) => ({
+  const particuliers: Row[] = t.services.index
+    .filter((i) => i.key !== "entreprise")
+    .map((i) => ({ key: i.key, name: i.name, detail: i.detail, elements: i.elements }));
+
+  const professionnels: Row[] = t.services.proItems.map((p) => ({
     key: p.key,
     name: p.title,
-    desc: p.desc,
+    detail: p.detail,
+    elements: p.elements,
   }));
 
   return (
@@ -98,13 +199,12 @@ export function ServicesCatalog() {
         label={t.services.particuliers.label}
         title={t.services.particuliers.title}
         desc={t.services.particuliers.desc}
-        items={particuliers}
+        rows={particuliers}
         bg="#FAF7F2"
-        tintOffset={0}
         footer={
           <Link
             href="/galerie"
-            className="group mt-8 lg:mt-10 inline-flex items-center gap-2 font-sans text-[12px] font-medium uppercase tracking-[0.18em]"
+            className="group mt-16 lg:mt-20 inline-flex items-center gap-2 font-sans text-[12px] font-medium uppercase tracking-[0.18em]"
             style={{ color: "#B65572" }}
           >
             {t.realisations.ctaAll}
@@ -120,9 +220,8 @@ export function ServicesCatalog() {
         label={t.services.professionnels.label}
         title={t.services.professionnels.title}
         desc={t.services.professionnels.desc}
-        items={professionnels}
+        rows={professionnels}
         bg="#F3EDE6"
-        tintOffset={3}
       />
     </>
   );
