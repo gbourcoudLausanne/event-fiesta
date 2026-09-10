@@ -646,6 +646,31 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
 
   return (
     <section id="realisations" className="pb-24 lg:pb-32" style={{ background: "#FAF7F2" }}>
+      {/* Ouverture de section */}
+      <motion.div
+        initial={reduce ? false : { opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, ease }}
+        className="mx-auto max-w-7xl px-6 pt-16 pb-6 lg:px-10 lg:pt-24 lg:pb-8"
+      >
+        <div className="flex items-center gap-3">
+          <span className="h-px w-10" style={{ background: "#D9628A" }} />
+          <span
+            className="font-sans text-[10px] uppercase tracking-[0.3em]"
+            style={{ color: "#B65572" }}
+          >
+            Toutes les créations
+          </span>
+        </div>
+        <h2
+          className="mt-4 font-serif font-light leading-tight tracking-tight"
+          style={{ fontSize: "clamp(1.9rem, 3.6vw, 3rem)", color: "#2A2320" }}
+        >
+          Explorez par collection
+        </h2>
+      </motion.div>
+
       {/* Onglets collants */}
       <div
         className="sticky top-[68px] z-30"
