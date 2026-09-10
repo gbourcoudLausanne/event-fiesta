@@ -38,7 +38,7 @@ export function HeroDecor() {
       >
         <motion.div className="absolute inset-x-0 -top-[12%] -bottom-[12%]" style={{ y }}>
           <Image
-            src="/Galerie/hero-slides/hero-slide-8.webp"
+            src="/Galerie/hero-slides/hero-slide-13.webp"
             alt=""
             fill
             className="object-cover"
