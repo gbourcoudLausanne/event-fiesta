@@ -47,23 +47,6 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
         initial={reduce ? false : "hidden"}
         animate={reduce ? undefined : "visible"}
       >
-        <motion.div variants={reduce ? undefined : rise} className="mb-6 flex justify-center">
-          <svg width="52" height="32" viewBox="0 0 52 32" fill="none" aria-hidden>
-            <motion.path
-              d="M4 30 C 4 6 48 6 48 30"
-              stroke="#D9628A"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-              initial={reduce ? undefined : { pathLength: 0 }}
-              animate={reduce ? undefined : { pathLength: 1 }}
-              transition={{ duration: 1, delay: 0.4, ease }}
-            />
-            <circle cx="4" cy="30" r="3" fill="#D9628A" />
-            <circle cx="26" cy="5" r="3" fill="#D9628A" />
-            <circle cx="48" cy="30" r="3" fill="#D9628A" />
-          </svg>
-        </motion.div>
-
         <motion.div
           variants={reduce ? undefined : rise}
           className="mb-5 flex items-center justify-center gap-3"
