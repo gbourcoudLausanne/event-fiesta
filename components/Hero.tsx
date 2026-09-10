@@ -26,7 +26,7 @@ const PHOTOS = [
   { src: "/Galerie/hero-slides/hero-slide-14.webp", alt: "Bouquet de ballons chiffre 15 rose gold personnalisé" },
   { src: "/Galerie/hero-slides/hero-slide-15.webp", alt: "Bouquet de ballons chiffre 10 rose personnalisé avec cœur" },
   { src: "/Galerie/hero-slides/hero-slide-16.webp", alt: "Table dressée élégante avec nappe rose vieilli et compositions de fleurs roses" },
-  { src: "/Galerie/hero-slides/hero-slide-17.webp", alt: "Pique-nique de luxe au bord de l'eau, table basse en bois, coussins de sol et chemin de table d'eucalyptus" },
+  { src: "/Galerie/hero-slides/hero-slide-17.webp", alt: "Pique-nique au bord de l'eau, table basse en bois, coussins de sol et chemin de table d'eucalyptus" },
   { src: "/Galerie/hero-slides/hero-slide-18.webp", alt: "Fête pyjama d'anniversaire enfant avec arche pêche et corail, coussins et portant de peignoirs roses" },
 ];
 

@@ -228,7 +228,7 @@ const CAROUSEL: CarouselType[] = [
   {
     label: "Pique-nique",
     photos: [
-      { src: "/Galerie/hero-slides/hero-slide-17.webp", alt: "Pique-nique de luxe au bord de l'eau, table basse en bois et coussins", name: "Pique-nique de luxe · au bord de l'eau" },
+      { src: "/Galerie/hero-slides/hero-slide-17.webp", alt: "Pique-nique au bord de l'eau, table basse en bois et coussins", name: "Pique-nique · au bord de l'eau" },
     ],
   },
   {

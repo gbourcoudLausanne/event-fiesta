@@ -71,8 +71,8 @@ export const en = {
       },
       {
         key: "piquenique",
-        name: "Luxury picnics",
-        desc: "A fully managed luxury picnic: low table, cushions, tableware, flower runner. I set up in the park, by the water or in your garden.",
+        name: "Picnics",
+        desc: "A fully managed picnic: low table, cushions, tableware, flower runner. I set up in the park, by the water or in your garden.",
         detail:
           "A picnic ready and waiting when you arrive: low table and floor cushions, tableware and linen, flower runner, drape and string lights. I set up in the park, by the water or in your garden, and clear everything away afterwards.",
         elements: ["Low table & cushions", "Tableware & linen", "Flower runner", "Drape & string lights"],
@@ -113,7 +113,7 @@ export const en = {
     particuliers: {
       label: "Private clients",
       title: "Your private celebrations",
-      desc: "Birthdays, christenings, baby showers, communions, gender reveals, themed parties, luxury picnics… Every milestone deserves a unique setting.",
+      desc: "Birthdays, christenings, baby showers, communions, gender reveals, themed parties, picnics… Every milestone deserves a unique setting.",
     },
     professionnels: {
       label: "Businesses",

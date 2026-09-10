@@ -71,8 +71,8 @@ export const es = {
       },
       {
         key: "piquenique",
-        name: "Pícnics de lujo",
-        desc: "Pícnic de lujo llave en mano: mesa baja, cojines, vajilla, camino de flores. Monto en el parque, junto al agua o en tu jardín.",
+        name: "Pícnics",
+        desc: "Pícnic llave en mano: mesa baja, cojines, vajilla, camino de flores. Monto en el parque, junto al agua o en tu jardín.",
         detail:
           "Un pícnic llave en mano, listo a la llegada: mesa baja y cojines de suelo, vajilla y mantelería, camino de flores, velo y guirnaldas de luz. Monto en el parque, junto al agua o en tu jardín, y lo recojo todo después.",
         elements: ["Mesa baja y cojines", "Vajilla y mantelería", "Camino de flores", "Velo y guirnaldas"],
@@ -113,7 +113,7 @@ export const es = {
     particuliers: {
       label: "Particulares",
       title: "Tus celebraciones privadas",
-      desc: "Cumpleaños, bautizos, baby showers, comuniones, gender reveals, fiestas temáticas, pícnics de lujo… Cada momento merece un escenario único.",
+      desc: "Cumpleaños, bautizos, baby showers, comuniones, gender reveals, fiestas temáticas, pícnics… Cada momento merece un escenario único.",
     },
     professionnels: {
       label: "Empresas",

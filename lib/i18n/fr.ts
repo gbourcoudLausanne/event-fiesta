@@ -71,8 +71,8 @@ export const fr = {
       },
       {
         key: "piquenique",
-        name: "Pique-niques de luxe",
-        desc: "Pique-nique de luxe clé en main : table basse, coussins, vaisselle, chemin de fleurs. J'installe au parc, au bord de l'eau ou dans votre jardin.",
+        name: "Pique-niques",
+        desc: "Pique-nique clé en main : table basse, coussins, vaisselle, chemin de fleurs. J'installe au parc, au bord de l'eau ou dans votre jardin.",
         detail:
           "Un pique-nique clé en main, prêt à l'arrivée : table basse et coussins de sol, vaisselle et nappage, chemin de fleurs, voile et guirlandes lumineuses. J'installe au parc, au bord de l'eau ou dans votre jardin, et je récupère tout après.",
         elements: ["Table basse & coussins", "Vaisselle & nappage", "Chemin de fleurs", "Voile & guirlandes"],
@@ -113,7 +113,7 @@ export const fr = {
     particuliers: {
       label: "Particuliers",
       title: "Vos célébrations privées",
-      desc: "Anniversaires, baptêmes, baby showers, communions, gender reveals, soirées à thème, pique-niques de luxe… Chaque moment de vie mérite un décor unique.",
+      desc: "Anniversaires, baptêmes, baby showers, communions, gender reveals, soirées à thème, pique-niques… Chaque moment de vie mérite un décor unique.",
     },
     professionnels: {
       label: "Professionnels",

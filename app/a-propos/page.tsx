@@ -861,7 +861,7 @@ export default function AboutPage() {
               <motion.div className="relative h-full w-full" style={{ y: imgY }}>
                 <Image
                   src="/Galerie/hero-slides/hero-slide-17.webp"
-                  alt="Pique-nique de luxe au bord de l'eau, table basse en bois et chemin de table d'eucalyptus"
+                  alt="Pique-nique au bord de l'eau, table basse en bois et chemin de table d'eucalyptus"
                   fill
                   className="object-cover"
                   style={{ filter: "sepia(0.2) saturate(0.85)" }}
