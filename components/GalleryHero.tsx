@@ -55,7 +55,7 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
       </div>
 
       <motion.div
-        className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 py-16 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16 lg:px-10 lg:py-24"
+        className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 py-16 lg:grid-cols-[1fr_0.9fr] lg:gap-16 lg:px-10 lg:py-24"
         variants={reduce ? undefined : container}
         initial={reduce ? false : "hidden"}
         animate={reduce ? undefined : "visible"}
@@ -111,7 +111,7 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
 
         {/* Collage */}
         <motion.div variants={reduce ? undefined : media} className="relative">
-          <div className="relative ml-auto w-[88%] sm:w-[80%] lg:w-[86%]">
+          <div className="relative ml-auto w-[80%] sm:w-[64%] lg:w-[74%]">
             <div
               className="relative overflow-hidden rounded-[16px]"
               style={{
