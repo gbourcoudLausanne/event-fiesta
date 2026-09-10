@@ -274,16 +274,9 @@ export const es = {
       "Cada evento cuenta una historia. Creo la decoración que la hace inolvidable.",
   },
   ctaBanner: {
-    eyebrow: "Empecemos juntos",
-    titleLine1: "Tu próxima celebración",
-    titleLine2: "merece lo mejor.",
+    title: "Tu próxima celebración merece lo mejor.",
     cta: "Pedir un presupuesto gratis",
     phoneLabel: "o llámame",
-    stats: [
-      { value: "2018", label: "desde" },
-      { value: "0", label: "plantilla" },
-      { value: "100%", label: "a medida" },
-    ],
   },
   faq: {
     eyebrow: "Tus preguntas",

@@ -274,16 +274,9 @@ export const fr = {
       "Chaque événement raconte une histoire. Je crée le décor qui la rend inoubliable.",
   },
   ctaBanner: {
-    eyebrow: "Commençons ensemble",
-    titleLine1: "Votre prochaine célébration",
-    titleLine2: "mérite l'excellence.",
+    title: "Votre prochaine célébration mérite l'excellence.",
     cta: "Demander un devis gratuit",
     phoneLabel: "ou appelez-moi",
-    stats: [
-      { value: "2018", label: "depuis" },
-      { value: "0", label: "template" },
-      { value: "100%", label: "sur mesure" },
-    ],
   },
   faq: {
     eyebrow: "Vos questions",

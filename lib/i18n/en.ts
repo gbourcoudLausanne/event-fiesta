@@ -275,16 +275,9 @@ export const en = {
       "Every event tells a story. I create the setting that makes it unforgettable.",
   },
   ctaBanner: {
-    eyebrow: "Let's start together",
-    titleLine1: "Your next celebration",
-    titleLine2: "deserves the best.",
+    title: "Your next celebration deserves the best.",
     cta: "Request a free quote",
     phoneLabel: "or call me",
-    stats: [
-      { value: "2018", label: "since" },
-      { value: "0", label: "template" },
-      { value: "100%", label: "bespoke" },
-    ],
   },
   faq: {
     eyebrow: "Your questions",
