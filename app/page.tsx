@@ -2,7 +2,6 @@ import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
 import { Realisations } from "@/components/Realisations";
 import { Process } from "@/components/Process";
-import { CtaBanner } from "@/components/CtaBanner";
 import { FAQ } from "@/components/FAQ";
 import { SoftDivider } from "@/components/SectionDivider";
 
@@ -18,7 +17,6 @@ export default function Home() {
 
       <Process />
 
-      <CtaBanner />
       <FAQ preview />
     </>
   );

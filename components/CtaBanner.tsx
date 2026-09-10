@@ -15,7 +15,7 @@ export function CtaBanner() {
   return (
     <section
       className="relative py-14 lg:py-16 overflow-hidden"
-      style={{ background: "#FAF7F2" }}
+      style={{ background: "#F3EDE6" }}
     >
       {/* Halo léger */}
       <div
