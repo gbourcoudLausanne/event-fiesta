@@ -32,7 +32,7 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
   return (
     <section
       className="relative isolate w-full overflow-hidden pt-[68px]"
-      style={{ background: "#F3EDE6" }}
+      style={{ background: "#EFE1DB" }}
     >
       {/* Wash flou en fond */}
       <div
