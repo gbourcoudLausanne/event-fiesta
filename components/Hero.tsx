@@ -410,7 +410,7 @@ function HeroText({ part }: { part?: "intro" | "actions" }) {
         {...item(0.12)}
         className="font-serif font-light tracking-tight"
         style={{
-          fontSize: centered ? "clamp(2.9rem, 10vw, 4.5rem)" : "clamp(2.9rem, 5.2vw, 5.5rem)",
+          fontSize: centered ? "clamp(2.9rem, 10vw, 4.5rem)" : "clamp(2.9rem, 5.2vw, 5rem)",
           lineHeight: 1.06,
           color: "#2A2320",
         }}
