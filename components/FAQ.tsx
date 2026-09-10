@@ -9,27 +9,27 @@ const spring = { type: "spring", stiffness: 340, damping: 26 } as const;
 const FAQS = [
   {
     q: "Dans quelles zones intervenez-vous ?",
-    a: "Nous intervenons principalement à Lausanne et dans toute la Suisse romande : Genève, Fribourg, Neuchâtel, Vaud, Valais. Pour les événements hors canton, contactez-nous pour un devis incluant les frais de déplacement.",
+    a: "J'interviens principalement à Lausanne et dans toute la Suisse romande : Genève, Fribourg, Neuchâtel, Vaud, Valais. Pour les événements hors canton, contactez-moi pour un devis incluant les frais de déplacement.",
   },
   {
     q: "Combien de temps à l'avance faut-il réserver ?",
-    a: "Nous recommandons de réserver au moins 3 à 4 semaines avant votre événement. Pour les grandes occasions (mariages, galas), un minimum de 2 mois est conseillé. Les demandes de dernière minute sont traitées selon les disponibilités.",
+    a: "Je recommande de réserver au moins 3 à 4 semaines avant votre événement. Pour les grandes occasions (mariages, galas), comptez plutôt 2 mois. Les demandes de dernière minute sont traitées selon les disponibilités.",
   },
   {
     q: "Proposez-vous des devis gratuits ?",
-    a: "Oui, absolument. L'estimation est gratuite et sans engagement. Il vous suffit de remplir notre formulaire de contact ou de nous écrire sur WhatsApp avec les détails de votre projet.",
+    a: "Oui, absolument. L'estimation est gratuite et sans engagement. Il vous suffit de remplir le formulaire de contact ou de m'écrire sur WhatsApp avec les détails de votre projet.",
   },
   {
     q: "Est-ce que vous vous occupez de l'installation et du démontage ?",
-    a: "Oui. Nous livrons, installons et démontions toute la décoration. Vous n'avez rien à faire : nous arrivons avant vos invités et récupérons le matériel après votre événement.",
+    a: "Oui. Je livre, j'installe et je démonte toute la décoration. Vous n'avez rien à faire : j'arrive avant vos invités et je récupère le matériel après votre événement.",
   },
   {
     q: "Pouvez-vous vous adapter à tous les budgets ?",
-    a: "Nous proposons des formules adaptées à différents budgets. Dites-nous votre enveloppe et nous concevrons la plus belle décoration possible dans ce cadre. La qualité et la créativité restent notre priorité.",
+    a: "Je propose des formules adaptées à différents budgets. Dites-moi votre enveloppe et je concevrai la plus belle décoration possible dans ce cadre. La qualité et la créativité restent ma priorité.",
   },
   {
     q: "Peut-on personnaliser les couleurs et le thème ?",
-    a: "C'est la base de notre travail ! Chaque décoration est pensée et créée sur mesure selon vos couleurs, votre thème et votre personnalité. Aucune décoration ne ressemble à une autre.",
+    a: "C'est la base de mon travail ! Chaque décoration est pensée et créée sur mesure selon vos couleurs, votre thème et votre personnalité. Aucune ne ressemble à une autre.",
   },
 ];
 
@@ -48,7 +48,7 @@ function FAQItem({ item, index, isOpen, onToggle }: {
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.5, delay: index * 0.07, ease }}
       className="relative border-b overflow-hidden"
-      style={{ borderColor: "rgba(13,11,8,0.12)" }}
+      style={{ borderColor: "rgba(42,35,32,0.12)" }}
     >
       {/* Bordure gauche animée */}
       <motion.div
@@ -82,7 +82,7 @@ function FAQItem({ item, index, isOpen, onToggle }: {
       >
         <motion.span
           className="font-serif font-light text-lg leading-snug flex-1"
-          animate={{ color: isOpen ? "#F4A8B8" : "#0D0B08" }}
+          animate={{ color: isOpen ? "#F4A8B8" : "#2A2320" }}
           transition={{ duration: 0.25 }}
         >
           {item.q}
@@ -93,17 +93,17 @@ function FAQItem({ item, index, isOpen, onToggle }: {
           className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center mt-0.5"
           animate={{
             rotate: isOpen ? 45 : 0,
-            background: isOpen ? "#D9628A" : "rgba(13,11,8,0)",
-            borderColor: isOpen ? "#D9628A" : "rgba(13,11,8,0.18)",
+            background: isOpen ? "#D9628A" : "rgba(42,35,32,0)",
+            borderColor: isOpen ? "#D9628A" : "rgba(42,35,32,0.18)",
           }}
           transition={spring}
-          style={{ border: "1px solid rgba(13,11,8,0.18)" }}
+          style={{ border: "1px solid rgba(42,35,32,0.18)" }}
           aria-hidden
         >
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
             <path
               d="M5 1v8M1 5h8"
-              stroke="#0D0B08"
+              stroke="#2A2320"
               strokeWidth="1.5"
               strokeLinecap="round"
             />
@@ -125,7 +125,7 @@ function FAQItem({ item, index, isOpen, onToggle }: {
               exit={{ y: -8 }}
               transition={{ duration: 0.35, ease }}
               className="font-sans font-light text-[14px] leading-relaxed pb-6 pl-4"
-              style={{ color: "rgba(13,11,8,0.65)" }}
+              style={{ color: "rgba(42,35,32,0.65)" }}
             >
               {item.a}
             </motion.p>
@@ -154,20 +154,23 @@ export function FAQ({ preview = false }: { preview?: boolean }) {
             transition={{ duration: 0.6, ease }}
             className="lg:sticky lg:top-28 lg:self-start"
           >
-            <p className="font-sans text-[11px] uppercase tracking-[0.25em] mb-4" style={{ color: "#D9628A" }}>
-              Vos questions
-            </p>
+            <div className="flex items-center gap-3 mb-5">
+              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+              <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
+                Vos questions
+              </span>
+            </div>
             <h2
               className="font-serif font-light leading-tight mb-6"
-              style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)", color: "#0D0B08" }}
+              style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)", color: "#2A2320" }}
             >
               Questions fréquentes
             </h2>
             <p
               className="font-sans font-light text-[14px] leading-relaxed mb-8"
-              style={{ color: "rgba(13,11,8,0.55)" }}
+              style={{ color: "rgba(42,35,32,0.55)" }}
             >
-              Une question non répondue ? Écrivez-nous directement.
+              Une question sans réponse ? Écrivez-moi directement.
             </p>
 
             <motion.a

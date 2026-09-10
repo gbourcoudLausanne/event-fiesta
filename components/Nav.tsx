@@ -154,9 +154,9 @@ export function Nav() {
           <Link
             href="/contact"
             className="btn-gold-shimmer font-sans text-[13px] font-medium px-5 py-2.5 rounded-full cursor-pointer whitespace-nowrap active:scale-[0.97] transition-all duration-300"
-            style={{ background: "#D9628A", color: "#080605" }}
+            style={{ background: "#D9628A", color: "#FAF7F2" }}
             onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLAnchorElement).style.background = "#F4A8B8")
+              ((e.currentTarget as HTMLAnchorElement).style.background = "#C25E7E")
             }
             onMouseLeave={(e) =>
               ((e.currentTarget as HTMLAnchorElement).style.background = "#D9628A")
@@ -228,7 +228,7 @@ export function Nav() {
                   href="/contact"
                   onClick={() => setMenuOpen(false)}
                   className="btn-gold-shimmer font-sans text-sm font-medium px-5 py-2.5 rounded-full cursor-pointer"
-                  style={{ background: "#D9628A", color: "#080605" }}
+                  style={{ background: "#D9628A", color: "#FAF7F2" }}
                 >
                   {t.nav.cta}
                 </Link>

@@ -24,7 +24,7 @@ export const es = {
     eyebrow: "Para cada ocasión",
     title: "Nuestros servicios",
     intro:
-      "Desde una fiesta de cumpleaños hasta una velada de empresa, diseñamos y elaboramos cada decoración a medida. Dos universos, una misma exigencia: que todo esté perfecto cuando tus invitados entran en la sala.",
+      "Desde una fiesta de cumpleaños hasta una velada de empresa, diseño y elaboro cada decoración a medida. Dos universos, una misma exigencia: que todo esté perfecto cuando tus invitados entran en la sala.",
     ctaAll: "Ver todos nuestros servicios",
     index: [
       {
@@ -55,12 +55,12 @@ export const es = {
       {
         key: "piquenique",
         name: "Pícnics",
-        desc: "Pícnic de lujo llave en mano: mesa baja, cojines, vajilla, camino de flores. Montamos en el parque, junto al agua o en tu jardín.",
+        desc: "Pícnic de lujo llave en mano: mesa baja, cojines, vajilla, camino de flores. Monto en el parque, junto al agua o en tu jardín.",
       },
       {
         key: "surmesure",
         name: "Evento a medida",
-        desc: "¿Una idea concreta, un tema poco común, una limitación de lugar? Diseñamos y elaboramos la decoración a mano, solo para tu evento.",
+        desc: "¿Una idea concreta, un tema poco común, una limitación de lugar? Diseño y elaboro la decoración a mano, solo para tu evento.",
       },
       {
         key: "entreprise",
@@ -157,24 +157,24 @@ export const es = {
     eyebrow: "De la idea al gran día",
     title: "Tu proyecto en 4 pasos",
     intro:
-      "Nos cuentas tu evento, imaginamos y creamos la decoración, la instalamos el día D. Tú solo tienes que disfrutar.",
+      "Me cuentas tu evento, imagino y creo la decoración, la instalo el día D. Tú solo tienes que disfrutar.",
     cta: "Quiero un presupuesto",
     steps: [
       {
-        title: "Cuéntanos tu proyecto",
-        desc: "Tema, fecha, lugar, deseos, presupuesto — lo escuchamos todo.",
+        title: "Cuéntame tu proyecto",
+        desc: "Tema, fecha, lugar, deseos, presupuesto — lo escucho todo.",
       },
       {
-        title: "Diseñamos tu decoración",
+        title: "Diseño tu decoración",
         desc: "Una propuesta a medida, con paleta y bocetos.",
       },
       {
         title: "Validación y organización",
-        desc: "Confirmamos cada detalle contigo, sin sorpresas.",
+        desc: "Confirmo cada detalle contigo, sin sorpresas.",
       },
       {
         title: "Montaje el día del evento",
-        desc: "Entregamos, instalamos y desmontamos. Tú solo disfrutas.",
+        desc: "Entrego, instalo y desmonto. Tú solo disfrutas.",
       },
     ],
   },
@@ -256,7 +256,7 @@ export const es = {
   realisations: {
     eyebrow: "Portfolio",
     title: "Nuestras realizaciones",
-    subtitle: "Una muestra de nuestras creaciones en Lausana y la Suiza romanda.",
+    subtitle: "Una muestra de mis creaciones en Lausana y la Suiza romanda.",
     ctaAll: "Ver la galería completa",
     filters: {
       all: "Todo",
@@ -270,16 +270,8 @@ export const es = {
     },
   },
   whyus: {
-    eyebrow: "Nuestro compromiso",
-    title: "Por qué elegirnos",
     quote:
-      "Cada evento cuenta una historia. Nosotros creamos los escenarios que la hacen inolvidable.",
-    stats: [
-      { value: "2018", label: "Desde" },
-      { value: "3", label: "Idiomas hablados" },
-      { value: "0", label: "Plantillas" },
-      { value: "100%", label: "A medida" },
-    ],
+      "Cada evento cuenta una historia. Creo la decoración que la hace inolvidable.",
   },
   testimonials: {
     eyebrow: "Lo que dicen",
@@ -362,7 +354,7 @@ export const es = {
       realisations: "Realizaciones",
       contact: "Contacto",
     },
-    copyright: "© 2024 Event Fiesta. Todos los derechos reservados.",
+    copyright: "© 2026 Event Fiesta. Todos los derechos reservados.",
     legal: "Avisos legales",
   },
 };

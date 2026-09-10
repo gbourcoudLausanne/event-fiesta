@@ -237,7 +237,7 @@ export function Process() {
     <section
       id="process"
       className="relative py-20 lg:py-28"
-      style={{ background: "#F3EDE6" }}
+      style={{ background: "#FAF7F2" }}
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden>
         <div

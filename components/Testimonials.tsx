@@ -44,7 +44,7 @@ function Avatar({ name, index }: { name: string; index: number }) {
         border: "1px solid rgba(217,98,138,0.28)",
       }}
     >
-      <span className="font-sans text-xs font-medium" style={{ color: "#0D0B08" }}>
+      <span className="font-sans text-xs font-medium" style={{ color: "#2A2320" }}>
         {initials}
       </span>
     </div>
@@ -105,32 +105,38 @@ export function Testimonials() {
           className="mb-14 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"
         >
           <div>
-            <p
-              className="font-sans text-[11px] uppercase tracking-[0.28em] mb-2"
-              style={{ color: "#D9628A" }}
-            >
-              {t.testimonials.eyebrow}
-            </p>
+            <div className="flex items-center gap-3 mb-5">
+              <span className="w-10 h-px" style={{ background: "#D9628A" }} />
+              <span
+                className="font-sans text-[10px] uppercase tracking-[0.3em]"
+                style={{ color: "#B65572" }}
+              >
+                {t.testimonials.eyebrow}
+              </span>
+            </div>
             <h2
               className="font-serif font-light"
-              style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", color: "#0D0B08" }}
+              style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", color: "#2A2320" }}
             >
               {t.testimonials.title}
             </h2>
           </div>
           <p
             className="font-sans text-xs"
-            style={{ color: "rgba(13,11,8,0.42)", letterSpacing: "0.05em" }}
+            style={{ color: "rgba(42,35,32,0.42)", letterSpacing: "0.05em" }}
           >
             Glissez pour voir plus →
           </p>
         </motion.div>
 
-        {/* Draggable carousel */}
+        {/* Carousel : glisser à la souris, ou flèches clavier une fois focus */}
         <div
           ref={trackRef}
-          className="no-scrollbar flex gap-5 overflow-x-auto pb-4 select-none"
-          style={{ cursor: isDragging ? "grabbing" : "grab" }}
+          tabIndex={0}
+          role="region"
+          aria-label={`${t.testimonials.title} — faites défiler horizontalement`}
+          className="no-scrollbar flex gap-5 overflow-x-auto pb-4 select-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D9628A]"
+          style={{ cursor: isDragging ? "grabbing" : "grab", scrollSnapType: "x proximity" }}
           onMouseDown={onMouseDown}
           onMouseLeave={onMouseLeave}
           onMouseUp={onMouseUp}
@@ -144,7 +150,7 @@ export function Testimonials() {
               viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.65, delay: i * 0.1, ease }}
               className="glass-card rounded-2xl p-7 flex-shrink-0 flex flex-col gap-5"
-              style={{ width: "clamp(300px, 80vw, 400px)" }}
+              style={{ width: "clamp(300px, 80vw, 400px)", scrollSnapAlign: "start" }}
             >
               <StarRating count={item.rating} />
 
@@ -154,11 +160,11 @@ export function Testimonials() {
                   style={{ color: "rgba(217,98,138,0.22)" }}
                   aria-hidden
                 >
-                  "
+                  &ldquo;
                 </span>
                 <p
                   className="font-serif font-light italic text-base lg:text-lg leading-relaxed pt-3"
-                  style={{ color: "rgba(13,11,8,0.75)" }}
+                  style={{ color: "rgba(42,35,32,0.75)" }}
                 >
                   {item.text}
                 </p>
@@ -171,13 +177,13 @@ export function Testimonials() {
                 <div>
                   <p
                     className="font-sans text-sm font-medium"
-                    style={{ color: "#0D0B08" }}
+                    style={{ color: "#2A2320" }}
                   >
                     {item.name}
                   </p>
                   <p
                     className="font-sans text-xs"
-                    style={{ color: "rgba(13,11,8,0.5)" }}
+                    style={{ color: "rgba(42,35,32,0.5)" }}
                   >
                     {item.event} · {item.location}
                   </p>
@@ -205,6 +211,7 @@ export function Testimonials() {
               width: "clamp(260px, 60vw, 320px)",
               border: "1px dashed rgba(217,98,138,0.28)",
               background: "rgba(217,98,138,0.04)",
+              scrollSnapAlign: "start",
             }}
           >
             <div
@@ -218,19 +225,19 @@ export function Testimonials() {
             </div>
             <p
               className="font-serif font-light italic text-xl"
-              style={{ color: "rgba(13,11,8,0.62)" }}
+              style={{ color: "rgba(42,35,32,0.62)" }}
             >
               Votre avis compte
             </p>
-            <p className="font-sans text-sm" style={{ color: "rgba(13,11,8,0.48)" }}>
+            <p className="font-sans text-sm" style={{ color: "rgba(42,35,32,0.48)" }}>
               Partagez votre expérience avec Event Fiesta
             </p>
             <button
               onClick={() => router.push("/contact")}
               className="font-sans text-xs font-medium px-5 py-2.5 rounded-full cursor-pointer transition-colors duration-200"
-              style={{ background: "#D9628A", color: "#0D0B08" }}
+              style={{ background: "#D9628A", color: "#FAF7F2" }}
             >
-              Nous contacter
+              Me contacter
             </button>
           </motion.div>
         </div>

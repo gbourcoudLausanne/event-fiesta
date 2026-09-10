@@ -24,7 +24,7 @@ export const en = {
     eyebrow: "For every occasion",
     title: "Our services",
     intro:
-      "From a birthday party to a corporate evening, we design and handcraft every decoration to measure. Two worlds, one standard: everything perfect the moment your guests walk in.",
+      "From a birthday party to a corporate evening, I design and handcraft every decoration to measure. Two worlds, one standard: everything perfect the moment your guests walk in.",
     ctaAll: "See all our services",
     index: [
       {
@@ -55,12 +55,12 @@ export const en = {
       {
         key: "piquenique",
         name: "Picnics",
-        desc: "A fully managed luxury picnic: low table, cushions, tableware, flower runner. We set up in the park, by the water or in your garden.",
+        desc: "A fully managed luxury picnic: low table, cushions, tableware, flower runner. I set up in the park, by the water or in your garden.",
       },
       {
         key: "surmesure",
         name: "Bespoke event",
-        desc: "A precise idea, an unusual theme, a tricky venue? We design and handcraft the decor, just for your event.",
+        desc: "A precise idea, an unusual theme, a tricky venue? I design and handcraft the decor, just for your event.",
       },
       {
         key: "entreprise",
@@ -157,24 +157,24 @@ export const en = {
     eyebrow: "From idea to the big day",
     title: "Your project in 4 steps",
     intro:
-      "You tell us about your event, we design and build the décor, we set it up on the day. All you have to do is enjoy it.",
+      "You tell me about your event, I design and build the décor, I set it up on the day. All you have to do is enjoy it.",
     cta: "I'd like a quote",
     steps: [
       {
-        title: "Tell us about your project",
-        desc: "Theme, date, venue, wishes, budget — we listen to it all.",
+        title: "Tell me about your project",
+        desc: "Theme, date, venue, wishes, budget — I listen to it all.",
       },
       {
-        title: "We design your decoration",
+        title: "I design your decoration",
         desc: "A bespoke proposal, with palette and sketches.",
       },
       {
         title: "Sign-off & planning",
-        desc: "We confirm every detail with you — no surprises.",
+        desc: "I confirm every detail with you — no surprises.",
       },
       {
         title: "Set-up on the day",
-        desc: "We deliver, install and take down. You just enjoy.",
+        desc: "I deliver, install and take down. You just enjoy.",
       },
     ],
   },
@@ -257,7 +257,7 @@ export const en = {
     eyebrow: "Portfolio",
     title: "Our work",
     subtitle:
-      "A glimpse of our creations in Lausanne and French-speaking Switzerland.",
+      "A glimpse of my creations in Lausanne and French-speaking Switzerland.",
     ctaAll: "See the full gallery",
     filters: {
       all: "All",
@@ -271,16 +271,8 @@ export const en = {
     },
   },
   whyus: {
-    eyebrow: "Our commitment",
-    title: "Why choose us",
     quote:
-      "Every event tells a story. We create the settings that make it unforgettable.",
-    stats: [
-      { value: "2018", label: "Since" },
-      { value: "3", label: "Languages spoken" },
-      { value: "0", label: "Templates" },
-      { value: "100%", label: "Bespoke" },
-    ],
+      "Every event tells a story. I create the setting that makes it unforgettable.",
   },
   testimonials: {
     eyebrow: "What they say",
@@ -364,7 +356,7 @@ export const en = {
       realisations: "Portfolio",
       contact: "Contact",
     },
-    copyright: "© 2024 Event Fiesta. All rights reserved.",
+    copyright: "© 2026 Event Fiesta. All rights reserved.",
     legal: "Legal notice",
   },
 };

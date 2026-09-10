@@ -24,7 +24,7 @@ export const fr = {
     eyebrow: "Pour chaque occasion",
     title: "Nos services",
     intro:
-      "De la fête d'anniversaire à la soirée d'entreprise, nous concevons et fabriquons chaque décoration sur mesure. Deux univers, une même exigence : que tout soit parfait au moment où vos invités entrent dans la salle.",
+      "De la fête d'anniversaire à la soirée d'entreprise, je conçois et je fabrique chaque décoration sur mesure. Deux univers, une même exigence : que tout soit parfait au moment où vos invités entrent dans la salle.",
     ctaAll: "Voir tous nos services",
     index: [
       {
@@ -55,12 +55,12 @@ export const fr = {
       {
         key: "piquenique",
         name: "Pique-niques",
-        desc: "Pique-nique de luxe clé en main : table basse, coussins, vaisselle, chemin de fleurs. On installe au parc, au bord de l'eau ou dans votre jardin.",
+        desc: "Pique-nique de luxe clé en main : table basse, coussins, vaisselle, chemin de fleurs. J'installe au parc, au bord de l'eau ou dans votre jardin.",
       },
       {
         key: "surmesure",
         name: "Événement sur mesure",
-        desc: "Une idée précise, un thème inhabituel, une contrainte de lieu ? On conçoit et fabrique le décor à la main, rien que pour votre événement.",
+        desc: "Une idée précise, un thème inhabituel, une contrainte de lieu ? Je conçois et je fabrique le décor à la main, rien que pour votre événement.",
       },
       {
         key: "entreprise",
@@ -157,24 +157,24 @@ export const fr = {
     eyebrow: "De l'idée au grand jour",
     title: "Votre projet en 4 étapes",
     intro:
-      "Vous nous racontez votre événement, on imagine et on fabrique le décor, on l'installe le jour J. Vous n'avez plus qu'à en profiter.",
+      "Vous me racontez votre événement, j'imagine et je fabrique le décor, je l'installe le jour J. Vous n'avez plus qu'à en profiter.",
     cta: "Je souhaite un devis",
     steps: [
       {
-        title: "Parlez-nous de votre projet",
-        desc: "Thème, date, lieu, envies, budget — on écoute tout.",
+        title: "Parlez-moi de votre projet",
+        desc: "Thème, date, lieu, envies, budget — j'écoute tout.",
       },
       {
-        title: "On imagine votre décoration",
+        title: "J'imagine votre décoration",
         desc: "Une proposition sur mesure, palette et croquis à l'appui.",
       },
       {
         title: "Validation & organisation",
-        desc: "On cale chaque détail avec vous, sans mauvaise surprise.",
+        desc: "Je cale chaque détail avec vous, sans mauvaise surprise.",
       },
       {
         title: "Installation le jour J",
-        desc: "On livre, on installe, on démonte. Vous n'avez qu'à profiter.",
+        desc: "Je livre, j'installe, je démonte. Vous n'avez qu'à profiter.",
       },
     ],
   },
@@ -256,7 +256,7 @@ export const fr = {
   realisations: {
     eyebrow: "Portfolio",
     title: "Nos réalisations",
-    subtitle: "Un aperçu de nos créations à Lausanne et en Suisse romande.",
+    subtitle: "Un aperçu de mes créations à Lausanne et en Suisse romande.",
     ctaAll: "Voir la galerie complète",
     filters: {
       all: "Tout",
@@ -270,16 +270,8 @@ export const fr = {
     },
   },
   whyus: {
-    eyebrow: "Notre engagement",
-    title: "Pourquoi nous choisir",
     quote:
-      "Chaque événement raconte une histoire. Nous créons les décors qui la rendent inoubliable.",
-    stats: [
-      { value: "2018", label: "Depuis" },
-      { value: "3", label: "Langues parlées" },
-      { value: "0", label: "Template" },
-      { value: "100%", label: "Sur mesure" },
-    ],
+      "Chaque événement raconte une histoire. Je crée le décor qui la rend inoubliable.",
   },
   testimonials: {
     eyebrow: "Ce qu'ils disent",
@@ -364,7 +356,7 @@ export const fr = {
       realisations: "Réalisations",
       contact: "Contact",
     },
-    copyright: "© 2024 Event Fiesta. Tous droits réservés.",
+    copyright: "© 2026 Event Fiesta. Tous droits réservés.",
     legal: "Mentions légales",
   },
 };

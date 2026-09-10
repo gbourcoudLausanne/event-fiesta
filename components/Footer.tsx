@@ -171,7 +171,7 @@ export function Footer() {
               style={{ background: "rgba(217,98,138,0.15)", color: "#F4A8B8", border: "1px solid rgba(217,98,138,0.3)" }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLAnchorElement).style.background = "#D9628A";
-                (e.currentTarget as HTMLAnchorElement).style.color = "#0D0B08";
+                (e.currentTarget as HTMLAnchorElement).style.color = "#FAF7F2";
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLAnchorElement).style.background = "rgba(217,98,138,0.15)";

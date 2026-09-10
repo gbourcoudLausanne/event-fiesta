@@ -470,7 +470,7 @@ function RealisationsCarousel() {
                     />
                     <div
                       className="absolute inset-0 pointer-events-none"
-                      style={{ background: "linear-gradient(180deg, rgba(13,11,8,0) 42%, rgba(13,11,8,0.78) 100%)" }}
+                      style={{ background: "linear-gradient(180deg, rgba(42,35,32,0) 42%, rgba(42,35,32,0.78) 100%)" }}
                     />
                     {on && (
                       <div
@@ -581,7 +581,7 @@ function RealisationsCarousel() {
                           />
                           <div
                             className="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-300 group-hover/g:opacity-100"
-                            style={{ background: "linear-gradient(180deg, rgba(13,11,8,0) 55%, rgba(13,11,8,0.6) 100%)" }}
+                            style={{ background: "linear-gradient(180deg, rgba(42,35,32,0) 55%, rgba(42,35,32,0.6) 100%)" }}
                           />
                           <p
                             className="absolute inset-x-0 bottom-0 p-3 text-left font-serif font-light italic text-[13px] opacity-0 transition-opacity duration-300 group-hover/g:opacity-100"
@@ -661,7 +661,7 @@ function Lightbox({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
       className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-12"
-      style={{ background: "rgba(13,11,8,0.95)" }}
+      style={{ background: "rgba(42,35,32,0.95)" }}
       onClick={onClose}
       role="dialog"
       aria-modal
@@ -679,7 +679,7 @@ function Lightbox({
         <Image src={photo.src} alt={photo.alt} fill className="object-contain" priority sizes="90vw" />
         <div
           className="absolute bottom-0 left-0 right-0 px-6 py-5 pointer-events-none"
-          style={{ background: "linear-gradient(to top, rgba(13,11,8,0.9), transparent)" }}
+          style={{ background: "linear-gradient(to top, rgba(42,35,32,0.9), transparent)" }}
         >
           <p className="font-serif text-xl" style={{ color: "#FAF7F2" }}>{photo.name}</p>
           <p className="font-sans text-xs mt-0.5" style={{ color: "rgba(250,247,242,0.4)" }}>
@@ -759,11 +759,11 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <h2
               className="font-serif font-light leading-tight"
-              style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)", color: "#0D0B08" }}
+              style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)", color: "#2A2320" }}
             >
               {t.realisations.title}
             </h2>
-            <p className="font-sans text-sm max-w-xs leading-relaxed lg:text-right" style={{ color: "rgba(13,11,8,0.55)" }}>
+            <p className="font-sans text-sm max-w-xs leading-relaxed lg:text-right" style={{ color: "rgba(42,35,32,0.55)" }}>
               {t.realisations.subtitle}
             </p>
           </div>
@@ -785,8 +785,8 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
               className="font-sans text-sm px-4 py-2 rounded-full transition-all duration-250 cursor-pointer"
               style={{
                 background: active === key ? "#D9628A" : "transparent",
-                color: active === key ? "#0D0B08" : "rgba(13,11,8,0.55)",
-                border: active === key ? "1px solid #D9628A" : "1px solid rgba(13,11,8,0.18)",
+                color: active === key ? "#FAF7F2" : "rgba(42,35,32,0.55)",
+                border: active === key ? "1px solid #D9628A" : "1px solid rgba(42,35,32,0.18)",
                 fontWeight: active === key ? 500 : 300,
               }}
             >
@@ -820,7 +820,7 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
                   />
                   <div
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-350 flex flex-col justify-end p-4 md:p-5"
-                    style={{ background: "linear-gradient(to top, rgba(13,11,8,0.78) 0%, rgba(13,11,8,0.1) 60%, transparent 100%)" }}
+                    style={{ background: "linear-gradient(to top, rgba(42,35,32,0.78) 0%, rgba(42,35,32,0.1) 60%, transparent 100%)" }}
                   >
                     <p
                       className="font-sans text-[10px] uppercase tracking-[0.18em] mb-1 translate-y-3 group-hover:translate-y-0 transition-transform duration-300"
@@ -850,7 +850,7 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
             <Link
               href="/galerie"
               className="btn-gold-shimmer font-sans text-[13px] font-medium px-8 py-3.5 rounded-full cursor-pointer transition-transform duration-200 hover:scale-[1.03]"
-              style={{ background: "#D9628A", color: "#0D0B08" }}
+              style={{ background: "#D9628A", color: "#FAF7F2" }}
             >
               {t.realisations.ctaAll}
             </Link>

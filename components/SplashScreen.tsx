@@ -66,14 +66,30 @@ function FloatingBalloons() {
 }
 
 // ── Splash Screen ────────────────────────────────────────────────────────────
+const SEEN_KEY = "ef-splash-seen";
+
 export function SplashScreen() {
-  const [visible, setVisible] = useState(true);
+  // Démarre masqué : on n'affiche le splash que si on ne l'a pas déjà vu
+  // dans cette session (évite de le resubir à chaque visite / navigation).
+  const [visible, setVisible] = useState(false);
   const reduce = useReducedMotion();
 
   useEffect(() => {
-    if (reduce) { setVisible(false); return; }
-    const t = setTimeout(() => setVisible(false), 2800);
-    return () => clearTimeout(t);
+    if (reduce) return;
+    try {
+      if (sessionStorage.getItem(SEEN_KEY) === "1") return;
+    } catch {}
+    const raf = requestAnimationFrame(() => setVisible(true));
+    const t = setTimeout(() => {
+      setVisible(false);
+      try {
+        sessionStorage.setItem(SEEN_KEY, "1");
+      } catch {}
+    }, 2800);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(t);
+    };
   }, [reduce]);
 
   return (
