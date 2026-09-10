@@ -186,7 +186,7 @@ export const fr = {
     craftEyebrow: "Le savoir-faire",
     paragraphs: [
       "Je conçois et je fabrique chaque décor à la main, avec mon propre matériel : arches de ballons, murs floraux, colonnes, sweet tables, panneaux de bienvenue et petits cadeaux pour vos invités.",
-      "Je parle trois langues et j'ai déjà mis en scène des dizaines d'univers différents. À chaque fois, la même exigence : un décor qui vous ressemble, et dont vos invités se souviennent. Livraison, installation, démontage : je m'occupe de tout, vous n'avez qu'à savourer le moment.",
+      "On échange en français, en espagnol ou en anglais, comme vous préférez. J'ai déjà mis en scène des dizaines d'univers différents, et à chaque fois la même exigence : un décor qui vous ressemble, et dont vos invités se souviennent. Livraison, installation, démontage : je m'occupe de tout, vous n'avez qu'à savourer le moment.",
     ],
     storyTitle: "Mon histoire",
     story:

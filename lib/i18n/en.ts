@@ -186,7 +186,7 @@ export const en = {
     craftEyebrow: "The craft",
     paragraphs: [
       "I design and handcraft every piece myself, with my own materials: balloon arches, flower walls, columns, sweet tables, welcome signs and little gifts for your guests.",
-      "I speak three languages and have already styled dozens of different worlds. Every time, the same standard: a setting that feels like you, and one your guests remember. Delivery, set-up, take-down: I handle it all, so you can simply enjoy the moment.",
+      "We speak French, Spanish or English, whichever suits you. I've already styled dozens of different worlds, and every time the same standard: a setting that feels like you, and one your guests remember. Delivery, set-up, take-down: I handle it all, so you can simply enjoy the moment.",
     ],
     storyTitle: "My story",
     story:

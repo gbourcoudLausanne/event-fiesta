@@ -186,7 +186,7 @@ export const es = {
     craftEyebrow: "El saber hacer",
     paragraphs: [
       "Diseño y elaboro a mano cada decoración, con mi propio material: arcos de globos, muros florales, columnas, sweet tables, carteles de bienvenida y pequeños regalos para tus invitados.",
-      "Hablo tres idiomas y ya he puesto en escena decenas de universos distintos. Cada vez, la misma exigencia: una decoración que te represente y que tus invitados recuerden. Entrega, montaje, desmontaje: me ocupo de todo, tú solo tienes que disfrutar del momento.",
+      "Nos comunicamos en francés, en español o en inglés, como prefieras. Ya he puesto en escena decenas de universos distintos, y cada vez la misma exigencia: una decoración que te represente y que tus invitados recuerden. Entrega, montaje, desmontaje: me ocupo de todo, tú solo tienes que disfrutar del momento.",
     ],
     storyTitle: "Mi historia",
     story:
