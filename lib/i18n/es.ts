@@ -273,37 +273,47 @@ export const es = {
     quote:
       "Cada evento cuenta una historia. Creo la decoración que la hace inolvidable.",
   },
-  testimonials: {
-    eyebrow: "Lo que dicen",
-    title: "Opiniones de clientes",
+  ctaBanner: {
+    eyebrow: "Empecemos juntos",
+    titleLine1: "Tu próxima celebración",
+    titleLine2: "merece lo mejor.",
+    cta: "Pedir un presupuesto gratis",
+    phoneLabel: "o llámame",
+    stats: [
+      { value: "2018", label: "desde" },
+      { value: "0", label: "plantilla" },
+      { value: "100%", label: "a medida" },
+    ],
+  },
+  faq: {
+    eyebrow: "Tus preguntas",
+    title: "Preguntas frecuentes",
+    note: "¿Una pregunta sin respuesta? Escríbeme directamente.",
+    cta: "Hacer mi pregunta",
     items: [
       {
-        name: "Sophie M.",
-        location: "Lausana",
-        event: "Baby Shower",
-        text: "¡Un equipo increíble! Mi baby shower fue un verdadero cuento de hadas. Cada detalle estaba pensado, cada flor en su lugar. Lo recomiendo con los ojos cerrados.",
-        rating: 5,
+        q: "¿En qué zonas trabajas?",
+        a: "Trabajo principalmente en Lausana y en toda la Suiza romanda: Ginebra, Friburgo, Neuchâtel, Vaud, Valais. Para eventos fuera del cantón, contáctame para un presupuesto que incluya los gastos de desplazamiento.",
       },
       {
-        name: "Ricardo & Laura",
-        location: "Pully",
-        event: "Cumpleaños",
-        text: "Confiamos la organización del 40 aniversario de Laura a Event Fiesta. El resultado superó todas nuestras expectativas. Un profesionalismo y creatividad notables.",
-        rating: 5,
+        q: "¿Con cuánta antelación hay que reservar?",
+        a: "Recomiendo reservar al menos 3 o 4 semanas antes de tu evento. Para las grandes ocasiones (bodas, galas), cuenta más bien con 2 meses. Las solicitudes de última hora se atienden según disponibilidad.",
       },
       {
-        name: "Amina B.",
-        location: "Renens",
-        event: "Bautizo",
-        text: "Event Fiesta transformó la sala en un paraíso de suavidad y elegancia. Mi hija Leila merecía el más bello de los bautizos. Gracias de todo corazón.",
-        rating: 5,
+        q: "¿Ofreces presupuestos gratuitos?",
+        a: "Sí, por supuesto. La estimación es gratuita y sin compromiso. Solo tienes que rellenar el formulario de contacto o escribirme por WhatsApp con los detalles de tu proyecto.",
       },
       {
-        name: "Thomas V.",
-        location: "Morges",
-        event: "Corporativo",
-        text: "Para nuestra noche de fin de año, buscábamos algo único. Event Fiesta superó todas nuestras expectativas. Un servicio de cinco estrellas con ideas originales.",
-        rating: 5,
+        q: "¿Te encargas del montaje y el desmontaje?",
+        a: "Sí. Entrego, instalo y desmonto toda la decoración. No tienes que hacer nada: llego antes que tus invitados y recojo el material después de tu evento.",
+      },
+      {
+        q: "¿Puedes adaptarte a todos los presupuestos?",
+        a: "Ofrezco fórmulas adaptadas a distintos presupuestos. Dime tu margen y diseñaré la decoración más bonita posible dentro de ese marco. La calidad y la creatividad siguen siendo mi prioridad.",
+      },
+      {
+        q: "¿Se pueden personalizar los colores y el tema?",
+        a: "¡Es la base de mi trabajo! Cada decoración se piensa y se crea a medida según tus colores, tu tema y tu personalidad. Ninguna se parece a otra.",
       },
     ],
   },
@@ -340,6 +350,37 @@ export const es = {
       address: "Lausana, Suiza romanda",
       hours: "Lun-Vie, 9h-18h",
     },
+  },
+  legal: {
+    eyebrow: "Información legal",
+    title: "Aviso legal",
+    updated: "Última actualización: septiembre de 2026",
+    sections: [
+      {
+        heading: "Editor del sitio",
+        body: "Event Fiesta — decoración de eventos\nLausana, Suiza romanda (Suiza)\nCorreo: contact@eventfiesta.ch\nTeléfono: 077 914 38 55",
+      },
+      {
+        heading: "Alojamiento",
+        body: "Este sitio está alojado por Vercel Inc.\n440 N Barranca Ave #4133, Covina, CA 91723, Estados Unidos\nvercel.com",
+      },
+      {
+        heading: "Propiedad intelectual",
+        body: "Todos los contenidos de este sitio (textos, fotografías, identidad visual) son propiedad de Event Fiesta, salvo indicación contraria. Queda prohibida toda reproducción sin autorización escrita previa.",
+      },
+      {
+        heading: "Fotografías",
+        body: "Las fotografías mostradas ilustran decoraciones realizadas por Event Fiesta o puestas en escena. No pueden reutilizarse sin acuerdo previo.",
+      },
+      {
+        heading: "Datos personales",
+        body: "La información enviada a través del formulario de contacto (nombre, correo, teléfono, detalles del evento) se utiliza únicamente para responder a tu solicitud y elaborar un presupuesto. No se cede ni se vende a terceros. Puedes solicitar su consulta o su eliminación en cualquier momento escribiendo a contact@eventfiesta.ch.",
+      },
+      {
+        heading: "Cookies",
+        body: "Este sitio no utiliza cookies de seguimiento publicitario. Solo se guarda tu preferencia de idioma localmente en tu navegador para tu comodidad.",
+      },
+    ],
   },
   footer: {
     tagline: "Decoración personalizada · Lausana",

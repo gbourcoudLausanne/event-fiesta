@@ -371,15 +371,19 @@ export function Process() {
           </ul>
         </div>
 
-        {/* CTA */}
-        <div className="mt-12 lg:mt-14">
+        {/* CTA — léger : la vraie conversion est dans la bannière juste après */}
+        <div className="mt-10 lg:mt-12">
           <Link
             href="/contact"
-            className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[13px] font-medium px-8 py-3.5 rounded-full transition-transform duration-200 hover:scale-[1.03]"
-            style={{ background: "#D9628A", color: "#FAF7F2" }}
+            className="group inline-flex items-center gap-2 font-sans text-[12px] font-medium uppercase tracking-[0.18em]"
+            style={{ color: "#B65572" }}
           >
             {t.process.cta}
-            <ArrowRight size={14} weight="bold" />
+            <ArrowRight
+              size={13}
+              weight="bold"
+              className="transition-transform duration-200 group-hover:translate-x-1"
+            />
           </Link>
         </div>
       </div>

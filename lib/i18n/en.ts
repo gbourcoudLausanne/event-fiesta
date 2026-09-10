@@ -274,37 +274,47 @@ export const en = {
     quote:
       "Every event tells a story. I create the setting that makes it unforgettable.",
   },
-  testimonials: {
-    eyebrow: "What they say",
-    title: "Client reviews",
+  ctaBanner: {
+    eyebrow: "Let's start together",
+    titleLine1: "Your next celebration",
+    titleLine2: "deserves the best.",
+    cta: "Request a free quote",
+    phoneLabel: "or call me",
+    stats: [
+      { value: "2018", label: "since" },
+      { value: "0", label: "template" },
+      { value: "100%", label: "bespoke" },
+    ],
+  },
+  faq: {
+    eyebrow: "Your questions",
+    title: "Frequently asked questions",
+    note: "A question left unanswered? Write to me directly.",
+    cta: "Ask my question",
     items: [
       {
-        name: "Sophie M.",
-        location: "Lausanne",
-        event: "Baby Shower",
-        text: "An incredible team! My baby shower was like a fairy tale. Every detail was considered, every flower in its place. I recommend them wholeheartedly.",
-        rating: 5,
+        q: "Which areas do you cover?",
+        a: "I mainly work in Lausanne and across French-speaking Switzerland: Geneva, Fribourg, Neuchâtel, Vaud, Valais. For events outside the canton, get in touch for a quote that includes travel costs.",
       },
       {
-        name: "Ricardo & Laura",
-        location: "Pully",
-        event: "Birthday",
-        text: "We entrusted Laura's 40th birthday to Event Fiesta. The result exceeded our expectations. Remarkable professionalism and creativity.",
-        rating: 5,
+        q: "How far in advance should I book?",
+        a: "I recommend booking at least 3 to 4 weeks before your event. For big occasions (weddings, galas), allow about 2 months. Last-minute requests are handled subject to availability.",
       },
       {
-        name: "Amina B.",
-        location: "Renens",
-        event: "Christening",
-        text: "Event Fiesta transformed the room into a paradise of softness and elegance. My daughter Leila deserved the most beautiful christening. Thank you from the bottom of our hearts.",
-        rating: 5,
+        q: "Do you offer free quotes?",
+        a: "Yes, absolutely. The estimate is free and with no obligation. Just fill in the contact form or message me on WhatsApp with the details of your project.",
       },
       {
-        name: "Thomas V.",
-        location: "Morges",
-        event: "Corporate",
-        text: "For our end-of-year evening, we were looking for something unique. Event Fiesta exceeded all our expectations. A five-star service with original ideas.",
-        rating: 5,
+        q: "Do you handle set-up and take-down?",
+        a: "Yes. I deliver, install and take down all the decoration. You have nothing to do: I arrive before your guests and collect everything after your event.",
+      },
+      {
+        q: "Can you work with any budget?",
+        a: "I offer options to suit different budgets. Tell me your range and I'll design the most beautiful decoration possible within it. Quality and creativity stay my priority.",
+      },
+      {
+        q: "Can the colours and theme be personalised?",
+        a: "That's the heart of what I do! Every decoration is designed and made to measure around your colours, your theme and your personality. No two are alike.",
       },
     ],
   },
@@ -342,6 +352,37 @@ export const en = {
       address: "Lausanne, French-speaking Switzerland",
       hours: "Mon-Fri, 9am-6pm",
     },
+  },
+  legal: {
+    eyebrow: "Legal information",
+    title: "Legal notice",
+    updated: "Last updated: September 2026",
+    sections: [
+      {
+        heading: "Site publisher",
+        body: "Event Fiesta — event decoration\nLausanne, French-speaking Switzerland (Switzerland)\nEmail: contact@eventfiesta.ch\nPhone: 077 914 38 55",
+      },
+      {
+        heading: "Hosting",
+        body: "This site is hosted by Vercel Inc.\n440 N Barranca Ave #4133, Covina, CA 91723, United States\nvercel.com",
+      },
+      {
+        heading: "Intellectual property",
+        body: "All content on this site (text, photographs, visual identity) is the property of Event Fiesta unless stated otherwise. Any reproduction without prior written permission is prohibited.",
+      },
+      {
+        heading: "Photographs",
+        body: "The photographs shown illustrate decorations created by Event Fiesta or staged setups. They may not be reused without prior agreement.",
+      },
+      {
+        heading: "Personal data",
+        body: "The information sent through the contact form (name, email, phone, event details) is used only to answer your request and prepare a quote. It is never shared or sold to third parties. You can ask to see or delete it at any time by writing to contact@eventfiesta.ch.",
+      },
+      {
+        heading: "Cookies",
+        body: "This site uses no advertising or tracking cookies. Only your language preference is stored locally in your browser for convenience.",
+      },
+    ],
   },
   footer: {
     tagline: "Custom decoration · Lausanne",

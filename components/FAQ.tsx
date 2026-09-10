@@ -2,39 +2,13 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const spring = { type: "spring", stiffness: 340, damping: 26 } as const;
 
-const FAQS = [
-  {
-    q: "Dans quelles zones intervenez-vous ?",
-    a: "J'interviens principalement à Lausanne et dans toute la Suisse romande : Genève, Fribourg, Neuchâtel, Vaud, Valais. Pour les événements hors canton, contactez-moi pour un devis incluant les frais de déplacement.",
-  },
-  {
-    q: "Combien de temps à l'avance faut-il réserver ?",
-    a: "Je recommande de réserver au moins 3 à 4 semaines avant votre événement. Pour les grandes occasions (mariages, galas), comptez plutôt 2 mois. Les demandes de dernière minute sont traitées selon les disponibilités.",
-  },
-  {
-    q: "Proposez-vous des devis gratuits ?",
-    a: "Oui, absolument. L'estimation est gratuite et sans engagement. Il vous suffit de remplir le formulaire de contact ou de m'écrire sur WhatsApp avec les détails de votre projet.",
-  },
-  {
-    q: "Est-ce que vous vous occupez de l'installation et du démontage ?",
-    a: "Oui. Je livre, j'installe et je démonte toute la décoration. Vous n'avez rien à faire : j'arrive avant vos invités et je récupère le matériel après votre événement.",
-  },
-  {
-    q: "Pouvez-vous vous adapter à tous les budgets ?",
-    a: "Je propose des formules adaptées à différents budgets. Dites-moi votre enveloppe et je concevrai la plus belle décoration possible dans ce cadre. La qualité et la créativité restent ma priorité.",
-  },
-  {
-    q: "Peut-on personnaliser les couleurs et le thème ?",
-    a: "C'est la base de mon travail ! Chaque décoration est pensée et créée sur mesure selon vos couleurs, votre thème et votre personnalité. Aucune ne ressemble à une autre.",
-  },
-];
-
 function FAQItem({ item, index, isOpen, onToggle }: {
-  item: typeof FAQS[0];
+  item: { q: string; a: string };
   index: number;
   isOpen: boolean;
   onToggle: () => void;
@@ -137,9 +111,10 @@ function FAQItem({ item, index, isOpen, onToggle }: {
 }
 
 export function FAQ({ preview = false }: { preview?: boolean }) {
+  const { t } = useI18n();
   const reduce = useReducedMotion();
   const [openIdx, setOpenIdx] = useState<number | null>(0);
-  const faqs = preview ? FAQS.slice(0, 4) : FAQS;
+  const faqs = preview ? t.faq.items.slice(0, 4) : t.faq.items;
 
   return (
     <section className="py-20 lg:py-24" style={{ background: "#F3EDE6" }}>
@@ -157,20 +132,20 @@ export function FAQ({ preview = false }: { preview?: boolean }) {
             <div className="flex items-center gap-3 mb-5">
               <span className="w-10 h-px" style={{ background: "#D9628A" }} />
               <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
-                Vos questions
+                {t.faq.eyebrow}
               </span>
             </div>
             <h2
               className="font-serif font-light leading-tight mb-6"
               style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)", color: "#2A2320" }}
             >
-              Questions fréquentes
+              {t.faq.title}
             </h2>
             <p
               className="font-sans font-light text-[14px] leading-relaxed mb-8"
               style={{ color: "rgba(42,35,32,0.55)" }}
             >
-              Une question sans réponse ? Écrivez-moi directement.
+              {t.faq.note}
             </p>
 
             <motion.a
@@ -186,7 +161,7 @@ export function FAQ({ preview = false }: { preview?: boolean }) {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
               </svg>
-              Poser ma question
+              {t.faq.cta}
             </motion.a>
           </motion.div>
 

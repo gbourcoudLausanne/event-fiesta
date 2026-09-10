@@ -2,10 +2,12 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
+import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
 export function CtaBanner() {
+  const { t } = useI18n();
   const reduce = useReducedMotion();
   const router = useRouter();
 
@@ -47,7 +49,7 @@ export function CtaBanner() {
           className="font-sans text-[11px] uppercase tracking-[0.3em] mb-6"
           style={{ color: "#D9628A" }}
         >
-          Commençons ensemble
+          {t.ctaBanner.eyebrow}
         </motion.p>
 
         <motion.h2
@@ -61,9 +63,9 @@ export function CtaBanner() {
             color: "#2A2320",
           }}
         >
-          Votre prochaine célébration
+          {t.ctaBanner.titleLine1}
           <br />
-          mérite l&apos;excellence.
+          {t.ctaBanner.titleLine2}
         </motion.h2>
 
         <motion.div
@@ -84,7 +86,7 @@ export function CtaBanner() {
               ((e.currentTarget as HTMLButtonElement).style.background = "#D9628A")
             }
           >
-            Demander un devis gratuit
+            {t.ctaBanner.cta}
           </button>
 
           <a
@@ -99,7 +101,7 @@ export function CtaBanner() {
                 "rgba(42,35,32,0.5)")
             }
           >
-            ou appelez-moi · 077 914 38 55
+            {t.ctaBanner.phoneLabel} · {t.contact.info.phone}
           </a>
         </motion.div>
 
@@ -111,11 +113,7 @@ export function CtaBanner() {
           transition={{ duration: 0.7, delay: 0.45, ease }}
           className="flex items-center justify-center gap-8 mt-14"
         >
-          {[
-            { value: "2018", label: "depuis" },
-            { value: "0", label: "template" },
-            { value: "100%", label: "sur mesure" },
-          ].map(({ value, label }) => (
+          {t.ctaBanner.stats.map(({ value, label }) => (
             <div key={label} className="flex flex-col items-center gap-1">
               <span
                 className="font-serif font-light"

@@ -192,14 +192,15 @@ export function Footer() {
             {t.footer.copyright}
           </p>
           <div className="flex items-center gap-6">
-            <button
+            <Link
+              href="/mentions-legales"
               className="font-sans text-xs transition-colors duration-200 cursor-pointer"
               style={{ color: "rgba(13,11,8,0.35)" }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "rgba(13,11,8,0.65)")}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "rgba(13,11,8,0.35)")}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(13,11,8,0.65)")}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(13,11,8,0.35)")}
             >
               {t.footer.legal}
-            </button>
+            </Link>
             <span style={{ color: "rgba(13,11,8,0.2)", fontSize: 10 }}>·</span>
             <p className="font-sans text-xs" style={{ color: "rgba(13,11,8,0.3)" }}>
               Lausanne · Suisse romande
