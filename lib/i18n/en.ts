@@ -24,7 +24,7 @@ export const en = {
     eyebrow: "For every occasion",
     title: "Our services",
     intro:
-      "From a birthday party to a corporate evening, I design and handcraft every decoration to measure. Two worlds, one standard: everything perfect the moment your guests walk in.",
+      "From a birthday party to a corporate evening, I design and handcraft every decoration to measure. Two worlds, one standard: everything perfect the moment your guests arrive.",
     ctaAll: "See all our services",
     learnMore: "Learn more",
     discuss: "Let's talk",
@@ -258,7 +258,7 @@ export const en = {
     },
     note: {
       eyebrow: "A word for you",
-      body: "Every project matters to me as if it were my own. Tell me about your event, your colours, your venue, what matters to you, and together we'll imagine a setting that feels like you. I can't wait to see your face when you walk into the room.",
+      body: "Every project matters to me as if it were my own. Tell me about your event, your colours, your venue, what matters to you, and together we'll imagine a setting that feels like you. I can't wait to see your face when you discover the setting.",
       sign: "Event Fiesta",
     },
     cta: "Let's talk about your event",

@@ -24,7 +24,7 @@ export const fr = {
     eyebrow: "Pour chaque occasion",
     title: "Nos services",
     intro:
-      "De la fête d'anniversaire à la soirée d'entreprise, je conçois et je fabrique chaque décoration sur mesure. Deux univers, une même exigence : que tout soit parfait au moment où vos invités entrent dans la salle.",
+      "De la fête d'anniversaire à la soirée d'entreprise, je conçois et je fabrique chaque décoration sur mesure. Deux univers, une même exigence : que tout soit parfait au moment où vos invités arrivent.",
     ctaAll: "Voir tous nos services",
     learnMore: "En savoir plus",
     discuss: "En parler",
@@ -258,7 +258,7 @@ export const fr = {
     },
     note: {
       eyebrow: "Un mot pour vous",
-      body: "Chaque projet me tient à cœur comme s'il était le mien. Racontez-moi votre événement, vos couleurs, votre lieu, ce qui compte pour vous, et on imagine ensemble un décor qui vous ressemble. J'ai hâte de voir vos yeux quand vous entrerez dans la salle.",
+      body: "Chaque projet me tient à cœur comme s'il était le mien. Racontez-moi votre événement, vos couleurs, votre lieu, ce qui compte pour vous, et on imagine ensemble un décor qui vous ressemble. J'ai hâte de voir vos yeux quand vous découvrirez le décor.",
       sign: "Event Fiesta",
     },
     cta: "Discutons de votre événement",

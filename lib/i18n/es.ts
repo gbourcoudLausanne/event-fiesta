@@ -24,7 +24,7 @@ export const es = {
     eyebrow: "Para cada ocasión",
     title: "Nuestros servicios",
     intro:
-      "Desde una fiesta de cumpleaños hasta una velada de empresa, diseño y elaboro cada decoración a medida. Dos universos, una misma exigencia: que todo esté perfecto cuando tus invitados entran en la sala.",
+      "Desde una fiesta de cumpleaños hasta una velada de empresa, diseño y elaboro cada decoración a medida. Dos universos, una misma exigencia: que todo esté perfecto cuando llegan tus invitados.",
     ctaAll: "Ver todos nuestros servicios",
     learnMore: "Ver más",
     discuss: "Hablarlo",
@@ -258,7 +258,7 @@ export const es = {
     },
     note: {
       eyebrow: "Unas palabras para ti",
-      body: "Cada proyecto me importa como si fuera el mío. Cuéntame tu evento, tus colores, tu lugar, lo que te importa, e imaginamos juntas una decoración que te represente. Me hace ilusión ver tu cara cuando entres en la sala.",
+      body: "Cada proyecto me importa como si fuera el mío. Cuéntame tu evento, tus colores, tu lugar, lo que te importa, e imaginamos juntas una decoración que te represente. Me hace ilusión ver tu cara cuando descubras la decoración.",
       sign: "Event Fiesta",
     },
     cta: "Hablemos de tu evento",
