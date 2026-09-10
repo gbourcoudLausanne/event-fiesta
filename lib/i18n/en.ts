@@ -284,9 +284,6 @@ export const en = {
     title: "Frequently asked questions",
     note: "A question left unanswered? Write to me directly.",
     cta: "Ask my question",
-    directTitle: "Direct line",
-    zone: "Lausanne & French-speaking Switzerland",
-    reassure: "Free quote, no obligation — reply within 24 h.",
     items: [
       {
         q: "Which areas do you cover?",

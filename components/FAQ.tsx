@@ -2,11 +2,133 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import { Phone, EnvelopeSimple, Clock, MapPinLine } from "@phosphor-icons/react";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const spring = { type: "spring", stiffness: 320, damping: 24 } as const;
+
+/* ── Bouquet de ballons — petite animation de clôture ─────────────────── */
+const BQ = [
+  { cx: 48, cy: 60, rx: 30, ry: 35, grad: "faq-rose", d: 0 },
+  { cx: 106, cy: 46, rx: 33, ry: 39, grad: "faq-blue", d: 0.1 },
+  { cx: 152, cy: 74, rx: 27, ry: 32, grad: "faq-peach", d: 0.2 },
+  { cx: 92, cy: 96, rx: 25, ry: 30, grad: "faq-cream", d: 0.3 },
+];
+const KNOT = { x: 94, y: 214 };
+const BQ_CONFETTI = [
+  { x: 22, c: "#F2A6B8", delay: 0 },
+  { x: 172, c: "#AFD2E1", delay: 2.6 },
+  { x: 122, c: "#F0C29A", delay: 4.4 },
+];
+
+function ClosingBouquet() {
+  const reduce = useReducedMotion();
+  return (
+    <motion.div
+      className="hidden lg:block mt-12 pointer-events-none"
+      style={{ width: "min(15vw, 200px)" }}
+      initial={reduce ? undefined : "hidden"}
+      whileInView={reduce ? undefined : "shown"}
+      viewport={{ once: true, amount: 0.5 }}
+      aria-hidden
+    >
+      <svg viewBox="0 0 200 250" fill="none" style={{ width: "100%", overflow: "visible" }}>
+        <defs>
+          <radialGradient id="faq-rose" cx="36%" cy="30%" r="75%">
+            <stop offset="0%" stopColor="#FCE2E9" />
+            <stop offset="55%" stopColor="#F2A6B8" />
+            <stop offset="100%" stopColor="#DE7C98" />
+          </radialGradient>
+          <radialGradient id="faq-blue" cx="36%" cy="30%" r="75%">
+            <stop offset="0%" stopColor="#E4F0F5" />
+            <stop offset="55%" stopColor="#AFD2E1" />
+            <stop offset="100%" stopColor="#7FB0C6" />
+          </radialGradient>
+          <radialGradient id="faq-peach" cx="36%" cy="30%" r="75%">
+            <stop offset="0%" stopColor="#FBE7D3" />
+            <stop offset="55%" stopColor="#F0C29A" />
+            <stop offset="100%" stopColor="#D89E70" />
+          </radialGradient>
+          <radialGradient id="faq-cream" cx="36%" cy="30%" r="75%">
+            <stop offset="0%" stopColor="#FFFDFA" />
+            <stop offset="55%" stopColor="#F3EBDF" />
+            <stop offset="100%" stopColor="#DFD2BF" />
+          </radialGradient>
+        </defs>
+
+        {!reduce &&
+          BQ_CONFETTI.map((f, i) => (
+            <motion.circle
+              key={`c${i}`}
+              cx={f.x}
+              cy={0}
+              r={3}
+              fill={f.c}
+              animate={{ y: [0, 250], opacity: [0, 0.7, 0.7, 0], rotate: [0, 220] }}
+              transition={{ repeat: Infinity, duration: 9 + i, ease: "linear", delay: f.delay }}
+              style={{ transformOrigin: `${f.x}px 0px` }}
+            />
+          ))}
+
+        <motion.g
+          animate={reduce ? undefined : { rotate: [-1.8, 1.8, -1.8], y: [0, -5, 0] }}
+          transition={{ repeat: Infinity, duration: 7.5, ease: "easeInOut" }}
+          style={{ transformOrigin: `${KNOT.x}px ${KNOT.y}px` }}
+        >
+          {BQ.map((b, i) => (
+            <motion.path
+              key={`s${i}`}
+              d={`M${b.cx} ${b.cy + b.ry} Q ${(b.cx + KNOT.x) / 2 + (i % 2 ? 12 : -12)} ${(b.cy + b.ry + KNOT.y) / 2} ${KNOT.x} ${KNOT.y}`}
+              stroke="rgba(42,35,32,0.26)"
+              strokeWidth="1"
+              fill="none"
+              strokeLinecap="round"
+              variants={{
+                hidden: { pathLength: 0, opacity: 0 },
+                shown: { pathLength: 1, opacity: 1, transition: { duration: 0.7, delay: 0.35 + b.d } },
+              }}
+            />
+          ))}
+
+          {BQ.map((b, i) => (
+            <motion.g
+              key={`b${i}`}
+              variants={{
+                hidden: { scale: 0, opacity: 0 },
+                shown: {
+                  scale: 1,
+                  opacity: 1,
+                  transition: { type: "spring", stiffness: 260, damping: 14, delay: b.d },
+                },
+              }}
+              style={{ transformOrigin: `${b.cx}px ${b.cy}px` }}
+            >
+              <ellipse cx={b.cx} cy={b.cy} rx={b.rx} ry={b.ry} fill={`url(#${b.grad})`} />
+              <ellipse
+                cx={b.cx - b.rx * 0.32}
+                cy={b.cy - b.ry * 0.34}
+                rx={b.rx * 0.2}
+                ry={b.ry * 0.28}
+                fill="rgba(255,255,255,0.5)"
+                transform={`rotate(-22 ${b.cx - b.rx * 0.32} ${b.cy - b.ry * 0.34})`}
+              />
+              <path d={`M${b.cx - 4} ${b.cy + b.ry} q 4 5 8 0`} fill={`url(#${b.grad})`} />
+            </motion.g>
+          ))}
+
+          <motion.circle
+            cx={KNOT.x}
+            cy={KNOT.y}
+            r={5}
+            fill="#E8B8C6"
+            variants={{ hidden: { scale: 0 }, shown: { scale: 1, transition: { delay: 0.55 } } }}
+            style={{ transformOrigin: `${KNOT.x}px ${KNOT.y}px` }}
+          />
+        </motion.g>
+      </svg>
+    </motion.div>
+  );
+}
 
 function FAQItem({
   item,
@@ -205,63 +327,7 @@ export function FAQ({ preview = false }: { preview?: boolean }) {
               {t.faq.cta}
             </motion.a>
 
-            {/* Coordonnées directes */}
-            <div
-              className="mt-8 pt-7"
-              style={{ borderTop: "1px solid rgba(42,35,32,0.12)" }}
-            >
-              <p
-                className="font-sans text-[10px] uppercase tracking-[0.24em] mb-4"
-                style={{ color: "rgba(42,35,32,0.4)" }}
-              >
-                {t.faq.directTitle}
-              </p>
-              <ul className="flex flex-col gap-3">
-                {[
-                  { Icon: Phone, label: t.contact.info.phone, href: "tel:0779143855" },
-                  { Icon: EnvelopeSimple, label: t.contact.info.email, href: "mailto:contact@eventfiesta.ch" },
-                  { Icon: Clock, label: t.contact.info.hours },
-                  { Icon: MapPinLine, label: t.faq.zone },
-                ].map(({ Icon, label, href }) => {
-                  const inner = (
-                    <>
-                      <span
-                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
-                        style={{ background: "rgba(217,98,138,0.10)", color: "#B65572" }}
-                      >
-                        <Icon size={13} weight="bold" />
-                      </span>
-                      <span
-                        className="font-sans text-[13px]"
-                        style={{ color: "rgba(42,35,32,0.7)" }}
-                      >
-                        {label}
-                      </span>
-                    </>
-                  );
-                  return (
-                    <li key={label}>
-                      {href ? (
-                        <a
-                          href={href}
-                          className="flex items-center gap-3 transition-opacity duration-200 hover:opacity-70"
-                        >
-                          {inner}
-                        </a>
-                      ) : (
-                        <span className="flex items-center gap-3">{inner}</span>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-              <p
-                className="mt-5 font-sans font-light text-[12px] leading-relaxed max-w-[16rem]"
-                style={{ color: "rgba(42,35,32,0.42)" }}
-              >
-                {t.faq.reassure}
-              </p>
-            </div>
+            <ClosingBouquet />
           </motion.div>
 
           {/* Accordéon */}
