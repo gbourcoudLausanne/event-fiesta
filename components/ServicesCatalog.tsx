@@ -10,7 +10,7 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 const PHOTOS: Record<string, string> = {
   // Particuliers
-  mariage: "/Galerie/hero-slides/hero-slide-7.webp",
+  mariage: "/Galerie/hero-slides/hero-slide-11.webp",
   anniversaire: "/Galerie/hero-slides/hero-slide-9.webp",
   babyshower: "/Galerie/hero-slides/hero-slide-1.webp",
   genderreveal: "/Galerie/Gender-Reveal/GenderReveal_2.webp",
