@@ -647,14 +647,20 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
       <div
         className="sticky top-[68px] z-30"
         style={{
-          background: "rgba(250,247,242,0.92)",
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
-          borderBottom: "1px solid rgba(42,35,32,0.08)",
+          background: "rgba(250,247,242,0.94)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          boxShadow: "0 1px 0 rgba(42,35,32,0.08), 0 14px 28px -22px rgba(42,35,32,0.3)",
         }}
       >
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="no-scrollbar flex gap-2 overflow-x-auto py-4">
+        <div className="mx-auto flex max-w-7xl items-center gap-4 px-6 lg:px-10">
+          <span
+            className="hidden shrink-0 font-sans text-[10px] uppercase tracking-[0.24em] lg:block"
+            style={{ color: "rgba(42,35,32,0.4)" }}
+          >
+            Collections
+          </span>
+          <div className="no-scrollbar -mr-6 flex gap-2 overflow-x-auto py-3.5 pr-6 lg:mr-0 lg:pr-0">
             <Chip label="Tout voir" count={ALL_PHOTOS.length} active={filter === "all"} onClick={() => setFilter("all")} />
             {COLLECTIONS.map((c) => (
               <Chip
@@ -670,7 +676,7 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
       </div>
 
       {/* Mosaïque */}
-      <div className="mx-auto max-w-7xl px-6 pt-10 lg:px-10 lg:pt-14">
+      <div className="mx-auto max-w-7xl px-6 pt-7 lg:px-10 lg:pt-9">
         <motion.div key={filter} className="columns-1 gap-3 sm:columns-2 lg:columns-3 xl:columns-4">
           {list.map((p, i) => (
             <motion.button
