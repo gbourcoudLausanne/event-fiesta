@@ -18,7 +18,7 @@ const PHOTOS: Record<string, string> = {
   piquenique: "/Galerie/hero-slides/hero-slide-17.webp",
   theme: "/Galerie/Soiree-a-theme/photo-1769038932067-6183daa327ad.webp",
   surmesure: "/Galerie/hero-slides/hero-slide-8.webp",
-  goodies: "/Galerie/goodies/Goodies_3.webp",
+  goodies: "/Galerie/goodies/Goodies_1.webp",
   // Professionnels
   corporate: "/Galerie/Corporate/Corporate_1.webp",
   yearend: "/Galerie/hero-slides/hero-slide-10.webp",
