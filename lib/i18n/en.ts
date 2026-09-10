@@ -272,6 +272,11 @@ export const en = {
     previewTitle: "A few of our creations",
     subtitle:
       "A glimpse of my creations in Lausanne and French-speaking Switzerland.",
+    heroEyebrow: "Gallery",
+    heroTitle: "Every setting tells a story",
+    heroText:
+      "Here are a few of the worlds I've imagined and handcrafted, in Lausanne and French-speaking Switzerland. Every event is unique — yours is still to invent.",
+    heroCta: "I have a project",
     ctaAll: "See the full gallery",
     filters: {
       all: "All",
@@ -287,11 +292,6 @@ export const en = {
   whyus: {
     quote:
       "Every event tells a story. I create the setting that makes it unforgettable.",
-  },
-  ctaBanner: {
-    title: "Your next celebration deserves the best.",
-    cta: "Request a free quote",
-    phoneLabel: "or call me",
   },
   cta: {
     eyebrow: "Shall we talk?",

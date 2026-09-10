@@ -271,6 +271,11 @@ export const fr = {
     title: "Nos réalisations",
     previewTitle: "Quelques réalisations",
     subtitle: "Un aperçu de mes créations à Lausanne et en Suisse romande.",
+    heroEyebrow: "Galerie",
+    heroTitle: "Chaque décor raconte une histoire",
+    heroText:
+      "Voici quelques-uns des univers que j'ai imaginés et fabriqués à la main, à Lausanne et en Suisse romande. Chaque événement est unique — le vôtre reste à inventer.",
+    heroCta: "J'ai un projet",
     ctaAll: "Voir la galerie complète",
     filters: {
       all: "Tout",
@@ -286,11 +291,6 @@ export const fr = {
   whyus: {
     quote:
       "Chaque événement raconte une histoire. Je crée le décor qui la rend inoubliable.",
-  },
-  ctaBanner: {
-    title: "Votre prochaine célébration mérite l'excellence.",
-    cta: "Demander un devis gratuit",
-    phoneLabel: "ou appelez-moi",
   },
   cta: {
     eyebrow: "On en parle ?",

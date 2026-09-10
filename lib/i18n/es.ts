@@ -271,6 +271,11 @@ export const es = {
     title: "Nuestras realizaciones",
     previewTitle: "Algunas realizaciones",
     subtitle: "Una muestra de mis creaciones en Lausana y la Suiza romanda.",
+    heroEyebrow: "Galería",
+    heroTitle: "Cada decoración cuenta una historia",
+    heroText:
+      "Estos son algunos de los universos que he imaginado y elaborado a mano, en Lausana y la Suiza romanda. Cada evento es único — el tuyo está por inventar.",
+    heroCta: "Tengo un proyecto",
     ctaAll: "Ver la galería completa",
     filters: {
       all: "Todo",
@@ -286,11 +291,6 @@ export const es = {
   whyus: {
     quote:
       "Cada evento cuenta una historia. Creo la decoración que la hace inolvidable.",
-  },
-  ctaBanner: {
-    title: "Tu próxima celebración merece lo mejor.",
-    cta: "Pedir un presupuesto gratis",
-    phoneLabel: "o llámame",
   },
   cta: {
     eyebrow: "¿Lo hablamos?",

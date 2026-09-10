@@ -742,32 +742,8 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
   const goPrev = () => setLightboxIndex((i) => i === null ? 0 : (i - 1 + filtered.length) % filtered.length);
 
   return (
-    <section id="realisations" className="py-20 lg:py-24" style={{ background: "#F3EDE6" }}>
+    <section id="realisations" className="pt-8 pb-20 lg:pt-10 lg:pb-24" style={{ background: "#F3EDE6" }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
-
-        {/* Header */}
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease }}
-          className="mb-10"
-        >
-          <p className="font-sans text-[11px] uppercase tracking-[0.25em] mb-3" style={{ color: "#D9628A" }}>
-            {t.realisations.eyebrow}
-          </p>
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-            <h2
-              className="font-serif font-light leading-tight"
-              style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)", color: "#2A2320" }}
-            >
-              {t.realisations.title}
-            </h2>
-            <p className="font-sans text-sm max-w-xs leading-relaxed lg:text-right" style={{ color: "rgba(42,35,32,0.55)" }}>
-              {t.realisations.subtitle}
-            </p>
-          </div>
-        </motion.div>
 
         {/* Category filters */}
         {!preview && (
@@ -775,7 +751,7 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
           initial={reduce ? false : { opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.15, ease }}
+          transition={{ duration: 0.5, ease }}
           className="flex flex-wrap gap-2 mb-10"
         >
           {FILTERS.map(({ key, labelKey }) => (
@@ -826,7 +802,7 @@ export function Realisations({ preview = false }: { preview?: boolean }) {
                       className="font-sans text-[10px] uppercase tracking-[0.18em] mb-1 translate-y-3 group-hover:translate-y-0 transition-transform duration-300"
                       style={{ color: "#F4A8B8", transitionDelay: "0.04s" }}
                     >
-                      {photo.category}
+                      {t.realisations.filters[photo.category]}
                     </p>
                     <p
                       className="font-serif text-lg translate-y-3 group-hover:translate-y-0 transition-transform duration-300"
