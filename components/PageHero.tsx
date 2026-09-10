@@ -25,7 +25,7 @@ export function PageHero({
     <section
       className={`relative overflow-hidden ${
         centered
-          ? "pt-[140px] pb-20 text-center lg:pt-[184px] lg:pb-28"
+          ? "pt-[116px] pb-12 text-center lg:pt-[132px] lg:pb-16"
           : "pt-[136px] pb-16 lg:pt-[168px] lg:pb-24"
       }`}
       style={{ background: "#F3EDE6" }}
@@ -87,7 +87,7 @@ export function PageHero({
           )}
 
           {cta && (
-            <div className={`mt-9 lg:mt-11 ${centered ? "" : ""}`}>
+            <div className="mt-7 lg:mt-9">
               <Link
                 href={cta.href}
                 className="btn-gold-shimmer inline-flex items-center gap-2 font-sans text-[13px] font-medium px-9 py-4 rounded-full transition-transform duration-200 hover:scale-[1.03]"
