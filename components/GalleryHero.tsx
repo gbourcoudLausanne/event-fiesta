@@ -103,13 +103,13 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
           aria-hidden
         />
 
-        {/* Carte texte — centrée, dépasse en bas */}
-        <div className="absolute inset-x-0 top-0 z-10 flex justify-center px-4 pt-[12vh] sm:px-6 lg:pt-[14vh]">
+        {/* Carte texte — rectangulaire, centrée, dépasse en bas */}
+        <div className="absolute inset-x-0 top-0 z-10 flex justify-center px-4 pt-[13vh] sm:px-6 lg:pt-[15vh]">
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 22, filter: "blur(6px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.8, delay: 0.25, ease }}
-            className="pointer-events-auto w-full max-w-[460px] rounded-[6px] bg-[#FAF7F2] p-9 text-center sm:p-12 lg:p-14"
+            className="pointer-events-auto w-full max-w-[820px] rounded-[6px] bg-[#FAF7F2] px-8 py-9 text-center sm:px-16 sm:py-11 lg:px-24 lg:py-12"
             style={{
               boxShadow: "0 60px 130px -48px rgba(90,50,60,0.5)",
               border: "1px solid rgba(217,98,138,0.14)",
@@ -136,15 +136,15 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
 
               <motion.h1
                 variants={reduce ? undefined : rise}
-                className="font-serif font-light leading-[1.1] tracking-tight"
-                style={{ fontSize: "clamp(2rem, 3.6vw, 3rem)", color: "#2A2320" }}
+                className="font-serif font-light leading-[1.08] tracking-tight"
+                style={{ fontSize: "clamp(2.1rem, 3.8vw, 3.3rem)", color: "#2A2320" }}
               >
                 {t.realisations.heroTitle}
               </motion.h1>
 
               <motion.p
                 variants={reduce ? undefined : rise}
-                className="mx-auto mt-5 max-w-sm font-sans font-light text-[14px] leading-relaxed"
+                className="mx-auto mt-5 max-w-2xl font-sans font-light text-[14.5px] leading-relaxed"
                 style={{ color: "rgba(42,35,32,0.6)" }}
               >
                 {t.realisations.heroText}
@@ -152,7 +152,7 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
 
               <motion.div
                 variants={reduce ? undefined : rise}
-                className="mt-9 flex flex-col items-center gap-4"
+                className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-6"
               >
                 <Link
                   href="/contact"
