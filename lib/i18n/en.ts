@@ -289,6 +289,13 @@ export const en = {
     cta: "Request a free quote",
     phoneLabel: "or call me",
   },
+  cta: {
+    eyebrow: "Shall we talk?",
+    title: "What if we imagined yours?",
+    text: "Tell me the date, the venue, the mood you have in mind. I'll get back to you within 24 h with a first idea and an estimate — free and with no obligation.",
+    button: "Request a quote",
+    phone: "or 077 914 38 55",
+  },
   faq: {
     eyebrow: "Your questions",
     title: "Frequently asked questions",

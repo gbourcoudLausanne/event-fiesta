@@ -288,6 +288,13 @@ export const fr = {
     cta: "Demander un devis gratuit",
     phoneLabel: "ou appelez-moi",
   },
+  cta: {
+    eyebrow: "On en parle ?",
+    title: "Et si on imaginait le vôtre ?",
+    text: "Racontez-moi la date, le lieu, l'ambiance que vous avez en tête. Je reviens vers vous sous 24 h avec une première idée et une estimation — gratuite et sans engagement.",
+    button: "Demander un devis",
+    phone: "ou 077 914 38 55",
+  },
   faq: {
     eyebrow: "Vos questions",
     title: "Questions fréquentes",

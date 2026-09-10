@@ -2,8 +2,7 @@
 
 import { PageHero } from "@/components/PageHero";
 import { ServicesCatalog } from "@/components/ServicesCatalog";
-import { Process } from "@/components/Process";
-import { CtaBanner } from "@/components/CtaBanner";
+import { ContactCta } from "@/components/ContactCta";
 import { useI18n } from "@/lib/i18n";
 
 export default function ServicesPage() {
@@ -17,8 +16,7 @@ export default function ServicesPage() {
         subtitle={t.services.intro}
       />
       <ServicesCatalog />
-      <Process />
-      <CtaBanner />
+      <ContactCta />
     </>
   );
 }

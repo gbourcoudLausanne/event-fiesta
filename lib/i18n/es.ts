@@ -288,6 +288,13 @@ export const es = {
     cta: "Pedir un presupuesto gratis",
     phoneLabel: "o llámame",
   },
+  cta: {
+    eyebrow: "¿Lo hablamos?",
+    title: "¿Y si imaginamos el tuyo?",
+    text: "Cuéntame la fecha, el lugar, el ambiente que tienes en mente. Te respondo en 24 h con una primera idea y una estimación — gratuita y sin compromiso.",
+    button: "Pedir presupuesto",
+    phone: "o 077 914 38 55",
+  },
   faq: {
     eyebrow: "Tus preguntas",
     title: "Preguntas frecuentes",
