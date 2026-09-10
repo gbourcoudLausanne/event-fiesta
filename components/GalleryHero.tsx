@@ -31,11 +31,11 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
 
   return (
     <section className="relative w-full overflow-hidden pt-[68px]" style={{ background: "#231017" }}>
-      <div className="relative h-[60vh] min-h-[440px] lg:h-[78vh]">
+      <div className="relative">
         {/* Mur de tuiles */}
         <div
-          className="absolute inset-0 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
-          style={{ gridAutoRows: "minmax(0, 1fr)", gap: "2px" }}
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
+          style={{ gap: "2px" }}
           onMouseLeave={() => setHovered(null)}
         >
           {WALL.map((tile, i) => (
@@ -43,7 +43,10 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
               key={tile.src}
               href="#realisations"
               onMouseEnter={() => setHovered(i)}
-              className="group relative block overflow-hidden"
+              className={`group relative block overflow-hidden ${
+                i >= 9 ? "hidden lg:block" : i >= 6 ? "hidden sm:block" : ""
+              }`}
+              style={{ aspectRatio: "4 / 3" }}
               initial={reduce ? false : { opacity: 0, scale: 1.04 }}
               animate={
                 reduce
@@ -87,7 +90,7 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
 
         {/* Voile pour lier le panneau */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 z-20 pointer-events-none"
           style={{
             background:
               "linear-gradient(100deg, rgba(35,16,23,0.55) 0%, rgba(35,16,23,0.15) 38%, transparent 60%)",
@@ -96,7 +99,7 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
         />
 
         {/* Panneau texte */}
-        <div className="pointer-events-none absolute inset-0 flex items-center">
+        <div className="pointer-events-none absolute inset-0 z-30 flex items-center">
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10">
             <motion.div
               initial={reduce ? false : { opacity: 0, x: -24 }}
