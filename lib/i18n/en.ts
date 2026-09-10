@@ -28,6 +28,9 @@ export const en = {
     ctaAll: "See all our services",
     learnMore: "Learn more",
     discuss: "Let's talk",
+    heroEyebrow: "Decoration & styling · Lausanne and French-speaking Switzerland",
+    heroTitle: "Services shaped around what you want",
+    heroText: "I design and handcraft every decoration to measure — around your occasion, your venue and the mood you have in mind.",
     index: [
       {
         key: "mariage",

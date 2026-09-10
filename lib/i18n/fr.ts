@@ -28,6 +28,9 @@ export const fr = {
     ctaAll: "Voir tous nos services",
     learnMore: "En savoir plus",
     discuss: "En parler",
+    heroEyebrow: "Décoration & mise en scène · Lausanne et Suisse romande",
+    heroTitle: "Des prestations adaptées à vos envies",
+    heroText: "Je conçois et je fabrique chaque décor à la main, sur mesure — selon votre occasion, votre lieu et l'ambiance que vous imaginez.",
     index: [
       {
         key: "mariage",

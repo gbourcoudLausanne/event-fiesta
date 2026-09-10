@@ -11,9 +11,11 @@ export default function ServicesPage() {
   return (
     <>
       <PageHero
-        eyebrow={t.services.eyebrow}
-        title={t.services.title}
-        subtitle={t.services.intro}
+        centered
+        eyebrow={t.services.heroEyebrow}
+        title={t.services.heroTitle}
+        subtitle={t.services.heroText}
+        cta={{ label: t.about.cta, href: "/contact" }}
       />
       <ServicesCatalog />
       <ContactCta />
