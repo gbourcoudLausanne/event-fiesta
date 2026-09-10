@@ -5,8 +5,11 @@ type BalloonDef = {
   dur: number;
   phase: number;
   mirror: boolean;
+  blur?: number;
+  op?: number;
 };
 
+// Jeu par défaut (splash screen)
 const BALLOONS: BalloonDef[] = [
   { x: 2, color: "#E8749E", size: 32, dur: 14, phase: 0.05, mirror: false },
   { x: 8, color: "#F4A8B8", size: 22, dur: 18, phase: 0.42, mirror: true },
@@ -28,6 +31,42 @@ const BALLOONS: BalloonDef[] = [
   { x: 96, color: "#F4A8B8", size: 28, dur: 13, phase: 0.88, mirror: false },
 ];
 
+// Jeu « hero » : plus nombreux, deux plans (fond flou/discret + premier plan gros/net)
+const HERO_BALLOONS: BalloonDef[] = [
+  // ── arrière-plan ──
+  { x: 4, color: "#F4A8B8", size: 24, dur: 22, phase: 0.10, mirror: true, blur: 2.5, op: 0.34 },
+  { x: 13, color: "#B98AE8", size: 28, dur: 24, phase: 0.55, mirror: false, blur: 3, op: 0.3 },
+  { x: 21, color: "#E8C870", size: 20, dur: 20, phase: 0.80, mirror: true, blur: 2, op: 0.38 },
+  { x: 30, color: "#E8749E", size: 26, dur: 23, phase: 0.25, mirror: false, blur: 3, op: 0.3 },
+  { x: 39, color: "#6FC7A0", size: 22, dur: 21, phase: 0.68, mirror: true, blur: 2.5, op: 0.34 },
+  { x: 48, color: "#F4A8B8", size: 28, dur: 25, phase: 0.05, mirror: false, blur: 3, op: 0.3 },
+  { x: 57, color: "#E8A688", size: 20, dur: 19, phase: 0.45, mirror: true, blur: 2, op: 0.38 },
+  { x: 66, color: "#B98AE8", size: 26, dur: 24, phase: 0.88, mirror: false, blur: 3, op: 0.3 },
+  { x: 74, color: "#E8749E", size: 22, dur: 22, phase: 0.32, mirror: true, blur: 2.5, op: 0.34 },
+  { x: 83, color: "#E8C870", size: 28, dur: 23, phase: 0.72, mirror: false, blur: 3, op: 0.3 },
+  { x: 92, color: "#F4A8B8", size: 24, dur: 20, phase: 0.18, mirror: true, blur: 2, op: 0.36 },
+  { x: 9, color: "#6FC7A0", size: 18, dur: 26, phase: 0.60, mirror: false, blur: 3, op: 0.28 },
+  { x: 52, color: "#E8749E", size: 18, dur: 27, phase: 0.40, mirror: true, blur: 3, op: 0.28 },
+  { x: 88, color: "#B98AE8", size: 20, dur: 25, phase: 0.92, mirror: false, blur: 2.5, op: 0.3 },
+  // ── premier plan ──
+  { x: 2, color: "#E8749E", size: 48, dur: 13, phase: 0.08, mirror: false, op: 0.8 },
+  { x: 12, color: "#F4A8B8", size: 40, dur: 15, phase: 0.50, mirror: true, op: 0.74 },
+  { x: 22, color: "#E8C870", size: 44, dur: 12, phase: 0.85, mirror: false, op: 0.72 },
+  { x: 33, color: "#B98AE8", size: 52, dur: 16, phase: 0.20, mirror: true, op: 0.7 },
+  { x: 44, color: "#E8749E", size: 38, dur: 14, phase: 0.62, mirror: false, op: 0.78 },
+  { x: 55, color: "#6FC7A0", size: 50, dur: 17, phase: 0.12, mirror: true, op: 0.68 },
+  { x: 65, color: "#F4A8B8", size: 42, dur: 13, phase: 0.42, mirror: false, op: 0.76 },
+  { x: 76, color: "#E8A688", size: 46, dur: 15, phase: 0.78, mirror: true, op: 0.72 },
+  { x: 86, color: "#E8749E", size: 40, dur: 12, phase: 0.30, mirror: false, op: 0.78 },
+  { x: 95, color: "#E8C870", size: 36, dur: 16, phase: 0.65, mirror: true, op: 0.74 },
+  { x: 7, color: "#B98AE8", size: 36, dur: 18, phase: 0.35, mirror: true, op: 0.7 },
+  { x: 28, color: "#F4A8B8", size: 34, dur: 14, phase: 0.55, mirror: false, op: 0.76 },
+  { x: 49, color: "#E8A688", size: 46, dur: 13, phase: 0.90, mirror: true, op: 0.72 },
+  { x: 70, color: "#E8749E", size: 36, dur: 17, phase: 0.05, mirror: false, op: 0.78 },
+  { x: 90, color: "#6FC7A0", size: 40, dur: 15, phase: 0.48, mirror: true, op: 0.68 },
+  { x: 38, color: "#E8C870", size: 32, dur: 16, phase: 0.15, mirror: false, op: 0.74 },
+];
+
 function BalloonSVG({ color, size }: { color: string; size: number }) {
   return (
     <svg width={size} height={Math.round(size * 1.85)} viewBox="0 0 30 56" fill="none">
@@ -39,17 +78,27 @@ function BalloonSVG({ color, size }: { color: string; size: number }) {
   );
 }
 
-// Champ de ballons qui montent en continu (utilisé par le splash et le hero /nos-services)
-export function RisingBalloons({ opacity = 1 }: { opacity?: number }) {
+// Champ de ballons qui montent en continu.
+// mode "default" : splash · mode "hero" : plus nombreux, deux plans (fond flou + premier plan)
+export function RisingBalloons({
+  mode = "default",
+  opacity = 1,
+}: {
+  mode?: "default" | "hero";
+  opacity?: number;
+}) {
+  const balloons = mode === "hero" ? HERO_BALLOONS : BALLOONS;
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ opacity }} aria-hidden>
-      {BALLOONS.map((b, i) => (
+      {balloons.map((b, i) => (
         <div
           key={i}
           style={{
             position: "absolute",
             bottom: 0,
             left: `${b.x}%`,
+            opacity: b.op ?? 1,
+            filter: b.blur ? `blur(${b.blur}px)` : undefined,
             animationName: b.mirror ? "balloon-float-r" : "balloon-float",
             animationDuration: `${b.dur}s`,
             animationTimingFunction: "linear",

@@ -58,7 +58,7 @@ export function PageHero({
             }}
             aria-hidden
           />
-          {!reduce && <RisingBalloons opacity={0.5} />}
+          {!reduce && <RisingBalloons mode="hero" opacity={0.9} />}
         </>
       ) : (
         <div
