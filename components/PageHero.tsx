@@ -45,20 +45,16 @@ export function PageHero({
     >
       {rose ? (
         <>
+          {!reduce && <RisingBalloons mode="hero" opacity={0.9} />}
+          {/* Voile sombre derrière le texte pour la lisibilité */}
           <div
-            className="absolute pointer-events-none rounded-full"
+            className="absolute inset-0 pointer-events-none"
             style={{
-              top: "-40%",
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "min(94vw, 940px)",
-              aspectRatio: "1",
               background:
-                "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.16), rgba(255,255,255,0) 62%)",
+                "radial-gradient(ellipse 68% 60% at 50% 44%, rgba(120,48,74,0.45) 0%, rgba(120,48,74,0.18) 45%, transparent 72%)",
             }}
             aria-hidden
           />
-          {!reduce && <RisingBalloons mode="hero" opacity={0.9} />}
         </>
       ) : (
         <div
@@ -98,6 +94,7 @@ export function PageHero({
             style={{
               fontSize: centered ? "clamp(1.7rem, 3.6vw, 2.8rem)" : "clamp(2.6rem, 5.5vw, 4.6rem)",
               color: ink,
+              textShadow: rose ? "0 2px 24px rgba(90,36,58,0.55)" : undefined,
             }}
           >
             {title}
@@ -108,7 +105,7 @@ export function PageHero({
               className={`font-sans font-light text-[15px] leading-relaxed mt-6 ${
                 centered ? "mx-auto max-w-xl" : "max-w-xl"
               }`}
-              style={{ color: sub }}
+              style={{ color: sub, textShadow: rose ? "0 1px 16px rgba(90,36,58,0.5)" : undefined }}
             >
               {subtitle}
             </p>
