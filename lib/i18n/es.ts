@@ -29,7 +29,7 @@ export const es = {
     learnMore: "Ver más",
     discuss: "Hablarlo",
     heroEyebrow: "Decoración y escenografía · Lausana y Suiza romanda",
-    heroTitle: "Servicios a la medida de tus ganas",
+    heroTitle: "Para cada ocasión, una decoración a medida",
     heroText: "Diseño y elaboro a mano cada decoración, a medida — según tu ocasión, tu lugar y el ambiente que imaginas.",
     index: [
       {

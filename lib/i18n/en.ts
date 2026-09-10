@@ -29,7 +29,7 @@ export const en = {
     learnMore: "Learn more",
     discuss: "Let's talk",
     heroEyebrow: "Decoration & styling · Lausanne and French-speaking Switzerland",
-    heroTitle: "Services shaped around what you want",
+    heroTitle: "For every occasion, a bespoke setting",
     heroText: "I design and handcraft every decoration to measure — around your occasion, your venue and the mood you have in mind.",
     index: [
       {
