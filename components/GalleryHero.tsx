@@ -94,18 +94,18 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
 
       {/* Texte centré */}
       <motion.div
-        className="mx-auto max-w-2xl px-6 pt-12 pb-16 text-center lg:pt-16 lg:pb-20"
+        className="mx-auto flex max-w-xl flex-col items-center px-6 pt-14 pb-20 text-center lg:pt-20 lg:pb-28"
         variants={reduce ? undefined : stack}
         initial={reduce ? false : "hidden"}
         animate={reduce ? undefined : "visible"}
       >
         <motion.div
           variants={reduce ? undefined : rise}
-          className="mb-5 flex items-center justify-center gap-3"
+          className="mb-6 flex items-center gap-3"
         >
           <span className="h-px w-10" style={{ background: "#D9628A" }} />
           <span
-            className="font-sans text-[10px] uppercase tracking-[0.32em]"
+            className="font-sans text-[10px] uppercase tracking-[0.34em]"
             style={{ color: "#B65572" }}
           >
             {t.realisations.heroEyebrow}
@@ -115,7 +115,7 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
 
         <motion.h1
           variants={reduce ? undefined : rise}
-          className="font-serif font-light leading-[1.07] tracking-tight"
+          className="font-serif font-light leading-[1.1] tracking-tight"
           style={{ fontSize: "clamp(2.2rem, 4.4vw, 3.6rem)", color: "#2A2320" }}
         >
           {t.realisations.heroTitle}
@@ -123,7 +123,7 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
 
         <motion.p
           variants={reduce ? undefined : rise}
-          className="mx-auto mt-5 max-w-lg font-sans font-light text-[14.5px] leading-relaxed"
+          className="mt-6 max-w-md font-sans font-light text-[14.5px] leading-relaxed"
           style={{ color: "rgba(42,35,32,0.6)" }}
         >
           {t.realisations.heroText}
@@ -131,7 +131,7 @@ export function GalleryHero({ worlds, pieces }: { worlds: number; pieces: number
 
         <motion.div
           variants={reduce ? undefined : rise}
-          className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
+          className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:gap-6 lg:mt-11"
         >
           <Link
             href="/contact"
