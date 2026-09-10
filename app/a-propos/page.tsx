@@ -908,7 +908,7 @@ export default function AboutPage() {
             <div className="flex items-center gap-3 mb-6">
               <span className="w-10 h-px" style={{ background: "#D9628A" }} />
               <span className="font-sans text-[10px] uppercase tracking-[0.3em]" style={{ color: "#B65572" }}>
-                L&rsquo;atelier
+                {t.about.craftEyebrow}
               </span>
             </div>
             <p

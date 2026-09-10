@@ -183,8 +183,9 @@ export const en = {
     title: "Born to make your parties shine",
     lead:
       "Event Fiesta is a passion for event decoration that began in Colombia in 2018, now based in Lausanne.",
+    craftEyebrow: "The craft",
     paragraphs: [
-      "It all comes out of my workshop, in Lausanne. That's where I design and handcraft every piece: balloon arches, flower walls, columns, sweet tables, welcome signs and little gifts for your guests.",
+      "I design and handcraft every piece myself, with my own materials: balloon arches, flower walls, columns, sweet tables, welcome signs and little gifts for your guests.",
       "I speak three languages and have already styled dozens of different worlds. Every time, the same standard: a setting that feels like you, and one your guests remember. Delivery, set-up, take-down: I handle it all, so you can simply enjoy the moment.",
     ],
     storyTitle: "My story",
@@ -207,7 +208,7 @@ export const en = {
         text: "Here for two years now, I decorate for friends and people around me. The same drive as day one: transform a space, and see the smiles when the décor is revealed.",
       },
     ],
-    imageCaption: "A table styled at the studio, before delivery",
+    imageCaption: "A setup in progress, before delivery",
     valuesTitle: "Our values",
     values: [
       {

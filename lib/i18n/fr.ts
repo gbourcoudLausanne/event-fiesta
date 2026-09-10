@@ -183,8 +183,9 @@ export const fr = {
     title: "Née pour faire briller vos fêtes",
     lead:
       "Event Fiesta, c'est une passion de la décoration d'événements née en Colombie en 2018, aujourd'hui installée à Lausanne.",
+    craftEyebrow: "Le savoir-faire",
     paragraphs: [
-      "Tout part de mon atelier, à Lausanne. J'y conçois et j'y fabrique chaque décor à la main : arches de ballons, murs floraux, colonnes, sweet tables, panneaux de bienvenue et petits cadeaux pour vos invités.",
+      "Je conçois et je fabrique chaque décor à la main, avec mon propre matériel : arches de ballons, murs floraux, colonnes, sweet tables, panneaux de bienvenue et petits cadeaux pour vos invités.",
       "Je parle trois langues et j'ai déjà mis en scène des dizaines d'univers différents. À chaque fois, la même exigence : un décor qui vous ressemble, et dont vos invités se souviennent. Livraison, installation, démontage : je m'occupe de tout, vous n'avez qu'à savourer le moment.",
     ],
     storyTitle: "Mon histoire",
@@ -207,7 +208,7 @@ export const fr = {
         text: "Installée ici depuis deux ans, je décore pour mes proches et les gens autour de moi. La même envie qu'au premier jour : transformer un lieu, et voir les sourires quand on découvre le décor.",
       },
     ],
-    imageCaption: "Une table dressée à l'atelier, avant livraison",
+    imageCaption: "Un décor en préparation, avant la livraison",
     valuesTitle: "Nos valeurs",
     values: [
       {

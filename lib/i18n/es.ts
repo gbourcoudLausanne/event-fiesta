@@ -183,8 +183,9 @@ export const es = {
     title: "Nacida para hacer brillar tus fiestas",
     lead:
       "Event Fiesta es una pasión por la decoración de eventos nacida en Colombia en 2018, hoy instalada en Lausana.",
+    craftEyebrow: "El saber hacer",
     paragraphs: [
-      "Todo sale de mi taller, en Lausana. Ahí diseño y elaboro a mano cada decoración: arcos de globos, muros florales, columnas, sweet tables, carteles de bienvenida y pequeños regalos para tus invitados.",
+      "Diseño y elaboro a mano cada decoración, con mi propio material: arcos de globos, muros florales, columnas, sweet tables, carteles de bienvenida y pequeños regalos para tus invitados.",
       "Hablo tres idiomas y ya he puesto en escena decenas de universos distintos. Cada vez, la misma exigencia: una decoración que te represente y que tus invitados recuerden. Entrega, montaje, desmontaje: me ocupo de todo, tú solo tienes que disfrutar del momento.",
     ],
     storyTitle: "Mi historia",
@@ -207,7 +208,7 @@ export const es = {
         text: "Aquí desde hace dos años, decoro para mis allegados y la gente a mi alrededor. Las mismas ganas del primer día: transformar un lugar y ver las sonrisas al descubrir la decoración.",
       },
     ],
-    imageCaption: "Una mesa montada en el taller, antes de la entrega",
+    imageCaption: "Una decoración en preparación, antes de la entrega",
     valuesTitle: "Nuestros valores",
     values: [
       {
