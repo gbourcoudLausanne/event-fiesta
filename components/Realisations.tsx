@@ -467,12 +467,14 @@ function Lightbox({
   onClose,
   onPrev,
   onNext,
+  onJump,
 }: {
   photos: readonly { src: string; alt: string; name: string }[];
   activeIndex: number;
   onClose: () => void;
   onPrev: () => void;
   onNext: () => void;
+  onJump?: (i: number) => void;
 }) {
   const photo = allPhotos[activeIndex];
 
@@ -495,259 +497,233 @@ function Lightbox({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-12"
-      style={{ background: "rgba(42,35,32,0.95)" }}
+      transition={{ duration: 0.22 }}
+      className="fixed inset-0 z-50 flex flex-col"
+      style={{ background: "rgba(28,18,24,0.97)" }}
       onClick={onClose}
       role="dialog"
       aria-modal
       aria-label={photo.name}
     >
-      <motion.div
-        initial={{ scale: 0.92, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.96, opacity: 0 }}
-        transition={{ duration: 0.28, ease }}
-        className="relative max-w-4xl w-full"
-        style={{ height: "min(80dvh, 660px)" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Image src={photo.src} alt={photo.alt} fill className="object-contain" priority sizes="90vw" />
-        <div
-          className="absolute bottom-0 left-0 right-0 px-6 py-5 pointer-events-none"
-          style={{ background: "linear-gradient(to top, rgba(42,35,32,0.9), transparent)" }}
-        >
-          <p className="font-serif text-xl" style={{ color: "#FAF7F2" }}>{photo.name}</p>
-          <p className="font-sans text-xs mt-0.5" style={{ color: "rgba(250,247,242,0.4)" }}>
-            {activeIndex + 1} / {allPhotos.length}
-          </p>
-        </div>
-      </motion.div>
-
-      {[
-        { onClick: (e: React.MouseEvent) => { e.stopPropagation(); onPrev(); }, icon: <ArrowLeft size={18} />, label: "Photo précédente", pos: "left-3 md:left-6" },
-        { onClick: (e: React.MouseEvent) => { e.stopPropagation(); onNext(); }, icon: <ArrowRight size={18} />, label: "Photo suivante", pos: "right-3 md:right-6" },
-      ].map(({ onClick, icon, label, pos }) => (
-        <button
-          key={label}
-          onClick={onClick}
-          aria-label={label}
-          className={`absolute ${pos} top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-colors cursor-pointer`}
-          style={{ background: "rgba(250,247,242,0.08)", color: "#FAF7F2" }}
-        >
-          {icon}
-        </button>
-      ))}
-
       <button
-        onClick={(e) => { e.stopPropagation(); onClose(); }}
-        className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-        style={{ background: "rgba(250,247,242,0.08)", color: "#FAF7F2" }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full transition-colors cursor-pointer"
+        style={{ background: "rgba(250,247,242,0.1)", color: "#FAF7F2" }}
         aria-label="Fermer"
       >
-        <X size={16} />
+        <X size={17} />
       </button>
+
+      <div
+        className="relative flex flex-1 items-center justify-center px-4 pb-2 pt-14 md:px-16"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <motion.div
+          key={activeIndex}
+          className="relative h-full w-full max-w-5xl"
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, ease }}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.18}
+          onDragEnd={(_, info) => {
+            if (info.offset.x < -70) onNext();
+            else if (info.offset.x > 70) onPrev();
+          }}
+        >
+          <Image src={photo.src} alt={photo.alt} fill className="object-contain" priority sizes="92vw" />
+        </motion.div>
+
+        {[
+          { fn: onPrev, icon: <ArrowLeft size={18} />, label: "Précédente", pos: "left-2 md:left-6" },
+          { fn: onNext, icon: <ArrowRight size={18} />, label: "Suivante", pos: "right-2 md:right-6" },
+        ].map(({ fn, icon, label, pos }) => (
+          <button
+            key={label}
+            onClick={(e) => {
+              e.stopPropagation();
+              fn();
+            }}
+            aria-label={label}
+            className={`absolute ${pos} top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full transition-colors cursor-pointer sm:flex`}
+            style={{ background: "rgba(250,247,242,0.1)", color: "#FAF7F2" }}
+          >
+            {icon}
+          </button>
+        ))}
+      </div>
+
+      <div className="px-6 text-center" onClick={(e) => e.stopPropagation()}>
+        <p className="font-serif font-light text-lg" style={{ color: "#FAF7F2" }}>
+          {photo.name}
+        </p>
+        <p className="mt-0.5 font-sans text-[11px] uppercase tracking-[0.18em]" style={{ color: "rgba(250,247,242,0.4)" }}>
+          {activeIndex + 1} / {allPhotos.length}
+        </p>
+      </div>
+
+      {onJump && (
+        <div
+          className="no-scrollbar flex gap-2 overflow-x-auto px-4 pb-5 pt-3 md:justify-center"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {allPhotos.map((p, i) => (
+            <button
+              key={p.src + i}
+              onClick={() => onJump(i)}
+              aria-label={p.name}
+              className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md transition-all duration-200 cursor-pointer sm:h-14 sm:w-14"
+              style={{
+                opacity: i === activeIndex ? 1 : 0.42,
+                outline: i === activeIndex ? "2px solid #FAF7F2" : "1px solid rgba(250,247,242,0.14)",
+                outlineOffset: 2,
+              }}
+            >
+              <Image src={p.src} alt="" fill className="object-cover" sizes="56px" />
+            </button>
+          ))}
+        </div>
+      )}
     </motion.div>
   );
 }
 
-/* ── Un « chapitre » de la galerie : une collection ────────────────────── */
-function CollectionSpread({
-  col,
-  index,
-  onOpen,
+/* ── Galerie premium : filtres collants + mosaïque filtrable ───────────── */
+const COLLECTIONS = CAROUSEL.map((c) => ({ key: c.label, count: c.photos.length }));
+const ALL_PHOTOS = CAROUSEL.flatMap((c) =>
+  c.photos.map((p) => ({ ...p, collection: c.label })),
+);
+
+export const GALLERY_WORLDS = CAROUSEL.length;
+export const GALLERY_PIECES = ALL_PHOTOS.length;
+const TILE_AR = ["3 / 4", "4 / 5", "1 / 1", "4 / 3", "3 / 4", "5 / 6"];
+
+function Chip({
+  label,
+  count,
+  active,
+  onClick,
 }: {
-  col: CarouselType;
-  index: number;
-  onOpen: (photoIndex: number) => void;
+  label: string;
+  count: number;
+  active: boolean;
+  onClick: () => void;
 }) {
-  const reduce = useReducedMotion();
-  const flip = index % 2 === 1;
-  const num = String(index + 1).padStart(2, "0");
-  const [hero, ...rest] = col.photos;
-  const shown = rest.slice(0, 5);
-  const extra = rest.length - shown.length;
-
   return (
-    <motion.div
-      initial={reduce ? false : { opacity: 0, y: 44 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.7, ease }}
-      className="relative"
+    <button
+      type="button"
+      onClick={onClick}
+      className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 font-sans text-[12px] transition-colors duration-200 cursor-pointer"
+      style={{
+        background: active ? "#D9628A" : "transparent",
+        color: active ? "#FAF7F2" : "rgba(42,35,32,0.62)",
+        border: `1px solid ${active ? "#D9628A" : "rgba(42,35,32,0.16)"}`,
+        fontWeight: active ? 500 : 400,
+      }}
     >
-      {/* Nom de la collection en filigrane géant */}
-      <span
-        aria-hidden
-        className={`pointer-events-none absolute -top-8 select-none font-serif font-light uppercase leading-none lg:-top-14 ${
-          flip ? "right-5 lg:right-14" : "left-5 lg:left-14"
-        }`}
-        style={{ fontSize: "clamp(3rem, 11vw, 8.5rem)", color: "rgba(217,98,138,0.07)" }}
-      >
-        {col.label}
-      </span>
-
-      <div className="relative mx-auto grid max-w-7xl items-center gap-7 px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:px-10">
-        {/* Grande photo */}
-        <button
-          type="button"
-          onClick={() => onOpen(0)}
-          className={`group relative overflow-hidden rounded-[18px] ${flip ? "lg:order-2" : ""}`}
-          style={{ aspectRatio: "4 / 5", boxShadow: "0 44px 90px -44px rgba(120,60,80,0.5)" }}
-          aria-label={`${col.label} — ${hero.name}`}
-        >
-          <Image
-            src={hero.src}
-            alt={hero.alt}
-            fill
-            className="object-cover transition-transform duration-[1200ms] group-hover:scale-[1.05]"
-            sizes="(max-width: 1024px) 100vw, 46vw"
-          />
-          <div
-            className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-            style={{ background: "linear-gradient(to top, rgba(13,11,8,0.55), transparent 55%)" }}
-          />
-          <span
-            className="absolute bottom-4 left-4 font-serif font-light italic opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 translate-y-2"
-            style={{ fontSize: "1.05rem", color: "#FAF7F2" }}
-          >
-            {hero.name}
-          </span>
-        </button>
-
-        {/* Colonne texte + mosaïque */}
-        <div className={flip ? "lg:order-1" : ""}>
-          <span className="font-display italic leading-none" style={{ fontSize: "1.15rem", color: "rgba(217,98,138,0.5)" }}>
-            {num}
-          </span>
-          <h2
-            className="mt-2 font-serif font-light leading-[1.08] tracking-tight"
-            style={{ fontSize: "clamp(2rem, 4vw, 3.1rem)", color: "#2A2320" }}
-          >
-            {col.label}
-          </h2>
-          <p className="mt-3 font-sans text-[11px] uppercase tracking-[0.2em]" style={{ color: "rgba(42,35,32,0.4)" }}>
-            {col.photos.length} {col.photos.length > 1 ? "décors" : "décor"}
-          </p>
-
-          {rest.length > 0 && (
-            <div className="mt-7 grid grid-cols-3 gap-2.5 sm:gap-3">
-              {shown.map((p, i) => (
-                <button
-                  key={p.src}
-                  type="button"
-                  onClick={() => onOpen(i + 1)}
-                  className="group relative overflow-hidden rounded-[10px]"
-                  style={{ aspectRatio: "1" }}
-                  aria-label={p.name}
-                >
-                  <Image
-                    src={p.src}
-                    alt={p.alt}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.12]"
-                    sizes="20vw"
-                  />
-                </button>
-              ))}
-              {extra > 0 && (
-                <button
-                  type="button"
-                  onClick={() => onOpen(shown.length + 1)}
-                  className="flex items-center justify-center rounded-[10px]"
-                  style={{ aspectRatio: "1", background: "rgba(217,98,138,0.09)", color: "#B65572" }}
-                  aria-label={`Voir ${extra} de plus`}
-                >
-                  <span className="font-sans text-sm font-medium">+{extra}</span>
-                </button>
-              )}
-            </div>
-          )}
-
-          <button
-            type="button"
-            onClick={() => onOpen(0)}
-            className="group mt-7 inline-flex items-center gap-2 font-sans text-[11px] font-semibold uppercase tracking-[0.16em]"
-            style={{ color: "#B65572" }}
-          >
-            Voir la série
-            <ArrowRight size={13} weight="bold" className="transition-transform duration-200 group-hover:translate-x-1" />
-          </button>
-        </div>
-      </div>
-    </motion.div>
+      {label}
+      <span style={{ opacity: 0.55, marginLeft: 6 }}>{count}</span>
+    </button>
   );
 }
 
 export function Realisations({ preview = false }: { preview?: boolean }) {
-  const { t } = useI18n();
   const reduce = useReducedMotion();
-  const [lb, setLb] = useState<{ c: number; i: number } | null>(null);
+  const [filter, setFilter] = useState<string>("all");
+  const [lbIndex, setLbIndex] = useState<number | null>(null);
 
   if (preview) return <RealisationsCarousel />;
 
-  const total = CAROUSEL.reduce((n, c) => n + c.photos.length, 0);
+  const list =
+    filter === "all" ? ALL_PHOTOS : ALL_PHOTOS.filter((p) => p.collection === filter);
 
   return (
-    <section
-      id="realisations"
-      className="overflow-hidden pt-[116px] pb-24 lg:pt-[148px] lg:pb-32"
-      style={{ background: "#FAF7F2" }}
-    >
-      <div className="mx-auto max-w-7xl px-6 lg:px-10">
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease }}
-          className="max-w-3xl"
-        >
-          <div className="mb-5 flex items-center gap-3">
-            <span className="h-px w-10" style={{ background: "#D9628A" }} />
-            <span className="font-sans text-[10px] uppercase tracking-[0.32em]" style={{ color: "#B65572" }}>
-              {t.realisations.heroEyebrow}
-            </span>
+    <section id="realisations" className="pb-24 lg:pb-32" style={{ background: "#FAF7F2" }}>
+      {/* Barre de filtres collante */}
+      <div
+        className="sticky top-[68px] z-30"
+        style={{
+          background: "rgba(250,247,242,0.92)",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          borderBottom: "1px solid rgba(42,35,32,0.08)",
+        }}
+      >
+        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+          <div className="no-scrollbar flex gap-2 overflow-x-auto py-4">
+            <Chip label="Tout voir" count={ALL_PHOTOS.length} active={filter === "all"} onClick={() => setFilter("all")} />
+            {COLLECTIONS.map((c) => (
+              <Chip
+                key={c.key}
+                label={c.key}
+                count={c.count}
+                active={filter === c.key}
+                onClick={() => setFilter(c.key)}
+              />
+            ))}
           </div>
-          <h1
-            className="font-serif font-light leading-[1.06] tracking-tight"
-            style={{ fontSize: "clamp(2.6rem, 6.2vw, 4.8rem)", color: "#2A2320" }}
-          >
-            {t.realisations.heroTitle}
-          </h1>
-          <p
-            className="mt-6 max-w-lg font-sans font-light text-[15px] leading-relaxed"
-            style={{ color: "rgba(42,35,32,0.58)" }}
-          >
-            {t.realisations.heroText}
-          </p>
-        </motion.div>
-        <p
-          className="mt-8 font-sans text-[11px] uppercase tracking-[0.22em]"
-          style={{ color: "rgba(42,35,32,0.38)" }}
-        >
-          {CAROUSEL.length} univers · {total} décors
-        </p>
+        </div>
       </div>
 
-      <div className="mt-16 flex flex-col gap-24 lg:mt-28 lg:gap-40">
-        {CAROUSEL.map((col, ci) => (
-          <CollectionSpread key={col.label} col={col} index={ci} onOpen={(i) => setLb({ c: ci, i })} />
-        ))}
+      {/* Mosaïque */}
+      <div className="mx-auto max-w-7xl px-6 pt-10 lg:px-10 lg:pt-14">
+        <motion.div key={filter} className="columns-1 gap-3 sm:columns-2 lg:columns-3 xl:columns-4">
+          {list.map((p, i) => (
+            <motion.button
+              key={`${filter}-${p.src}-${i}`}
+              type="button"
+              initial={reduce ? false : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: Math.min(i, 14) * 0.035, ease }}
+              onClick={() => setLbIndex(i)}
+              className="group relative mb-3 block w-full overflow-hidden rounded-[14px] text-left"
+              aria-label={p.name}
+            >
+              <div
+                className="relative w-full"
+                style={{ aspectRatio: TILE_AR[i % TILE_AR.length], background: "#EBE2D8" }}
+              >
+                <Image
+                  src={p.src}
+                  alt={p.alt}
+                  fill
+                  className="object-cover transition-transform duration-[900ms] group-hover:scale-[1.06]"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                />
+                <div
+                  className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  style={{ background: "linear-gradient(to top, rgba(13,11,8,0.74), rgba(13,11,8,0.05) 52%, transparent)" }}
+                >
+                  <span className="font-sans text-[9px] uppercase tracking-[0.2em]" style={{ color: "#F4A8B8" }}>
+                    {p.collection}
+                  </span>
+                  <span className="font-serif font-light text-[15px] leading-snug" style={{ color: "#FAF7F2" }}>
+                    {p.name}
+                  </span>
+                </div>
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-[14px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  style={{ border: "1px solid rgba(217,98,138,0.45)" }}
+                />
+              </div>
+            </motion.button>
+          ))}
+        </motion.div>
       </div>
 
       <AnimatePresence>
-        {lb && (
+        {lbIndex !== null && (
           <Lightbox
-            photos={CAROUSEL[lb.c].photos}
-            activeIndex={lb.i}
-            onClose={() => setLb(null)}
-            onNext={() =>
-              setLb((v) => (v === null ? null : { ...v, i: (v.i + 1) % CAROUSEL[v.c].photos.length }))
-            }
-            onPrev={() =>
-              setLb((v) =>
-                v === null ? null : { ...v, i: (v.i - 1 + CAROUSEL[v.c].photos.length) % CAROUSEL[v.c].photos.length },
-              )
-            }
+            photos={list}
+            activeIndex={lbIndex}
+            onClose={() => setLbIndex(null)}
+            onNext={() => setLbIndex((i) => (i === null ? 0 : (i + 1) % list.length))}
+            onPrev={() => setLbIndex((i) => (i === null ? 0 : (i - 1 + list.length) % list.length))}
+            onJump={(i) => setLbIndex(i)}
           />
         )}
       </AnimatePresence>
