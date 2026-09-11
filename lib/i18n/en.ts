@@ -439,6 +439,7 @@ export const en = {
       refNote: "Keep it — it makes finding your request easy",
       copy: "Copy",
       copied: "Copied",
+      waMessage: "Hello Event Fiesta! I'm writing about my request no. {ref}.",
       whatsapp: "Continue on WhatsApp",
       back: "Back to home",
     },

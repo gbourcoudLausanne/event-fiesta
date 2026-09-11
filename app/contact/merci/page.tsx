@@ -116,7 +116,9 @@ export default function MerciPage() {
 
           <div className="mt-9 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <a
-              href="https://wa.me/41779143855"
+              href={`https://wa.me/41779143855${
+                ref ? `?text=${encodeURIComponent(t.contact.merci.waMessage.replace("{ref}", ref))}` : ""
+              }`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 font-sans text-[13px] font-medium transition-transform duration-200 hover:scale-[1.03]"

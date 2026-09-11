@@ -438,6 +438,7 @@ export const fr = {
       refNote: "Gardez-le, il permet de retrouver votre demande facilement",
       copy: "Copier",
       copied: "Copié",
+      waMessage: "Bonjour Event Fiesta ! Je vous contacte au sujet de ma demande n° {ref}.",
       whatsapp: "Continuer sur WhatsApp",
       back: "Retour à l'accueil",
     },
