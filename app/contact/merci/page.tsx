@@ -1,8 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
-import { WhatsappLogo, ArrowLeft, Check } from "@phosphor-icons/react";
+import { WhatsappLogo, ArrowLeft, Check, Copy } from "@phosphor-icons/react";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -10,6 +11,26 @@ const ease = [0.16, 1, 0.3, 1] as const;
 export default function MerciPage() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
+  const [ref, setRef] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      setRef(new URLSearchParams(window.location.search).get("ref"));
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  const copyRef = async () => {
+    if (!ref) return;
+    try {
+      await navigator.clipboard.writeText(ref);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      /* clipboard indisponible — pas grave, le numéro reste affiché */
+    }
+  };
 
   return (
     <div className="pt-[68px]">
@@ -58,6 +79,40 @@ export default function MerciPage() {
           >
             {t.contact.merci.text}
           </p>
+
+          {ref && (
+            <motion.div
+              initial={reduce ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2, ease }}
+              className="mx-auto mt-8 inline-flex flex-col items-center gap-3 rounded-2xl px-7 py-5"
+              style={{ background: "rgba(250,247,242,0.12)", border: "1px dashed rgba(250,247,242,0.4)" }}
+            >
+              <span className="font-sans text-[10px] uppercase tracking-[0.28em]" style={{ color: "rgba(250,247,242,0.65)" }}>
+                {t.contact.merci.ref}
+              </span>
+              <button
+                type="button"
+                onClick={copyRef}
+                className="inline-flex items-center gap-3 font-sans text-[13px] font-medium transition-opacity hover:opacity-80"
+                style={{ color: "#FAF7F2" }}
+              >
+                <span className="font-mono tracking-[0.1em]" style={{ fontSize: "1.6rem" }}>
+                  {ref}
+                </span>
+                <span
+                  className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px]"
+                  style={{ background: "rgba(250,247,242,0.18)" }}
+                >
+                  <Copy size={13} weight="bold" />
+                  {copied ? t.contact.merci.copied : t.contact.merci.copy}
+                </span>
+              </button>
+              <span className="font-sans text-[11px] font-light" style={{ color: "rgba(250,247,242,0.6)" }}>
+                {t.contact.merci.refNote}
+              </span>
+            </motion.div>
+          )}
 
           <div className="mt-9 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <a

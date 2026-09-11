@@ -192,6 +192,7 @@ export function Contact() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
 
+  const [requestRef] = useState(() => `EF-${Math.floor(1000 + Math.random() * 9000)}`);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -408,15 +409,16 @@ export function Contact() {
             <input
               type="hidden"
               name="_subject"
-              value={`Nouvelle demande — ${eventType || "événement"}${venue ? ` · ${venue}` : ""}`}
+              value={`Nouvelle demande — ${eventType || "événement"}${venue ? ` · ${venue}` : ""} · Réf. ${requestRef}`}
             />
             <input type="hidden" name="_captcha" value="false" />
             <input type="hidden" name="_template" value="box" />
-            <input type="hidden" name="_next" value={MERCI_URL} />
+            <input type="hidden" name="_next" value={`${MERCI_URL}?ref=${requestRef}`} />
             {email && <input type="hidden" name="_replyto" value={email} />}
             <input type="text" name="_honey" tabIndex={-1} autoComplete="off" style={{ display: "none" }} />
 
             {/* Champs transmis — ordre maîtrisé pour l'e-mail */}
+            <input type="hidden" name="Référence" value={requestRef} />
             <input type="hidden" name="Type d'événement" value={eventType} />
             <input type="hidden" name="Nom" value={fullName} />
             <input type="hidden" name="Email" value={email} />
