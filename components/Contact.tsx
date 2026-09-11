@@ -35,6 +35,8 @@ const FORM_ENDPOINT = "https://formsubmit.co/contact@eventfiesta.ch";
 const MERCI_URL = "https://eventfiesta.ch/contact/merci";
 const MAX_BYTES = 5 * 1024 * 1024;
 const MAX_FILES = 5;
+const DRAFT_KEY = "ef-contact-draft";
+const MIN_FILL_MS = 3000;
 
 const PALETTE_HEX = [
   "#E8B4C4", "#D9628A", "#C97B63", "#F0C29A", "#B7C4A8",
@@ -193,6 +195,7 @@ export function Contact() {
   const reduce = useReducedMotion();
 
   const [requestRef] = useState(() => `EF-${Math.floor(1000 + Math.random() * 9000)}`);
+  const [renderedAt] = useState(() => Date.now());
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -213,8 +216,54 @@ export function Contact() {
 
   const fileRef = useRef<HTMLInputElement>(null);
   const stepEls = useRef<(HTMLElement | null)[]>([]);
+  const mountedAt = useRef<number>(0);
   const [active, setActive] = useState(0);
   const charMax = 800;
+
+  useEffect(() => {
+    mountedAt.current = Date.now();
+  }, []);
+
+  /* Brouillon local — restauré à l'ouverture, effacé à l'envoi */
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      try {
+        const raw = localStorage.getItem(DRAFT_KEY);
+        if (!raw) return;
+        const d = JSON.parse(raw);
+        if (d.fullName) setFullName(d.fullName);
+        if (d.email) setEmail(d.email);
+        if (d.phone) setPhone(d.phone);
+        if (d.venue) setVenue(d.venue);
+        if (d.eventType) setEventType(d.eventType);
+        if (d.guests) setGuests(d.guests);
+        if (d.budget) setBudget(d.budget);
+        if (Array.isArray(d.moods)) setMoods(d.moods);
+        if (Array.isArray(d.palette)) setPalette(d.palette);
+        if (d.dateTbd) setDateTbd(d.dateTbd);
+        if (d.date) setDate(d.date);
+        if (d.message) setMessage(d.message);
+        if (Array.isArray(d.links) && d.links.length) setLinks(d.links);
+      } catch {
+        /* brouillon corrompu — on l'ignore */
+      }
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        DRAFT_KEY,
+        JSON.stringify({ fullName, email, phone, venue, eventType, guests, budget, moods, palette, dateTbd, date, message, links }),
+      );
+    } catch {
+      /* stockage indisponible — tant pis, pas bloquant */
+    }
+  }, [fullName, email, phone, venue, eventType, guests, budget, moods, palette, dateTbd, date, message, links]);
+
+  const daysUntilEvent = !dateTbd && date ? Math.ceil((new Date(date).getTime() - renderedAt) / 86400000) : null;
+  const urgent = daysUntilEvent !== null && !Number.isNaN(daysUntilEvent) && daysUntilEvent >= 0 && daysUntilEvent <= 21;
 
   const previews = useMemo(
     () => files.map((f) => ({ key: f.name + f.size, url: URL.createObjectURL(f) })),
@@ -266,11 +315,21 @@ export function Contact() {
     set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    if (Date.now() - mountedAt.current < MIN_FILL_MS) {
+      // rempli trop vite pour être humain — on bloque silencieusement
+      e.preventDefault();
+      return;
+    }
     if (!eventType) {
       e.preventDefault();
       setMissingType(true);
       stepEls.current[1]?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
+    }
+    try {
+      localStorage.removeItem(DRAFT_KEY);
+    } catch {
+      /* pas grave */
     }
     setSubmitting(true);
   };
@@ -347,8 +406,30 @@ export function Contact() {
               {t.contact.quick.email}
             </a>
           </div>
+
+          <p className="mt-6 font-sans text-[11.5px]" style={{ color: "rgba(42,35,32,0.4)" }}>
+            {t.contact.duration}
+          </p>
         </motion.div>
       </section>
+
+      {/* Barre de progression — mobile uniquement */}
+      <div
+        className="sticky top-[68px] z-30 lg:hidden"
+        style={{ background: "rgba(250,247,242,0.95)", backdropFilter: "blur(8px)" }}
+      >
+        <div className="h-[3px] w-full" style={{ background: "rgba(42,35,32,0.08)" }}>
+          <div
+            className="h-full transition-[width] duration-300"
+            style={{ width: `${((active + 1) / t.contact.steps.length) * 100}%`, background: "#D9628A" }}
+          />
+        </div>
+        <p className="px-6 py-2 font-sans text-[11px]" style={{ color: "rgba(42,35,32,0.5)" }}>
+          {t.contact.stepOf.replace("{n}", String(active + 1)).replace("{total}", String(t.contact.steps.length))}
+          {" · "}
+          {t.contact.steps[active]}
+        </p>
+      </div>
 
       {/* ── Corps ── */}
       <section className="relative py-16 lg:py-24" style={{ background: "#FAF7F2" }}>
@@ -356,6 +437,9 @@ export function Contact() {
           {/* Rail */}
           <aside className="hidden lg:block">
             <div className="sticky top-28 flex flex-col gap-1">
+              <p className="mb-2 px-3 font-sans text-[11px]" style={{ color: "rgba(42,35,32,0.4)" }}>
+                {t.contact.stepOf.replace("{n}", String(active + 1)).replace("{total}", String(t.contact.steps.length))}
+              </p>
               {t.contact.steps.map((s, i) => (
                 <a
                   key={s}
@@ -409,12 +493,13 @@ export function Contact() {
             <input
               type="hidden"
               name="_subject"
-              value={`Nouvelle demande — ${eventType || "événement"}${venue ? ` · ${venue}` : ""} · Réf. ${requestRef}`}
+              value={`${urgent ? "⚡ URGENT — " : ""}Nouvelle demande — ${eventType || "événement"}${venue ? ` · ${venue}` : ""} · Réf. ${requestRef}`}
             />
             <input type="hidden" name="_captcha" value="false" />
             <input type="hidden" name="_template" value="box" />
             <input type="hidden" name="_next" value={`${MERCI_URL}?ref=${requestRef}`} />
             {email && <input type="hidden" name="_replyto" value={email} />}
+            {email && <input type="hidden" name="_cc" value={email} />}
             <input type="text" name="_honey" tabIndex={-1} autoComplete="off" style={{ display: "none" }} />
 
             {/* Champs transmis — ordre maîtrisé pour l'e-mail */}

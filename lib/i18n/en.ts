@@ -346,6 +346,8 @@ export const en = {
       email: "Email",
     },
     steps: ["You", "The event", "Your budget", "Your vision", "Your inspiration"],
+    duration: "~3 minutes",
+    stepOf: "Step {n} of {total}",
     you: {
       heading: "You",
       name: "First and last name",
