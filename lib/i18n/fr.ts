@@ -9,7 +9,7 @@ export const fr = {
   },
   hero: {
     eyebrow: "Lausanne · Suisse romande",
-    headline1: "Créons ensemble un événement",
+    headline1: "Créons ensemble une décoration",
     headline2: "inoubliable à votre image",
     subtext: "Décoration d'événements sur mesure · Suisse romande",
     cta1: "Demander un devis",
@@ -271,7 +271,7 @@ export const fr = {
     title: "Nos réalisations",
     previewTitle: "Quelques réalisations",
     subtitle: "Un aperçu de mes créations à Lausanne et en Suisse romande.",
-    heroEyebrow: "Galerie",
+    heroEyebrow: "Galerie · Lausanne et Suisse romande",
     heroTitle: "Chaque décor raconte une histoire",
     heroText:
       "Voici quelques-uns des univers que j'ai imaginés et fabriqués à la main, à Lausanne et en Suisse romande. Chaque événement est unique — le vôtre reste à inventer.",
@@ -337,7 +337,7 @@ export const fr = {
     title: "Parlons de votre projet",
     subtitle:
       "Racontez-moi votre événement — je reviens vers vous sous 24 h avec une première idée et une estimation.",
-    eyebrow: "Prendre contact",
+    eyebrow: "Prendre contact · Lausanne et Suisse romande",
     quick: {
       whatsapp: "WhatsApp",
       whatsappNote: "Réponse rapide",

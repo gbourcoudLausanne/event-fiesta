@@ -9,7 +9,7 @@ export const en = {
   },
   hero: {
     eyebrow: "Lausanne · French-speaking Switzerland",
-    headline1: "Let's create an event",
+    headline1: "Let's create a decoration",
     headline2: "as unforgettable as you are",
     subtext: "Bespoke event decoration · French-speaking Switzerland",
     cta1: "Request a quote",
@@ -272,7 +272,7 @@ export const en = {
     previewTitle: "A few of our creations",
     subtitle:
       "A glimpse of my creations in Lausanne and French-speaking Switzerland.",
-    heroEyebrow: "Gallery",
+    heroEyebrow: "Gallery · Lausanne and French-speaking Switzerland",
     heroTitle: "Every setting tells a story",
     heroText:
       "Here are a few of the worlds I've imagined and handcrafted, in Lausanne and French-speaking Switzerland. Every event is unique — yours is still to invent.",
@@ -338,7 +338,7 @@ export const en = {
     title: "Tell us about your project",
     subtitle:
       "Tell me about your event — I'll get back to you within 24 h with a first idea and an estimate.",
-    eyebrow: "Get in touch",
+    eyebrow: "Get in touch · Lausanne and French-speaking Switzerland",
     quick: {
       whatsapp: "WhatsApp",
       whatsappNote: "Quick reply",

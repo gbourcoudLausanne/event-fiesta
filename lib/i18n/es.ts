@@ -9,7 +9,7 @@ export const es = {
   },
   hero: {
     eyebrow: "Lausana · Suiza romanda",
-    headline1: "Creemos juntos un evento",
+    headline1: "Creemos juntos una decoración",
     headline2: "inolvidable y a tu imagen",
     subtext: "Decoración de eventos a medida · Suiza romanda",
     cta1: "Pedir presupuesto",
@@ -271,7 +271,7 @@ export const es = {
     title: "Nuestras realizaciones",
     previewTitle: "Algunas realizaciones",
     subtitle: "Una muestra de mis creaciones en Lausana y la Suiza romanda.",
-    heroEyebrow: "Galería",
+    heroEyebrow: "Galería · Lausana y Suiza romanda",
     heroTitle: "Cada decoración cuenta una historia",
     heroText:
       "Estos son algunos de los universos que he imaginado y elaborado a mano, en Lausana y la Suiza romanda. Cada evento es único — el tuyo está por inventar.",
@@ -337,7 +337,7 @@ export const es = {
     title: "Hablemos de tu proyecto",
     subtitle:
       "Cuéntame tu evento — te respondo en 24 h con una primera idea y una estimación.",
-    eyebrow: "Ponte en contacto",
+    eyebrow: "Ponte en contacto · Lausana y Suiza romanda",
     quick: {
       whatsapp: "WhatsApp",
       whatsappNote: "Respuesta rápida",
