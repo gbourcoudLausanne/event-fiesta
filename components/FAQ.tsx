@@ -130,8 +130,26 @@ export function FAQ({ preview = false }: { preview?: boolean }) {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
   const faqs = preview ? t.faq.items.slice(0, 4) : t.faq.items;
 
+  const faqJsonLd = !preview
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: t.faq.items.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }
+    : null;
+
   return (
     <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: "#F3EDE6" }}>
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
       {/* Halo décoratif */}
       <div
         className="absolute pointer-events-none rounded-full"
