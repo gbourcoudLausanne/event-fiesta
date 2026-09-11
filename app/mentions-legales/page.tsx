@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight } from "@phosphor-icons/react";
 import { PageHero } from "@/components/PageHero";
+import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -14,6 +15,12 @@ export default function LegalPage() {
 
   return (
     <div className="pt-[68px]">
+      <BreadcrumbSchema
+        items={[
+          { name: "Accueil", url: "https://eventfiesta.ch/" },
+          { name: "Mentions légales", url: "https://eventfiesta.ch/mentions-legales" },
+        ]}
+      />
       <PageHero eyebrow={t.legal.eyebrow} title={t.legal.title} subtitle={t.legal.updated} />
 
       <section className="py-16 lg:py-24" style={{ background: "#FAF7F2" }}>

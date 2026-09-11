@@ -99,6 +99,23 @@ const jsonLd = {
   description:
     "Décoration d'événements sur mesure à Lausanne et en Suisse romande : anniversaires, baptêmes, baby showers, gender reveals, soirées à thème, événements d'entreprise.",
   sameAs: ["https://instagram.com/eventfiesta.ch"],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Services de décoration événementielle",
+    itemListElement: [
+      { name: "Mariage civil", description: "Arche de cérémonie, chemin, coin photo, compositions florales." },
+      { name: "Anniversaire", description: "Arches de ballons, sweet table, décor de salle sur mesure." },
+      { name: "Baby shower & gender reveal", description: "Décors doux et personnalisés pour l'arrivée de bébé." },
+      { name: "Baptême & communion", description: "Décoration élégante pour les cérémonies religieuses." },
+      { name: "Pique-nique de luxe", description: "Installation de pique-nique chic en extérieur, clé en main." },
+      { name: "Soirée à thème", description: "Décor immersif conçu autour de votre thème." },
+      { name: "Événements d'entreprise", description: "Séminaires, soirées et lancements avec cohérence de marque." },
+      { name: "Goodies personnalisés", description: "Cadeaux invités et attentions sur mesure." },
+    ].map((s) => ({
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name: s.name, description: s.description },
+    })),
+  },
 };
 
 export default function RootLayout({

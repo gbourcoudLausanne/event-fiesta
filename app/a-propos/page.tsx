@@ -21,6 +21,7 @@ import {
   Package,
 } from "@phosphor-icons/react";
 import { FloatingBalloons } from "@/components/FloatingBalloons";
+import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 import { useI18n } from "@/lib/i18n";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -780,6 +781,12 @@ export default function AboutPage() {
 
   return (
     <>
+      <BreadcrumbSchema
+        items={[
+          { name: "Accueil", url: "https://eventfiesta.ch/" },
+          { name: "À propos", url: "https://eventfiesta.ch/a-propos" },
+        ]}
+      />
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden pt-[120px] pb-14 lg:pt-[140px] lg:pb-16" style={{ background: "#F3EDE6" }}>
         {/* confettis */}

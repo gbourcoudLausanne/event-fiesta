@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Contact } from "@/components/Contact";
 import { FAQ } from "@/components/FAQ";
 import { SectionDivider } from "@/components/SectionDivider";
+import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 
 export const metadata: Metadata = {
   title: "Contact & devis gratuit — Event Fiesta",
@@ -13,6 +14,12 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="pt-[68px]">
+      <BreadcrumbSchema
+        items={[
+          { name: "Accueil", url: "https://eventfiesta.ch/" },
+          { name: "Contact", url: "https://eventfiesta.ch/contact" },
+        ]}
+      />
       <Contact />
       <SectionDivider from="#FAF7F2" to="#F3EDE6" variant="wave" height={64} />
       <FAQ />
