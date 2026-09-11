@@ -499,7 +499,6 @@ export function Contact() {
             <input type="hidden" name="_template" value="box" />
             <input type="hidden" name="_next" value={`${MERCI_URL}?ref=${requestRef}`} />
             {email && <input type="hidden" name="_replyto" value={email} />}
-            {email && <input type="hidden" name="_cc" value={email} />}
             <input type="text" name="_honey" tabIndex={-1} autoComplete="off" style={{ display: "none" }} />
 
             {/* Champs transmis — ordre maîtrisé pour l'e-mail */}
