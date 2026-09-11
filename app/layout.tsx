@@ -72,6 +72,35 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: "Event Fiesta",
+  image: "https://eventfiesta.ch/opengraph-image",
+  url: "https://eventfiesta.ch",
+  telephone: "+41779143855",
+  email: "contact@eventfiesta.ch",
+  priceRange: "CHF",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Lausanne",
+    addressRegion: "Vaud",
+    addressCountry: "CH",
+  },
+  areaServed: [
+    "Lausanne",
+    "Genève",
+    "Fribourg",
+    "Neuchâtel",
+    "Vaud",
+    "Valais",
+    "Suisse romande",
+  ],
+  description:
+    "Décoration d'événements sur mesure à Lausanne et en Suisse romande : anniversaires, baptêmes, baby showers, gender reveals, soirées à thème, événements d'entreprise.",
+  sameAs: ["https://instagram.com/eventfiesta.ch"],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -83,6 +112,10 @@ export default function RootLayout({
       className={`${cormorant.variable} ${montserrat.variable} ${dmSerif.variable} ${caveat.variable} antialiased`}
     >
       <body className="bg-creme text-noir font-sans min-h-screen">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <I18nProvider>
           <SplashScreen />
           <ScrollProgress />
