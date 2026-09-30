@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { FileText, Receipt, Plus } from "@phosphor-icons/react/dist/ssr";
+import { FileText, Receipt, Plus, EnvelopeSimple, Phone, MapPin, NotePencil } from "@phosphor-icons/react/dist/ssr";
 
 const STATUS_LABELS: Record<string, string> = {
   brouillon: "Brouillon",
@@ -50,16 +50,43 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
       </Link>
 
       <div className="mb-8 rounded-2xl bg-white p-6" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
-        <h1 className="mb-2 font-display text-[26px]" style={{ color: "var(--noir)" }}>
+        <h1 className="mb-4 font-display text-[26px]" style={{ color: "var(--noir)" }}>
           {client.full_name}
         </h1>
-        <p className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.55)" }}>
-          {[client.email, client.phone, client.address].filter(Boolean).join(" · ") || "—"}
-        </p>
+
+        <div className="grid grid-cols-3 gap-4 border-t pt-4" style={{ borderColor: "rgba(13,11,8,0.08)" }}>
+          <div className="flex items-start gap-2.5">
+            <EnvelopeSimple size={16} className="mt-0.5 shrink-0" style={{ color: "var(--or)" }} />
+            <div>
+              <p className="font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.4)" }}>Email</p>
+              <p className="font-sans text-[13.5px]" style={{ color: "var(--noir)" }}>{client.email || "—"}</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-2.5">
+            <Phone size={16} className="mt-0.5 shrink-0" style={{ color: "var(--or)" }} />
+            <div>
+              <p className="font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.4)" }}>Téléphone</p>
+              <p className="font-sans text-[13.5px]" style={{ color: "var(--noir)" }}>{client.phone || "—"}</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-2.5">
+            <MapPin size={16} className="mt-0.5 shrink-0" style={{ color: "var(--or)" }} />
+            <div>
+              <p className="font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.4)" }}>Adresse</p>
+              <p className="font-sans text-[13.5px]" style={{ color: "var(--noir)" }}>{client.address || "—"}</p>
+            </div>
+          </div>
+        </div>
+
         {client.notes && (
-          <p className="mt-3 rounded-xl px-4 py-3 font-sans text-[13px]" style={{ background: "var(--creme-2)", color: "rgba(13,11,8,0.6)" }}>
-            {client.notes}
-          </p>
+          <div className="mt-4 rounded-xl p-4" style={{ background: "var(--creme-2)" }}>
+            <p className="mb-1.5 flex items-center gap-1.5 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+              <NotePencil size={13} /> Notes
+            </p>
+            <p className="font-sans text-[13.5px] leading-relaxed" style={{ color: "rgba(13,11,8,0.7)" }}>
+              {client.notes}
+            </p>
+          </div>
         )}
       </div>
 
