@@ -1,14 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+  const [supabase] = useState(() => createClient());
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
+  const [sessionReady, setSessionReady] = useState(false);
+
+  // Le lien de récupération livre les jetons dans le fragment #access_token=…
+  // (format "implicit"), pas dans un ?code= — le client navigateur étant
+  // configuré en PKCE par défaut, sa détection automatique ne les reconnaît
+  // pas. On les extrait donc nous-mêmes pour établir la session.
+  useEffect(() => {
+    async function establishSession() {
+      const hash = window.location.hash.replace(/^#/, "");
+      const params = new URLSearchParams(hash);
+      const access_token = params.get("access_token");
+      const refresh_token = params.get("refresh_token");
+
+      if (!access_token || !refresh_token) {
+        return "Le lien de récupération n'a pas pu être validé — demande un nouveau lien.";
+      }
+
+      const { error: setErr } = await supabase.auth.setSession({ access_token, refresh_token });
+      if (setErr) {
+        return "Le lien de récupération a peut-être expiré — demande un nouveau lien.";
+      }
+
+      // Retire les jetons de l'URL visible une fois la session établie.
+      window.history.replaceState(null, "", window.location.pathname);
+      return null;
+    }
+
+    establishSession().then((errorMessage) => {
+      if (errorMessage) setError(errorMessage);
+      else setSessionReady(true);
+    });
+  }, [supabase]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -19,11 +52,10 @@ export default function ResetPasswordPage() {
     setIsPending(true);
     setError(null);
 
-    const supabase = createClient();
     const { error: updateError } = await supabase.auth.updateUser({ password });
 
     if (updateError) {
-      setError("Impossible de mettre à jour le mot de passe — le lien a peut-être expiré.");
+      setError("Impossible de mettre à jour le mot de passe.");
       setIsPending(false);
       return;
     }
@@ -63,14 +95,15 @@ export default function ResetPasswordPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="new-password"
-              className="w-full rounded-xl bg-white px-4 py-3 font-sans text-[14px] outline-none"
+              disabled={!sessionReady}
+              className="w-full rounded-xl bg-white px-4 py-3 font-sans text-[14px] outline-none disabled:opacity-50"
               style={{ border: "1px solid rgba(13,11,8,0.14)", color: "var(--noir)" }}
             />
           </label>
 
           <button
             type="submit"
-            disabled={isPending}
+            disabled={isPending || !sessionReady}
             className="mt-2 rounded-2xl py-3.5 font-sans text-[14px] font-medium disabled:opacity-60"
             style={{ background: "var(--rose-deep)", color: "var(--creme)" }}
           >
