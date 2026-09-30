@@ -189,7 +189,7 @@ function StepBlock({
 /* ── page ───────────────────────────────────────────────────────────── */
 
 export function Contact() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const reduce = useReducedMotion();
   const router = useRouter();
 
@@ -493,6 +493,7 @@ export function Contact() {
             />
             {/* Honeypot — un bot remplit ce champ invisible, jamais un humain */}
             <input type="text" name="_honey" tabIndex={-1} autoComplete="off" style={{ display: "none" }} />
+            <input type="hidden" name="Langue" value={lang} />
 
             {/* Champs transmis — ordre maîtrisé pour l'e-mail */}
             <input type="hidden" name="Référence" value={requestRef} />
