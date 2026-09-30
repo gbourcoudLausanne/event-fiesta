@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { createClientRecord, deleteClientRecord } from "./actions";
 import { Trash } from "@phosphor-icons/react/dist/ssr";
@@ -46,17 +47,17 @@ export default async function ClientsPage() {
           clients.map((c, i) => (
             <div
               key={c.id}
-              className="flex items-center justify-between px-5 py-4"
+              className="flex items-center justify-between px-5 py-1"
               style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}
             >
-              <div>
+              <Link href={`/admin/clients/${c.id}`} className="flex-1 py-3 transition-opacity hover:opacity-70">
                 <p className="font-sans text-[14px] font-semibold" style={{ color: "var(--noir)" }}>
                   {c.full_name}
                 </p>
                 <p className="font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>
                   {[c.email, c.phone, c.address].filter(Boolean).join(" · ") || "—"}
                 </p>
-              </div>
+              </Link>
               <form action={deleteClientRecord.bind(null, c.id)}>
                 <button
                   type="submit"
