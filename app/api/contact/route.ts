@@ -1,0 +1,85 @@
+import { NextRequest, NextResponse } from "next/server";
+import { Resend } from "resend";
+
+export const runtime = "nodejs";
+
+const TO_EMAIL = "contact@eventfiesta.ch";
+const FROM_EMAIL = "Event Fiesta <notifications@eventfiesta.ch>";
+const MAX_TOTAL_BYTES = 5 * 1024 * 1024;
+const MAX_FILES = 5;
+
+// Champs internes qu'on ne veut pas voir recopiés tels quels dans le corps de l'e-mail
+const SKIP_FIELDS = new Set(["_honey", "Sujet"]);
+
+export async function POST(req: NextRequest) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error("contact: RESEND_API_KEY manquante");
+    return NextResponse.json({ error: "Configuration serveur manquante." }, { status: 500 });
+  }
+
+  let form: FormData;
+  try {
+    form = await req.formData();
+  } catch {
+    return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
+  }
+
+  // Honeypot — un bot remplit ce champ invisible, jamais un humain.
+  // On répond "ok" sans rien envoyer, pour ne pas indiquer au bot qu'il a été détecté.
+  const honey = form.get("_honey");
+  if (typeof honey === "string" && honey.trim() !== "") {
+    return NextResponse.json({ ok: true });
+  }
+
+  const nom = String(form.get("Nom") ?? "").trim();
+  const email = String(form.get("Email") ?? "").trim();
+  if (!nom || !email) {
+    return NextResponse.json({ error: "Nom et email requis." }, { status: 400 });
+  }
+
+  const lines: string[] = [];
+  for (const [key, value] of form.entries()) {
+    if (SKIP_FIELDS.has(key) || value instanceof File) continue;
+    const v = String(value).trim();
+    if (v) lines.push(`${key} : ${v}`);
+  }
+
+  const files = form.getAll("attachment").filter(
+    (f): f is File => f instanceof File && f.size > 0,
+  );
+  const attachments: { filename: string; content: Buffer }[] = [];
+  let totalBytes = 0;
+  for (const file of files.slice(0, MAX_FILES)) {
+    if (totalBytes + file.size > MAX_TOTAL_BYTES) break;
+    totalBytes += file.size;
+    attachments.push({
+      filename: file.name || "photo.jpg",
+      content: Buffer.from(await file.arrayBuffer()),
+    });
+  }
+
+  const subject = String(form.get("Sujet") ?? "") || "Nouvelle demande — Event Fiesta";
+
+  try {
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: TO_EMAIL,
+      replyTo: email,
+      subject,
+      text: lines.join("\n"),
+      attachments: attachments.length > 0 ? attachments : undefined,
+    });
+
+    if (error) {
+      console.error("contact: erreur Resend", error);
+      return NextResponse.json({ error: "Échec de l'envoi." }, { status: 502 });
+    }
+
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error("contact: erreur inattendue", err);
+    return NextResponse.json({ error: "Erreur serveur." }, { status: 500 });
+  }
+}

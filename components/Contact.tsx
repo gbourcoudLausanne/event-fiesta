@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { useRouter } from "next/navigation";
 import {
   WhatsappLogo,
   Phone,
@@ -31,8 +32,6 @@ const spring = { type: "spring", stiffness: 300, damping: 24 } as const;
 
 const WA_NUMBER = "41779143855";
 const WA_LINK = `https://wa.me/${WA_NUMBER}`;
-const FORM_ENDPOINT = "https://formsubmit.co/contact@eventfiesta.ch";
-const MERCI_URL = "https://eventfiesta.ch/contact/merci";
 const MAX_BYTES = 5 * 1024 * 1024;
 const MAX_FILES = 5;
 const DRAFT_KEY = "ef-contact-draft";
@@ -192,6 +191,7 @@ function StepBlock({
 export function Contact() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
+  const router = useRouter();
 
   const [requestRef] = useState(() => `EF-${Math.floor(1000 + Math.random() * 9000)}`);
   const [renderedAt] = useState(() => Date.now());
@@ -212,6 +212,7 @@ export function Contact() {
   const [fileError, setFileError] = useState(false);
   const [missingType, setMissingType] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
   const stepEls = useRef<(HTMLElement | null)[]>([]);
@@ -308,19 +309,28 @@ export function Contact() {
   const toggle = (arr: string[], v: string, set: (x: string[]) => void) =>
     set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!eventType) {
-      e.preventDefault();
       setMissingType(true);
       stepEls.current[1]?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
-    try {
-      localStorage.removeItem(DRAFT_KEY);
-    } catch {
-      /* pas grave */
-    }
     setSubmitting(true);
+    setSubmitError(false);
+    try {
+      const res = await fetch("/api/contact", { method: "POST", body: new FormData(e.currentTarget) });
+      if (!res.ok) throw new Error("submit failed");
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch {
+        /* pas grave */
+      }
+      router.push(`/contact/merci?ref=${requestRef}`);
+    } catch {
+      setSubmitError(true);
+      setSubmitting(false);
+    }
   };
 
   const [dragOver, setDragOver] = useState(false);
@@ -473,21 +483,15 @@ export function Contact() {
 
           {/* Formulaire */}
           <form
-            action={FORM_ENDPOINT}
-            method="POST"
-            encType="multipart/form-data"
             onSubmit={handleSubmit}
             className="flex flex-col gap-14"
           >
             <input
               type="hidden"
-              name="_subject"
+              name="Sujet"
               value={`${urgent ? "⚡ URGENT — " : ""}Nouvelle demande — ${eventType || "événement"}${venue ? ` · ${venue}` : ""} · Réf. ${requestRef}`}
             />
-            <input type="hidden" name="_captcha" value="false" />
-            <input type="hidden" name="_template" value="box" />
-            <input type="hidden" name="_next" value={`${MERCI_URL}?ref=${requestRef}`} />
-            {email && <input type="hidden" name="_replyto" value={email} />}
+            {/* Honeypot — un bot remplit ce champ invisible, jamais un humain */}
             <input type="text" name="_honey" tabIndex={-1} autoComplete="off" style={{ display: "none" }} />
 
             {/* Champs transmis — ordre maîtrisé pour l'e-mail */}
@@ -826,6 +830,11 @@ export function Contact() {
                 {submitting ? t.contact.submitting : t.contact.submit}
                 {!submitting && <ArrowRight size={16} weight="bold" />}
               </motion.button>
+              {submitError && (
+                <p className="mt-3 text-center font-sans text-[12.5px]" style={{ color: "#B0546F" }}>
+                  L&apos;envoi a échoué — réessayez, ou contactez-nous directement via WhatsApp ci-dessous.
+                </p>
+              )}
               <p className="mt-3 text-center font-sans text-[11px]" style={{ color: "rgba(42,35,32,0.4)" }}>
                 {t.contact.disclaimer}
               </p>
