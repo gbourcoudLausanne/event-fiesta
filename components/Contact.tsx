@@ -36,7 +36,6 @@ const MERCI_URL = "https://eventfiesta.ch/contact/merci";
 const MAX_BYTES = 5 * 1024 * 1024;
 const MAX_FILES = 5;
 const DRAFT_KEY = "ef-contact-draft";
-const MIN_FILL_MS = 3000;
 
 const PALETTE_HEX = [
   "#E8B4C4", "#D9628A", "#C97B63", "#F0C29A", "#B7C4A8",
@@ -216,13 +215,8 @@ export function Contact() {
 
   const fileRef = useRef<HTMLInputElement>(null);
   const stepEls = useRef<(HTMLElement | null)[]>([]);
-  const mountedAt = useRef<number>(0);
   const [active, setActive] = useState(0);
   const charMax = 800;
-
-  useEffect(() => {
-    mountedAt.current = Date.now();
-  }, []);
 
   /* Brouillon local — restauré à l'ouverture, effacé à l'envoi */
   useEffect(() => {
@@ -315,11 +309,6 @@ export function Contact() {
     set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    if (Date.now() - mountedAt.current < MIN_FILL_MS) {
-      // rempli trop vite pour être humain — on bloque silencieusement
-      e.preventDefault();
-      return;
-    }
     if (!eventType) {
       e.preventDefault();
       setMissingType(true);
