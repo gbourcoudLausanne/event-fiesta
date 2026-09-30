@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Montserrat, DM_Serif_Display, Caveat } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import { I18nProvider } from "@/lib/i18n";
 import { SplashScreen } from "@/components/SplashScreen";
 import { Nav } from "@/components/Nav";
