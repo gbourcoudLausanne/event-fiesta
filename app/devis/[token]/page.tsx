@@ -32,11 +32,16 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
   const { token } = await params;
   const supabase = createAdminClient();
 
-  const { data: quote } = await supabase
-    .from("quotes")
-    .select("reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, clients(full_name, email, phone, address)")
-    .eq("public_token", token)
-    .single();
+  const [{ data: quote }, { data: settings }] = await Promise.all([
+    supabase
+      .from("quotes")
+      .select(
+        "reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, balance_due_terms, payment_methods, clients(full_name, email, phone, address)",
+      )
+      .eq("public_token", token)
+      .single(),
+    supabase.from("settings").select("creditor_name, iban, twint_phone").eq("id", true).single(),
+  ]);
 
   if (!quote) notFound();
 
@@ -46,6 +51,18 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
   const tax = subtotal * (quote.tax_rate / 100);
   const total = subtotal + tax;
   const isSigned = quote.status === "accepte" && quote.signed_at;
+
+  const depositPercent = quote.deposit_percent;
+  const hasDeposit = !!depositPercent && depositPercent > 0;
+  const depositAmount = hasDeposit ? total * ((depositPercent as number) / 100) : 0;
+  const balanceAmount = total - depositAmount;
+  const paymentMethods = quote.payment_methods ?? [];
+  const showPaymentBlock = hasDeposit || !!quote.balance_due_terms || paymentMethods.length > 0;
+  const PAYMENT_METHOD_LABELS: Record<string, string> = {
+    iban: "Virement bancaire",
+    twint: "Twint",
+    carte: "Carte bancaire sur place",
+  };
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-14">
@@ -106,6 +123,55 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
           <span>Total</span><span style={{ color: "var(--rose-deep)" }}>{chf(total)}</span>
         </div>
       </div>
+
+      {showPaymentBlock && (
+        <div className="mb-8 rounded-2xl p-5" style={{ background: "var(--creme-2)" }}>
+          <p className="mb-3 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+            Conditions de paiement
+          </p>
+
+          {hasDeposit ? (
+            <>
+              <div className="flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
+                <span>Acompte à la commande ({depositPercent}%)</span>
+                <span className="font-semibold" style={{ color: "var(--noir)" }}>{chf(depositAmount)}</span>
+              </div>
+              <div className="mt-1 flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
+                <span>Solde{quote.balance_due_terms ? ` — ${quote.balance_due_terms}` : ""}</span>
+                <span className="font-semibold" style={{ color: "var(--noir)" }}>{chf(balanceAmount)}</span>
+              </div>
+            </>
+          ) : quote.balance_due_terms ? (
+            <div className="flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
+              <span>Paiement — {quote.balance_due_terms}</span>
+              <span className="font-semibold" style={{ color: "var(--noir)" }}>{chf(total)}</span>
+            </div>
+          ) : null}
+
+          {paymentMethods.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-4 border-t pt-3" style={{ borderColor: "rgba(13,11,8,0.08)" }}>
+              {paymentMethods.includes("iban") && (
+                <p className="font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.55)" }}>
+                  <span className="font-semibold" style={{ color: "var(--noir)" }}>{PAYMENT_METHOD_LABELS.iban} : </span>
+                  {settings?.creditor_name ? `${settings.creditor_name} — ` : ""}
+                  {settings?.iban || "coordonnées sur demande"}
+                </p>
+              )}
+              {paymentMethods.includes("twint") && (
+                <p className="font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.55)" }}>
+                  <span className="font-semibold" style={{ color: "var(--noir)" }}>{PAYMENT_METHOD_LABELS.twint} : </span>
+                  {settings?.twint_phone || "coordonnées sur demande"}
+                </p>
+              )}
+              {paymentMethods.includes("carte") && (
+                <p className="font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.55)" }}>
+                  <span className="font-semibold" style={{ color: "var(--noir)" }}>{PAYMENT_METHOD_LABELS.carte}</span>
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {isSigned ? (
         <div className="rounded-2xl p-6" style={{ background: "var(--blush)" }}>

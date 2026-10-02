@@ -20,9 +20,25 @@ export type QuoteFormValues = {
   venue: string;
   tax_rate: number;
   items: QuoteItem[];
+  deposit_percent: number | null;
+  balance_due_terms: string;
+  payment_methods: string[];
 };
 
 const EMPTY_ITEM: QuoteItem = { description: "", quantity: 1, unit: "forfait", unit_price: 0 };
+
+const DEPOSIT_PRESETS = [0, 30, 50, 100];
+const BALANCE_PRESETS = [
+  "À la signature du devis",
+  "7 jours avant l'événement",
+  "30 jours avant l'événement",
+  "À réception de facture",
+];
+const PAYMENT_METHOD_OPTIONS: { value: string; label: string }[] = [
+  { value: "iban", label: "Virement bancaire (IBAN)" },
+  { value: "twint", label: "Twint" },
+  { value: "carte", label: "Carte bancaire sur place" },
+];
 
 export default function QuoteForm({
   clientId,
@@ -39,8 +55,15 @@ export default function QuoteForm({
   const [venue, setVenue] = useState(initial?.venue ?? "");
   const [taxRate, setTaxRate] = useState(initial?.tax_rate ?? 0);
   const [items, setItems] = useState<QuoteItem[]>(initial?.items?.length ? initial.items : [{ ...EMPTY_ITEM }]);
+  const [depositPercent, setDepositPercent] = useState<number | null>(initial?.deposit_percent ?? null);
+  const [balanceDueTerms, setBalanceDueTerms] = useState(initial?.balance_due_terms ?? "");
+  const [paymentMethods, setPaymentMethods] = useState<string[]>(initial?.payment_methods ?? []);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  function togglePaymentMethod(value: string) {
+    setPaymentMethods((prev) => (prev.includes(value) ? prev.filter((m) => m !== value) : [...prev, value]));
+  }
 
   function updateItem(index: number, field: keyof QuoteItem, value: string | number) {
     setItems((prev) => prev.map((it, i) => (i === index ? { ...it, [field]: value } : it)));
@@ -73,6 +96,9 @@ export default function QuoteForm({
       venue,
       tax_rate: taxRate,
       items: cleanItems,
+      deposit_percent: depositPercent,
+      balance_due_terms: balanceDueTerms || null,
+      payment_methods: paymentMethods,
     };
     startTransition(async () => {
       if (quoteId) {
@@ -179,6 +205,96 @@ export default function QuoteForm({
           </div>
           <div className="flex w-56 justify-between font-semibold" style={{ color: "var(--noir)" }}>
             <span>Total</span><span>{chf(total)}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+        <p className="mb-3 font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>Conditions de paiement</p>
+
+        <div className="mb-4">
+          <label className={labelCls} style={labelStyle}>Acompte à la commande</label>
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min={0}
+              max={100}
+              value={depositPercent ?? ""}
+              onChange={(e) => setDepositPercent(e.target.value === "" ? null : parseFloat(e.target.value) || 0)}
+              placeholder="0"
+              className={inputCls + " w-24"}
+              style={inputStyle}
+            />
+            <span className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.5)" }}>%</span>
+            <div className="ml-2 flex gap-1.5">
+              {DEPOSIT_PRESETS.map((p) => (
+                <button
+                  key={p}
+                  type="button"
+                  onClick={() => setDepositPercent(p)}
+                  className="rounded-lg px-2.5 py-1 font-sans text-[12px]"
+                  style={{
+                    background: depositPercent === p ? "var(--blush)" : "transparent",
+                    color: depositPercent === p ? "var(--rose-deep)" : "rgba(13,11,8,0.5)",
+                    border: "1px solid rgba(13,11,8,0.1)",
+                  }}
+                >
+                  {p}%
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <label className={labelCls} style={labelStyle}>Solde — échéance</label>
+          <input
+            value={balanceDueTerms}
+            onChange={(e) => setBalanceDueTerms(e.target.value)}
+            placeholder="ex: 7 jours avant l'événement"
+            className={inputCls}
+            style={inputStyle}
+          />
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            {BALANCE_PRESETS.map((p) => (
+              <button
+                key={p}
+                type="button"
+                onClick={() => setBalanceDueTerms(p)}
+                className="rounded-lg px-2.5 py-1 font-sans text-[12px]"
+                style={{
+                  background: balanceDueTerms === p ? "var(--blush)" : "transparent",
+                  color: balanceDueTerms === p ? "var(--rose-deep)" : "rgba(13,11,8,0.5)",
+                  border: "1px solid rgba(13,11,8,0.1)",
+                }}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className={labelCls} style={labelStyle}>Moyens de paiement proposés</label>
+          <div className="flex flex-wrap gap-2">
+            {PAYMENT_METHOD_OPTIONS.map((opt) => {
+              const active = paymentMethods.includes(opt.value);
+              return (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => togglePaymentMethod(opt.value)}
+                  className="rounded-xl px-3 py-2 font-sans text-[12.5px]"
+                  style={{
+                    background: active ? "var(--rose-deep)" : "transparent",
+                    color: active ? "var(--creme)" : "rgba(13,11,8,0.6)",
+                    border: active ? "1px solid var(--rose-deep)" : "1px solid rgba(13,11,8,0.14)",
+                  }}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

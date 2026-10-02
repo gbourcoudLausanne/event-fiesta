@@ -15,11 +15,16 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   }
 
   const { id } = await params;
-  const { data: quote } = await supabase
-    .from("quotes")
-    .select("reference, title, event_type, event_date, venue, tax_rate, items, created_at, clients(full_name, email, phone, address)")
-    .eq("id", id)
-    .single();
+  const [{ data: quote }, { data: settings }] = await Promise.all([
+    supabase
+      .from("quotes")
+      .select(
+        "reference, title, event_type, event_date, venue, tax_rate, items, created_at, deposit_percent, balance_due_terms, payment_methods, clients(full_name, email, phone, address)",
+      )
+      .eq("id", id)
+      .single(),
+    supabase.from("settings").select("creditor_name, iban, twint_phone").eq("id", true).single(),
+  ]);
 
   if (!quote) {
     return NextResponse.json({ error: "Devis introuvable." }, { status: 404 });
@@ -43,6 +48,10 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       client: client ?? { full_name: "—", email: null, phone: null, address: null },
       items: (quote.items as DevisPdfItem[]) ?? [],
       taxRate: quote.tax_rate,
+      depositPercent: quote.deposit_percent,
+      balanceDueTerms: quote.balance_due_terms,
+      paymentMethods: quote.payment_methods ?? [],
+      settings,
     }),
   );
 

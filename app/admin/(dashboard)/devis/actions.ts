@@ -25,6 +25,9 @@ export async function createQuote(input: {
   venue: string;
   tax_rate: number;
   items: QuoteItem[];
+  deposit_percent: number | null;
+  balance_due_terms: string | null;
+  payment_methods: string[];
 }) {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -38,6 +41,9 @@ export async function createQuote(input: {
       venue: input.venue || null,
       tax_rate: input.tax_rate,
       items: input.items,
+      deposit_percent: input.deposit_percent,
+      balance_due_terms: input.balance_due_terms,
+      payment_methods: input.payment_methods,
     })
     .select("id")
     .single();
@@ -60,6 +66,9 @@ export async function updateQuote(
     venue: string;
     tax_rate: number;
     items: QuoteItem[];
+    deposit_percent: number | null;
+    balance_due_terms: string | null;
+    payment_methods: string[];
   },
 ) {
   const supabase = await createClient();
@@ -72,6 +81,9 @@ export async function updateQuote(
       venue: input.venue || null,
       tax_rate: input.tax_rate,
       items: input.items,
+      deposit_percent: input.deposit_percent,
+      balance_due_terms: input.balance_due_terms,
+      payment_methods: input.payment_methods,
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);

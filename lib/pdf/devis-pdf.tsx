@@ -74,24 +74,24 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     fontSize: 13,
     color: INK,
-    lineHeight: 1.5,
-    marginBottom: 24,
-    paddingBottom: 18,
+    lineHeight: 1.4,
+    marginBottom: 16,
+    paddingBottom: 13,
     borderBottomWidth: 0.5,
     borderBottomColor: BORDER,
   },
 
-  infoGrid: { flexDirection: "row", gap: 24, marginBottom: 26 },
+  infoGrid: { flexDirection: "row", gap: 24, marginBottom: 18 },
   infoBlock: { flex: 1, borderLeftWidth: 2, borderLeftColor: PINK, paddingLeft: 10 },
-  infoLabel: { fontSize: 7, letterSpacing: 1.2, color: MUTED_LIGHT, marginBottom: 5 },
-  infoValue: { fontSize: 10, lineHeight: 1.55, color: INK },
+  infoLabel: { fontSize: 7, letterSpacing: 1.2, color: MUTED_LIGHT, marginBottom: 4 },
+  infoValue: { fontSize: 10, lineHeight: 1.4, color: INK },
 
-  table: { borderTopWidth: 1, borderTopColor: INK, marginTop: 4 },
+  table: { borderTopWidth: 1, borderTopColor: INK, marginTop: 2 },
   tableHeaderRow: {
-    flexDirection: "row", paddingVertical: 7, paddingHorizontal: 6,
+    flexDirection: "row", paddingVertical: 6, paddingHorizontal: 6,
     backgroundColor: CREME_2, borderBottomWidth: 1, borderBottomColor: "rgba(13,11,8,0.15)",
   },
-  tableRow: { flexDirection: "row", paddingVertical: 9, paddingHorizontal: 6, borderBottomWidth: 0.5, borderBottomColor: BORDER },
+  tableRow: { flexDirection: "row", paddingVertical: 6.5, paddingHorizontal: 6, borderBottomWidth: 0.5, borderBottomColor: BORDER },
   colDesc: { flex: 1, paddingRight: 8 },
   colQty: { width: 44, textAlign: "right" },
   colUnit: { width: 56, textAlign: "center" },
@@ -100,22 +100,22 @@ const styles = StyleSheet.create({
   th: { fontSize: 7, letterSpacing: 0.8, color: MUTED_LIGHT, fontWeight: 600 },
   td: { fontSize: 9.5, color: INK },
 
-  totalsBox: { marginTop: 18, alignSelf: "flex-end", width: 230, backgroundColor: CREME_2, borderRadius: 8, padding: 14 },
-  totalsRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 3.5 },
+  totalsBox: { marginTop: 12, alignSelf: "flex-end", width: 230, backgroundColor: CREME_2, borderRadius: 8, padding: 12 },
+  totalsRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 2.5 },
   totalsLabel: { fontSize: 9.5, color: MUTED },
   totalsValue: { fontSize: 9.5, color: INK },
   grandTotalRow: {
     flexDirection: "row", justifyContent: "space-between",
-    paddingTop: 9, marginTop: 5, borderTopWidth: 1, borderTopColor: INK,
+    paddingTop: 7, marginTop: 4, borderTopWidth: 1, borderTopColor: INK,
   },
   grandTotalLabel: { fontFamily: "DM Serif Display", fontSize: 14, color: INK },
   grandTotalValue: { fontFamily: "DM Serif Display", fontSize: 14, color: PINK },
 
   ctaBox: {
-    marginTop: 28,
+    marginTop: 16,
     backgroundColor: PINK,
     borderRadius: 10,
-    paddingVertical: 12,
+    paddingVertical: 10,
     paddingHorizontal: 18,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -124,9 +124,18 @@ const styles = StyleSheet.create({
   ctaText: { fontSize: 9.5, color: "#FAF7F2", fontWeight: 500 },
   ctaContact: { fontSize: 9.5, color: "#FAF7F2", fontWeight: 600 },
 
-  validity: { fontSize: 7.5, color: MUTED_LIGHT, marginTop: 10, textAlign: "center" },
+  validity: { fontSize: 7.5, color: MUTED_LIGHT, marginTop: 8, textAlign: "center" },
 
-  thankYou: { fontFamily: "Cormorant Garamond", fontStyle: "italic", fontSize: 12, color: PINK, marginTop: 20, textAlign: "center" },
+  paymentBlock: { marginTop: 14, paddingTop: 11, borderTopWidth: 0.5, borderTopColor: BORDER },
+  paymentTitle: { fontSize: 7, letterSpacing: 1.2, color: MUTED_LIGHT, marginBottom: 6 },
+  paymentRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 1.5 },
+  paymentLabel: { fontSize: 9.5, color: MUTED },
+  paymentValue: { fontSize: 9.5, color: INK, fontWeight: 600 },
+  paymentMethods: { marginTop: 6, flexDirection: "row", flexWrap: "wrap", gap: 14 },
+  paymentMethodItem: { fontSize: 8.5, color: MUTED, lineHeight: 1.4 },
+  paymentMethodBold: { color: INK, fontWeight: 600 },
+
+  thankYou: { fontFamily: "Cormorant Garamond", fontStyle: "italic", fontSize: 12, color: PINK, marginTop: 14, textAlign: "center" },
 
   footer: {
     position: "absolute", bottom: 24, left: 32, right: 32,
@@ -186,6 +195,14 @@ function BalloonIcon({
 
 export type DevisPdfItem = { description: string; quantity: number; unit: string; unit_price: number };
 
+export type DevisPdfSettings = { creditor_name: string | null; iban: string | null; twint_phone: string | null };
+
+const PAYMENT_METHOD_LABELS: Record<string, string> = {
+  iban: "Virement bancaire",
+  twint: "Twint",
+  carte: "Carte bancaire sur place",
+};
+
 export type DevisPdfProps = {
   reference: string;
   title: string | null;
@@ -196,12 +213,34 @@ export type DevisPdfProps = {
   client: { full_name: string; email: string | null; phone: string | null; address: string | null };
   items: DevisPdfItem[];
   taxRate: number;
+  depositPercent?: number | null;
+  balanceDueTerms?: string | null;
+  paymentMethods?: string[];
+  settings?: DevisPdfSettings | null;
 };
 
-export function DevisPdfDocument({ reference, title, createdAt, eventType, eventDate, venue, client, items, taxRate }: DevisPdfProps) {
+export function DevisPdfDocument({
+  reference,
+  title,
+  createdAt,
+  eventType,
+  eventDate,
+  venue,
+  client,
+  items,
+  taxRate,
+  depositPercent,
+  balanceDueTerms,
+  paymentMethods = [],
+  settings,
+}: DevisPdfProps) {
   const subtotal = items.reduce((s, it) => s + it.quantity * it.unit_price, 0);
   const tax = subtotal * (taxRate / 100);
   const total = subtotal + tax;
+  const hasDeposit = !!depositPercent && depositPercent > 0;
+  const depositAmount = hasDeposit ? total * ((depositPercent as number) / 100) : 0;
+  const balanceAmount = total - depositAmount;
+  const showPaymentBlock = hasDeposit || !!balanceDueTerms || paymentMethods.length > 0;
   const firstName = client.full_name.split(" ")[0];
   const eventLabel = title || eventType || "votre événement";
   const introText =
@@ -291,6 +330,55 @@ export function DevisPdfDocument({ reference, title, createdAt, eventType, event
               <Text style={styles.grandTotalValue}>{chf(total)}</Text>
             </View>
           </View>
+
+          {showPaymentBlock && (
+            <View style={styles.paymentBlock}>
+              <Text style={styles.paymentTitle}>CONDITIONS DE PAIEMENT</Text>
+
+              {hasDeposit ? (
+                <>
+                  <View style={styles.paymentRow}>
+                    <Text style={styles.paymentLabel}>Acompte à la commande ({depositPercent}%)</Text>
+                    <Text style={styles.paymentValue}>{chf(depositAmount)}</Text>
+                  </View>
+                  <View style={styles.paymentRow}>
+                    <Text style={styles.paymentLabel}>
+                      Solde{balanceDueTerms ? ` — ${balanceDueTerms}` : ""}
+                    </Text>
+                    <Text style={styles.paymentValue}>{chf(balanceAmount)}</Text>
+                  </View>
+                </>
+              ) : balanceDueTerms ? (
+                <View style={styles.paymentRow}>
+                  <Text style={styles.paymentLabel}>Paiement — {balanceDueTerms}</Text>
+                  <Text style={styles.paymentValue}>{chf(total)}</Text>
+                </View>
+              ) : null}
+
+              {paymentMethods.length > 0 && (
+                <View style={styles.paymentMethods}>
+                  {paymentMethods.includes("iban") && (
+                    <Text style={styles.paymentMethodItem}>
+                      <Text style={styles.paymentMethodBold}>{PAYMENT_METHOD_LABELS.iban} : </Text>
+                      {settings?.creditor_name ? `${settings.creditor_name} — ` : ""}
+                      {settings?.iban || "coordonnées sur demande"}
+                    </Text>
+                  )}
+                  {paymentMethods.includes("twint") && (
+                    <Text style={styles.paymentMethodItem}>
+                      <Text style={styles.paymentMethodBold}>{PAYMENT_METHOD_LABELS.twint} : </Text>
+                      {settings?.twint_phone || "coordonnées sur demande"}
+                    </Text>
+                  )}
+                  {paymentMethods.includes("carte") && (
+                    <Text style={styles.paymentMethodItem}>
+                      <Text style={styles.paymentMethodBold}>{PAYMENT_METHOD_LABELS.carte}</Text>
+                    </Text>
+                  )}
+                </View>
+              )}
+            </View>
+          )}
 
           <Text style={styles.thankYou}>Merci de votre confiance — j&apos;ai hâte de donner vie à votre événement.</Text>
 
