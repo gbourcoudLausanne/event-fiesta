@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   paymentMethodItem: { fontSize: 8.5, color: MUTED, lineHeight: 1.4 },
   paymentMethodBold: { color: INK, fontWeight: 600 },
 
-  thankYou: { fontFamily: "Cormorant Garamond", fontStyle: "italic", fontSize: 12, color: PINK, marginTop: 14, textAlign: "center" },
+  thankYou: { fontFamily: "Cormorant Garamond", fontStyle: "italic", fontSize: 12, color: PINK, marginTop: 28, textAlign: "center" },
 
   footer: {
     position: "absolute", bottom: 24, left: 32, right: 32,
