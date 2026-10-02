@@ -56,6 +56,7 @@ async function upsertClientFromContact(opts: {
       phone: opts.phone || null,
       address: opts.venue || null,
       notes: dated,
+      source: "site_web",
     });
   }
 }

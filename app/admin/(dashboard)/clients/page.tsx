@@ -11,7 +11,7 @@ export default async function ClientsPage() {
   const supabase = await createClient();
   const { data: clients } = await supabase
     .from("clients")
-    .select("id, full_name, email, phone, address, created_at")
+    .select("id, full_name, email, phone, address, source, created_at")
     .order("created_at", { ascending: false });
 
   return (
@@ -51,9 +51,19 @@ export default async function ClientsPage() {
               style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}
             >
               <Link href={`/admin/clients/${c.id}`} className="flex-1 py-3 transition-opacity hover:opacity-70">
-                <p className="font-sans text-[14px] font-semibold" style={{ color: "var(--noir)" }}>
-                  {c.full_name}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="font-sans text-[14px] font-semibold" style={{ color: "var(--noir)" }}>
+                    {c.full_name}
+                  </p>
+                  {c.source === "site_web" && (
+                    <span
+                      className="rounded-full px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wide"
+                      style={{ background: "var(--blush)", color: "var(--rose-deep)" }}
+                    >
+                      Nouvelle demande
+                    </span>
+                  )}
+                </div>
                 <p className="font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>
                   {[c.email, c.phone, c.address].filter(Boolean).join(" · ") || "—"}
                 </p>
