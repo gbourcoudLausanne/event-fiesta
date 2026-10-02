@@ -278,8 +278,6 @@ export function DevisPdfDocument({
         </View>
 
         <View style={styles.body}>
-          <Text style={styles.intro}>{introText}</Text>
-
           <View style={styles.infoGrid}>
             <View style={styles.infoBlock}>
               <Text style={styles.infoLabel}>CLIENT</Text>
@@ -300,6 +298,8 @@ export function DevisPdfDocument({
               </Text>
             </View>
           </View>
+
+          <Text style={styles.intro}>{introText}</Text>
 
           <View style={styles.table}>
             <View style={styles.tableHeaderRow}>
