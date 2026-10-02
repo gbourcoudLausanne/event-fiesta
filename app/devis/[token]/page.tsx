@@ -37,7 +37,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
     supabase
       .from("quotes")
       .select(
-        "reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, clients(full_name, email, phone, address)",
+        "reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, clients(full_name, email, phone, address)",
       )
       .eq("public_token", token)
       .single(),
@@ -72,6 +72,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
     carte: "Carte bancaire sur place",
   };
 
+  const referenceImages = (quote.reference_images as string[] | null) ?? [];
   const firstName = client?.full_name.split(" ")[0] ?? "";
   const eventLabel = quote.title || quote.event_type || "votre événement";
   const introText =
@@ -232,6 +233,22 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {referenceImages.length > 0 && (
+        <div className="mb-8">
+          <p className="mb-3 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+            Imágenes de referencia
+          </p>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {referenceImages.map((url) => (
+              <a key={url} href={url} target="_blank" rel="noreferrer" className="block aspect-square overflow-hidden rounded-xl" style={{ background: "var(--creme-2)" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={url} alt="Référence visuelle" className="h-full w-full object-cover" />
+              </a>
+            ))}
+          </div>
         </div>
       )}
 

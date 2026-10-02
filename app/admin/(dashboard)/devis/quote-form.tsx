@@ -1,8 +1,27 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Plus, Trash } from "@phosphor-icons/react";
-import { createQuote, updateQuote, type QuoteItem } from "./actions";
+import { Plus, Trash, ImageSquare } from "@phosphor-icons/react";
+import { createQuote, updateQuote, uploadQuoteImage, removeQuoteImage, type QuoteItem } from "./actions";
+
+async function compressImage(file: File, maxDim = 1600, quality = 0.82): Promise<Blob> {
+  const bitmap = await createImageBitmap(file);
+  let width = bitmap.width;
+  let height = bitmap.height;
+  if (width > maxDim || height > maxDim) {
+    const scale = maxDim / Math.max(width, height);
+    width = Math.round(width * scale);
+    height = Math.round(height * scale);
+  }
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  ctx?.drawImage(bitmap, 0, 0, width, height);
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error("Compression échouée"))), "image/jpeg", quality);
+  });
+}
 
 const inputCls = "w-full rounded-xl bg-white px-3.5 py-2.5 font-sans text-[13.5px] outline-none";
 const inputStyle = { border: "1px solid rgba(13,11,8,0.14)", color: "var(--noir)" } as const;
@@ -27,6 +46,7 @@ export type QuoteFormValues = {
   payment_methods: string[];
   pricing_mode: "detaille" | "forfait";
   package_total: number | null;
+  reference_images: string[];
 };
 
 const EMPTY_ITEM: QuoteItem = { title: "", description: "", quantity: 1, unit: "forfait", unit_price: 0 };
@@ -66,8 +86,40 @@ export default function QuoteForm({
   const [depositAmount, setDepositAmount] = useState<number | null>(initial?.deposit_amount ?? null);
   const [balanceDueTerms, setBalanceDueTerms] = useState(initial?.balance_due_terms ?? "");
   const [paymentMethods, setPaymentMethods] = useState<string[]>(initial?.payment_methods ?? []);
+  const [referenceImages, setReferenceImages] = useState<string[]>(initial?.reference_images ?? []);
+  const [uploadingImages, setUploadingImages] = useState(false);
+  const [imageError, setImageError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  async function handleImageUpload(files: FileList | null) {
+    if (!files || files.length === 0 || !quoteId) return;
+    setImageError(null);
+    setUploadingImages(true);
+    try {
+      for (const file of Array.from(files)) {
+        const blob = await compressImage(file);
+        const formData = new FormData();
+        formData.append("file", blob, "reference.jpg");
+        const res = await uploadQuoteImage(quoteId, formData);
+        if (res.error) {
+          setImageError(res.error);
+        } else if (res.url) {
+          setReferenceImages((prev) => [...prev, res.url as string]);
+        }
+      }
+    } catch {
+      setImageError("Échec de la compression ou de l'envoi de l'image.");
+    } finally {
+      setUploadingImages(false);
+    }
+  }
+
+  async function handleImageRemove(url: string) {
+    if (!quoteId) return;
+    setReferenceImages((prev) => prev.filter((u) => u !== url));
+    await removeQuoteImage(quoteId, url);
+  }
 
   function togglePaymentMethod(value: string) {
     setPaymentMethods((prev) => (prev.includes(value) ? prev.filter((m) => m !== value) : [...prev, value]));
@@ -463,6 +515,67 @@ export default function QuoteForm({
             })}
           </div>
         </div>
+      </div>
+
+      <div className="rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+        <p className="mb-1 font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>
+          Images de référence
+        </p>
+        <p className="mb-3 font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.5)" }}>
+          Visibles uniquement sur le lien client (pas sur le PDF). Compressées automatiquement à l&apos;envoi.
+        </p>
+
+        {!quoteId ? (
+          <p className="rounded-xl px-4 py-3 font-sans text-[12.5px]" style={{ background: "var(--creme-2)", color: "rgba(13,11,8,0.55)" }}>
+            Crée d&apos;abord le devis pour pouvoir ajouter des images.
+          </p>
+        ) : (
+          <>
+            {imageError && (
+              <div className="mb-3 rounded-xl px-4 py-2.5 font-sans text-[13px]" style={{ background: "rgba(217,98,138,0.1)", color: "#B0546F" }}>
+                {imageError}
+              </div>
+            )}
+
+            {referenceImages.length > 0 && (
+              <div className="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
+                {referenceImages.map((url) => (
+                  <div key={url} className="group relative aspect-square overflow-hidden rounded-xl" style={{ background: "var(--creme-2)" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={url} alt="Référence" className="h-full w-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => handleImageRemove(url)}
+                      className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-lg opacity-0 transition-opacity group-hover:opacity-100"
+                      style={{ background: "rgba(13,11,8,0.6)", color: "var(--creme)" }}
+                    >
+                      <Trash size={13} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <label
+              className="flex cursor-pointer items-center gap-1.5 rounded-xl px-3 py-2 font-sans text-[12.5px] font-medium"
+              style={{ border: "1px dashed rgba(13,11,8,0.2)", color: "rgba(13,11,8,0.6)" }}
+            >
+              <ImageSquare size={15} />
+              {uploadingImages ? "Envoi en cours…" : "Ajouter des images"}
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                disabled={uploadingImages}
+                onChange={(e) => {
+                  handleImageUpload(e.target.files);
+                  e.target.value = "";
+                }}
+                className="hidden"
+              />
+            </label>
+          </>
+        )}
       </div>
 
       <button

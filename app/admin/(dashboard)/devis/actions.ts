@@ -119,3 +119,44 @@ export async function deleteQuote(id: string, clientId: string | null) {
   if (clientId) revalidatePath(`/admin/clients/${clientId}`);
   redirect(clientId ? `/admin/clients/${clientId}` : "/admin/devis");
 }
+
+export async function uploadQuoteImage(quoteId: string, formData: FormData) {
+  const file = formData.get("file");
+  if (!(file instanceof File)) {
+    return { error: "Aucun fichier reçu." };
+  }
+
+  const supabase = await createClient();
+  const path = `${quoteId}/${crypto.randomUUID()}.jpg`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("quote-images")
+    .upload(path, file, { contentType: "image/jpeg", upsert: false });
+
+  if (uploadError) {
+    return { error: "Échec de l'envoi de l'image." };
+  }
+
+  const { data: urlData } = supabase.storage.from("quote-images").getPublicUrl(path);
+
+  const { data: quote } = await supabase.from("quotes").select("reference_images").eq("id", quoteId).single();
+  const updated = [...(quote?.reference_images ?? []), urlData.publicUrl];
+  await supabase.from("quotes").update({ reference_images: updated }).eq("id", quoteId);
+
+  revalidatePath(`/admin/devis/${quoteId}`);
+  return { url: urlData.publicUrl };
+}
+
+export async function removeQuoteImage(quoteId: string, url: string) {
+  const supabase = await createClient();
+  const { data: quote } = await supabase.from("quotes").select("reference_images").eq("id", quoteId).single();
+  const updated = (quote?.reference_images ?? []).filter((u: string) => u !== url);
+  await supabase.from("quotes").update({ reference_images: updated }).eq("id", quoteId);
+
+  const path = url.split("/quote-images/")[1];
+  if (path) {
+    await supabase.storage.from("quote-images").remove([path]);
+  }
+
+  revalidatePath(`/admin/devis/${quoteId}`);
+}
