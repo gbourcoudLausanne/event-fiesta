@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { renderLeadEmail, renderClientConfirmationEmail } from "@/lib/email-templates";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 
@@ -12,6 +13,52 @@ const MAX_FILES = 5;
 
 // Champs internes/techniques à ne pas recopier tels quels dans le corps de l'e-mail
 const SKIP_FIELDS = new Set(["_honey", "Sujet", "Langue"]);
+// En plus des champs ci-dessus, ceux-là ont déjà leur propre colonne dans
+// la fiche client — pas besoin de les répéter dans les notes.
+const NOTES_EXCLUDE = new Set(["Nom", "Email", "Téléphone", "Référence"]);
+
+async function upsertClientFromContact(opts: {
+  fullName: string;
+  email: string;
+  phone: string;
+  venue: string;
+  fields: { label: string; value: string }[];
+  ref: string;
+}) {
+  const noteLine = opts.fields
+    .filter((f) => !NOTES_EXCLUDE.has(f.label))
+    .map((f) => `${f.label} : ${f.value}`)
+    .join(" · ");
+  const dated = `[${new Date().toLocaleDateString("fr-CH")}${opts.ref ? ` · Réf. ${opts.ref}` : ""}] ${noteLine}`;
+
+  const supabase = createAdminClient();
+  const { data: existing } = await supabase
+    .from("clients")
+    .select("id, notes")
+    .ilike("email", opts.email)
+    .maybeSingle();
+
+  if (existing) {
+    await supabase
+      .from("clients")
+      .update({
+        full_name: opts.fullName,
+        phone: opts.phone || undefined,
+        address: opts.venue || undefined,
+        notes: existing.notes ? `${existing.notes}\n${dated}` : dated,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", existing.id);
+  } else {
+    await supabase.from("clients").insert({
+      full_name: opts.fullName,
+      email: opts.email,
+      phone: opts.phone || null,
+      address: opts.venue || null,
+      notes: dated,
+    });
+  }
+}
 
 export async function POST(req: NextRequest) {
   const apiKey = process.env.RESEND_API_KEY;
@@ -66,6 +113,7 @@ export async function POST(req: NextRequest) {
   const eventType = String(form.get("Type d'événement") ?? "");
   const date = String(form.get("Date souhaitée") ?? "");
   const venue = String(form.get("Lieu") ?? "");
+  const phone = String(form.get("Téléphone") ?? "").trim();
   const subject = String(form.get("Sujet") ?? "") || "Nouvelle demande — Event Fiesta";
   const urgent = subject.startsWith("⚡");
 
@@ -105,6 +153,13 @@ export async function POST(req: NextRequest) {
       });
     } catch (err) {
       console.error("contact: erreur Resend (confirmation client, non bloquant)", err);
+    }
+
+    // Crée ou met à jour la fiche client dans le CRM — best effort, pareil.
+    try {
+      await upsertClientFromContact({ fullName: nom, email, phone, venue, fields, ref });
+    } catch (err) {
+      console.error("contact: erreur upsert client CRM (non bloquant)", err);
     }
 
     return NextResponse.json({ ok: true });
