@@ -36,13 +36,17 @@ const BLUSH = "#F5E6E0";
 const CREME_2 = "#F3EDE6";
 
 const styles = StyleSheet.create({
-  page: { fontFamily: "Montserrat", fontSize: 9.5, color: INK },
+  page: { fontFamily: "Montserrat", fontSize: 9.5, color: INK, padding: 32 },
 
-  headerBand: {
+  headerCard: {
     backgroundColor: BLUSH,
-    paddingTop: 36,
-    paddingBottom: 26,
-    paddingHorizontal: 44,
+    borderRadius: 18,
+    padding: 26,
+    marginBottom: 26,
+    position: "relative",
+    overflow: "hidden",
+  },
+  headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
@@ -52,11 +56,18 @@ const styles = StyleSheet.create({
   logoEvent: { fontFamily: "Montserrat", fontWeight: 500, fontSize: 13, letterSpacing: 2 },
   logoFiesta: { fontFamily: "Cormorant Garamond", fontStyle: "italic", fontSize: 19, color: PINK, marginLeft: 5 },
   tagline: { fontSize: 6.5, letterSpacing: 1.6, color: MUTED_LIGHT, marginTop: 3, marginLeft: 25 },
+  logoRule: { width: 64, height: 1.4, backgroundColor: "#B08B3A", marginTop: 10, marginLeft: 25 },
 
-  docTitle: { fontFamily: "DM Serif Display", fontSize: 26, textAlign: "right", color: INK },
-  docMeta: { fontSize: 8.5, textAlign: "right", color: MUTED, marginTop: 5, lineHeight: 1.5 },
+  docTitle: { fontFamily: "DM Serif Display", fontSize: 28, textAlign: "right", color: INK },
+  refBadge: {
+    alignSelf: "flex-end", marginTop: 7,
+    backgroundColor: "rgba(217,98,138,0.14)", borderRadius: 999,
+    paddingVertical: 3, paddingHorizontal: 10,
+  },
+  refBadgeText: { fontSize: 8, letterSpacing: 0.4, color: PINK_DEEP, fontWeight: 600 },
+  docMeta: { fontSize: 8.5, textAlign: "right", color: MUTED, marginTop: 6 },
 
-  body: { padding: 44, paddingTop: 30 },
+  body: { paddingTop: 6 },
 
   intro: {
     fontFamily: "Cormorant Garamond",
@@ -118,7 +129,7 @@ const styles = StyleSheet.create({
   thankYou: { fontFamily: "Cormorant Garamond", fontStyle: "italic", fontSize: 12, color: PINK, marginTop: 20, textAlign: "center" },
 
   footer: {
-    position: "absolute", bottom: 28, left: 44, right: 44,
+    position: "absolute", bottom: 24, left: 32, right: 32,
     borderTopWidth: 0.5, borderTopColor: BORDER, paddingTop: 10,
     flexDirection: "row", justifyContent: "space-between",
   },
@@ -134,19 +145,41 @@ function fmtDate(d: string | null) {
   return new Date(d).toLocaleDateString("fr-CH", { day: "numeric", month: "long", year: "numeric" });
 }
 
-function BalloonIcon() {
+function BalloonIcon({
+  size = 16,
+  gradientId = "ballonGold",
+  opacity = 1,
+}: {
+  size?: number;
+  gradientId?: string;
+  opacity?: number;
+}) {
+  const h = size * (27 / 16);
   return (
-    <Svg width="16" height="27" viewBox="0 0 18 30">
+    <Svg width={size} height={h} viewBox="0 0 18 30">
       <Defs>
-        <LinearGradient id="ballonGold" x1="0" y1="0" x2="1" y2="1">
+        <LinearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
           <Stop offset="0%" stopColor="#F2879E" />
           <Stop offset="100%" stopColor={PINK_DEEP} />
         </LinearGradient>
       </Defs>
-      <Ellipse cx="9" cy="9" rx="7.8" ry="8.6" fill="url(#ballonGold)" />
-      <Ellipse cx="5.8" cy="5.5" rx="2" ry="2.8" fill="#FFFFFF" fillOpacity={0.3} />
-      <Path d="M7.4 17.6 Q9 20.2 10.6 17.6" stroke="url(#ballonGold)" strokeWidth={1.1} fill="url(#ballonGold)" />
-      <Path d="M9 20.5 Q7.5 24 9 27.5 Q10 29.5 9 30" stroke={PINK_DEEP} strokeWidth={0.65} fill="none" />
+      <Ellipse cx="9" cy="9" rx="7.8" ry="8.6" fill={`url(#${gradientId})`} fillOpacity={opacity} />
+      <Ellipse cx="5.8" cy="5.5" rx="2" ry="2.8" fill="#FFFFFF" fillOpacity={0.3 * opacity} />
+      <Path
+        d="M7.4 17.6 Q9 20.2 10.6 17.6"
+        stroke={`url(#${gradientId})`}
+        strokeWidth={1.1}
+        strokeOpacity={opacity}
+        fill={`url(#${gradientId})`}
+        fillOpacity={opacity}
+      />
+      <Path
+        d="M9 20.5 Q7.5 24 9 27.5 Q10 29.5 9 30"
+        stroke={PINK_DEEP}
+        strokeWidth={0.65}
+        strokeOpacity={opacity}
+        fill="none"
+      />
     </Svg>
   );
 }
@@ -178,23 +211,36 @@ export function DevisPdfDocument({ reference, title, createdAt, eventType, event
   return (
     <Document title={`Devis ${reference} — Event Fiesta`}>
       <Page size="A4" style={styles.page}>
-        <View style={styles.headerBand}>
-          <View>
-            <View style={styles.logoRow}>
-              <BalloonIcon />
-              <View style={styles.logoText}>
-                <Text style={styles.logoEvent}>EVENT</Text>
-                <Text style={styles.logoFiesta}>Fiesta</Text>
-              </View>
-            </View>
-            <Text style={styles.tagline}>DÉCORATION SUR MESURE · LAUSANNE</Text>
+        <View style={styles.headerCard}>
+          <View style={{ position: "absolute", bottom: 14, left: 250 }}>
+            <BalloonIcon size={20} gradientId="bgBallon1" opacity={0.16} />
           </View>
-          <View>
-            <Text style={styles.docTitle}>Devis</Text>
-            <Text style={styles.docMeta}>
-              Réf. {reference}{"\n"}
-              {fmtDate(createdAt)}
-            </Text>
+          <View style={{ position: "absolute", bottom: -12, left: 320 }}>
+            <BalloonIcon size={28} gradientId="bgBallon2" opacity={0.1} />
+          </View>
+          <View style={{ position: "absolute", bottom: 20, right: 150 }}>
+            <BalloonIcon size={15} gradientId="bgBallon3" opacity={0.14} />
+          </View>
+
+          <View style={styles.headerRow}>
+            <View>
+              <View style={styles.logoRow}>
+                <BalloonIcon />
+                <View style={styles.logoText}>
+                  <Text style={styles.logoEvent}>EVENT</Text>
+                  <Text style={styles.logoFiesta}>Fiesta</Text>
+                </View>
+              </View>
+              <Text style={styles.tagline}>DÉCORATION SUR MESURE · LAUSANNE</Text>
+              <View style={styles.logoRule} />
+            </View>
+            <View>
+              <Text style={styles.docTitle}>Devis</Text>
+              <View style={styles.refBadge}>
+                <Text style={styles.refBadgeText}>RÉF. {reference}</Text>
+              </View>
+              <Text style={styles.docMeta}>{fmtDate(createdAt)}</Text>
+            </View>
           </View>
         </View>
 
