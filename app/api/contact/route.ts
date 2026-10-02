@@ -21,10 +21,12 @@ async function upsertClientFromContact(opts: {
   fullName: string;
   email: string;
   phone: string;
-  venue: string;
   fields: { label: string; value: string }[];
   ref: string;
 }) {
+  // Le formulaire de contact ne demande que le lieu de l'événement, jamais
+  // l'adresse personnelle du client — on ne doit donc jamais écrire dans la
+  // colonne "address" (adresse perso) à partir de ces données.
   const noteLine = opts.fields
     .filter((f) => !NOTES_EXCLUDE.has(f.label))
     .map((f) => `${f.label} : ${f.value}`)
@@ -44,7 +46,6 @@ async function upsertClientFromContact(opts: {
       .update({
         full_name: opts.fullName,
         phone: opts.phone || undefined,
-        address: opts.venue || undefined,
         notes: existing.notes ? `${existing.notes}\n${dated}` : dated,
         updated_at: new Date().toISOString(),
       })
@@ -54,7 +55,6 @@ async function upsertClientFromContact(opts: {
       full_name: opts.fullName,
       email: opts.email,
       phone: opts.phone || null,
-      address: opts.venue || null,
       notes: dated,
       source: "site_web",
     });
@@ -158,7 +158,7 @@ export async function POST(req: NextRequest) {
 
     // Crée ou met à jour la fiche client dans le CRM — best effort, pareil.
     try {
-      await upsertClientFromContact({ fullName: nom, email, phone, venue, fields, ref });
+      await upsertClientFromContact({ fullName: nom, email, phone, fields, ref });
     } catch (err) {
       console.error("contact: erreur upsert client CRM (non bloquant)", err);
     }
