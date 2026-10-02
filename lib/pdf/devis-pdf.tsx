@@ -70,11 +70,10 @@ const styles = StyleSheet.create({
   body: { paddingTop: 6 },
 
   intro: {
-    fontFamily: "Cormorant Garamond",
-    fontStyle: "italic",
-    fontSize: 13,
+    fontFamily: "Montserrat",
+    fontSize: 10,
     color: INK,
-    lineHeight: 1.4,
+    lineHeight: 1.5,
     marginBottom: 16,
     paddingBottom: 13,
     borderBottomWidth: 0.5,
