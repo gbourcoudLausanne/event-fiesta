@@ -148,47 +148,83 @@ export default function QuoteForm({
 
       <div className="rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
         <p className="mb-3 font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>Prestations</p>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           {items.map((item, i) => (
-            <div key={i} className="grid grid-cols-[1fr_70px_90px_110px_28px] items-center gap-2">
-              <input
+            <div key={i} className="rounded-xl p-3" style={{ border: "1px solid rgba(13,11,8,0.1)" }}>
+              <textarea
                 value={item.description}
-                onChange={(e) => updateItem(i, "description", e.target.value)}
-                placeholder="Description de la prestation…"
-                className={inputCls}
-                style={inputStyle}
+                onChange={(e) => {
+                  updateItem(i, "description", e.target.value);
+                  e.target.style.height = "auto";
+                  e.target.style.height = `${e.target.scrollHeight}px`;
+                }}
+                ref={(el) => {
+                  if (el) {
+                    el.style.height = "auto";
+                    el.style.height = `${el.scrollHeight}px`;
+                  }
+                }}
+                placeholder="Description de la prestation… (peut être longue, ex: un forfait complet)"
+                rows={1}
+                className="w-full resize-none overflow-hidden rounded-lg bg-white px-3 py-2 font-sans text-[13.5px] leading-relaxed outline-none"
+                style={{ border: "1px solid rgba(13,11,8,0.12)", color: "var(--noir)" }}
               />
-              <input
-                type="number"
-                min={0}
-                value={item.quantity}
-                onChange={(e) => updateItem(i, "quantity", parseFloat(e.target.value) || 0)}
-                className={inputCls + " text-right"}
-                style={inputStyle}
-              />
-              <input
-                value={item.unit}
-                onChange={(e) => updateItem(i, "unit", e.target.value)}
-                placeholder="unité"
-                className={inputCls}
-                style={inputStyle}
-              />
-              <input
-                type="number"
-                min={0}
-                value={item.unit_price}
-                onChange={(e) => updateItem(i, "unit_price", parseFloat(e.target.value) || 0)}
-                className={inputCls + " text-right"}
-                style={inputStyle}
-              />
-              <button
-                type="button"
-                onClick={() => removeItem(i)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-black/5"
-                style={{ color: "rgba(13,11,8,0.35)" }}
-              >
-                <Trash size={14} />
-              </button>
+              <div className="mt-2 flex items-end gap-2">
+                <div className="w-[72px]">
+                  <label className="mb-1 block font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+                    Qté
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={item.quantity}
+                    onChange={(e) => updateItem(i, "quantity", parseFloat(e.target.value) || 0)}
+                    className={inputCls + " text-right"}
+                    style={inputStyle}
+                  />
+                </div>
+                <div className="w-[100px]">
+                  <label className="mb-1 block font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+                    Unité
+                  </label>
+                  <input
+                    value={item.unit}
+                    onChange={(e) => updateItem(i, "unit", e.target.value)}
+                    placeholder="forfait"
+                    className={inputCls}
+                    style={inputStyle}
+                  />
+                </div>
+                <div className="w-[120px]">
+                  <label className="mb-1 block font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+                    Prix unitaire
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={item.unit_price}
+                    onChange={(e) => updateItem(i, "unit_price", parseFloat(e.target.value) || 0)}
+                    className={inputCls + " text-right"}
+                    style={inputStyle}
+                  />
+                </div>
+                <div className="flex-1 text-right">
+                  <p className="mb-1 font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+                    Total ligne
+                  </p>
+                  <p className="py-2.5 font-sans text-[13.5px] font-semibold" style={{ color: "var(--noir)" }}>
+                    {chf(item.quantity * item.unit_price)}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeItem(i)}
+                  className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:bg-black/5"
+                  style={{ color: "rgba(13,11,8,0.35)" }}
+                >
+                  <Trash size={14} />
+                </button>
+              </div>
             </div>
           ))}
         </div>
