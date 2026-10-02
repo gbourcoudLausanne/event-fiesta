@@ -212,16 +212,6 @@ export function DevisPdfDocument({ reference, title, createdAt, eventType, event
     <Document title={`Devis ${reference} — Event Fiesta`}>
       <Page size="A4" style={styles.page}>
         <View style={styles.headerCard}>
-          <View style={{ position: "absolute", bottom: 14, left: 250 }}>
-            <BalloonIcon size={20} gradientId="bgBallon1" opacity={0.16} />
-          </View>
-          <View style={{ position: "absolute", bottom: -12, left: 320 }}>
-            <BalloonIcon size={28} gradientId="bgBallon2" opacity={0.1} />
-          </View>
-          <View style={{ position: "absolute", bottom: 20, right: 150 }}>
-            <BalloonIcon size={15} gradientId="bgBallon3" opacity={0.14} />
-          </View>
-
           <View style={styles.headerRow}>
             <View>
               <View style={styles.logoRow}>
