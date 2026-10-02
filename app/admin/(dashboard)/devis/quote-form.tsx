@@ -56,6 +56,7 @@ const BALANCE_PRESETS = [
   "À la signature du devis",
   "7 jours avant l'événement",
   "30 jours avant l'événement",
+  "Le jour de l'événement",
   "À réception de facture",
 ];
 const PAYMENT_METHOD_OPTIONS: { value: string; label: string }[] = [
