@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: INK,
     lineHeight: 1.5,
+    marginTop: 14,
     marginBottom: 16,
     paddingBottom: 13,
     borderBottomWidth: 0.5,
