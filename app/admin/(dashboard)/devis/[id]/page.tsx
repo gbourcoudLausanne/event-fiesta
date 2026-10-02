@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { FilePdf } from "@phosphor-icons/react/dist/ssr";
 import QuoteForm from "../quote-form";
 import StatusControls from "./status-controls";
 
@@ -35,7 +36,18 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
             {quote.title || "Devis sans titre"}
           </h1>
         </div>
-        <StatusControls quoteId={quote.id} clientId={quote.client_id} status={quote.status} labels={STATUS_LABELS} />
+        <div className="flex items-center gap-2">
+          <a
+            href={`/api/devis/${quote.id}/pdf`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 rounded-xl px-3.5 py-2 font-sans text-[13px] font-medium transition-colors hover:bg-black/5"
+            style={{ border: "1px solid rgba(13,11,8,0.14)", color: "var(--noir)" }}
+          >
+            <FilePdf size={15} /> Aperçu PDF
+          </a>
+          <StatusControls quoteId={quote.id} clientId={quote.client_id} status={quote.status} labels={STATUS_LABELS} />
+        </div>
       </div>
 
       <QuoteForm
