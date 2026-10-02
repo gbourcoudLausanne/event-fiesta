@@ -36,7 +36,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
     supabase
       .from("quotes")
       .select(
-        "reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, balance_due_terms, payment_methods, clients(full_name, email, phone, address)",
+        "reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, clients(full_name, email, phone, address)",
       )
       .eq("public_token", token)
       .single(),
@@ -53,8 +53,14 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
   const isSigned = quote.status === "accepte" && quote.signed_at;
 
   const depositPercent = quote.deposit_percent;
-  const hasDeposit = !!depositPercent && depositPercent > 0;
-  const depositAmount = hasDeposit ? total * ((depositPercent as number) / 100) : 0;
+  const hasFixedDeposit = !!quote.deposit_amount && quote.deposit_amount > 0;
+  const hasPercentDeposit = !hasFixedDeposit && !!depositPercent && depositPercent > 0;
+  const hasDeposit = hasFixedDeposit || hasPercentDeposit;
+  const depositAmount = hasFixedDeposit
+    ? (quote.deposit_amount as number)
+    : hasPercentDeposit
+      ? total * ((depositPercent as number) / 100)
+      : 0;
   const balanceAmount = total - depositAmount;
   const paymentMethods = quote.payment_methods ?? [];
   const showPaymentBlock = hasDeposit || !!quote.balance_due_terms || paymentMethods.length > 0;
@@ -133,7 +139,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
           {hasDeposit ? (
             <>
               <div className="flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
-                <span>Acompte à la commande ({depositPercent}%)</span>
+                <span>Acompte à la commande{hasPercentDeposit ? ` (${depositPercent}%)` : ""}</span>
                 <span className="font-semibold" style={{ color: "var(--noir)" }}>{chf(depositAmount)}</span>
               </div>
               <div className="mt-1 flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>

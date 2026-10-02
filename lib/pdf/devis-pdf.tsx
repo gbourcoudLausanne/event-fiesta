@@ -214,6 +214,7 @@ export type DevisPdfProps = {
   items: DevisPdfItem[];
   taxRate: number;
   depositPercent?: number | null;
+  depositAmountFixed?: number | null;
   balanceDueTerms?: string | null;
   paymentMethods?: string[];
   settings?: DevisPdfSettings | null;
@@ -230,6 +231,7 @@ export function DevisPdfDocument({
   items,
   taxRate,
   depositPercent,
+  depositAmountFixed,
   balanceDueTerms,
   paymentMethods = [],
   settings,
@@ -237,8 +239,10 @@ export function DevisPdfDocument({
   const subtotal = items.reduce((s, it) => s + it.quantity * it.unit_price, 0);
   const tax = subtotal * (taxRate / 100);
   const total = subtotal + tax;
-  const hasDeposit = !!depositPercent && depositPercent > 0;
-  const depositAmount = hasDeposit ? total * ((depositPercent as number) / 100) : 0;
+  const hasFixedDeposit = !!depositAmountFixed && depositAmountFixed > 0;
+  const hasPercentDeposit = !hasFixedDeposit && !!depositPercent && depositPercent > 0;
+  const hasDeposit = hasFixedDeposit || hasPercentDeposit;
+  const depositAmount = hasFixedDeposit ? (depositAmountFixed as number) : hasPercentDeposit ? total * ((depositPercent as number) / 100) : 0;
   const balanceAmount = total - depositAmount;
   const showPaymentBlock = hasDeposit || !!balanceDueTerms || paymentMethods.length > 0;
   const firstName = client.full_name.split(" ")[0];
@@ -338,7 +342,9 @@ export function DevisPdfDocument({
               {hasDeposit ? (
                 <>
                   <View style={styles.paymentRow}>
-                    <Text style={styles.paymentLabel}>Acompte à la commande ({depositPercent}%)</Text>
+                    <Text style={styles.paymentLabel}>
+                      Acompte à la commande{hasPercentDeposit ? ` (${depositPercent}%)` : ""}
+                    </Text>
                     <Text style={styles.paymentValue}>{chf(depositAmount)}</Text>
                   </View>
                   <View style={styles.paymentRow}>

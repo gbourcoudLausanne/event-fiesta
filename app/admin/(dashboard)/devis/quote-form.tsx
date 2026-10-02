@@ -21,6 +21,7 @@ export type QuoteFormValues = {
   tax_rate: number;
   items: QuoteItem[];
   deposit_percent: number | null;
+  deposit_amount: number | null;
   balance_due_terms: string;
   payment_methods: string[];
 };
@@ -55,7 +56,9 @@ export default function QuoteForm({
   const [venue, setVenue] = useState(initial?.venue ?? "");
   const [taxRate, setTaxRate] = useState(initial?.tax_rate ?? 0);
   const [items, setItems] = useState<QuoteItem[]>(initial?.items?.length ? initial.items : [{ ...EMPTY_ITEM }]);
+  const [depositMode, setDepositMode] = useState<"percent" | "amount">(initial?.deposit_amount ? "amount" : "percent");
   const [depositPercent, setDepositPercent] = useState<number | null>(initial?.deposit_percent ?? null);
+  const [depositAmount, setDepositAmount] = useState<number | null>(initial?.deposit_amount ?? null);
   const [balanceDueTerms, setBalanceDueTerms] = useState(initial?.balance_due_terms ?? "");
   const [paymentMethods, setPaymentMethods] = useState<string[]>(initial?.payment_methods ?? []);
   const [error, setError] = useState<string | null>(null);
@@ -80,6 +83,7 @@ export default function QuoteForm({
   const subtotal = items.reduce((s, it) => s + it.quantity * it.unit_price, 0);
   const tax = subtotal * (taxRate / 100);
   const total = subtotal + tax;
+  const depositPreviewAmount = depositPercent ? total * (depositPercent / 100) : 0;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -96,7 +100,8 @@ export default function QuoteForm({
       venue,
       tax_rate: taxRate,
       items: cleanItems,
-      deposit_percent: depositPercent,
+      deposit_percent: depositMode === "percent" ? depositPercent : null,
+      deposit_amount: depositMode === "amount" ? depositAmount : null,
       balance_due_terms: balanceDueTerms || null,
       payment_methods: paymentMethods,
     };
@@ -213,37 +218,87 @@ export default function QuoteForm({
         <p className="mb-3 font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>Conditions de paiement</p>
 
         <div className="mb-4">
-          <label className={labelCls} style={labelStyle}>Acompte à la commande</label>
-          <div className="flex items-center gap-2">
-            <input
-              type="number"
-              min={0}
-              max={100}
-              value={depositPercent ?? ""}
-              onChange={(e) => setDepositPercent(e.target.value === "" ? null : parseFloat(e.target.value) || 0)}
-              placeholder="0"
-              className={inputCls + " w-24"}
-              style={inputStyle}
-            />
-            <span className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.5)" }}>%</span>
-            <div className="ml-2 flex gap-1.5">
-              {DEPOSIT_PRESETS.map((p) => (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => setDepositPercent(p)}
-                  className="rounded-lg px-2.5 py-1 font-sans text-[12px]"
-                  style={{
-                    background: depositPercent === p ? "var(--blush)" : "transparent",
-                    color: depositPercent === p ? "var(--rose-deep)" : "rgba(13,11,8,0.5)",
-                    border: "1px solid rgba(13,11,8,0.1)",
-                  }}
-                >
-                  {p}%
-                </button>
-              ))}
+          <div className="mb-2 flex items-center justify-between">
+            <label className={labelCls} style={{ ...labelStyle, marginBottom: 0 }}>Acompte à la commande</label>
+            <div className="flex gap-1">
+              <button
+                type="button"
+                onClick={() => setDepositMode("percent")}
+                className="rounded-lg px-2.5 py-1 font-sans text-[11.5px] font-medium"
+                style={{
+                  background: depositMode === "percent" ? "var(--rose-deep)" : "transparent",
+                  color: depositMode === "percent" ? "var(--creme)" : "rgba(13,11,8,0.5)",
+                  border: depositMode === "percent" ? "1px solid var(--rose-deep)" : "1px solid rgba(13,11,8,0.14)",
+                }}
+              >
+                %
+              </button>
+              <button
+                type="button"
+                onClick={() => setDepositMode("amount")}
+                className="rounded-lg px-2.5 py-1 font-sans text-[11.5px] font-medium"
+                style={{
+                  background: depositMode === "amount" ? "var(--rose-deep)" : "transparent",
+                  color: depositMode === "amount" ? "var(--creme)" : "rgba(13,11,8,0.5)",
+                  border: depositMode === "amount" ? "1px solid var(--rose-deep)" : "1px solid rgba(13,11,8,0.14)",
+                }}
+              >
+                CHF fixe
+              </button>
             </div>
           </div>
+
+          {depositMode === "percent" ? (
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                min={0}
+                max={100}
+                value={depositPercent ?? ""}
+                onChange={(e) => setDepositPercent(e.target.value === "" ? null : parseFloat(e.target.value) || 0)}
+                placeholder="0"
+                className={inputCls + " w-24"}
+                style={inputStyle}
+              />
+              <span className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.5)" }}>%</span>
+              <div className="ml-2 flex gap-1.5">
+                {DEPOSIT_PRESETS.map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => setDepositPercent(p)}
+                    className="rounded-lg px-2.5 py-1 font-sans text-[12px]"
+                    style={{
+                      background: depositPercent === p ? "var(--blush)" : "transparent",
+                      color: depositPercent === p ? "var(--rose-deep)" : "rgba(13,11,8,0.5)",
+                      border: "1px solid rgba(13,11,8,0.1)",
+                    }}
+                  >
+                    {p}%
+                  </button>
+                ))}
+              </div>
+              {!!depositPercent && (
+                <span className="ml-1 font-sans text-[12.5px] font-medium" style={{ color: "var(--rose-deep)" }}>
+                  ≈ {chf(depositPreviewAmount)}
+                </span>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.5)" }}>CHF</span>
+              <input
+                type="number"
+                min={0}
+                step={0.05}
+                value={depositAmount ?? ""}
+                onChange={(e) => setDepositAmount(e.target.value === "" ? null : parseFloat(e.target.value) || 0)}
+                placeholder="0.00"
+                className={inputCls + " w-32"}
+                style={inputStyle}
+              />
+            </div>
+          )}
         </div>
 
         <div className="mb-4">

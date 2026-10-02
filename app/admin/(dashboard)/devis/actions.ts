@@ -26,6 +26,7 @@ export async function createQuote(input: {
   tax_rate: number;
   items: QuoteItem[];
   deposit_percent: number | null;
+  deposit_amount: number | null;
   balance_due_terms: string | null;
   payment_methods: string[];
 }) {
@@ -42,6 +43,7 @@ export async function createQuote(input: {
       tax_rate: input.tax_rate,
       items: input.items,
       deposit_percent: input.deposit_percent,
+      deposit_amount: input.deposit_amount,
       balance_due_terms: input.balance_due_terms,
       payment_methods: input.payment_methods,
     })
@@ -67,6 +69,7 @@ export async function updateQuote(
     tax_rate: number;
     items: QuoteItem[];
     deposit_percent: number | null;
+    deposit_amount: number | null;
     balance_due_terms: string | null;
     payment_methods: string[];
   },
@@ -82,6 +85,7 @@ export async function updateQuote(
       tax_rate: input.tax_rate,
       items: input.items,
       deposit_percent: input.deposit_percent,
+      deposit_amount: input.deposit_amount,
       balance_due_terms: input.balance_due_terms,
       payment_methods: input.payment_methods,
       updated_at: new Date().toISOString(),
