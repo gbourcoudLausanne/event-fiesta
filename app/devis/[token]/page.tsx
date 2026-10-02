@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { DEVIS_I18N, type DevisLang } from "@/lib/devis-i18n";
 import SignaturePadClient from "./signature-pad-client";
 
 function chf(n: number) {
@@ -7,9 +8,9 @@ function chf(n: number) {
   return `CHF ${intPart.replace(/\B(?=(\d{3})+(?!\d))/g, "'")},${decPart}`;
 }
 
-function fmtDate(d: string | null) {
+function fmtDate(d: string | null, locale: string) {
   if (!d) return "—";
-  return new Date(d).toLocaleDateString("fr-CH", { day: "numeric", month: "long", year: "numeric" });
+  return new Date(d).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" });
 }
 
 function BalloonIcon() {
@@ -29,6 +30,15 @@ function BalloonIcon() {
   );
 }
 
+type TranslatedItem = { title?: string | null; description?: string | null; unit?: string | null };
+type TranslatedContent = {
+  title?: string | null;
+  event_type?: string | null;
+  venue?: string | null;
+  balance_due_terms?: string | null;
+  items?: TranslatedItem[];
+};
+
 export default async function PublicDevisPage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
   const supabase = createAdminClient();
@@ -37,7 +47,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
     supabase
       .from("quotes")
       .select(
-        "reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, clients(full_name, email, phone, address)",
+        "reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, clients(full_name, email, phone, address)",
       )
       .eq("public_token", token)
       .single(),
@@ -46,8 +56,23 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
 
   if (!quote) notFound();
 
+  const lang = ((quote.client_language as DevisLang | null) ?? "fr") as DevisLang;
+  const t = DEVIS_I18N[lang];
+  const tc = (quote.translated_content as TranslatedContent | null) ?? null;
+
   const client = quote.clients as unknown as { full_name: string; email: string | null; phone: string | null; address: string | null } | null;
   const items = (quote.items as { title?: string; description: string; quantity: number; unit: string; unit_price: number }[]) ?? [];
+  const displayItems = items.map((it, i) => ({
+    ...it,
+    title: tc?.items?.[i]?.title ?? it.title,
+    description: tc?.items?.[i]?.description ?? it.description,
+    unit: tc?.items?.[i]?.unit ?? it.unit,
+  }));
+  const displayTitle = tc?.title ?? quote.title;
+  const displayEventType = tc?.event_type ?? quote.event_type;
+  const displayVenue = tc?.venue ?? quote.venue;
+  const displayBalanceDueTerms = tc?.balance_due_terms ?? quote.balance_due_terms;
+
   const isPackageMode = quote.pricing_mode === "forfait";
   const subtotal = items.reduce((s, it) => s + it.quantity * it.unit_price, 0);
   const tax = isPackageMode ? 0 : subtotal * (quote.tax_rate / 100);
@@ -65,19 +90,12 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
       : 0;
   const balanceAmount = total - depositAmount;
   const paymentMethods = quote.payment_methods ?? [];
-  const showPaymentBlock = hasDeposit || !!quote.balance_due_terms || paymentMethods.length > 0;
-  const PAYMENT_METHOD_LABELS: Record<string, string> = {
-    iban: "Virement bancaire",
-    twint: "Twint",
-    carte: "Carte bancaire sur place",
-  };
+  const showPaymentBlock = hasDeposit || !!displayBalanceDueTerms || paymentMethods.length > 0;
 
   const referenceImages = (quote.reference_images as string[] | null) ?? [];
   const firstName = client?.full_name.split(" ")[0] ?? "";
-  const eventLabel = quote.title || quote.event_type || "votre événement";
-  const introText =
-    `Bonjour ${firstName}, c'est avec plaisir que je vous propose cette offre sur mesure pour ${eventLabel.toLowerCase()}` +
-    `${quote.venue ? ` à ${quote.venue}` : ""} — pensée pour vous, selon tout ce que vous m'avez partagé.`;
+  const eventLabel = displayTitle || displayEventType || t.event;
+  const introText = t.intro(firstName, eventLabel, displayVenue ?? null);
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-14">
@@ -90,23 +108,23 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
           </div>
         </div>
         <p className="mt-1 font-sans text-[9.5px] uppercase tracking-[0.2em]" style={{ color: "rgba(13,11,8,0.45)" }}>
-          Décoration sur mesure · Lausanne
+          {t.tagline}
         </p>
-        <p className="mt-5 font-display text-[24px]" style={{ color: "var(--noir)" }}>Devis {quote.reference}</p>
-        <p className="font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>{fmtDate(quote.created_at)}</p>
+        <p className="mt-5 font-display text-[24px]" style={{ color: "var(--noir)" }}>{t.quoteWord} {quote.reference}</p>
+        <p className="font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>{fmtDate(quote.created_at, t.locale)}</p>
       </div>
 
       <div className="mb-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div className="border-l-2 pl-3" style={{ borderColor: "var(--rose-deep)" }}>
-          <p className="mb-1 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.4)" }}>Client</p>
+          <p className="mb-1 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.4)" }}>{t.client}</p>
           <p className="font-sans text-[13.5px] leading-relaxed" style={{ color: "var(--noir)" }}>{client?.full_name}</p>
         </div>
         <div className="border-l-2 pl-3" style={{ borderColor: "var(--rose-deep)" }}>
-          <p className="mb-1 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.4)" }}>Événement</p>
+          <p className="mb-1 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.4)" }}>{t.event}</p>
           <p className="font-sans text-[13.5px] leading-relaxed" style={{ color: "var(--noir)" }}>
-            {quote.title || quote.event_type || "—"}
-            {quote.event_date && <><br />Le {fmtDate(quote.event_date)}</>}
-            {quote.venue && <><br />{quote.venue}</>}
+            {displayTitle || displayEventType || "—"}
+            {quote.event_date && <><br />{fmtDate(quote.event_date, t.locale)}</>}
+            {displayVenue && <><br />{displayVenue}</>}
           </p>
         </div>
       </div>
@@ -122,10 +140,10 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
         <>
           <div className="mb-6 overflow-hidden rounded-2xl bg-white" style={{ border: "1px solid rgba(13,11,8,0.1)" }}>
             <div className="flex px-4 py-2.5" style={{ background: "var(--creme-2)" }}>
-              <p className="w-40 shrink-0 font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>Service</p>
-              <p className="font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>Description</p>
+              <p className="w-40 shrink-0 font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>{t.service}</p>
+              <p className="font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>{t.description}</p>
             </div>
-            {items.map((item, i) => (
+            {displayItems.map((item, i) => (
               <div key={i} className="flex gap-3 px-4 py-3" style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}>
                 <p className="w-40 shrink-0 font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>{item.title || "—"}</p>
                 <p className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.7)" }}>{item.description}</p>
@@ -134,7 +152,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
           </div>
 
           <div className="mb-8 rounded-xl p-4 text-center" style={{ background: "var(--creme-2)", border: "1px solid rgba(217,98,138,0.25)" }}>
-            <span className="font-display text-[17px]" style={{ color: "var(--noir)" }}>Prix total du forfait : </span>
+            <span className="font-display text-[17px]" style={{ color: "var(--noir)" }}>{t.packageTotalLabel} </span>
             <span className="font-display text-[17px]" style={{ color: "var(--rose-deep)" }}>{chf(total)}</span>
           </div>
         </>
@@ -142,10 +160,10 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
         <>
           <div className="mb-6 overflow-hidden rounded-2xl bg-white" style={{ border: "1px solid rgba(13,11,8,0.1)" }}>
             <div className="flex items-center justify-between px-4 py-2.5" style={{ background: "var(--creme-2)" }}>
-              <p className="font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>Prestation</p>
-              <p className="font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>Total</p>
+              <p className="font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>{t.prestation}</p>
+              <p className="font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>{t.total}</p>
             </div>
-            {items.map((item, i) => (
+            {displayItems.map((item, i) => (
               <div key={i} className="flex items-start justify-between gap-3 px-4 py-3" style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}>
                 <div className="min-w-0">
                   <p className="font-sans text-[13px]" style={{ color: "var(--noir)" }}>{item.description}</p>
@@ -160,13 +178,13 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
 
           <div className="mb-8 ml-auto w-56 rounded-xl p-4" style={{ background: "var(--creme-2)" }}>
             <div className="flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
-              <span>Sous-total</span><span>{chf(subtotal)}</span>
+              <span>{t.subtotal}</span><span>{chf(subtotal)}</span>
             </div>
             <div className="mt-1 flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
-              <span>TVA ({quote.tax_rate}%)</span><span>{chf(tax)}</span>
+              <span>{t.vat(quote.tax_rate)}</span><span>{chf(tax)}</span>
             </div>
             <div className="mt-2 flex justify-between border-t pt-2 font-display text-[16px]" style={{ borderColor: "rgba(13,11,8,0.15)", color: "var(--noir)" }}>
-              <span>Total</span><span style={{ color: "var(--rose-deep)" }}>{chf(total)}</span>
+              <span>{t.total}</span><span style={{ color: "var(--rose-deep)" }}>{chf(total)}</span>
             </div>
           </div>
         </>
@@ -175,23 +193,23 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
       {showPaymentBlock && (
         <div className="mb-8 rounded-2xl p-5" style={{ background: "var(--creme-2)" }}>
           <p className="mb-3 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.45)" }}>
-            Conditions de paiement
+            {t.paymentConditions}
           </p>
 
           {hasDeposit ? (
             <>
               <div className="flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
-                <span>Acompte à la commande{hasPercentDeposit ? ` (${depositPercent}%)` : ""}</span>
+                <span>{t.depositAtOrder}{hasPercentDeposit ? ` (${depositPercent}%)` : ""}</span>
                 <span className="font-semibold" style={{ color: "var(--noir)" }}>{chf(depositAmount)}</span>
               </div>
               <div className="mt-1 flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
-                <span>Solde{quote.balance_due_terms ? ` — ${quote.balance_due_terms}` : ""}</span>
+                <span>{t.balance}{displayBalanceDueTerms ? ` — ${displayBalanceDueTerms}` : ""}</span>
                 <span className="font-semibold" style={{ color: "var(--noir)" }}>{chf(balanceAmount)}</span>
               </div>
             </>
-          ) : quote.balance_due_terms ? (
+          ) : displayBalanceDueTerms ? (
             <div className="flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
-              <span>Paiement — {quote.balance_due_terms}</span>
+              <span>{t.payment} — {displayBalanceDueTerms}</span>
               <span className="font-semibold" style={{ color: "var(--noir)" }}>{chf(total)}</span>
             </div>
           ) : null}
@@ -200,7 +218,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
             <div className="mt-3 flex flex-wrap gap-4 border-t pt-3" style={{ borderColor: "rgba(13,11,8,0.08)" }}>
               {paymentMethods.includes("iban") && (
                 <p className="font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.55)" }}>
-                  <span className="font-semibold" style={{ color: "var(--noir)" }}>{PAYMENT_METHOD_LABELS.iban} : </span>
+                  <span className="font-semibold" style={{ color: "var(--noir)" }}>{t.paymentMethodIban} : </span>
                   {settings?.iban ? (
                     <>
                       {settings.creditor_name ? `${settings.creditor_name} — ` : ""}
@@ -208,7 +226,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
                     </>
                   ) : (
                     <>
-                      coordonnées sur{" "}
+                      {t.coordsOnWhatsapp}{" "}
                       <a href="https://wa.me/41779143855" target="_blank" rel="noreferrer" className="underline" style={{ color: "var(--rose-deep)" }}>
                         WhatsApp
                       </a>
@@ -218,17 +236,17 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
               )}
               {paymentMethods.includes("twint") && (
                 <p className="font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.55)" }}>
-                  <span className="font-semibold" style={{ color: "var(--noir)" }}>{PAYMENT_METHOD_LABELS.twint} : </span>
+                  <span className="font-semibold" style={{ color: "var(--noir)" }}>{t.paymentMethodTwint} : </span>
                   {settings?.twint_phone || (
                     <a href="https://wa.me/41779143855" target="_blank" rel="noreferrer" className="underline" style={{ color: "var(--rose-deep)" }}>
-                      demander le numéro sur WhatsApp
+                      {t.askTwintOnWhatsapp}
                     </a>
                   )}
                 </p>
               )}
               {paymentMethods.includes("carte") && (
                 <p className="font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.55)" }}>
-                  <span className="font-semibold" style={{ color: "var(--noir)" }}>{PAYMENT_METHOD_LABELS.carte}</span>
+                  <span className="font-semibold" style={{ color: "var(--noir)" }}>{t.paymentMethodCarte}</span>
                 </p>
               )}
             </div>
@@ -239,13 +257,13 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
       {referenceImages.length > 0 && (
         <div className="mb-8">
           <p className="mb-3 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.45)" }}>
-            Imágenes de referencia
+            {t.referenceImagesTitle}
           </p>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {referenceImages.map((url) => (
               <a key={url} href={url} target="_blank" rel="noreferrer" className="block aspect-square overflow-hidden rounded-xl" style={{ background: "var(--creme-2)" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={url} alt="Référence visuelle" className="h-full w-full object-cover" />
+                <img src={url} alt={t.referenceImagesTitle} className="h-full w-full object-cover" />
               </a>
             ))}
           </div>
@@ -254,29 +272,25 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
 
       <div className="mb-8">
         <p className="mb-2 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.45)" }}>
-          Conditions y observaciones
+          {t.notesTitle}
         </p>
         <p className="mb-2 font-sans text-[11.5px] leading-relaxed" style={{ color: "rgba(13,11,8,0.6)" }}>
-          El precio incluye la decoración y el montaje de los elementos descritos anteriormente. Los alimentos,
-          bebidas, pastel y pasabocas que aparecen en las imágenes de referencia no están incluidos, salvo acuerdo
-          expreso.
+          {t.notesP1}
         </p>
         <p className="font-sans text-[11.5px] leading-relaxed" style={{ color: "rgba(13,11,8,0.6)" }}>
-          Las imágenes son referencias visuales creadas con IA para representar el estilo, los colores y la
-          propuesta general. La decoración final seguirá esta inspiración y podrá presentar pequeñas variaciones
-          según el espacio y los materiales disponibles.
+          {t.notesP2}
         </p>
       </div>
 
       <p className="mb-6 text-center font-serif text-[16px] italic" style={{ color: "var(--rose-deep)" }}>
-        Merci de votre confiance — j&apos;ai hâte de donner vie à votre événement.
+        {t.thankYou}
       </p>
 
       <div
         className="mb-2 flex items-center justify-between rounded-2xl px-5 py-3"
         style={{ background: "var(--rose-deep)" }}
       >
-        <span className="font-sans text-[13px]" style={{ color: "var(--creme)" }}>Une question sur ce devis ?</span>
+        <span className="font-sans text-[13px]" style={{ color: "var(--creme)" }}>{t.ctaQuestion}</span>
         <a
           href="https://wa.me/41779143855"
           target="_blank"
@@ -288,22 +302,22 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
         </a>
       </div>
       <p className="mb-8 text-center font-sans text-[11px]" style={{ color: "rgba(13,11,8,0.4)" }}>
-        Devis valable 30 jours à compter de la date d&apos;émission.
+        {t.validity}
       </p>
 
       {isSigned ? (
         <div className="rounded-2xl p-6" style={{ background: "var(--blush)" }}>
-          <p className="font-display text-[19px]" style={{ color: "var(--noir)" }}>✓ Devis accepté</p>
+          <p className="font-display text-[19px]" style={{ color: "var(--noir)" }}>{t.signedTitle}</p>
           <p className="mt-1 font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
-            Signé par {quote.signed_by} le {fmtDate(quote.signed_at)}
+            {t.signedBy(quote.signed_by ?? "", fmtDate(quote.signed_at, t.locale))}
           </p>
           {quote.signature_data && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={quote.signature_data} alt="Signature" className="mt-3 h-20 rounded-lg bg-white p-2" />
+            <img src={quote.signature_data} alt={t.signatureLabel} className="mt-3 h-20 rounded-lg bg-white p-2" />
           )}
         </div>
       ) : (
-        <SignaturePadClient token={token} />
+        <SignaturePadClient token={token} lang={lang} />
       )}
     </div>
   );

@@ -1,5 +1,6 @@
 import { Document, Page, View, Text, Font, StyleSheet, Svg, Path, Ellipse, Defs, LinearGradient, Stop } from "@react-pdf/renderer";
 import path from "path";
+import { DEVIS_I18N, type DevisLang } from "@/lib/devis-i18n";
 
 const FONTS = path.join(process.cwd(), "lib/pdf/fonts");
 
@@ -174,9 +175,9 @@ function chf(n: number) {
   return `CHF ${intPart.replace(/\B(?=(\d{3})+(?!\d))/g, "'")},${decPart}`;
 }
 
-function fmtDate(d: string | null) {
+function fmtDate(d: string | null, locale: string) {
   if (!d) return "—";
-  return new Date(d).toLocaleDateString("fr-CH", { day: "numeric", month: "long", year: "numeric" });
+  return new Date(d).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" });
 }
 
 function BalloonIcon({
@@ -222,10 +223,12 @@ export type DevisPdfItem = { title?: string; description: string; quantity: numb
 
 export type DevisPdfSettings = { creditor_name: string | null; iban: string | null; twint_phone: string | null };
 
-const PAYMENT_METHOD_LABELS: Record<string, string> = {
-  iban: "Virement bancaire",
-  twint: "Twint",
-  carte: "Carte bancaire sur place",
+export type DevisPdfTranslatedContent = {
+  title?: string | null;
+  event_type?: string | null;
+  venue?: string | null;
+  balance_due_terms?: string | null;
+  items?: { title?: string | null; description?: string | null; unit?: string | null }[];
 };
 
 export type DevisPdfProps = {
@@ -245,6 +248,8 @@ export type DevisPdfProps = {
   settings?: DevisPdfSettings | null;
   pricingMode?: "detaille" | "forfait";
   packageTotal?: number | null;
+  lang?: DevisLang;
+  translatedContent?: DevisPdfTranslatedContent | null;
 };
 
 export function DevisPdfDocument({
@@ -264,7 +269,22 @@ export function DevisPdfDocument({
   settings,
   pricingMode = "detaille",
   packageTotal,
+  lang = "fr",
+  translatedContent,
 }: DevisPdfProps) {
+  const t = DEVIS_I18N[lang];
+  const tc = translatedContent ?? null;
+  const displayTitle = tc?.title ?? title;
+  const displayEventType = tc?.event_type ?? eventType;
+  const displayVenue = tc?.venue ?? venue;
+  const displayBalanceDueTerms = tc?.balance_due_terms ?? balanceDueTerms;
+  const displayItems = items.map((it, i) => ({
+    ...it,
+    title: tc?.items?.[i]?.title ?? it.title,
+    description: tc?.items?.[i]?.description ?? it.description,
+    unit: tc?.items?.[i]?.unit ?? it.unit,
+  }));
+
   const isPackageMode = pricingMode === "forfait";
   const subtotal = items.reduce((s, it) => s + it.quantity * it.unit_price, 0);
   const tax = isPackageMode ? 0 : subtotal * (taxRate / 100);
@@ -274,12 +294,10 @@ export function DevisPdfDocument({
   const hasDeposit = hasFixedDeposit || hasPercentDeposit;
   const depositAmount = hasFixedDeposit ? (depositAmountFixed as number) : hasPercentDeposit ? total * ((depositPercent as number) / 100) : 0;
   const balanceAmount = total - depositAmount;
-  const showPaymentBlock = hasDeposit || !!balanceDueTerms || paymentMethods.length > 0;
+  const showPaymentBlock = hasDeposit || !!displayBalanceDueTerms || paymentMethods.length > 0;
   const firstName = client.full_name.split(" ")[0];
-  const eventLabel = title || eventType || "votre événement";
-  const introText =
-    `Bonjour ${firstName}, c'est avec plaisir que je vous propose cette offre sur mesure pour ${eventLabel.toLowerCase()}` +
-    `${venue ? ` à ${venue}` : ""} — pensée pour vous, selon tout ce que vous m'avez partagé.`;
+  const eventLabel = displayTitle || displayEventType || t.event;
+  const introText = t.intro(firstName, eventLabel, displayVenue ?? null);
 
   return (
     <Document title={`Devis ${reference} — Event Fiesta`}>
@@ -294,15 +312,15 @@ export function DevisPdfDocument({
                   <Text style={styles.logoFiesta}>Fiesta</Text>
                 </View>
               </View>
-              <Text style={styles.tagline}>DÉCORATION SUR MESURE · LAUSANNE</Text>
+              <Text style={styles.tagline}>{t.tagline.toUpperCase()}</Text>
               <View style={styles.logoRule} />
             </View>
             <View>
-              <Text style={styles.docTitle}>Devis</Text>
+              <Text style={styles.docTitle}>{t.quoteWord}</Text>
               <View style={styles.refBadge}>
-                <Text style={styles.refBadgeText}>RÉF. {reference}</Text>
+                <Text style={styles.refBadgeText}>{t.ref.toUpperCase()} {reference}</Text>
               </View>
-              <Text style={styles.docMeta}>{fmtDate(createdAt)}</Text>
+              <Text style={styles.docMeta}>{fmtDate(createdAt, t.locale)}</Text>
             </View>
           </View>
         </View>
@@ -310,7 +328,7 @@ export function DevisPdfDocument({
         <View style={styles.body}>
           <View style={styles.infoGrid}>
             <View style={styles.infoBlock}>
-              <Text style={styles.infoLabel}>CLIENT</Text>
+              <Text style={styles.infoLabel}>{t.client.toUpperCase()}</Text>
               <Text style={styles.infoValue}>
                 {client.full_name}
                 {client.address ? `\n${client.address}` : ""}
@@ -319,12 +337,12 @@ export function DevisPdfDocument({
               </Text>
             </View>
             <View style={styles.infoBlock}>
-              <Text style={styles.infoLabel}>ÉVÉNEMENT</Text>
+              <Text style={styles.infoLabel}>{t.event.toUpperCase()}</Text>
               <Text style={styles.infoValue}>
-                {title || eventType || "—"}
-                {eventType && title ? `\n${eventType}` : ""}
-                {eventDate ? `\nLe ${fmtDate(eventDate)}` : ""}
-                {venue ? `\n${venue}` : ""}
+                {displayTitle || displayEventType || "—"}
+                {displayEventType && displayTitle ? `\n${displayEventType}` : ""}
+                {eventDate ? `\n${fmtDate(eventDate, t.locale)}` : ""}
+                {displayVenue ? `\n${displayVenue}` : ""}
               </Text>
             </View>
           </View>
@@ -335,10 +353,10 @@ export function DevisPdfDocument({
             <>
               <View style={styles.table}>
                 <View style={styles.packageHeaderRow}>
-                  <Text style={[styles.th, styles.colService]}>SERVICE</Text>
-                  <Text style={[styles.th, styles.colDesc]}>DESCRIPTION</Text>
+                  <Text style={[styles.th, styles.colService]}>{t.service.toUpperCase()}</Text>
+                  <Text style={[styles.th, styles.colDesc]}>{t.description.toUpperCase()}</Text>
                 </View>
-                {items.map((item, i) => (
+                {displayItems.map((item, i) => (
                   <View key={i} style={styles.packageRow}>
                     <Text style={[styles.serviceName, styles.colService]}>{item.title || "—"}</Text>
                     <Text style={[styles.td, styles.colDesc]}>{item.description}</Text>
@@ -348,7 +366,7 @@ export function DevisPdfDocument({
 
               <View style={styles.packageTotalBanner}>
                 <Text>
-                  <Text style={styles.packageTotalLabel}>Prix total du forfait : </Text>
+                  <Text style={styles.packageTotalLabel}>{t.packageTotalLabel} </Text>
                   <Text style={styles.packageTotalValue}>{chf(total)}</Text>
                 </Text>
               </View>
@@ -357,13 +375,13 @@ export function DevisPdfDocument({
             <>
               <View style={styles.table}>
                 <View style={styles.tableHeaderRow}>
-                  <Text style={[styles.th, styles.colDesc]}>PRESTATION</Text>
-                  <Text style={[styles.th, styles.colQty]}>QTÉ</Text>
-                  <Text style={[styles.th, styles.colUnit]}>UNITÉ</Text>
-                  <Text style={[styles.th, styles.colPrice]}>P.U.</Text>
-                  <Text style={[styles.th, styles.colTotal]}>TOTAL</Text>
+                  <Text style={[styles.th, styles.colDesc]}>{t.prestation.toUpperCase()}</Text>
+                  <Text style={[styles.th, styles.colQty]}>{t.qty.toUpperCase()}</Text>
+                  <Text style={[styles.th, styles.colUnit]}>{t.unit.toUpperCase()}</Text>
+                  <Text style={[styles.th, styles.colPrice]}>{t.unitPrice.toUpperCase()}</Text>
+                  <Text style={[styles.th, styles.colTotal]}>{t.total.toUpperCase()}</Text>
                 </View>
-                {items.map((item, i) => (
+                {displayItems.map((item, i) => (
                   <View key={i} style={styles.tableRow}>
                     <Text style={[styles.td, styles.colDesc]}>{item.description}</Text>
                     <Text style={[styles.td, styles.colQty]}>{item.quantity}</Text>
@@ -376,15 +394,15 @@ export function DevisPdfDocument({
 
               <View style={styles.totalsBox}>
                 <View style={styles.totalsRow}>
-                  <Text style={styles.totalsLabel}>Sous-total</Text>
+                  <Text style={styles.totalsLabel}>{t.subtotal}</Text>
                   <Text style={styles.totalsValue}>{chf(subtotal)}</Text>
                 </View>
                 <View style={styles.totalsRow}>
-                  <Text style={styles.totalsLabel}>TVA ({taxRate}%)</Text>
+                  <Text style={styles.totalsLabel}>{t.vat(taxRate)}</Text>
                   <Text style={styles.totalsValue}>{chf(tax)}</Text>
                 </View>
                 <View style={styles.grandTotalRow}>
-                  <Text style={styles.grandTotalLabel}>Total</Text>
+                  <Text style={styles.grandTotalLabel}>{t.total}</Text>
                   <Text style={styles.grandTotalValue}>{chf(total)}</Text>
                 </View>
               </View>
@@ -393,26 +411,26 @@ export function DevisPdfDocument({
 
           {showPaymentBlock && (
             <View style={styles.paymentBlock}>
-              <Text style={styles.paymentTitle}>CONDITIONS DE PAIEMENT</Text>
+              <Text style={styles.paymentTitle}>{t.paymentConditions.toUpperCase()}</Text>
 
               {hasDeposit ? (
                 <>
                   <View style={styles.paymentRow}>
                     <Text style={styles.paymentLabel}>
-                      Acompte à la commande{hasPercentDeposit ? ` (${depositPercent}%)` : ""}
+                      {t.depositAtOrder}{hasPercentDeposit ? ` (${depositPercent}%)` : ""}
                     </Text>
                     <Text style={styles.paymentValue}>{chf(depositAmount)}</Text>
                   </View>
                   <View style={styles.paymentRow}>
                     <Text style={styles.paymentLabel}>
-                      Solde{balanceDueTerms ? ` — ${balanceDueTerms}` : ""}
+                      {t.balance}{displayBalanceDueTerms ? ` — ${displayBalanceDueTerms}` : ""}
                     </Text>
                     <Text style={styles.paymentValue}>{chf(balanceAmount)}</Text>
                   </View>
                 </>
-              ) : balanceDueTerms ? (
+              ) : displayBalanceDueTerms ? (
                 <View style={styles.paymentRow}>
-                  <Text style={styles.paymentLabel}>Paiement — {balanceDueTerms}</Text>
+                  <Text style={styles.paymentLabel}>{t.payment} — {displayBalanceDueTerms}</Text>
                   <Text style={styles.paymentValue}>{chf(total)}</Text>
                 </View>
               ) : null}
@@ -421,20 +439,20 @@ export function DevisPdfDocument({
                 <View style={styles.paymentMethods}>
                   {paymentMethods.includes("iban") && (
                     <Text style={styles.paymentMethodItem}>
-                      <Text style={styles.paymentMethodBold}>{PAYMENT_METHOD_LABELS.iban} : </Text>
+                      <Text style={styles.paymentMethodBold}>{t.paymentMethodIban} : </Text>
                       {settings?.creditor_name ? `${settings.creditor_name} — ` : ""}
-                      {settings?.iban || "coordonnées sur demande"}
+                      {settings?.iban || "—"}
                     </Text>
                   )}
                   {paymentMethods.includes("twint") && (
                     <Text style={styles.paymentMethodItem}>
-                      <Text style={styles.paymentMethodBold}>{PAYMENT_METHOD_LABELS.twint} : </Text>
-                      {settings?.twint_phone || "coordonnées sur demande"}
+                      <Text style={styles.paymentMethodBold}>{t.paymentMethodTwint} : </Text>
+                      {settings?.twint_phone || "—"}
                     </Text>
                   )}
                   {paymentMethods.includes("carte") && (
                     <Text style={styles.paymentMethodItem}>
-                      <Text style={styles.paymentMethodBold}>{PAYMENT_METHOD_LABELS.carte}</Text>
+                      <Text style={styles.paymentMethodBold}>{t.paymentMethodCarte}</Text>
                     </Text>
                   )}
                 </View>
@@ -443,30 +461,22 @@ export function DevisPdfDocument({
           )}
 
           <View style={styles.notesBlock}>
-            <Text style={styles.notesTitle}>CONDITIONS Y OBSERVACIONES</Text>
-            <Text style={styles.notesText}>
-              El precio incluye la decoración y el montaje de los elementos descritos anteriormente. Los alimentos,
-              bebidas, pastel y pasabocas que aparecen en las imágenes de referencia no están incluidos, salvo
-              acuerdo expreso.
-            </Text>
-            <Text style={styles.notesText}>
-              Las imágenes son referencias visuales creadas con IA para representar el estilo, los colores y la
-              propuesta general. La decoración final seguirá esta inspiración y podrá presentar pequeñas variaciones
-              según el espacio y los materiales disponibles.
-            </Text>
+            <Text style={styles.notesTitle}>{t.notesTitle.toUpperCase()}</Text>
+            <Text style={styles.notesText}>{t.notesP1}</Text>
+            <Text style={styles.notesText}>{t.notesP2}</Text>
           </View>
 
-          <Text style={styles.thankYou}>Merci de votre confiance — j&apos;ai hâte de donner vie à votre événement.</Text>
+          <Text style={styles.thankYou}>{t.thankYou}</Text>
 
           <View style={styles.ctaBox}>
-            <Text style={styles.ctaText}>Une question sur ce devis ?</Text>
+            <Text style={styles.ctaText}>{t.ctaQuestion}</Text>
             <Text style={styles.ctaContact}>WhatsApp +41 77 914 38 55</Text>
           </View>
-          <Text style={styles.validity}>Devis valable 30 jours à compter de la date d&apos;émission.</Text>
+          <Text style={styles.validity}>{t.validity}</Text>
         </View>
 
         <View style={styles.footer} fixed>
-          <Text style={styles.footerText}>Event Fiesta · Lausanne & Suisse romande</Text>
+          <Text style={styles.footerText}>Event Fiesta · {t.footerRegion}</Text>
           <Text style={styles.footerText}>contact@eventfiesta.ch · +41 77 914 38 55</Text>
         </View>
       </Page>

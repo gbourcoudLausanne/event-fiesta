@@ -4,6 +4,7 @@ import { FilePdf } from "@phosphor-icons/react/dist/ssr";
 import QuoteForm from "../quote-form";
 import StatusControls from "./status-controls";
 import CopyLinkButton from "./copy-link-button";
+import LanguageControls from "./language-controls";
 
 function fmtDate(d: string | null) {
   if (!d) return "—";
@@ -24,7 +25,7 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
   const { data: quote } = await supabase
     .from("quotes")
     .select(
-      "id, reference, title, event_type, event_date, venue, tax_rate, items, status, client_id, public_token, signed_by, signed_at, signature_data, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, clients(full_name)",
+      "id, reference, title, event_type, event_date, venue, tax_rate, items, status, client_id, public_token, signed_by, signed_at, signature_data, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, clients(full_name)",
     )
     .eq("id", id)
     .single();
@@ -35,6 +36,10 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
 
   return (
     <div>
+      <div className="mb-4 flex justify-end">
+        <LanguageControls quoteId={quote.id} clientLanguage={quote.client_language} />
+      </div>
+
       <div className="mb-6 flex items-start justify-between">
         <div>
           <p className="mb-1 font-sans text-[11px] uppercase tracking-[0.12em]" style={{ color: "rgba(13,11,8,0.45)" }}>

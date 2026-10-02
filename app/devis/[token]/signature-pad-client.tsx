@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import SignaturePad from "signature_pad";
 import { signQuote } from "./actions";
+import { DEVIS_I18N, type DevisLang } from "@/lib/devis-i18n";
 
-export default function SignaturePadClient({ token }: { token: string }) {
+export default function SignaturePadClient({ token, lang = "fr" }: { token: string; lang?: DevisLang }) {
+  const t = DEVIS_I18N[lang];
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const padRef = useRef<SignaturePad | null>(null);
   const [name, setName] = useState("");
@@ -39,11 +41,11 @@ export default function SignaturePadClient({ token }: { token: string }) {
   async function handleSubmit() {
     setError(null);
     if (!name.trim()) {
-      setError("Merci d'indiquer votre nom.");
+      setError(t.errorName);
       return;
     }
     if (!padRef.current || padRef.current.isEmpty()) {
-      setError("Merci de signer dans le cadre ci-dessus.");
+      setError(t.errorSignature);
       return;
     }
     setIsPending(true);
@@ -61,10 +63,10 @@ export default function SignaturePadClient({ token }: { token: string }) {
     return (
       <div className="rounded-2xl p-6 text-center" style={{ background: "var(--blush)" }}>
         <p className="font-display text-[20px]" style={{ color: "var(--noir)" }}>
-          Merci {name} !
+          {t.thanksName(name)}
         </p>
         <p className="mt-1 font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
-          Votre devis a bien été accepté — je reviens vers vous très vite pour la suite.
+          {t.thanksBody}
         </p>
       </div>
     );
@@ -73,10 +75,10 @@ export default function SignaturePadClient({ token }: { token: string }) {
   return (
     <div className="rounded-2xl bg-white p-6" style={{ border: "1px solid rgba(13,11,8,0.1)" }}>
       <p className="mb-1 font-display text-[19px]" style={{ color: "var(--noir)" }}>
-        Bon pour commande
+        {t.bonCommandeTitle}
       </p>
       <p className="mb-4 font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.55)" }}>
-        En signant ci-dessous, vous confirmez accepter ce devis tel que décrit.
+        {t.bonCommandeSubtitle}
       </p>
 
       {error && (
@@ -87,19 +89,19 @@ export default function SignaturePadClient({ token }: { token: string }) {
 
       <label className="mb-3 block">
         <span className="mb-1.5 block font-sans text-[11px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.5)" }}>
-          Votre nom
+          {t.yourName}
         </span>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Prénom Nom"
+          placeholder={t.namePlaceholder}
           className="w-full rounded-xl bg-white px-3.5 py-2.5 font-sans text-[13.5px] outline-none"
           style={{ border: "1px solid rgba(13,11,8,0.14)", color: "var(--noir)" }}
         />
       </label>
 
       <span className="mb-1.5 block font-sans text-[11px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.5)" }}>
-        Signature
+        {t.signatureLabel}
       </span>
       <canvas
         ref={canvasRef}
@@ -109,7 +111,7 @@ export default function SignaturePadClient({ token }: { token: string }) {
 
       <div className="mt-3 flex items-center justify-between">
         <button type="button" onClick={clearSignature} className="font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.45)" }}>
-          Effacer
+          {t.clear}
         </button>
         <button
           type="button"
@@ -118,7 +120,7 @@ export default function SignaturePadClient({ token }: { token: string }) {
           className="rounded-2xl px-6 py-3 font-sans text-[13.5px] font-medium disabled:opacity-60"
           style={{ background: "var(--rose-deep)", color: "var(--creme)" }}
         >
-          {isPending ? "Envoi…" : "J'accepte ce devis"}
+          {isPending ? t.sending : t.accept}
         </button>
       </div>
     </div>

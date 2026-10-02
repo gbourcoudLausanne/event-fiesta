@@ -19,7 +19,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     supabase
       .from("quotes")
       .select(
-        "reference, title, event_type, event_date, venue, tax_rate, items, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, clients(full_name, email, phone, address)",
+        "reference, title, event_type, event_date, venue, tax_rate, items, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, client_language, translated_content, clients(full_name, email, phone, address)",
       )
       .eq("id", id)
       .single(),
@@ -54,6 +54,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       paymentMethods: quote.payment_methods ?? [],
       pricingMode: (quote.pricing_mode as "detaille" | "forfait") ?? "detaille",
       packageTotal: quote.package_total,
+      lang: (quote.client_language as "fr" | "es" | "en") ?? "fr",
+      translatedContent: quote.translated_content,
       settings,
     }),
   );
