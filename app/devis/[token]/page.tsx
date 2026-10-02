@@ -72,6 +72,12 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
     carte: "Carte bancaire sur place",
   };
 
+  const firstName = client?.full_name.split(" ")[0] ?? "";
+  const eventLabel = quote.title || quote.event_type || "votre événement";
+  const introText =
+    `Bonjour ${firstName}, c'est avec plaisir que je vous propose cette offre sur mesure pour ${eventLabel.toLowerCase()}` +
+    `${quote.venue ? ` à ${quote.venue}` : ""} — pensée pour vous, selon tout ce que vous m'avez partagé.`;
+
   return (
     <div className="mx-auto max-w-2xl px-6 py-14">
       <div className="mb-8 rounded-2xl p-7" style={{ background: "var(--blush)" }}>
@@ -103,6 +109,13 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
           </p>
         </div>
       </div>
+
+      <p
+        className="mb-6 border-b pb-4 font-sans text-[14px] leading-relaxed"
+        style={{ borderColor: "rgba(13,11,8,0.1)", color: "var(--noir)" }}
+      >
+        {introText}
+      </p>
 
       {isPackageMode ? (
         <>
@@ -221,6 +234,45 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
           )}
         </div>
       )}
+
+      <div className="mb-8">
+        <p className="mb-2 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+          Conditions y observaciones
+        </p>
+        <p className="mb-2 font-sans text-[11.5px] leading-relaxed" style={{ color: "rgba(13,11,8,0.6)" }}>
+          El precio incluye la decoración y el montaje de los elementos descritos anteriormente. Los alimentos,
+          bebidas, pastel y pasabocas que aparecen en las imágenes de referencia no están incluidos, salvo acuerdo
+          expreso.
+        </p>
+        <p className="font-sans text-[11.5px] leading-relaxed" style={{ color: "rgba(13,11,8,0.6)" }}>
+          Las imágenes son referencias visuales creadas con IA para representar el estilo, los colores y la
+          propuesta general. La decoración final seguirá esta inspiración y podrá presentar pequeñas variaciones
+          según el espacio y los materiales disponibles.
+        </p>
+      </div>
+
+      <p className="mb-6 text-center font-serif text-[16px] italic" style={{ color: "var(--rose-deep)" }}>
+        Merci de votre confiance — j&apos;ai hâte de donner vie à votre événement.
+      </p>
+
+      <div
+        className="mb-2 flex items-center justify-between rounded-2xl px-5 py-3"
+        style={{ background: "var(--rose-deep)" }}
+      >
+        <span className="font-sans text-[13px]" style={{ color: "var(--creme)" }}>Une question sur ce devis ?</span>
+        <a
+          href="https://wa.me/41779143855"
+          target="_blank"
+          rel="noreferrer"
+          className="font-sans text-[13px] font-semibold"
+          style={{ color: "var(--creme)" }}
+        >
+          WhatsApp +41 77 914 38 55
+        </a>
+      </div>
+      <p className="mb-8 text-center font-sans text-[11px]" style={{ color: "rgba(13,11,8,0.4)" }}>
+        Devis valable 30 jours à compter de la date d&apos;émission.
+      </p>
 
       {isSigned ? (
         <div className="rounded-2xl p-6" style={{ background: "var(--blush)" }}>
