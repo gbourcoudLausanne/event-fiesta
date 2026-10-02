@@ -3,6 +3,12 @@ import { createClient } from "@/lib/supabase/server";
 import { FilePdf } from "@phosphor-icons/react/dist/ssr";
 import QuoteForm from "../quote-form";
 import StatusControls from "./status-controls";
+import CopyLinkButton from "./copy-link-button";
+
+function fmtDate(d: string | null) {
+  if (!d) return "—";
+  return new Date(d).toLocaleDateString("fr-CH", { day: "numeric", month: "long", year: "numeric" });
+}
 
 const STATUS_LABELS: Record<string, string> = {
   brouillon: "Brouillon",
@@ -17,7 +23,7 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
 
   const { data: quote } = await supabase
     .from("quotes")
-    .select("id, reference, title, event_type, event_date, venue, tax_rate, items, status, client_id, clients(full_name)")
+    .select("id, reference, title, event_type, event_date, venue, tax_rate, items, status, client_id, public_token, signed_by, signed_at, signature_data, clients(full_name)")
     .eq("id", id)
     .single();
 
@@ -48,6 +54,37 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
           </a>
           <StatusControls quoteId={quote.id} clientId={quote.client_id} status={quote.status} labels={STATUS_LABELS} />
         </div>
+      </div>
+
+      <div className="mb-6 rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+        {quote.signed_at ? (
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="font-sans text-[13.5px] font-semibold" style={{ color: "var(--noir)" }}>
+                ✓ Accepté et signé
+              </p>
+              <p className="font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>
+                Par {quote.signed_by} le {fmtDate(quote.signed_at)}
+              </p>
+            </div>
+            {quote.signature_data && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={quote.signature_data} alt="Signature du client" className="h-14 rounded-lg" style={{ background: "var(--creme-2)" }} />
+            )}
+          </div>
+        ) : (
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="font-sans text-[13.5px] font-semibold" style={{ color: "var(--noir)" }}>
+                Lien de signature client
+              </p>
+              <p className="font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.5)" }}>
+                Envoie ce lien pour que le client consulte et signe le devis en ligne.
+              </p>
+            </div>
+            <CopyLinkButton link={`https://eventfiesta.ch/devis/${quote.public_token}`} />
+          </div>
+        )}
       </div>
 
       <QuoteForm
