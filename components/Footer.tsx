@@ -191,7 +191,7 @@ export function Footer() {
           <p className="font-sans text-xs" style={{ color: "rgba(13,11,8,0.35)" }}>
             {t.footer.copyright}
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5">
             <Link
               href="/mentions-legales"
               className="font-sans text-xs transition-colors duration-200 cursor-pointer"
@@ -200,6 +200,16 @@ export function Footer() {
               onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(13,11,8,0.35)")}
             >
               {t.footer.legal}
+            </Link>
+            <span style={{ color: "rgba(13,11,8,0.2)", fontSize: 10 }}>·</span>
+            <Link
+              href="/admin/login"
+              className="font-sans text-xs transition-colors duration-200 cursor-pointer"
+              style={{ color: "rgba(13,11,8,0.25)" }}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(13,11,8,0.55)")}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(13,11,8,0.25)")}
+            >
+              Admin
             </Link>
             <span style={{ color: "rgba(13,11,8,0.2)", fontSize: 10 }}>·</span>
             <p className="font-sans text-xs" style={{ color: "rgba(13,11,8,0.3)" }}>
