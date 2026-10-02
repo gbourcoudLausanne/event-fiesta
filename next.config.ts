@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/devis/*/pdf": ["./lib/pdf/fonts/**"],
     "/api/factures/*/pdf": ["./lib/pdf/fonts/**"],
+    "/api/_debug-fonts": ["./lib/pdf/fonts/**"],
   },
 };
 
