@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 export type QuoteItem = {
+  title?: string;
   description: string;
   quantity: number;
   unit: string;
@@ -29,6 +30,8 @@ export async function createQuote(input: {
   deposit_amount: number | null;
   balance_due_terms: string | null;
   payment_methods: string[];
+  pricing_mode: "detaille" | "forfait";
+  package_total: number | null;
 }) {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -46,6 +49,8 @@ export async function createQuote(input: {
       deposit_amount: input.deposit_amount,
       balance_due_terms: input.balance_due_terms,
       payment_methods: input.payment_methods,
+      pricing_mode: input.pricing_mode,
+      package_total: input.package_total,
     })
     .select("id")
     .single();
@@ -72,6 +77,8 @@ export async function updateQuote(
     deposit_amount: number | null;
     balance_due_terms: string | null;
     payment_methods: string[];
+    pricing_mode: "detaille" | "forfait";
+    package_total: number | null;
   },
 ) {
   const supabase = await createClient();
@@ -88,6 +95,8 @@ export async function updateQuote(
       deposit_amount: input.deposit_amount,
       balance_due_terms: input.balance_due_terms,
       payment_methods: input.payment_methods,
+      pricing_mode: input.pricing_mode,
+      package_total: input.package_total,
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);

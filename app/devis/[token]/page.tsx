@@ -37,7 +37,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
     supabase
       .from("quotes")
       .select(
-        "reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, clients(full_name, email, phone, address)",
+        "reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, clients(full_name, email, phone, address)",
       )
       .eq("public_token", token)
       .single(),
@@ -47,10 +47,11 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
   if (!quote) notFound();
 
   const client = quote.clients as unknown as { full_name: string; email: string | null; phone: string | null; address: string | null } | null;
-  const items = (quote.items as { description: string; quantity: number; unit: string; unit_price: number }[]) ?? [];
+  const items = (quote.items as { title?: string; description: string; quantity: number; unit: string; unit_price: number }[]) ?? [];
+  const isPackageMode = quote.pricing_mode === "forfait";
   const subtotal = items.reduce((s, it) => s + it.quantity * it.unit_price, 0);
-  const tax = subtotal * (quote.tax_rate / 100);
-  const total = subtotal + tax;
+  const tax = isPackageMode ? 0 : subtotal * (quote.tax_rate / 100);
+  const total = isPackageMode ? quote.package_total ?? 0 : subtotal + tax;
   const isSigned = quote.status === "accepte" && quote.signed_at;
 
   const depositPercent = quote.deposit_percent;
@@ -103,35 +104,59 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
         </div>
       </div>
 
-      <div className="mb-6 overflow-hidden rounded-2xl bg-white" style={{ border: "1px solid rgba(13,11,8,0.1)" }}>
-        <div className="flex items-center justify-between px-4 py-2.5" style={{ background: "var(--creme-2)" }}>
-          <p className="font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>Prestation</p>
-          <p className="font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>Total</p>
-        </div>
-        {items.map((item, i) => (
-          <div key={i} className="flex items-start justify-between gap-3 px-4 py-3" style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}>
-            <div className="min-w-0">
-              <p className="font-sans text-[13px]" style={{ color: "var(--noir)" }}>{item.description}</p>
-              <p className="font-sans text-[11.5px]" style={{ color: "rgba(13,11,8,0.45)" }}>{item.quantity} {item.unit} × {chf(item.unit_price)}</p>
+      {isPackageMode ? (
+        <>
+          <div className="mb-6 overflow-hidden rounded-2xl bg-white" style={{ border: "1px solid rgba(13,11,8,0.1)" }}>
+            <div className="flex px-4 py-2.5" style={{ background: "var(--creme-2)" }}>
+              <p className="w-40 shrink-0 font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>Service</p>
+              <p className="font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>Description</p>
             </div>
-            <p className="shrink-0 whitespace-nowrap font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>
-              {chf(item.quantity * item.unit_price)}
-            </p>
+            {items.map((item, i) => (
+              <div key={i} className="flex gap-3 px-4 py-3" style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}>
+                <p className="w-40 shrink-0 font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>{item.title || "—"}</p>
+                <p className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.7)" }}>{item.description}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <div className="mb-8 ml-auto w-56 rounded-xl p-4" style={{ background: "var(--creme-2)" }}>
-        <div className="flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
-          <span>Sous-total</span><span>{chf(subtotal)}</span>
-        </div>
-        <div className="mt-1 flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
-          <span>TVA ({quote.tax_rate}%)</span><span>{chf(tax)}</span>
-        </div>
-        <div className="mt-2 flex justify-between border-t pt-2 font-display text-[16px]" style={{ borderColor: "rgba(13,11,8,0.15)", color: "var(--noir)" }}>
-          <span>Total</span><span style={{ color: "var(--rose-deep)" }}>{chf(total)}</span>
-        </div>
-      </div>
+          <div className="mb-8 rounded-xl p-4 text-center" style={{ background: "var(--creme-2)", border: "1px solid rgba(217,98,138,0.25)" }}>
+            <span className="font-display text-[17px]" style={{ color: "var(--noir)" }}>Prix total du forfait : </span>
+            <span className="font-display text-[17px]" style={{ color: "var(--rose-deep)" }}>{chf(total)}</span>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="mb-6 overflow-hidden rounded-2xl bg-white" style={{ border: "1px solid rgba(13,11,8,0.1)" }}>
+            <div className="flex items-center justify-between px-4 py-2.5" style={{ background: "var(--creme-2)" }}>
+              <p className="font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>Prestation</p>
+              <p className="font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>Total</p>
+            </div>
+            {items.map((item, i) => (
+              <div key={i} className="flex items-start justify-between gap-3 px-4 py-3" style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}>
+                <div className="min-w-0">
+                  <p className="font-sans text-[13px]" style={{ color: "var(--noir)" }}>{item.description}</p>
+                  <p className="font-sans text-[11.5px]" style={{ color: "rgba(13,11,8,0.45)" }}>{item.quantity} {item.unit} × {chf(item.unit_price)}</p>
+                </div>
+                <p className="shrink-0 whitespace-nowrap font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>
+                  {chf(item.quantity * item.unit_price)}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mb-8 ml-auto w-56 rounded-xl p-4" style={{ background: "var(--creme-2)" }}>
+            <div className="flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
+              <span>Sous-total</span><span>{chf(subtotal)}</span>
+            </div>
+            <div className="mt-1 flex justify-between font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
+              <span>TVA ({quote.tax_rate}%)</span><span>{chf(tax)}</span>
+            </div>
+            <div className="mt-2 flex justify-between border-t pt-2 font-display text-[16px]" style={{ borderColor: "rgba(13,11,8,0.15)", color: "var(--noir)" }}>
+              <span>Total</span><span style={{ color: "var(--rose-deep)" }}>{chf(total)}</span>
+            </div>
+          </div>
+        </>
+      )}
 
       {showPaymentBlock && (
         <div className="mb-8 rounded-2xl p-5" style={{ background: "var(--creme-2)" }}>

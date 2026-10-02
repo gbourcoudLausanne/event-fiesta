@@ -100,6 +100,26 @@ const styles = StyleSheet.create({
   th: { fontSize: 7, letterSpacing: 0.8, color: MUTED_LIGHT, fontWeight: 600 },
   td: { fontSize: 9.5, color: INK },
 
+  packageHeaderRow: {
+    flexDirection: "row", paddingVertical: 5, paddingHorizontal: 6,
+    backgroundColor: CREME_2, borderBottomWidth: 1, borderBottomColor: "rgba(13,11,8,0.15)",
+  },
+  packageRow: { flexDirection: "row", paddingVertical: 8, paddingHorizontal: 6, borderBottomWidth: 0.5, borderBottomColor: BORDER },
+  colService: { width: 130, paddingRight: 8 },
+  serviceName: { fontSize: 9.5, fontWeight: 600, color: INK },
+
+  packageTotalBanner: {
+    marginTop: 12,
+    backgroundColor: CREME_2,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "rgba(217,98,138,0.3)",
+    paddingVertical: 11,
+    alignItems: "center",
+  },
+  packageTotalLabel: { fontFamily: "DM Serif Display", fontSize: 14, color: INK, letterSpacing: 0.3 },
+  packageTotalValue: { fontFamily: "DM Serif Display", fontSize: 14, color: PINK },
+
   totalsBox: { marginTop: 10, alignSelf: "flex-end", width: 230, backgroundColor: CREME_2, borderRadius: 8, padding: 10 },
   totalsRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 2 },
   totalsLabel: { fontSize: 9.5, color: MUTED },
@@ -198,7 +218,7 @@ function BalloonIcon({
   );
 }
 
-export type DevisPdfItem = { description: string; quantity: number; unit: string; unit_price: number };
+export type DevisPdfItem = { title?: string; description: string; quantity: number; unit: string; unit_price: number };
 
 export type DevisPdfSettings = { creditor_name: string | null; iban: string | null; twint_phone: string | null };
 
@@ -223,6 +243,8 @@ export type DevisPdfProps = {
   balanceDueTerms?: string | null;
   paymentMethods?: string[];
   settings?: DevisPdfSettings | null;
+  pricingMode?: "detaille" | "forfait";
+  packageTotal?: number | null;
 };
 
 export function DevisPdfDocument({
@@ -240,10 +262,13 @@ export function DevisPdfDocument({
   balanceDueTerms,
   paymentMethods = [],
   settings,
+  pricingMode = "detaille",
+  packageTotal,
 }: DevisPdfProps) {
+  const isPackageMode = pricingMode === "forfait";
   const subtotal = items.reduce((s, it) => s + it.quantity * it.unit_price, 0);
-  const tax = subtotal * (taxRate / 100);
-  const total = subtotal + tax;
+  const tax = isPackageMode ? 0 : subtotal * (taxRate / 100);
+  const total = isPackageMode ? packageTotal ?? 0 : subtotal + tax;
   const hasFixedDeposit = !!depositAmountFixed && depositAmountFixed > 0;
   const hasPercentDeposit = !hasFixedDeposit && !!depositPercent && depositPercent > 0;
   const hasDeposit = hasFixedDeposit || hasPercentDeposit;
@@ -306,39 +331,65 @@ export function DevisPdfDocument({
 
           <Text style={styles.intro}>{introText}</Text>
 
-          <View style={styles.table}>
-            <View style={styles.tableHeaderRow}>
-              <Text style={[styles.th, styles.colDesc]}>PRESTATION</Text>
-              <Text style={[styles.th, styles.colQty]}>QTÉ</Text>
-              <Text style={[styles.th, styles.colUnit]}>UNITÉ</Text>
-              <Text style={[styles.th, styles.colPrice]}>P.U.</Text>
-              <Text style={[styles.th, styles.colTotal]}>TOTAL</Text>
-            </View>
-            {items.map((item, i) => (
-              <View key={i} style={styles.tableRow}>
-                <Text style={[styles.td, styles.colDesc]}>{item.description}</Text>
-                <Text style={[styles.td, styles.colQty]}>{item.quantity}</Text>
-                <Text style={[styles.td, styles.colUnit]}>{item.unit}</Text>
-                <Text style={[styles.td, styles.colPrice]}>{chf(item.unit_price)}</Text>
-                <Text style={[styles.td, styles.colTotal]}>{chf(item.quantity * item.unit_price)}</Text>
+          {isPackageMode ? (
+            <>
+              <View style={styles.table}>
+                <View style={styles.packageHeaderRow}>
+                  <Text style={[styles.th, styles.colService]}>SERVICE</Text>
+                  <Text style={[styles.th, styles.colDesc]}>DESCRIPTION</Text>
+                </View>
+                {items.map((item, i) => (
+                  <View key={i} style={styles.packageRow}>
+                    <Text style={[styles.serviceName, styles.colService]}>{item.title || "—"}</Text>
+                    <Text style={[styles.td, styles.colDesc]}>{item.description}</Text>
+                  </View>
+                ))}
               </View>
-            ))}
-          </View>
 
-          <View style={styles.totalsBox}>
-            <View style={styles.totalsRow}>
-              <Text style={styles.totalsLabel}>Sous-total</Text>
-              <Text style={styles.totalsValue}>{chf(subtotal)}</Text>
-            </View>
-            <View style={styles.totalsRow}>
-              <Text style={styles.totalsLabel}>TVA ({taxRate}%)</Text>
-              <Text style={styles.totalsValue}>{chf(tax)}</Text>
-            </View>
-            <View style={styles.grandTotalRow}>
-              <Text style={styles.grandTotalLabel}>Total</Text>
-              <Text style={styles.grandTotalValue}>{chf(total)}</Text>
-            </View>
-          </View>
+              <View style={styles.packageTotalBanner}>
+                <Text>
+                  <Text style={styles.packageTotalLabel}>Prix total du forfait : </Text>
+                  <Text style={styles.packageTotalValue}>{chf(total)}</Text>
+                </Text>
+              </View>
+            </>
+          ) : (
+            <>
+              <View style={styles.table}>
+                <View style={styles.tableHeaderRow}>
+                  <Text style={[styles.th, styles.colDesc]}>PRESTATION</Text>
+                  <Text style={[styles.th, styles.colQty]}>QTÉ</Text>
+                  <Text style={[styles.th, styles.colUnit]}>UNITÉ</Text>
+                  <Text style={[styles.th, styles.colPrice]}>P.U.</Text>
+                  <Text style={[styles.th, styles.colTotal]}>TOTAL</Text>
+                </View>
+                {items.map((item, i) => (
+                  <View key={i} style={styles.tableRow}>
+                    <Text style={[styles.td, styles.colDesc]}>{item.description}</Text>
+                    <Text style={[styles.td, styles.colQty]}>{item.quantity}</Text>
+                    <Text style={[styles.td, styles.colUnit]}>{item.unit}</Text>
+                    <Text style={[styles.td, styles.colPrice]}>{chf(item.unit_price)}</Text>
+                    <Text style={[styles.td, styles.colTotal]}>{chf(item.quantity * item.unit_price)}</Text>
+                  </View>
+                ))}
+              </View>
+
+              <View style={styles.totalsBox}>
+                <View style={styles.totalsRow}>
+                  <Text style={styles.totalsLabel}>Sous-total</Text>
+                  <Text style={styles.totalsValue}>{chf(subtotal)}</Text>
+                </View>
+                <View style={styles.totalsRow}>
+                  <Text style={styles.totalsLabel}>TVA ({taxRate}%)</Text>
+                  <Text style={styles.totalsValue}>{chf(tax)}</Text>
+                </View>
+                <View style={styles.grandTotalRow}>
+                  <Text style={styles.grandTotalLabel}>Total</Text>
+                  <Text style={styles.grandTotalValue}>{chf(total)}</Text>
+                </View>
+              </View>
+            </>
+          )}
 
           {showPaymentBlock && (
             <View style={styles.paymentBlock}>

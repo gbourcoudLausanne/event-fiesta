@@ -25,9 +25,11 @@ export type QuoteFormValues = {
   deposit_amount: number | null;
   balance_due_terms: string;
   payment_methods: string[];
+  pricing_mode: "detaille" | "forfait";
+  package_total: number | null;
 };
 
-const EMPTY_ITEM: QuoteItem = { description: "", quantity: 1, unit: "forfait", unit_price: 0 };
+const EMPTY_ITEM: QuoteItem = { title: "", description: "", quantity: 1, unit: "forfait", unit_price: 0 };
 
 const DEPOSIT_PRESETS = [0, 30, 50, 100];
 const BALANCE_PRESETS = [
@@ -57,6 +59,8 @@ export default function QuoteForm({
   const [venue, setVenue] = useState(initial?.venue ?? "");
   const [taxRate, setTaxRate] = useState(initial?.tax_rate ?? 0);
   const [items, setItems] = useState<QuoteItem[]>(initial?.items?.length ? initial.items : [{ ...EMPTY_ITEM }]);
+  const [pricingMode, setPricingMode] = useState<"detaille" | "forfait">(initial?.pricing_mode ?? "detaille");
+  const [packageTotal, setPackageTotal] = useState<number | null>(initial?.package_total ?? null);
   const [depositMode, setDepositMode] = useState<"percent" | "amount">(initial?.deposit_amount ? "amount" : "percent");
   const [depositPercent, setDepositPercent] = useState<number | null>(initial?.deposit_percent ?? null);
   const [depositAmount, setDepositAmount] = useState<number | null>(initial?.deposit_amount ?? null);
@@ -83,7 +87,7 @@ export default function QuoteForm({
 
   const subtotal = items.reduce((s, it) => s + it.quantity * it.unit_price, 0);
   const tax = subtotal * (taxRate / 100);
-  const total = subtotal + tax;
+  const total = pricingMode === "forfait" ? packageTotal ?? 0 : subtotal + tax;
   const depositPreviewAmount = depositPercent ? total * (depositPercent / 100) : 0;
 
   function handleSubmit(e: React.FormEvent) {
@@ -105,6 +109,8 @@ export default function QuoteForm({
       deposit_amount: depositMode === "amount" ? depositAmount : null,
       balance_due_terms: balanceDueTerms || null,
       payment_methods: paymentMethods,
+      pricing_mode: pricingMode,
+      package_total: pricingMode === "forfait" ? packageTotal : null,
     };
     startTransition(async () => {
       if (quoteId) {
@@ -148,10 +154,48 @@ export default function QuoteForm({
       </div>
 
       <div className="rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
-        <p className="mb-3 font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>Prestations</p>
+        <div className="mb-3 flex items-center justify-between">
+          <p className="font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>Prestations</p>
+          <div className="flex gap-1">
+            <button
+              type="button"
+              onClick={() => setPricingMode("detaille")}
+              className="rounded-lg px-2.5 py-1 font-sans text-[11.5px] font-medium"
+              style={{
+                background: pricingMode === "detaille" ? "var(--rose-deep)" : "transparent",
+                color: pricingMode === "detaille" ? "var(--creme)" : "rgba(13,11,8,0.5)",
+                border: pricingMode === "detaille" ? "1px solid var(--rose-deep)" : "1px solid rgba(13,11,8,0.14)",
+              }}
+            >
+              Détaillé (prix par ligne)
+            </button>
+            <button
+              type="button"
+              onClick={() => setPricingMode("forfait")}
+              className="rounded-lg px-2.5 py-1 font-sans text-[11.5px] font-medium"
+              style={{
+                background: pricingMode === "forfait" ? "var(--rose-deep)" : "transparent",
+                color: pricingMode === "forfait" ? "var(--creme)" : "rgba(13,11,8,0.5)",
+                border: pricingMode === "forfait" ? "1px solid var(--rose-deep)" : "1px solid rgba(13,11,8,0.14)",
+              }}
+            >
+              Forfait global (un seul prix)
+            </button>
+          </div>
+        </div>
+
         <div className="flex flex-col gap-3">
           {items.map((item, i) => (
             <div key={i} className="rounded-xl p-3" style={{ border: "1px solid rgba(13,11,8,0.1)" }}>
+              {pricingMode === "forfait" && (
+                <input
+                  value={item.title ?? ""}
+                  onChange={(e) => updateItem(i, "title", e.target.value)}
+                  placeholder="Nom du service (ex: Décoration principale)"
+                  className={inputCls + " mb-2 font-semibold"}
+                  style={inputStyle}
+                />
+              )}
               <textarea
                 value={item.description}
                 onChange={(e) => {
@@ -170,62 +214,75 @@ export default function QuoteForm({
                 className="w-full resize-none overflow-hidden rounded-lg bg-white px-3 py-2 font-sans text-[13.5px] leading-relaxed outline-none"
                 style={{ border: "1px solid rgba(13,11,8,0.12)", color: "var(--noir)" }}
               />
-              <div className="mt-2 flex items-end gap-2">
-                <div className="w-[72px]">
-                  <label className="mb-1 block font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
-                    Qté
-                  </label>
-                  <input
-                    type="number"
-                    min={0}
-                    value={item.quantity}
-                    onChange={(e) => updateItem(i, "quantity", parseFloat(e.target.value) || 0)}
-                    className={inputCls + " text-right"}
-                    style={inputStyle}
-                  />
+              {pricingMode === "detaille" ? (
+                <div className="mt-2 flex items-end gap-2">
+                  <div className="w-[72px]">
+                    <label className="mb-1 block font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+                      Qté
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={item.quantity}
+                      onChange={(e) => updateItem(i, "quantity", parseFloat(e.target.value) || 0)}
+                      className={inputCls + " text-right"}
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div className="w-[100px]">
+                    <label className="mb-1 block font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+                      Unité
+                    </label>
+                    <input
+                      value={item.unit}
+                      onChange={(e) => updateItem(i, "unit", e.target.value)}
+                      placeholder="forfait"
+                      className={inputCls}
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div className="w-[120px]">
+                    <label className="mb-1 block font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+                      Prix unitaire
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={item.unit_price}
+                      onChange={(e) => updateItem(i, "unit_price", parseFloat(e.target.value) || 0)}
+                      className={inputCls + " text-right"}
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div className="flex-1 text-right">
+                    <p className="mb-1 font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+                      Total ligne
+                    </p>
+                    <p className="py-2.5 font-sans text-[13.5px] font-semibold" style={{ color: "var(--noir)" }}>
+                      {chf(item.quantity * item.unit_price)}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeItem(i)}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:bg-black/5"
+                    style={{ color: "rgba(13,11,8,0.35)" }}
+                  >
+                    <Trash size={14} />
+                  </button>
                 </div>
-                <div className="w-[100px]">
-                  <label className="mb-1 block font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
-                    Unité
-                  </label>
-                  <input
-                    value={item.unit}
-                    onChange={(e) => updateItem(i, "unit", e.target.value)}
-                    placeholder="forfait"
-                    className={inputCls}
-                    style={inputStyle}
-                  />
+              ) : (
+                <div className="mt-2 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => removeItem(i)}
+                    className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-black/5"
+                    style={{ color: "rgba(13,11,8,0.35)" }}
+                  >
+                    <Trash size={14} />
+                  </button>
                 </div>
-                <div className="w-[120px]">
-                  <label className="mb-1 block font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
-                    Prix unitaire
-                  </label>
-                  <input
-                    type="number"
-                    min={0}
-                    value={item.unit_price}
-                    onChange={(e) => updateItem(i, "unit_price", parseFloat(e.target.value) || 0)}
-                    className={inputCls + " text-right"}
-                    style={inputStyle}
-                  />
-                </div>
-                <div className="flex-1 text-right">
-                  <p className="mb-1 font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
-                    Total ligne
-                  </p>
-                  <p className="py-2.5 font-sans text-[13.5px] font-semibold" style={{ color: "var(--noir)" }}>
-                    {chf(item.quantity * item.unit_price)}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => removeItem(i)}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:bg-black/5"
-                  style={{ color: "rgba(13,11,8,0.35)" }}
-                >
-                  <Trash size={14} />
-                </button>
-              </div>
+              )}
             </div>
           ))}
         </div>
@@ -235,20 +292,37 @@ export default function QuoteForm({
           className="mt-3 flex items-center gap-1.5 rounded-xl px-3 py-2 font-sans text-[12.5px] font-medium"
           style={{ border: "1px dashed rgba(13,11,8,0.2)", color: "rgba(13,11,8,0.6)" }}
         >
-          <Plus size={13} /> Ajouter une ligne
+          <Plus size={13} /> {pricingMode === "forfait" ? "Ajouter un service" : "Ajouter une ligne"}
         </button>
 
-        <div className="mt-5 flex flex-col items-end gap-1 border-t pt-4 font-sans text-[13.5px]" style={{ borderColor: "rgba(13,11,8,0.08)" }}>
-          <div className="flex w-56 justify-between" style={{ color: "rgba(13,11,8,0.6)" }}>
-            <span>Sous-total</span><span>{chf(subtotal)}</span>
+        {pricingMode === "detaille" ? (
+          <div className="mt-5 flex flex-col items-end gap-1 border-t pt-4 font-sans text-[13.5px]" style={{ borderColor: "rgba(13,11,8,0.08)" }}>
+            <div className="flex w-56 justify-between" style={{ color: "rgba(13,11,8,0.6)" }}>
+              <span>Sous-total</span><span>{chf(subtotal)}</span>
+            </div>
+            <div className="flex w-56 justify-between" style={{ color: "rgba(13,11,8,0.6)" }}>
+              <span>TVA ({taxRate}%)</span><span>{chf(tax)}</span>
+            </div>
+            <div className="flex w-56 justify-between font-semibold" style={{ color: "var(--noir)" }}>
+              <span>Total</span><span>{chf(total)}</span>
+            </div>
           </div>
-          <div className="flex w-56 justify-between" style={{ color: "rgba(13,11,8,0.6)" }}>
-            <span>TVA ({taxRate}%)</span><span>{chf(tax)}</span>
+        ) : (
+          <div className="mt-5 flex items-center justify-end gap-3 border-t pt-4" style={{ borderColor: "rgba(13,11,8,0.08)" }}>
+            <label className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>Prix total du forfait</label>
+            <span className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.5)" }}>CHF</span>
+            <input
+              type="number"
+              min={0}
+              step={0.05}
+              value={packageTotal ?? ""}
+              onChange={(e) => setPackageTotal(e.target.value === "" ? null : parseFloat(e.target.value) || 0)}
+              placeholder="0.00"
+              className={inputCls + " w-32 text-right font-semibold"}
+              style={inputStyle}
+            />
           </div>
-          <div className="flex w-56 justify-between font-semibold" style={{ color: "var(--noir)" }}>
-            <span>Total</span><span>{chf(total)}</span>
-          </div>
-        </div>
+        )}
       </div>
 
       <div className="rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
