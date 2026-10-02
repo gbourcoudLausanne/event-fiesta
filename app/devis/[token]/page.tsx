@@ -3,7 +3,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import SignaturePadClient from "./signature-pad-client";
 
 function chf(n: number) {
-  return "CHF " + n.toLocaleString("fr-CH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const [intPart, decPart] = n.toFixed(2).split(".");
+  return `CHF ${intPart.replace(/\B(?=(\d{3})+(?!\d))/g, "'")},${decPart}`;
 }
 
 function fmtDate(d: string | null) {

@@ -9,7 +9,8 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 function chf(n: number) {
-  return "CHF " + n.toLocaleString("fr-CH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const [intPart, decPart] = n.toFixed(2).split(".");
+  return `CHF ${intPart.replace(/\B(?=(\d{3})+(?!\d))/g, "'")},${decPart}`;
 }
 
 function total(items: unknown, taxRate: number) {

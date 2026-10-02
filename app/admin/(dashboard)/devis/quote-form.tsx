@@ -10,7 +10,8 @@ const labelCls = "mb-1 block font-sans text-[11px] uppercase tracking-[0.1em]";
 const labelStyle = { color: "rgba(13,11,8,0.5)" };
 
 function chf(n: number) {
-  return "CHF " + n.toLocaleString("fr-CH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const [intPart, decPart] = n.toFixed(2).split(".");
+  return `CHF ${intPart.replace(/\B(?=(\d{3})+(?!\d))/g, "'")},${decPart}`;
 }
 
 export type QuoteFormValues = {
