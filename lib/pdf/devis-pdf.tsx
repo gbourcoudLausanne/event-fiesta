@@ -36,13 +36,13 @@ const BLUSH = "#F5E6E0";
 const CREME_2 = "#F3EDE6";
 
 const styles = StyleSheet.create({
-  page: { fontFamily: "Montserrat", fontSize: 9.5, color: INK, padding: 32 },
+  page: { fontFamily: "Montserrat", fontSize: 9.5, color: INK, padding: 28 },
 
   headerCard: {
     backgroundColor: BLUSH,
     borderRadius: 18,
-    padding: 26,
-    marginBottom: 26,
+    padding: 22,
+    marginBottom: 20,
     position: "relative",
     overflow: "hidden",
   },
@@ -73,25 +73,25 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat",
     fontSize: 10,
     color: INK,
-    lineHeight: 1.5,
-    marginTop: 14,
-    marginBottom: 16,
-    paddingBottom: 13,
+    lineHeight: 1.4,
+    marginTop: 10,
+    marginBottom: 12,
+    paddingBottom: 10,
     borderBottomWidth: 0.5,
     borderBottomColor: BORDER,
   },
 
-  infoGrid: { flexDirection: "row", gap: 24, marginBottom: 18 },
+  infoGrid: { flexDirection: "row", gap: 24, marginBottom: 14 },
   infoBlock: { flex: 1, borderLeftWidth: 2, borderLeftColor: PINK, paddingLeft: 10 },
   infoLabel: { fontSize: 7, letterSpacing: 1.2, color: MUTED_LIGHT, marginBottom: 4 },
   infoValue: { fontSize: 10, lineHeight: 1.4, color: INK },
 
   table: { borderTopWidth: 1, borderTopColor: INK, marginTop: 2 },
   tableHeaderRow: {
-    flexDirection: "row", paddingVertical: 6, paddingHorizontal: 6,
+    flexDirection: "row", paddingVertical: 5, paddingHorizontal: 6,
     backgroundColor: CREME_2, borderBottomWidth: 1, borderBottomColor: "rgba(13,11,8,0.15)",
   },
-  tableRow: { flexDirection: "row", paddingVertical: 6.5, paddingHorizontal: 6, borderBottomWidth: 0.5, borderBottomColor: BORDER },
+  tableRow: { flexDirection: "row", paddingVertical: 5.5, paddingHorizontal: 6, borderBottomWidth: 0.5, borderBottomColor: BORDER },
   colDesc: { flex: 1, paddingRight: 8 },
   colQty: { width: 44, textAlign: "right" },
   colUnit: { width: 56, textAlign: "center" },
@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
   th: { fontSize: 7, letterSpacing: 0.8, color: MUTED_LIGHT, fontWeight: 600 },
   td: { fontSize: 9.5, color: INK },
 
-  totalsBox: { marginTop: 12, alignSelf: "flex-end", width: 230, backgroundColor: CREME_2, borderRadius: 8, padding: 12 },
-  totalsRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 2.5 },
+  totalsBox: { marginTop: 10, alignSelf: "flex-end", width: 230, backgroundColor: CREME_2, borderRadius: 8, padding: 10 },
+  totalsRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 2 },
   totalsLabel: { fontSize: 9.5, color: MUTED },
   totalsValue: { fontSize: 9.5, color: INK },
   grandTotalRow: {
@@ -112,10 +112,10 @@ const styles = StyleSheet.create({
   grandTotalValue: { fontFamily: "DM Serif Display", fontSize: 14, color: PINK },
 
   ctaBox: {
-    marginTop: 16,
+    marginTop: 12,
     backgroundColor: PINK,
     borderRadius: 10,
-    paddingVertical: 10,
+    paddingVertical: 9,
     paddingHorizontal: 18,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -124,22 +124,26 @@ const styles = StyleSheet.create({
   ctaText: { fontSize: 9.5, color: "#FAF7F2", fontWeight: 500 },
   ctaContact: { fontSize: 9.5, color: "#FAF7F2", fontWeight: 600 },
 
-  validity: { fontSize: 7.5, color: MUTED_LIGHT, marginTop: 8, textAlign: "center" },
+  validity: { fontSize: 7.5, color: MUTED_LIGHT, marginTop: 6, textAlign: "center" },
 
-  paymentBlock: { marginTop: 14, paddingTop: 11, borderTopWidth: 0.5, borderTopColor: BORDER },
-  paymentTitle: { fontSize: 7, letterSpacing: 1.2, color: MUTED_LIGHT, marginBottom: 6 },
+  paymentBlock: { marginTop: 10, paddingTop: 9, borderTopWidth: 0.5, borderTopColor: BORDER },
+  paymentTitle: { fontSize: 7, letterSpacing: 1.2, color: MUTED_LIGHT, marginBottom: 5 },
   paymentRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 1.5 },
   paymentLabel: { fontSize: 9.5, color: MUTED },
   paymentValue: { fontSize: 9.5, color: INK, fontWeight: 600 },
-  paymentMethods: { marginTop: 6, flexDirection: "row", flexWrap: "wrap", gap: 14 },
-  paymentMethodItem: { fontSize: 8.5, color: MUTED, lineHeight: 1.4 },
+  paymentMethods: { marginTop: 5, flexDirection: "row", flexWrap: "wrap", gap: 14 },
+  paymentMethodItem: { fontSize: 8.5, color: MUTED, lineHeight: 1.3 },
   paymentMethodBold: { color: INK, fontWeight: 600 },
 
-  thankYou: { fontFamily: "Cormorant Garamond", fontStyle: "italic", fontSize: 12, color: PINK, marginTop: 28, textAlign: "center" },
+  notesBlock: { marginTop: 10, paddingTop: 8, borderTopWidth: 0.5, borderTopColor: BORDER },
+  notesTitle: { fontSize: 7, letterSpacing: 1.2, color: MUTED_LIGHT, marginBottom: 4 },
+  notesText: { fontSize: 7, color: MUTED, lineHeight: 1.3, marginBottom: 3 },
+
+  thankYou: { fontFamily: "Cormorant Garamond", fontStyle: "italic", fontSize: 12, color: PINK, marginTop: 12, textAlign: "center" },
 
   footer: {
-    position: "absolute", bottom: 24, left: 32, right: 32,
-    borderTopWidth: 0.5, borderTopColor: BORDER, paddingTop: 10,
+    position: "absolute", bottom: 20, left: 28, right: 28,
+    borderTopWidth: 0.5, borderTopColor: BORDER, paddingTop: 8,
     flexDirection: "row", justifyContent: "space-between",
   },
   footerText: { fontSize: 7.5, color: MUTED },
@@ -386,6 +390,20 @@ export function DevisPdfDocument({
               )}
             </View>
           )}
+
+          <View style={styles.notesBlock}>
+            <Text style={styles.notesTitle}>CONDITIONS Y OBSERVACIONES</Text>
+            <Text style={styles.notesText}>
+              El precio incluye la decoración y el montaje de los elementos descritos anteriormente. Los alimentos,
+              bebidas, pastel y pasabocas que aparecen en las imágenes de referencia no están incluidos, salvo
+              acuerdo expreso.
+            </Text>
+            <Text style={styles.notesText}>
+              Las imágenes son referencias visuales creadas con IA para representar el estilo, los colores y la
+              propuesta general. La decoración final seguirá esta inspiración y podrá presentar pequeñas variaciones
+              según el espacio y los materiales disponibles.
+            </Text>
+          </View>
 
           <Text style={styles.thankYou}>Merci de votre confiance — j&apos;ai hâte de donner vie à votre événement.</Text>
 
