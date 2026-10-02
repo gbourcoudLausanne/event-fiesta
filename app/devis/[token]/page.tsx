@@ -87,7 +87,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
         <p className="font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>{fmtDate(quote.created_at)}</p>
       </div>
 
-      <div className="mb-6 grid grid-cols-2 gap-5">
+      <div className="mb-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div className="border-l-2 pl-3" style={{ borderColor: "var(--rose-deep)" }}>
           <p className="mb-1 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.4)" }}>Client</p>
           <p className="font-sans text-[13.5px] leading-relaxed" style={{ color: "var(--noir)" }}>{client?.full_name}</p>
@@ -108,12 +108,14 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
           <p className="font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>Total</p>
         </div>
         {items.map((item, i) => (
-          <div key={i} className="flex items-center justify-between px-4 py-3" style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}>
-            <div>
+          <div key={i} className="flex items-start justify-between gap-3 px-4 py-3" style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}>
+            <div className="min-w-0">
               <p className="font-sans text-[13px]" style={{ color: "var(--noir)" }}>{item.description}</p>
               <p className="font-sans text-[11.5px]" style={{ color: "rgba(13,11,8,0.45)" }}>{item.quantity} {item.unit} × {chf(item.unit_price)}</p>
             </div>
-            <p className="font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>{chf(item.quantity * item.unit_price)}</p>
+            <p className="shrink-0 whitespace-nowrap font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>
+              {chf(item.quantity * item.unit_price)}
+            </p>
           </div>
         ))}
       </div>
@@ -159,14 +161,29 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
               {paymentMethods.includes("iban") && (
                 <p className="font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.55)" }}>
                   <span className="font-semibold" style={{ color: "var(--noir)" }}>{PAYMENT_METHOD_LABELS.iban} : </span>
-                  {settings?.creditor_name ? `${settings.creditor_name} — ` : ""}
-                  {settings?.iban || "coordonnées sur demande"}
+                  {settings?.iban ? (
+                    <>
+                      {settings.creditor_name ? `${settings.creditor_name} — ` : ""}
+                      {settings.iban}
+                    </>
+                  ) : (
+                    <>
+                      coordonnées sur{" "}
+                      <a href="https://wa.me/41779143855" target="_blank" rel="noreferrer" className="underline" style={{ color: "var(--rose-deep)" }}>
+                        WhatsApp
+                      </a>
+                    </>
+                  )}
                 </p>
               )}
               {paymentMethods.includes("twint") && (
                 <p className="font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.55)" }}>
                   <span className="font-semibold" style={{ color: "var(--noir)" }}>{PAYMENT_METHOD_LABELS.twint} : </span>
-                  {settings?.twint_phone || "coordonnées sur demande"}
+                  {settings?.twint_phone || (
+                    <a href="https://wa.me/41779143855" target="_blank" rel="noreferrer" className="underline" style={{ color: "var(--rose-deep)" }}>
+                      demander le numéro sur WhatsApp
+                    </a>
+                  )}
                 </p>
               )}
               {paymentMethods.includes("carte") && (
