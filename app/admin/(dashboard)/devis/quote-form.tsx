@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Plus, Trash, ImageSquare } from "@phosphor-icons/react";
+import { Plus, Trash, ImageSquare, CheckCircle } from "@phosphor-icons/react";
 import { createQuote, updateQuote, uploadQuoteImage, removeQuoteImage, type QuoteItem } from "./actions";
 
 async function compressImage(file: File, maxDim = 1600, quality = 0.82): Promise<Blob> {
@@ -91,6 +91,7 @@ export default function QuoteForm({
   const [uploadingImages, setUploadingImages] = useState(false);
   const [imageError, setImageError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [justSaved, setJustSaved] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   async function handleImageUpload(files: FileList | null) {
@@ -168,6 +169,8 @@ export default function QuoteForm({
     startTransition(async () => {
       if (quoteId) {
         await updateQuote(quoteId, payload);
+        setJustSaved(true);
+        setTimeout(() => setJustSaved(false), 2200);
       } else {
         const res = await createQuote({ client_id: clientId, ...payload });
         if (res?.error) setError(res.error);
@@ -582,10 +585,11 @@ export default function QuoteForm({
       <button
         type="submit"
         disabled={isPending}
-        className="self-start rounded-2xl px-6 py-3 font-sans text-[13.5px] font-medium disabled:opacity-60"
-        style={{ background: "var(--rose-deep)", color: "var(--creme)" }}
+        className="flex items-center gap-2 self-start rounded-2xl px-6 py-3 font-sans text-[13.5px] font-medium transition-colors duration-300 disabled:opacity-60"
+        style={{ background: justSaved ? "#4C9A6A" : "var(--rose-deep)", color: "var(--creme)" }}
       >
-        {isPending ? "Enregistrement…" : quoteId ? "Enregistrer" : "Créer le devis"}
+        {justSaved && <CheckCircle size={17} weight="fill" />}
+        {justSaved ? "Enregistré" : isPending ? "Enregistrement…" : quoteId ? "Enregistrer" : "Créer le devis"}
       </button>
     </form>
   );
