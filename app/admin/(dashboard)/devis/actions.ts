@@ -97,6 +97,10 @@ export async function updateQuote(
       payment_methods: input.payment_methods,
       pricing_mode: input.pricing_mode,
       package_total: input.package_total,
+      // Toute modification du contenu original invalide la traduction existante —
+      // sinon le lien client garderait un texte traduit obsolète après une édition.
+      client_language: null,
+      translated_content: null,
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);
