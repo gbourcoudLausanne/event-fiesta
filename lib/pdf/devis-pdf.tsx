@@ -185,7 +185,7 @@ function fmtDate(d: string | null, locale: string) {
   return new Date(d).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" });
 }
 
-function BalloonIcon({
+export function BalloonIcon({
   size = 16,
   gradientId = "ballonGold",
   opacity = 1,

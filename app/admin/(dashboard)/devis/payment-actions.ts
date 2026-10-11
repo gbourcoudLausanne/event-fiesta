@@ -18,6 +18,7 @@ async function revalidateQuote(quoteId: string) {
   const { data } = await supabase.from("quotes").select("public_token").eq("id", quoteId).single();
   revalidatePath(`/admin/devis/${quoteId}`);
   revalidatePath("/admin");
+  revalidatePath("/admin/paiements");
   if (data?.public_token) revalidatePath(`/devis/${data.public_token}`);
 }
 

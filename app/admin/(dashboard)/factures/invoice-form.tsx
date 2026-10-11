@@ -18,6 +18,7 @@ export type InvoiceFormValues = {
   tax_rate: number;
   due_date: string;
   items: InvoiceItem[];
+  deduct_payments?: boolean;
 };
 
 const EMPTY_ITEM: InvoiceItem = { description: "", quantity: 1, unit: "forfait", unit_price: 0 };
@@ -26,13 +27,16 @@ export default function InvoiceForm({
   clientId,
   invoiceId,
   initial,
+  hasQuote = false,
 }: {
   clientId: string;
   invoiceId?: string;
   initial?: InvoiceFormValues;
+  hasQuote?: boolean;
 }) {
   const [taxRate, setTaxRate] = useState(initial?.tax_rate ?? 0);
   const [dueDate, setDueDate] = useState(initial?.due_date ?? "");
+  const [deductPayments, setDeductPayments] = useState(initial?.deduct_payments ?? true);
   const [items, setItems] = useState<InvoiceItem[]>(initial?.items?.length ? initial.items : [{ ...EMPTY_ITEM }]);
   const [error, setError] = useState<string | null>(null);
   const [justSaved, setJustSaved] = useState(false);
@@ -65,7 +69,7 @@ export default function InvoiceForm({
     const payload = { tax_rate: taxRate, due_date: dueDate || null, items: cleanItems };
     startTransition(async () => {
       if (invoiceId) {
-        const res = await updateInvoice(invoiceId, payload);
+        const res = await updateInvoice(invoiceId, hasQuote ? { ...payload, deduct_payments: deductPayments } : payload);
         if (res?.error) {
           setError(res.error);
           return;
@@ -168,6 +172,25 @@ export default function InvoiceForm({
           </div>
         </div>
       </div>
+
+      {hasQuote && (
+        <label className="flex items-start gap-3 rounded-2xl bg-white p-4 md:p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+          <input
+            type="checkbox"
+            checked={deductPayments}
+            onChange={(e) => setDeductPayments(e.target.checked)}
+            className="mt-0.5 h-5 w-5 shrink-0 accent-[#B0546F]"
+          />
+          <span>
+            <span className="block font-sans text-[13.5px] font-semibold" style={{ color: "var(--noir)" }}>
+              Déduire les paiements déjà reçus
+            </span>
+            <span className="block font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.55)" }}>
+              La facture affiche « Déjà payé » (acompte…) et le reste à payer, d&apos;après le suivi du devis.
+            </span>
+          </span>
+        </label>
+      )}
 
       <button
         type="submit"

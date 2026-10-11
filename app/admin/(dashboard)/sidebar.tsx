@@ -6,18 +6,18 @@ import {
   SquaresFour,
   Users,
   FileText,
-  Receipt,
+  Wallet,
   CalendarBlank,
   Gear,
   SignOut,
 } from "@phosphor-icons/react";
 import { logout } from "../actions";
 
-const NAV = [
+const NAV: { href: string; label: string; short: string; icon: typeof SquaresFour; exact?: boolean; also?: string[] }[] = [
   { href: "/admin", label: "Vue d'ensemble", short: "Accueil", icon: SquaresFour, exact: true },
   { href: "/admin/clients", label: "Clients", short: "Clients", icon: Users },
   { href: "/admin/devis", label: "Devis", short: "Devis", icon: FileText },
-  { href: "/admin/factures", label: "Factures", short: "Factures", icon: Receipt },
+  { href: "/admin/paiements", label: "Paiements", short: "Paiements", icon: Wallet, also: ["/admin/factures"] },
   { href: "/admin/agenda", label: "Agenda", short: "Agenda", icon: CalendarBlank },
   { href: "/admin/reglages", label: "Réglages", short: "Réglages", icon: Gear },
 ];
@@ -25,7 +25,9 @@ const NAV = [
 export default function Sidebar({ email }: { email: string }) {
   const pathname = usePathname();
   const isActive = (item: (typeof NAV)[number]) =>
-    item.exact ? pathname === item.href : pathname.startsWith(item.href);
+    item.exact
+      ? pathname === item.href
+      : pathname.startsWith(item.href) || (item.also ?? []).some((p) => pathname.startsWith(p));
 
   return (
     <>

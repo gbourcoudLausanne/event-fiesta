@@ -5,6 +5,7 @@ import QuoteForm from "../quote-form";
 import StatusControls from "./status-controls";
 import SendControls from "./send-controls";
 import PaymentsPanel from "./payments-panel";
+import QuoteInvoices from "./quote-invoices";
 import { PAYMENT_COLUMNS, type QuotePayment } from "@/lib/quote-payments";
 import type { ShareLang } from "@/lib/quote-share";
 import LanguageControls from "./language-controls";
@@ -41,6 +42,12 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
     .eq("quote_id", quote.id)
     .order("position");
   const payments = (paymentRows ?? []) as QuotePayment[];
+
+  const { data: invoiceRows } = await supabase
+    .from("invoices")
+    .select("id, reference, status, created_at")
+    .eq("quote_id", quote.id)
+    .order("created_at");
 
   // Historique : chaque étape datée, du plus ancien au plus récent
   const history = [
@@ -128,6 +135,10 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
           balanceTerms={quote.balance_due_terms}
           hasClientEmail={!!clientRow?.email}
         />
+      )}
+
+      {(quote.signed_at || quote.status === "accepte") && (
+        <QuoteInvoices quoteId={quote.id} invoices={invoiceRows ?? []} />
       )}
 
       <details className="mb-6 rounded-2xl bg-white px-4 py-3 md:px-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>

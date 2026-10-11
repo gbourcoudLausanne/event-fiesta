@@ -65,6 +65,12 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
     .eq("quote_id", quote.id)
     .order("position");
   const payments = (paymentRows ?? []) as QuotePayment[];
+  const { data: invoiceRows } = await supabase
+    .from("invoices")
+    .select("reference, public_token, created_at")
+    .eq("quote_id", quote.id)
+    .neq("status", "annulee")
+    .order("created_at");
 
   const lang = ((quote.client_language as DevisLang | null) ?? "fr") as DevisLang;
   const t = DEVIS_I18N[lang];
@@ -369,6 +375,27 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
           iban={settings?.iban ?? null}
           creditorName={settings?.creditor_name ?? null}
         />
+      )}
+
+      {isSigned && (invoiceRows ?? []).length > 0 && (
+        <div className="mt-4 rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+          <p className="mb-2 font-sans text-[12px] font-semibold uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.5)" }}>
+            {{ fr: "Vos factures", es: "Tus facturas", en: "Your invoices" }[lang]}
+          </p>
+          {(invoiceRows ?? []).map((inv) => (
+            <a
+              key={inv.public_token}
+              href={`/facture/${inv.public_token}/pdf`}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center justify-between gap-3 py-2 font-sans text-[13.5px]"
+              style={{ color: "var(--noir)" }}
+            >
+              <span className="font-medium">{inv.reference}</span>
+              <span style={{ color: "var(--rose-deep)" }}>PDF ↓</span>
+            </a>
+          ))}
+        </div>
       )}
     </div>
   );

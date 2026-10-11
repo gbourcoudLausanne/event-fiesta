@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import InvoiceForm from "../invoice-form";
 import StatusControls from "./status-controls";
+import InvoiceSendControls from "./invoice-send-controls";
 
 const STATUS_LABELS: Record<string, string> = {
   en_attente: "En attente",
@@ -15,13 +17,15 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
 
   const { data: invoice } = await supabase
     .from("invoices")
-    .select("id, reference, tax_rate, items, status, due_date, client_id, clients(full_name)")
+    .select("id, reference, tax_rate, items, status, due_date, client_id, quote_id, public_token, deduct_payments, clients(full_name, email, phone), quotes(id, reference)")
     .eq("id", id)
     .single();
 
   if (!invoice) notFound();
 
-  const clientName = (invoice.clients as unknown as { full_name: string } | null)?.full_name ?? "—";
+  const clientRow = invoice.clients as unknown as { full_name: string; email: string | null; phone: string | null } | null;
+  const clientName = clientRow?.full_name ?? "—";
+  const linkedQuote = invoice.quotes as unknown as { id: string; reference: string } | null;
 
   return (
     <div>
@@ -37,12 +41,36 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
         <StatusControls invoiceId={invoice.id} clientId={invoice.client_id} status={invoice.status} labels={STATUS_LABELS} />
       </div>
 
+      {linkedQuote && (
+        <Link
+          href={`/admin/devis/${linkedQuote.id}`}
+          className="mb-4 flex items-center justify-between gap-3 rounded-2xl px-4 py-3 font-sans text-[13px]"
+          style={{ background: "var(--creme-2)", color: "var(--noir)" }}
+        >
+          <span>
+            Liée au devis <strong>{linkedQuote.reference}</strong>
+          </span>
+          <span style={{ color: "var(--rose-deep)" }}>Ouvrir le devis →</span>
+        </Link>
+      )}
+
+      <InvoiceSendControls
+        invoiceId={invoice.id}
+        reference={invoice.reference}
+        link={`https://eventfiesta.ch/facture/${invoice.public_token}/pdf`}
+        clientName={clientName}
+        clientEmail={clientRow?.email ?? null}
+        clientPhone={clientRow?.phone ?? null}
+      />
+
       <InvoiceForm
         clientId={invoice.client_id}
         invoiceId={invoice.id}
+        hasQuote={!!linkedQuote}
         initial={{
           tax_rate: invoice.tax_rate,
           due_date: invoice.due_date ?? "",
+          deduct_payments: invoice.deduct_payments ?? true,
           items: (invoice.items as { description: string; quantity: number; unit: string; unit_price: number }[]) ?? [],
         }}
       />

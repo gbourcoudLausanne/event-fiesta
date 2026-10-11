@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Plus } from "@phosphor-icons/react/dist/ssr";
+import MoneyTabs from "../money-tabs";
 
 const STATUS_LABELS: Record<string, string> = {
   en_attente: "En attente",
@@ -23,15 +24,16 @@ export default async function FacturesListPage() {
   const supabase = await createClient();
   const { data: invoices } = await supabase
     .from("invoices")
-    .select("id, reference, status, tax_rate, items, created_at, clients(full_name)")
+    .select("id, reference, status, tax_rate, items, created_at, clients(full_name), quotes(reference)")
     .order("created_at", { ascending: false });
 
   return (
     <div>
-      <div className="mb-5 flex items-center justify-between gap-3 md:mb-6">
-        <h1 className="font-display text-[23px] md:text-[26px]" style={{ color: "var(--noir)" }}>
-          Factures
-        </h1>
+      <h1 className="mb-4 font-display text-[23px] md:text-[26px]" style={{ color: "var(--noir)" }}>
+        Paiements
+      </h1>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <MoneyTabs active="factures" />
         <Link
           href="/admin/factures/nouveau"
           className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 font-sans text-[13px] font-medium md:py-2"
@@ -40,6 +42,9 @@ export default async function FacturesListPage() {
           <Plus size={14} weight="bold" /> Nouvelle facture
         </Link>
       </div>
+      <p className="-mt-2 mb-4 font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>
+        Factures classiques, au besoin. Le plus simple : depuis un devis signé, bouton « Créer une facture ».
+      </p>
       <div className="rounded-2xl bg-white" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
         {!invoices || invoices.length === 0 ? (
           <p className="px-5 py-8 text-center font-sans text-[13.5px]" style={{ color: "rgba(13,11,8,0.4)" }}>
@@ -59,6 +64,7 @@ export default async function FacturesListPage() {
                 </p>
                 <p className="truncate font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>
                   {(inv.clients as unknown as { full_name: string } | null)?.full_name ?? "—"} · {STATUS_LABELS[inv.status]}
+                  {(inv.quotes as unknown as { reference: string } | null)?.reference ? ` · devis ${(inv.quotes as unknown as { reference: string }).reference}` : ""}
                 </p>
               </div>
               <p className="shrink-0 whitespace-nowrap font-sans text-[13.5px] font-semibold md:text-[14px]" style={{ color: "var(--noir)" }}>

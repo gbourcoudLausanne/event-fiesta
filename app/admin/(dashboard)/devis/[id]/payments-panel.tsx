@@ -34,7 +34,17 @@ function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString("fr-CH", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Zurich" });
 }
 
-function PaymentRow({ p, balanceTerms, hasClientEmail }: { p: QuotePayment; balanceTerms: string | null; hasClientEmail: boolean }) {
+export function PaymentRow({
+  p,
+  balanceTerms,
+  hasClientEmail,
+  noBorder = false,
+}: {
+  p: QuotePayment;
+  balanceTerms: string | null;
+  hasClientEmail: boolean;
+  noBorder?: boolean;
+}) {
   const router = useRouter();
   const [mode, setMode] = useState<"view" | "pay" | "edit">("view");
   const [method, setMethod] = useState<Method>("twint");
@@ -59,7 +69,7 @@ function PaymentRow({ p, balanceTerms, hasClientEmail }: { p: QuotePayment; bala
   }
 
   return (
-    <div className="py-3" style={{ borderTop: "1px solid rgba(13,11,8,0.06)" }}>
+    <div className={noBorder ? "pb-3 pt-1" : "py-3"} style={noBorder ? undefined : { borderTop: "1px solid rgba(13,11,8,0.06)" }}>
       {mode === "edit" ? (
         <div className="grid grid-cols-2 gap-2">
           <input value={label} onChange={(e) => setLabel(e.target.value)} placeholder={KIND_LABEL[p.kind]} className={inputCls + " col-span-2 sm:col-span-1"} style={inputStyle} />

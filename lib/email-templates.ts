@@ -410,3 +410,30 @@ export function renderRemindersDigestEmail(lines: { label: string; value: string
     </tr>
   `);
 }
+
+// ─── E-mail au client : facture (PDF joint) ──────────────────────────────
+
+export function renderInvoiceEmail(opts: { firstName: string; reference: string; amountDue: string; dueDate: string | null; link: string }): string {
+  const p = (t: string) =>
+    `<p style="margin:0 0 14px;color:${BRAND.ink};font-size:14.5px;line-height:1.6;font-family:${SANS};">${t}</p>`;
+  return wrapper(`
+    ${header(`Facture ${esc(opts.reference)}`)}
+    <tr>
+      <td style="padding:28px 32px 4px;">
+        ${p(`Bonjour ${esc(opts.firstName)},`)}
+        ${p(`Vous trouverez ci-joint votre facture <strong>${esc(opts.reference)}</strong>. Montant à régler : <strong>${esc(opts.amountDue)}</strong>${opts.dueDate ? `, d'ici au ${esc(opts.dueDate)}` : ""}.`)}
+        ${p("Les informations de paiement (Twint ou virement) figurent sur la facture.")}
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:6px 32px 22px;">
+        <a href="${opts.link}" style="display:inline-block;background:${BRAND.pink};color:#ffffff;text-decoration:none;font-size:14.5px;font-weight:600;padding:14px 26px;border-radius:12px;font-family:${SANS};">Voir la facture</a>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 26px;">
+        ${p("Merci pour votre confiance !<br/>Event Fiesta")}
+      </td>
+    </tr>
+  `);
+}
