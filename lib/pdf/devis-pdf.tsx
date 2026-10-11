@@ -503,11 +503,17 @@ export function DevisPdfDocument({
 
           <Text style={styles.thankYou}>{t.thankYou}</Text>
 
-          <View style={styles.ctaBox}>
-            <Text style={styles.ctaText}>{t.ctaQuestion}</Text>
-            <Text style={styles.ctaContact}>WhatsApp +41 77 914 38 55</Text>
-          </View>
-          <Text style={styles.validity}>{t.validity}</Text>
+          {/* Une fois signé, la validité et l'invitation à poser des questions n'ont plus lieu d'être
+              (et le bloc signature doit tenir sur la même page). */}
+          {!signedAt && (
+            <>
+              <View style={styles.ctaBox}>
+                <Text style={styles.ctaText}>{t.ctaQuestion}</Text>
+                <Text style={styles.ctaContact}>WhatsApp +41 77 914 38 55</Text>
+              </View>
+              <Text style={styles.validity}>{t.validity}</Text>
+            </>
+          )}
         </View>
 
         <View style={styles.footer} fixed>
