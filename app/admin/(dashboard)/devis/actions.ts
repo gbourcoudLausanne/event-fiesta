@@ -118,7 +118,16 @@ export async function updateQuoteStatus(id: string, status: string) {
 
 export async function deleteQuote(id: string, clientId: string | null) {
   const supabase = await createClient();
-  await supabase.from("quotes").delete().eq("id", id);
+  const { error } = await supabase.from("quotes").delete().eq("id", id);
+
+  // Images de référence : toutes rangées sous `${quoteId}/` dans le bucket.
+  if (!error) {
+    const { data: files } = await supabase.storage.from("quote-images").list(id, { limit: 1000 });
+    if (files && files.length > 0) {
+      await supabase.storage.from("quote-images").remove(files.map((f) => `${id}/${f.name}`));
+    }
+  }
+
   revalidatePath("/admin/devis");
   if (clientId) revalidatePath(`/admin/clients/${clientId}`);
   redirect(clientId ? `/admin/clients/${clientId}` : "/admin/devis");

@@ -48,7 +48,7 @@ export default function StatusControls({
       <ConfirmDeleteButton
         onConfirm={handleDelete}
         title="Supprimer ce devis ?"
-        message="Le devis et sa signature éventuelle seront définitivement supprimés. Le lien client ne fonctionnera plus."
+        message="Le devis, sa signature éventuelle et ses images seront définitivement supprimés. Le lien client ne fonctionnera plus."
       />
     </div>
   );
