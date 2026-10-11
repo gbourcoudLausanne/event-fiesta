@@ -348,3 +348,65 @@ export function renderPaymentReceivedEmail(opts: {
     </tr>
   `);
 }
+
+// ─── E-mail au client : relance (devis sans réponse, acompte, solde) ─────
+
+export function renderReminderEmail(opts: {
+  lang: "fr" | "es" | "en";
+  firstName: string;
+  title: string;
+  heading: string;
+  body: string;
+  footnote: string | null;
+  buttonLabel: string;
+  link: string;
+}): string {
+  const c = shareCopy(opts.lang);
+  const p = (t: string) =>
+    `<p style="margin:0 0 14px;color:${BRAND.ink};font-size:14.5px;line-height:1.6;font-family:${SANS};">${t}</p>`;
+
+  return wrapper(`
+    ${header(esc(opts.heading), esc(opts.title))}
+    <tr>
+      <td style="padding:28px 32px 4px;">
+        ${p(esc(c.greeting(opts.firstName)))}
+        ${p(esc(opts.body))}
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:6px 32px 22px;">
+        <a href="${opts.link}" style="display:inline-block;background:${BRAND.pink};color:#ffffff;text-decoration:none;font-size:14.5px;font-weight:600;padding:14px 26px;border-radius:12px;font-family:${SANS};">${esc(opts.buttonLabel)}</a>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 26px;">
+        ${opts.footnote ? `<p style="margin:0 0 14px;color:${BRAND.muted};font-size:12.5px;line-height:1.5;font-family:${SANS};">${esc(opts.footnote)}</p>` : ""}
+        ${p(esc(c.closing).replace(/\n/g, "<br/>"))}
+      </td>
+    </tr>
+  `);
+}
+
+// ─── E-mail interne : récap des relances envoyées ────────────────────────
+
+export function renderRemindersDigestEmail(lines: { label: string; value: string; url: string }[]): string {
+  const rows = lines
+    .map(
+      (l) => `
+    <tr>
+      <td style="padding:10px 0;border-bottom:1px solid rgba(42,35,32,0.07);vertical-align:top;">
+        <a href="${l.url}" style="font-size:14px;color:${BRAND.ink};font-family:${SANS};text-decoration:none;font-weight:600;">${esc(l.label)}</a><br/>
+        <span style="font-size:12.5px;color:${BRAND.muted};font-family:${SANS};">${esc(l.value)}</span>
+      </td>
+    </tr>`,
+    )
+    .join("");
+  return wrapper(`
+    ${header("Relances envoyées", "Récapitulatif automatique du jour")}
+    <tr>
+      <td style="padding:22px 32px 26px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rows}</table>
+      </td>
+    </tr>
+  `);
+}

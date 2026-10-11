@@ -13,11 +13,12 @@ export async function updateSettings(
   const creditor_city = String(formData.get("creditor_city") ?? "").trim() || null;
   const iban = String(formData.get("iban") ?? "").trim() || null;
   const twint_phone = String(formData.get("twint_phone") ?? "").trim() || null;
+  const auto_reminders = formData.get("auto_reminders") === "on";
 
   const supabase = await createClient();
   const { error } = await supabase
     .from("settings")
-    .update({ creditor_name, creditor_address, creditor_zip, creditor_city, iban, twint_phone })
+    .update({ creditor_name, creditor_address, creditor_zip, creditor_city, iban, twint_phone, auto_reminders })
     .eq("id", true);
 
   if (error) return { error: "L'enregistrement a échoué. Réessaie." };

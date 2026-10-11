@@ -7,6 +7,7 @@ import {
   Users,
   FileText,
   Receipt,
+  CalendarBlank,
   Gear,
   SignOut,
 } from "@phosphor-icons/react";
@@ -17,6 +18,7 @@ const NAV = [
   { href: "/admin/clients", label: "Clients", short: "Clients", icon: Users },
   { href: "/admin/devis", label: "Devis", short: "Devis", icon: FileText },
   { href: "/admin/factures", label: "Factures", short: "Factures", icon: Receipt },
+  { href: "/admin/agenda", label: "Agenda", short: "Agenda", icon: CalendarBlank },
   { href: "/admin/reglages", label: "Réglages", short: "Réglages", icon: Gear },
 ];
 
@@ -117,7 +119,7 @@ export default function Sidebar({ email }: { email: string }) {
 
       {/* Mobile : onglets en bas */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 md:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-6 md:hidden"
         style={{
           background: "var(--noir)",
           paddingBottom: "env(safe-area-inset-bottom)",
@@ -131,7 +133,7 @@ export default function Sidebar({ email }: { email: string }) {
             <Link
               key={item.href}
               href={item.href}
-              className="flex flex-col items-center gap-0.5 pb-2 pt-2.5 font-sans text-[10.5px]"
+              className="flex flex-col items-center gap-0.5 pb-2 pt-2.5 font-sans text-[10px]"
               style={{ color: active ? "var(--rose-light)" : "rgba(250,247,242,0.6)" }}
             >
               <Icon size={22} weight={active ? "fill" : "regular"} />

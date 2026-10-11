@@ -5,7 +5,7 @@ export default async function ReglagesPage() {
   const supabase = await createClient();
   const { data: settings } = await supabase
     .from("settings")
-    .select("creditor_name, creditor_address, creditor_zip, creditor_city, iban, twint_phone")
+    .select("creditor_name, creditor_address, creditor_zip, creditor_city, iban, twint_phone, auto_reminders")
     .eq("id", true)
     .single();
 

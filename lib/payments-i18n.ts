@@ -143,3 +143,72 @@ export function paymentDue(
 export function twintReference(reference: string, label: string) {
   return `${reference} ${label.toLowerCase()}`;
 }
+
+// ─── Relances automatiques ───────────────────────────────────────────────
+
+export const REMINDER_I18N: Record<PayLang, {
+  quoteSubject: (title: string) => string;
+  quoteTitle: string;
+  quoteBody: (title: string) => string;
+  quoteButton: string;
+  depositSubject: string;
+  depositTitle: string;
+  depositBody: (amount: string, phone: string, ref: string) => string;
+  balanceSubject: string;
+  balanceTitle: string;
+  balanceBody: (amount: string, phone: string, ref: string) => string;
+  trackButton: string;
+  ignoreIfPaid: string;
+}> = {
+  fr: {
+    quoteSubject: (t) => `Votre devis vous attend — ${t}`,
+    quoteTitle: "Votre devis vous attend",
+    quoteBody: (t) =>
+      `Je me permets de revenir vers vous au sujet du devis « ${t} ». Avez-vous pu le consulter ? Il reste disponible en ligne, et je suis à votre disposition pour toute question ou adaptation.`,
+    quoteButton: "Voir le devis",
+    depositSubject: "Petit rappel : l'acompte de votre événement",
+    depositTitle: "Rappel : acompte",
+    depositBody: (a, p, r) =>
+      `Petit rappel : l'acompte de ${a} n'est pas encore arrivé. Pour bloquer la date et lancer la préparation, merci de le régler par Twint au ${p}, avec le message « ${r} ».`,
+    balanceSubject: "C'est bientôt le jour J !",
+    balanceTitle: "Le jour J approche",
+    balanceBody: (a, p, r) =>
+      `Tout est prêt pour votre événement ! Petit rappel : le solde de ${a} reste à régler. Par Twint au ${p}, avec le message « ${r} ».`,
+    trackButton: "Voir le suivi",
+    ignoreIfPaid: "Si vous avez déjà payé, merci de ne pas tenir compte de ce message.",
+  },
+  es: {
+    quoteSubject: (t) => `Tu presupuesto te espera — ${t}`,
+    quoteTitle: "Tu presupuesto te espera",
+    quoteBody: (t) =>
+      `Te escribo de nuevo sobre el presupuesto « ${t} ». ¿Pudiste revisarlo? Sigue disponible en línea, y quedo a tu disposición para cualquier pregunta o ajuste.`,
+    quoteButton: "Ver el presupuesto",
+    depositSubject: "Pequeño recordatorio: el anticipo de tu evento",
+    depositTitle: "Recordatorio: anticipo",
+    depositBody: (a, p, r) =>
+      `Pequeño recordatorio: el anticipo de ${a} aún no ha llegado. Para reservar la fecha y empezar la preparación, por favor págalo por Twint al ${p}, con el mensaje « ${r} ».`,
+    balanceSubject: "¡Ya casi es el gran día!",
+    balanceTitle: "Se acerca el gran día",
+    balanceBody: (a, p, r) =>
+      `¡Todo está listo para tu evento! Pequeño recordatorio: queda por pagar el saldo de ${a}. Por Twint al ${p}, con el mensaje « ${r} ».`,
+    trackButton: "Ver el seguimiento",
+    ignoreIfPaid: "Si ya pagaste, por favor ignora este mensaje.",
+  },
+  en: {
+    quoteSubject: (t) => `Your quote is waiting — ${t}`,
+    quoteTitle: "Your quote is waiting",
+    quoteBody: (t) =>
+      `I'm following up on the quote "${t}". Have you had a chance to look at it? It's still available online, and I'm happy to answer any questions or make adjustments.`,
+    quoteButton: "View the quote",
+    depositSubject: "Friendly reminder: your event deposit",
+    depositTitle: "Reminder: deposit",
+    depositBody: (a, p, r) =>
+      `Friendly reminder: the ${a} deposit hasn't arrived yet. To secure the date and start the preparation, please pay it via Twint to ${p}, with the message "${r}".`,
+    balanceSubject: "The big day is almost here!",
+    balanceTitle: "The big day is coming",
+    balanceBody: (a, p, r) =>
+      `Everything is ready for your event! Friendly reminder: the ${a} balance is still due. Via Twint to ${p}, with the message "${r}".`,
+    trackButton: "View the tracker",
+    ignoreIfPaid: "If you've already paid, please disregard this message.",
+  },
+};

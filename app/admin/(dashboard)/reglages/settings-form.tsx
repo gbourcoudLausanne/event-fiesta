@@ -16,6 +16,7 @@ export type SettingsValues = {
   creditor_city: string | null;
   iban: string | null;
   twint_phone: string | null;
+  auto_reminders: boolean;
 } | null;
 
 export default function SettingsForm({ settings }: { settings: SettingsValues }) {
@@ -66,6 +67,26 @@ export default function SettingsForm({ settings }: { settings: SettingsValues })
       <div className="col-span-2">
         <label className={labelCls} style={labelStyle}>Numéro Twint</label>
         <input name="twint_phone" type="tel" defaultValue={settings?.twint_phone ?? ""} placeholder="+41 77 914 38 55" className={inputCls} style={inputStyle} />
+      </div>
+
+      <div className="col-span-2 mt-2 rounded-xl p-3.5" style={{ background: "var(--creme-2)" }}>
+        <label className="flex items-start gap-3">
+          <input
+            type="checkbox"
+            name="auto_reminders"
+            defaultChecked={settings?.auto_reminders ?? true}
+            className="mt-0.5 h-5 w-5 shrink-0 accent-[#B0546F]"
+          />
+          <span>
+            <span className="block font-sans text-[13.5px] font-semibold" style={{ color: "var(--noir)" }}>
+              Relances automatiques aux clients
+            </span>
+            <span className="block font-sans text-[12px] leading-relaxed" style={{ color: "rgba(13,11,8,0.55)" }}>
+              Chaque matin, un e-mail part (une seule fois) : devis envoyé sans réponse depuis 7 jours, acompte pas payé
+              48 h après la signature, solde pas payé la veille de l&apos;événement. Tu reçois un récapitulatif.
+            </span>
+          </span>
+        </label>
       </div>
 
       <button
