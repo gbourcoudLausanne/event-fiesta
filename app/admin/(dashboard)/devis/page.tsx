@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { Plus } from "@phosphor-icons/react/dist/ssr";
 
 const STATUS_LABELS: Record<string, string> = {
   brouillon: "Brouillon",
@@ -29,13 +30,22 @@ export default async function DevisListPage() {
 
   return (
     <div>
-      <h1 className="mb-6 font-display text-[23px] md:text-[26px]" style={{ color: "var(--noir)" }}>
-        Devis
-      </h1>
+      <div className="mb-5 flex items-center justify-between gap-3 md:mb-6">
+        <h1 className="font-display text-[23px] md:text-[26px]" style={{ color: "var(--noir)" }}>
+          Devis
+        </h1>
+        <Link
+          href="/admin/devis/nouveau"
+          className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 font-sans text-[13px] font-medium md:py-2"
+          style={{ background: "var(--rose-deep)", color: "var(--creme)" }}
+        >
+          <Plus size={14} weight="bold" /> Nouveau devis
+        </Link>
+      </div>
       <div className="rounded-2xl bg-white" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
         {!quotes || quotes.length === 0 ? (
           <p className="px-5 py-8 text-center font-sans text-[13.5px]" style={{ color: "rgba(13,11,8,0.4)" }}>
-            Aucun devis — crée-en un depuis une fiche client.
+            Aucun devis pour l&apos;instant — appuie sur « Nouveau devis ».
           </p>
         ) : (
           quotes.map((q, i) => (

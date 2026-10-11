@@ -21,3 +21,31 @@ export async function deleteClientRecord(id: string) {
   await supabase.from("clients").delete().eq("id", id);
   revalidatePath("/admin/clients");
 }
+
+// Création depuis le parcours "Nouveau devis" : renvoie l'id pour enchaîner sur le devis.
+export async function createClientForQuote(input: {
+  full_name: string;
+  email: string;
+  phone: string;
+  address: string;
+}): Promise<{ id?: string; error?: string }> {
+  const full_name = input.full_name.trim();
+  if (!full_name) return { error: "Le nom du client est obligatoire." };
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("clients")
+    .insert({
+      full_name,
+      email: input.email.trim() || null,
+      phone: input.phone.trim() || null,
+      address: input.address.trim() || null,
+    })
+    .select("id")
+    .single();
+
+  if (error || !data) return { error: "Impossible de créer le client. Réessaie." };
+
+  revalidatePath("/admin/clients");
+  return { id: data.id };
+}

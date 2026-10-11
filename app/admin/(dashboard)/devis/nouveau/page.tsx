@@ -1,6 +1,7 @@
-import { redirect } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import QuoteForm from "../quote-form";
+import ClientPicker from "./client-picker";
 
 export default async function NewQuotePage({
   searchParams,
@@ -8,24 +9,43 @@ export default async function NewQuotePage({
   searchParams: Promise<{ client?: string }>;
 }) {
   const { client } = await searchParams;
-  if (!client) redirect("/admin/clients");
-
   const supabase = await createClient();
-  const { data: clientRow } = await supabase
-    .from("clients")
-    .select("id, full_name")
-    .eq("id", client)
-    .single();
 
-  if (!clientRow) redirect("/admin/clients");
+  const clientRow = client
+    ? (await supabase.from("clients").select("id, full_name").eq("id", client).single()).data
+    : null;
 
+  // Étape 1 : choisir un client existant ou en créer un nouveau
+  if (!clientRow) {
+    const { data: clients } = await supabase
+      .from("clients")
+      .select("id, full_name, email, phone")
+      .order("full_name", { ascending: true });
+
+    return (
+      <div>
+        <Link href="/admin/devis" className="mb-4 inline-block font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>
+          ← Devis
+        </Link>
+        <h1 className="mb-5 font-display text-[23px] md:mb-6 md:text-[26px]" style={{ color: "var(--noir)" }}>
+          Nouveau devis
+        </h1>
+        <ClientPicker clients={clients ?? []} />
+      </div>
+    );
+  }
+
+  // Étape 2 : le devis
   return (
     <div>
       <h1 className="mb-1 font-display text-[23px] md:text-[26px]" style={{ color: "var(--noir)" }}>
         Nouveau devis
       </h1>
       <p className="mb-6 font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.5)" }}>
-        Client : {clientRow.full_name}
+        Client : {clientRow.full_name} ·{" "}
+        <Link href="/admin/devis/nouveau" className="underline" style={{ color: "var(--rose-deep)" }}>
+          changer
+        </Link>
       </p>
       <QuoteForm clientId={clientRow.id} />
     </div>
