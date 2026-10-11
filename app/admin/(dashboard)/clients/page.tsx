@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { createClientRecord, deleteClientRecord } from "./actions";
-import { Trash } from "@phosphor-icons/react/dist/ssr";
+import ConfirmDeleteButton from "../confirm-delete-button";
 
 const inputCls =
   "w-full rounded-xl bg-white px-3.5 py-2.5 font-sans text-[13.5px] outline-none";
@@ -68,17 +68,12 @@ export default async function ClientsPage() {
                   {[c.email, c.phone, c.address].filter(Boolean).join(" · ") || "—"}
                 </p>
               </Link>
-              <form action={deleteClientRecord.bind(null, c.id)}>
-                <button
-                  type="submit"
-                  className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-black/5 md:h-8 md:w-8"
-                  style={{ color: "rgba(13,11,8,0.35)" }}
-                  title="Supprimer"
-                  aria-label="Supprimer"
-                >
-                  <Trash size={15} />
-                </button>
-              </form>
+              <ConfirmDeleteButton
+                onConfirm={deleteClientRecord.bind(null, c.id)}
+                title={`Supprimer ${c.full_name} ?`}
+                message="La fiche client sera définitivement supprimée. Ses devis et factures sont conservés, mais ne seront plus rattachés à un client."
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors hover:bg-black/5 md:h-8 md:w-8"
+              />
             </div>
           ))
         )}

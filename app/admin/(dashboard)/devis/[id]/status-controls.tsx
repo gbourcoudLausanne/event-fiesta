@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { updateQuoteStatus, deleteQuote } from "../actions";
-import { Trash } from "@phosphor-icons/react";
+import ConfirmDeleteButton from "../../confirm-delete-button";
 
 const STATUS_ORDER = ["brouillon", "envoye", "accepte", "refuse"];
 
@@ -28,10 +28,8 @@ export default function StatusControls({
     });
   }
 
-  function handleDelete() {
-    startTransition(async () => {
-      await deleteQuote(quoteId, clientId);
-    });
+  async function handleDelete() {
+    await deleteQuote(quoteId, clientId);
   }
 
   return (
@@ -47,17 +45,11 @@ export default function StatusControls({
           <option key={s} value={s}>{labels[s]}</option>
         ))}
       </select>
-      <button
-        type="button"
-        onClick={handleDelete}
-        disabled={isPending}
-        className="flex h-9 w-9 items-center justify-center rounded-xl transition-colors hover:bg-black/5"
-        style={{ color: "rgba(13,11,8,0.4)" }}
-        title="Supprimer"
-        aria-label="Supprimer"
-      >
-        <Trash size={15} />
-      </button>
+      <ConfirmDeleteButton
+        onConfirm={handleDelete}
+        title="Supprimer ce devis ?"
+        message="Le devis et sa signature éventuelle seront définitivement supprimés. Le lien client ne fonctionnera plus."
+      />
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { updateInvoiceStatus, deleteInvoice } from "../actions";
-import { Trash } from "@phosphor-icons/react";
+import ConfirmDeleteButton from "../../confirm-delete-button";
 
 const STATUS_ORDER = ["en_attente", "payee", "annulee"];
 
@@ -28,10 +28,8 @@ export default function StatusControls({
     });
   }
 
-  function handleDelete() {
-    startTransition(async () => {
-      await deleteInvoice(invoiceId, clientId);
-    });
+  async function handleDelete() {
+    await deleteInvoice(invoiceId, clientId);
   }
 
   return (
@@ -47,17 +45,11 @@ export default function StatusControls({
           <option key={s} value={s}>{labels[s]}</option>
         ))}
       </select>
-      <button
-        type="button"
-        onClick={handleDelete}
-        disabled={isPending}
-        className="flex h-9 w-9 items-center justify-center rounded-xl transition-colors hover:bg-black/5"
-        style={{ color: "rgba(13,11,8,0.4)" }}
-        title="Supprimer"
-        aria-label="Supprimer"
-      >
-        <Trash size={15} />
-      </button>
+      <ConfirmDeleteButton
+        onConfirm={handleDelete}
+        title="Supprimer cette facture ?"
+        message="La facture sera définitivement supprimée."
+      />
     </div>
   );
 }
