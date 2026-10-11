@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { renderToBuffer } from "@react-pdf/renderer";
 import { createClient } from "@/lib/supabase/server";
-import { DevisPdfDocument, type DevisPdfItem } from "@/lib/pdf/devis-pdf";
+import { buildQuotePdf } from "@/lib/pdf/build-quote-pdf";
 
 export const runtime = "nodejs";
 
@@ -15,57 +14,15 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   }
 
   const { id } = await params;
-  const [{ data: quote }, { data: settings }] = await Promise.all([
-    supabase
-      .from("quotes")
-      .select(
-        "reference, title, event_type, event_date, venue, tax_rate, items, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, client_language, translated_content, show_notes, notes_text, clients(full_name, email, phone, address)",
-      )
-      .eq("id", id)
-      .single(),
-    supabase.from("settings").select("creditor_name, iban, twint_phone").eq("id", true).single(),
-  ]);
-
-  if (!quote) {
+  const pdf = await buildQuotePdf(supabase, { id });
+  if (!pdf) {
     return NextResponse.json({ error: "Devis introuvable." }, { status: 404 });
   }
 
-  const client = quote.clients as unknown as {
-    full_name: string;
-    email: string | null;
-    phone: string | null;
-    address: string | null;
-  } | null;
-
-  const buffer = await renderToBuffer(
-    DevisPdfDocument({
-      reference: quote.reference,
-      title: quote.title,
-      createdAt: quote.created_at,
-      eventType: quote.event_type,
-      eventDate: quote.event_date,
-      venue: quote.venue,
-      client: client ?? { full_name: "—", email: null, phone: null, address: null },
-      items: (quote.items as DevisPdfItem[]) ?? [],
-      taxRate: quote.tax_rate,
-      depositPercent: quote.deposit_percent,
-      depositAmountFixed: quote.deposit_amount,
-      balanceDueTerms: quote.balance_due_terms,
-      paymentMethods: quote.payment_methods ?? [],
-      pricingMode: (quote.pricing_mode as "detaille" | "forfait") ?? "detaille",
-      packageTotal: quote.package_total,
-      lang: (quote.client_language as "fr" | "es" | "en") ?? "fr",
-      translatedContent: quote.translated_content,
-      showNotes: quote.show_notes,
-      notesText: quote.notes_text,
-      settings,
-    }),
-  );
-
-  return new NextResponse(new Uint8Array(buffer), {
+  return new NextResponse(new Uint8Array(pdf.buffer), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `inline; filename="devis-${quote.reference}.pdf"`,
+      "Content-Disposition": `inline; filename="${pdf.filename}"`,
     },
   });
 }

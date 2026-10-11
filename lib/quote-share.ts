@@ -10,6 +10,12 @@ const COPY: Record<ShareLang, {
   closing: string;
   subject: (title: string) => string;
   button: string;
+  pdfNote: string;
+  confirmSubject: (title: string) => string;
+  confirmTitle: string;
+  confirmIntro: (date: string, time: string) => string;
+  confirmBody: string;
+  confirmButton: string;
 }> = {
   fr: {
     greeting: (n) => `Bonjour ${n},`,
@@ -18,6 +24,12 @@ const COPY: Record<ShareLang, {
     closing: "Belle journée,\nEvent Fiesta",
     subject: (t) => `Votre devis Event Fiesta — ${t}`,
     button: "Voir et signer le devis",
+    pdfNote: "Vous trouverez aussi le devis en PDF en pièce jointe.",
+    confirmSubject: (t) => `Devis confirmé — ${t}`,
+    confirmTitle: "Merci, votre devis est confirmé !",
+    confirmIntro: (d, h) => `Vous avez accepté ce devis le ${d} à ${h}.`,
+    confirmBody: "Vous trouverez en pièce jointe votre devis signé en PDF. Vous pouvez aussi le retrouver en ligne à tout moment :",
+    confirmButton: "Voir mon devis en ligne",
   },
   es: {
     greeting: (n) => `Hola ${n},`,
@@ -26,6 +38,12 @@ const COPY: Record<ShareLang, {
     closing: "¡Un abrazo!\nEvent Fiesta",
     subject: (t) => `Tu presupuesto Event Fiesta — ${t}`,
     button: "Ver y firmar el presupuesto",
+    pdfNote: "También encontrarás el presupuesto en PDF adjunto.",
+    confirmSubject: (t) => `Presupuesto confirmado — ${t}`,
+    confirmTitle: "¡Gracias, tu presupuesto está confirmado!",
+    confirmIntro: (d, h) => `Aceptaste este presupuesto el ${d} a las ${h}.`,
+    confirmBody: "Adjunto encontrarás tu presupuesto firmado en PDF. También puedes consultarlo en línea cuando quieras:",
+    confirmButton: "Ver mi presupuesto en línea",
   },
   en: {
     greeting: (n) => `Hello ${n},`,
@@ -34,6 +52,12 @@ const COPY: Record<ShareLang, {
     closing: "Best regards,\nEvent Fiesta",
     subject: (t) => `Your Event Fiesta quote — ${t}`,
     button: "View and sign the quote",
+    pdfNote: "You will also find the quote attached as a PDF.",
+    confirmSubject: (t) => `Quote confirmed — ${t}`,
+    confirmTitle: "Thank you, your quote is confirmed!",
+    confirmIntro: (d, h) => `You accepted this quote on ${d} at ${h}.`,
+    confirmBody: "Your signed quote is attached as a PDF. You can also view it online at any time:",
+    confirmButton: "View my quote online",
   },
 };
 

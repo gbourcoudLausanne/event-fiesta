@@ -36,6 +36,8 @@ type DevisDict = {
   intro: (firstName: string, eventLabel: string, venue: string | null) => string;
   signedTitle: string;
   signedBy: (name: string, date: string) => string;
+  acceptedOn: (date: string, time: string) => string;
+  downloadPdf: string;
   bonCommandeTitle: string;
   bonCommandeSubtitle: string;
   yourName: string;
@@ -92,6 +94,8 @@ export const DEVIS_I18N: Record<DevisLang, DevisDict> = {
       `${venue ? ` à ${venue}` : ""} — pensée pour vous, selon tout ce que vous m'avez partagé.`,
     signedTitle: "✓ Devis accepté",
     signedBy: (name, date) => `Signé par ${name} le ${date}`,
+    acceptedOn: (date, time) => `Vous avez accepté ce devis le ${date} à ${time}.`,
+    downloadPdf: "Télécharger le devis (PDF)",
     bonCommandeTitle: "Bon pour commande",
     bonCommandeSubtitle: "En signant ci-dessous, vous confirmez accepter ce devis tel que décrit.",
     yourName: "Votre nom",
@@ -146,6 +150,8 @@ export const DEVIS_I18N: Record<DevisLang, DevisDict> = {
       `${venue ? ` en ${venue}` : ""} — pensada para ti, según todo lo que me has compartido.`,
     signedTitle: "✓ Presupuesto aceptado",
     signedBy: (name, date) => `Firmado por ${name} el ${date}`,
+    acceptedOn: (date, time) => `Aceptaste este presupuesto el ${date} a las ${time}.`,
+    downloadPdf: "Descargar el presupuesto (PDF)",
     bonCommandeTitle: "Visto bueno para confirmar",
     bonCommandeSubtitle: "Al firmar a continuación, confirmas que aceptas este presupuesto tal como se describe.",
     yourName: "Tu nombre",
@@ -200,6 +206,8 @@ export const DEVIS_I18N: Record<DevisLang, DevisDict> = {
       `${venue ? ` at ${venue}` : ""} — designed just for you, based on everything you've shared with me.`,
     signedTitle: "✓ Quote accepted",
     signedBy: (name, date) => `Signed by ${name} on ${date}`,
+    acceptedOn: (date, time) => `You accepted this quote on ${date} at ${time}.`,
+    downloadPdf: "Download the quote (PDF)",
     bonCommandeTitle: "Approval to proceed",
     bonCommandeSubtitle: "By signing below, you confirm you accept this quote as described.",
     yourName: "Your name",
@@ -236,4 +244,13 @@ export function resolveNotes(opts: {
     : defaultNotesText(opts.lang);
   const paragraphs = text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
   return paragraphs.length > 0 ? paragraphs : null;
+}
+
+// Date et heure de signature, toujours à l'heure suisse (le serveur tourne en UTC).
+export function formatSignedAt(iso: string, locale: string) {
+  const d = new Date(iso);
+  return {
+    date: d.toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Zurich" }),
+    time: d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Zurich" }),
+  };
 }

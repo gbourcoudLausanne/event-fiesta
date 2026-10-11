@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { DEVIS_I18N, type DevisLang, resolveNotes } from "@/lib/devis-i18n";
+import { DEVIS_I18N, type DevisLang, resolveNotes, formatSignedAt } from "@/lib/devis-i18n";
 import SignaturePadClient from "./signature-pad-client";
 
 function chf(n: number) {
@@ -313,14 +313,28 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
           WhatsApp +41 77 914 38 55
         </a>
       </div>
-      <p className="mb-8 text-center font-sans text-[11px]" style={{ color: "rgba(13,11,8,0.4)" }}>
+      <p className="mb-6 text-center font-sans text-[11px]" style={{ color: "rgba(13,11,8,0.4)" }}>
         {t.validity}
       </p>
+
+      <a
+        href={`/devis/${token}/pdf`}
+        className="mb-8 flex items-center justify-center gap-2 rounded-2xl px-5 py-3 font-sans text-[13px] font-medium transition-colors hover:bg-black/[0.03]"
+        style={{ border: "1px solid rgba(13,11,8,0.14)", color: "var(--noir)" }}
+      >
+        <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+          <path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z" />
+        </svg>
+        {t.downloadPdf}
+      </a>
 
       {isSigned ? (
         <div className="rounded-2xl p-6" style={{ background: "var(--blush)" }}>
           <p className="font-display text-[19px]" style={{ color: "var(--noir)" }}>{t.signedTitle}</p>
-          <p className="mt-1 font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>
+          <p className="mt-1 font-sans text-[14px]" style={{ color: "var(--noir)" }}>
+            {t.acceptedOn(formatSignedAt(quote.signed_at as string, t.locale).date, formatSignedAt(quote.signed_at as string, t.locale).time)}
+          </p>
+          <p className="mt-0.5 font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.55)" }}>
             {t.signedBy(quote.signed_by ?? "", fmtDate(quote.signed_at, t.locale))}
           </p>
           {quote.signature_data && (

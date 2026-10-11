@@ -1,6 +1,6 @@
-import { Document, Page, View, Text, Font, StyleSheet, Svg, Path, Ellipse, Defs, LinearGradient, Stop } from "@react-pdf/renderer";
+import { Document, Page, View, Text, Image, Font, StyleSheet, Svg, Path, Ellipse, Defs, LinearGradient, Stop } from "@react-pdf/renderer";
 import path from "path";
-import { DEVIS_I18N, type DevisLang, resolveNotes } from "@/lib/devis-i18n";
+import { DEVIS_I18N, type DevisLang, resolveNotes, formatSignedAt } from "@/lib/devis-i18n";
 
 const FONTS = path.join(process.cwd(), "lib/pdf/fonts");
 
@@ -160,6 +160,11 @@ const styles = StyleSheet.create({
   notesTitle: { fontSize: 7, letterSpacing: 1.2, color: MUTED_LIGHT, marginBottom: 4 },
   notesText: { fontSize: 7, color: MUTED, lineHeight: 1.3, marginBottom: 3 },
 
+  signedBlock: { marginTop: 10, padding: 8, borderRadius: 6, backgroundColor: "#FBEFF2", flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  signedTitle: { fontSize: 9, fontWeight: 600, color: INK, marginBottom: 2 },
+  signedText: { fontSize: 7.5, color: MUTED, lineHeight: 1.3 },
+  signedImage: { height: 34, width: 110, objectFit: "contain", backgroundColor: "#FFFFFF", borderRadius: 4 },
+
   thankYou: { fontFamily: "Cormorant Garamond", fontStyle: "italic", fontSize: 12, color: PINK, marginTop: 12, textAlign: "center" },
 
   footer: {
@@ -253,6 +258,9 @@ export type DevisPdfProps = {
   translatedContent?: DevisPdfTranslatedContent | null;
   showNotes?: boolean | null;
   notesText?: string | null;
+  signedBy?: string | null;
+  signedAt?: string | null;
+  signatureData?: string | null;
 };
 
 export function DevisPdfDocument({
@@ -276,6 +284,9 @@ export function DevisPdfDocument({
   translatedContent,
   showNotes,
   notesText,
+  signedBy,
+  signedAt,
+  signatureData,
 }: DevisPdfProps) {
   const t = DEVIS_I18N[lang];
   const tc = translatedContent ?? null;
@@ -472,6 +483,21 @@ export function DevisPdfDocument({
               {notes.map((para, i) => (
                 <Text key={i} style={styles.notesText}>{para}</Text>
               ))}
+            </View>
+          )}
+
+          {signedAt && (
+            <View style={styles.signedBlock} wrap={false}>
+              <View style={{ flex: 1, paddingRight: 8 }}>
+                <Text style={styles.signedTitle}>{t.signedTitle.replace(/^✓\s*/, "")}</Text>
+                <Text style={styles.signedText}>
+                  {t.signedBy(signedBy ?? "", formatSignedAt(signedAt, t.locale).date)} · {formatSignedAt(signedAt, t.locale).time}
+                </Text>
+              </View>
+              {signatureData?.startsWith("data:image") && (
+                // eslint-disable-next-line jsx-a11y/alt-text
+                <Image src={signatureData} style={styles.signedImage} />
+              )}
             </View>
           )}
 

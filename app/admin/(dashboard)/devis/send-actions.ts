@@ -5,6 +5,7 @@ import { Resend } from "resend";
 import { createClient } from "@/lib/supabase/server";
 import { renderQuoteToClientEmail } from "@/lib/email-templates";
 import { shareCopy, firstNameOf, type ShareLang } from "@/lib/quote-share";
+import { buildQuotePdf } from "@/lib/pdf/build-quote-pdf";
 
 const FROM = "Event Fiesta <notifications@eventfiesta.ch>";
 const REPLY_TO = "contact@eventfiesta.ch";
@@ -37,6 +38,10 @@ export async function sendQuoteByEmail(quoteId: string): Promise<{ ok?: boolean;
   const title = (lang !== "fr" && translatedTitle) || q.title || "Event Fiesta";
   const link = `https://eventfiesta.ch/devis/${q.public_token}`;
   const c = shareCopy(lang);
+  const pdf = await buildQuotePdf(supabase, { id: quoteId }).catch((err) => {
+    console.error("sendQuoteByEmail: PDF non généré, envoi sans pièce jointe", err);
+    return null;
+  });
 
   const { error } = await new Resend(apiKey).emails.send({
     from: FROM,
@@ -45,6 +50,7 @@ export async function sendQuoteByEmail(quoteId: string): Promise<{ ok?: boolean;
     subject: c.subject(title),
     html: renderQuoteToClientEmail({ lang, firstName: firstNameOf(client.full_name), title, link }),
     text: `${c.greeting(firstNameOf(client.full_name))}\n\n${c.body(title)}\n${link}\n\n${c.cta}\n\n${c.closing}`,
+    attachments: pdf ? [{ filename: pdf.filename, content: pdf.buffer }] : undefined,
   });
   if (error) {
     console.error("sendQuoteByEmail: erreur Resend", error);

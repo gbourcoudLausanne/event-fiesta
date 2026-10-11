@@ -255,6 +255,44 @@ export function renderQuoteToClientEmail(opts: {
     </tr>
     <tr>
       <td style="padding:0 32px 26px;">
+        ${p(esc(c.pdfNote))}
+        ${p(esc(c.cta))}
+        ${p(esc(c.closing).replace(/\n/g, "<br/>"))}
+      </td>
+    </tr>
+  `);
+}
+
+// ─── E-mail au client : confirmation après signature (PDF signé joint) ────
+
+export function renderQuoteConfirmedClientEmail(opts: {
+  lang: "fr" | "es" | "en";
+  firstName: string;
+  title: string;
+  date: string;
+  time: string;
+  link: string;
+}): string {
+  const c = shareCopy(opts.lang);
+  const p = (t: string) =>
+    `<p style="margin:0 0 14px;color:${BRAND.ink};font-size:14.5px;line-height:1.6;font-family:${SANS};">${t}</p>`;
+
+  return wrapper(`
+    ${header(esc(c.confirmTitle), esc(opts.title))}
+    <tr>
+      <td style="padding:28px 32px 4px;">
+        ${p(esc(c.greeting(opts.firstName)))}
+        ${p(`<strong>${esc(c.confirmIntro(opts.date, opts.time))}</strong>`)}
+        ${p(esc(c.confirmBody))}
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:6px 32px 22px;">
+        <a href="${opts.link}" style="display:inline-block;background:${BRAND.pink};color:#ffffff;text-decoration:none;font-size:14.5px;font-weight:600;padding:14px 26px;border-radius:12px;font-family:${SANS};">${esc(c.confirmButton)}</a>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 26px;">
         ${p(esc(c.cta))}
         ${p(esc(c.closing).replace(/\n/g, "<br/>"))}
       </td>
