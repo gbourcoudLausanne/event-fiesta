@@ -26,7 +26,7 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
   const { data: quote } = await supabase
     .from("quotes")
     .select(
-      "id, reference, title, event_type, event_date, venue, tax_rate, items, status, client_id, public_token, signed_by, signed_at, signature_data, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, clients(full_name, email, phone)",
+      "id, reference, title, event_type, event_date, venue, tax_rate, items, status, client_id, public_token, signed_by, signed_at, signature_data, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, show_notes, notes_text, clients(full_name, email, phone)",
     )
     .eq("id", id)
     .single();
@@ -114,6 +114,8 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
           pricing_mode: (quote.pricing_mode as "detaille" | "forfait") ?? "detaille",
           package_total: quote.package_total,
           reference_images: quote.reference_images ?? [],
+          show_notes: quote.show_notes ?? true,
+          notes_text: quote.notes_text,
         }}
       />
     </div>

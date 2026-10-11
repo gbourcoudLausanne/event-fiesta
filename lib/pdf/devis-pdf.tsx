@@ -1,6 +1,6 @@
 import { Document, Page, View, Text, Font, StyleSheet, Svg, Path, Ellipse, Defs, LinearGradient, Stop } from "@react-pdf/renderer";
 import path from "path";
-import { DEVIS_I18N, type DevisLang } from "@/lib/devis-i18n";
+import { DEVIS_I18N, type DevisLang, resolveNotes } from "@/lib/devis-i18n";
 
 const FONTS = path.join(process.cwd(), "lib/pdf/fonts");
 
@@ -228,6 +228,7 @@ export type DevisPdfTranslatedContent = {
   event_type?: string | null;
   venue?: string | null;
   balance_due_terms?: string | null;
+  notes_text?: string | null;
   items?: { title?: string | null; description?: string | null; unit?: string | null }[];
 };
 
@@ -250,6 +251,8 @@ export type DevisPdfProps = {
   packageTotal?: number | null;
   lang?: DevisLang;
   translatedContent?: DevisPdfTranslatedContent | null;
+  showNotes?: boolean | null;
+  notesText?: string | null;
 };
 
 export function DevisPdfDocument({
@@ -271,6 +274,8 @@ export function DevisPdfDocument({
   packageTotal,
   lang = "fr",
   translatedContent,
+  showNotes,
+  notesText,
 }: DevisPdfProps) {
   const t = DEVIS_I18N[lang];
   const tc = translatedContent ?? null;
@@ -278,6 +283,7 @@ export function DevisPdfDocument({
   const displayEventType = tc?.event_type ?? eventType;
   const displayVenue = tc?.venue ?? venue;
   const displayBalanceDueTerms = tc?.balance_due_terms ?? balanceDueTerms;
+  const notes = resolveNotes({ showNotes, notesText, translatedNotes: tc?.notes_text, lang });
   const displayItems = items.map((it, i) => ({
     ...it,
     title: tc?.items?.[i]?.title ?? it.title,
@@ -460,11 +466,14 @@ export function DevisPdfDocument({
             </View>
           )}
 
-          <View style={styles.notesBlock}>
-            <Text style={styles.notesTitle}>{t.notesTitle.toUpperCase()}</Text>
-            <Text style={styles.notesText}>{t.notesP1}</Text>
-            <Text style={styles.notesText}>{t.notesP2}</Text>
-          </View>
+          {notes && (
+            <View style={styles.notesBlock}>
+              <Text style={styles.notesTitle}>{t.notesTitle.toUpperCase()}</Text>
+              {notes.map((para, i) => (
+                <Text key={i} style={styles.notesText}>{para}</Text>
+              ))}
+            </View>
+          )}
 
           <Text style={styles.thankYou}>{t.thankYou}</Text>
 

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { DEVIS_I18N, type DevisLang } from "@/lib/devis-i18n";
+import { DEVIS_I18N, type DevisLang, resolveNotes } from "@/lib/devis-i18n";
 import SignaturePadClient from "./signature-pad-client";
 
 function chf(n: number) {
@@ -36,6 +36,7 @@ type TranslatedContent = {
   event_type?: string | null;
   venue?: string | null;
   balance_due_terms?: string | null;
+  notes_text?: string | null;
   items?: TranslatedItem[];
 };
 
@@ -47,7 +48,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
     supabase
       .from("quotes")
       .select(
-        "reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, clients(full_name, email, phone, address)",
+        "reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, show_notes, notes_text, clients(full_name, email, phone, address)",
       )
       .eq("public_token", token)
       .single(),
@@ -72,6 +73,12 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
   const displayEventType = tc?.event_type ?? quote.event_type;
   const displayVenue = tc?.venue ?? quote.venue;
   const displayBalanceDueTerms = tc?.balance_due_terms ?? quote.balance_due_terms;
+  const notes = resolveNotes({
+    showNotes: quote.show_notes,
+    notesText: quote.notes_text,
+    translatedNotes: tc?.notes_text,
+    lang,
+  });
 
   const isPackageMode = quote.pricing_mode === "forfait";
   const subtotal = items.reduce((s, it) => s + it.quantity * it.unit_price, 0);
@@ -270,17 +277,22 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
         </div>
       )}
 
-      <div className="mb-8">
-        <p className="mb-2 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.45)" }}>
-          {t.notesTitle}
-        </p>
-        <p className="mb-2 font-sans text-[11.5px] leading-relaxed" style={{ color: "rgba(13,11,8,0.6)" }}>
-          {t.notesP1}
-        </p>
-        <p className="font-sans text-[11.5px] leading-relaxed" style={{ color: "rgba(13,11,8,0.6)" }}>
-          {t.notesP2}
-        </p>
-      </div>
+      {notes && (
+        <div className="mb-8">
+          <p className="mb-2 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+            {t.notesTitle}
+          </p>
+          {notes.map((para, i) => (
+            <p
+              key={i}
+              className={`${i < notes.length - 1 ? "mb-2 " : ""}whitespace-pre-line font-sans text-[11.5px] leading-relaxed`}
+              style={{ color: "rgba(13,11,8,0.6)" }}
+            >
+              {para}
+            </p>
+          ))}
+        </div>
+      )}
 
       <p className="mb-6 text-center font-serif text-[16px] italic" style={{ color: "var(--rose-deep)" }}>
         {t.thankYou}

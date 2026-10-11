@@ -32,6 +32,8 @@ export async function createQuote(input: {
   payment_methods: string[];
   pricing_mode: "detaille" | "forfait";
   package_total: number | null;
+  show_notes: boolean;
+  notes_text: string | null;
 }) {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -51,6 +53,8 @@ export async function createQuote(input: {
       payment_methods: input.payment_methods,
       pricing_mode: input.pricing_mode,
       package_total: input.package_total,
+      show_notes: input.show_notes,
+      notes_text: input.notes_text,
     })
     .select("id")
     .single();
@@ -79,6 +83,8 @@ export async function updateQuote(
     payment_methods: string[];
     pricing_mode: "detaille" | "forfait";
     package_total: number | null;
+    show_notes: boolean;
+    notes_text: string | null;
   },
 ) {
   const supabase = await createClient();
@@ -97,6 +103,8 @@ export async function updateQuote(
       payment_methods: input.payment_methods,
       pricing_mode: input.pricing_mode,
       package_total: input.package_total,
+      show_notes: input.show_notes,
+      notes_text: input.notes_text,
       // Toute modification du contenu original invalide la traduction existante —
       // sinon le lien client garderait un texte traduit obsolète après une édition.
       client_language: null,

@@ -10,7 +10,7 @@ export async function translateQuote(quoteId: string, targetLang: "fr" | "es" | 
   const supabase = await createClient();
   const { data: quote } = await supabase
     .from("quotes")
-    .select("title, event_type, venue, balance_due_terms, items")
+    .select("title, event_type, venue, balance_due_terms, items, notes_text")
     .eq("id", quoteId)
     .single();
 
@@ -21,6 +21,7 @@ export async function translateQuote(quoteId: string, targetLang: "fr" | "es" | 
     event_type: quote.event_type,
     venue: quote.venue,
     balance_due_terms: quote.balance_due_terms,
+    notes_text: quote.notes_text,
     items: (
       (quote.items as { title?: string; description: string; unit: string }[] | null) ?? []
     ).map((it) => ({

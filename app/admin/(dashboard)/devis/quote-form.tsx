@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { Plus, Trash, ImageSquare, CheckCircle } from "@phosphor-icons/react";
 import { createQuote, updateQuote, uploadQuoteImage, removeQuoteImage, type QuoteItem } from "./actions";
+import { defaultNotesText } from "@/lib/devis-i18n";
 
 async function compressImage(file: File, maxDim = 1600, quality = 0.82): Promise<Blob> {
   const bitmap = await createImageBitmap(file);
@@ -48,6 +49,8 @@ export type QuoteFormValues = {
   pricing_mode: "detaille" | "forfait";
   package_total: number | null;
   reference_images: string[];
+  show_notes: boolean;
+  notes_text: string | null;
 };
 
 const EMPTY_ITEM: QuoteItem = { title: "", description: "", quantity: 1, unit: "forfait", unit_price: 0 };
@@ -88,6 +91,8 @@ export default function QuoteForm({
   const [depositAmount, setDepositAmount] = useState<number | null>(initial?.deposit_amount ?? null);
   const [balanceDueTerms, setBalanceDueTerms] = useState(initial?.balance_due_terms ?? "");
   const [paymentMethods, setPaymentMethods] = useState<string[]>(initial?.payment_methods ?? []);
+  const [showNotes, setShowNotes] = useState(initial?.show_notes ?? true);
+  const [notesText, setNotesText] = useState(initial?.notes_text ?? defaultNotesText("fr"));
   const [referenceImages, setReferenceImages] = useState<string[]>(initial?.reference_images ?? []);
   const [uploadingImages, setUploadingImages] = useState(false);
   const [imageError, setImageError] = useState<string | null>(null);
@@ -166,6 +171,9 @@ export default function QuoteForm({
       payment_methods: paymentMethods,
       pricing_mode: pricingMode,
       package_total: pricingMode === "forfait" ? packageTotal : null,
+      show_notes: showNotes,
+      // Texte standard inchangé → null, pour garder la traduction intégrée ES/EN
+      notes_text: notesText.trim() === defaultNotesText("fr").trim() ? null : notesText.trim() || null,
     };
     startTransition(async () => {
       if (quoteId) {
@@ -531,6 +539,69 @@ export default function QuoteForm({
             })}
           </div>
         </div>
+      </div>
+
+      <div className="rounded-2xl bg-white p-4 md:p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+        <div className="mb-1 flex items-center justify-between gap-3">
+          <p className="font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>
+            Conditions et observations
+          </p>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={showNotes}
+            onClick={() => setShowNotes((v) => !v)}
+            className="flex shrink-0 items-center gap-2 font-sans text-[12px]"
+            style={{ color: "rgba(13,11,8,0.6)" }}
+          >
+            {showNotes ? "Affichées" : "Masquées"}
+            <span
+              className="relative inline-block h-6 w-11 rounded-full transition-colors"
+              style={{ background: showNotes ? "var(--rose-deep)" : "rgba(13,11,8,0.18)" }}
+            >
+              <span
+                className="absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all"
+                style={{ left: showNotes ? "22px" : "2px" }}
+              />
+            </span>
+          </button>
+        </div>
+        <p className="mb-3 font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.5)" }}>
+          {showNotes
+            ? "Affichées sur le lien client et le PDF. Sépare les paragraphes par une ligne vide."
+            : "Cette section n'apparaîtra ni sur le lien client ni sur le PDF."}
+        </p>
+        {showNotes && (
+          <>
+            <textarea
+              value={notesText}
+              onChange={(e) => {
+                setNotesText(e.target.value);
+                e.target.style.height = "auto";
+                e.target.style.height = `${e.target.scrollHeight}px`;
+              }}
+              ref={(el) => {
+                if (el) {
+                  el.style.height = "auto";
+                  el.style.height = `${el.scrollHeight}px`;
+                }
+              }}
+              rows={4}
+              className="w-full resize-none overflow-hidden rounded-xl bg-white px-3.5 py-2.5 font-sans text-[13px] leading-relaxed outline-none"
+              style={{ border: "1px solid rgba(13,11,8,0.14)", color: "var(--noir)" }}
+            />
+            {notesText.trim() !== defaultNotesText("fr").trim() && (
+              <button
+                type="button"
+                onClick={() => setNotesText(defaultNotesText("fr"))}
+                className="mt-1.5 font-sans text-[12px] underline"
+                style={{ color: "rgba(13,11,8,0.5)" }}
+              >
+                Remettre le texte standard
+              </button>
+            )}
+          </>
+        )}
       </div>
 
       <div className="rounded-2xl bg-white p-4 md:p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>

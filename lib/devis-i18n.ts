@@ -215,3 +215,25 @@ export const DEVIS_I18N: Record<DevisLang, DevisDict> = {
     footerRegion: "Lausanne & French-speaking Switzerland",
   },
 };
+
+// Texte standard de "Conditions et observations" (paragraphes séparés par une ligne vide).
+export function defaultNotesText(lang: DevisLang = "fr") {
+  const t = DEVIS_I18N[lang];
+  return `${t.notesP1}\n\n${t.notesP2}`;
+}
+
+// Paragraphes à afficher sur le lien client / le PDF, ou null si la section est masquée.
+// Texte personnalisé : sa traduction si elle existe, sinon l'original.
+export function resolveNotes(opts: {
+  showNotes: boolean | null | undefined;
+  notesText: string | null | undefined;
+  translatedNotes: string | null | undefined;
+  lang: DevisLang;
+}): string[] | null {
+  if (opts.showNotes === false) return null;
+  const text = opts.notesText?.trim()
+    ? (opts.lang !== "fr" && opts.translatedNotes?.trim()) || opts.notesText
+    : defaultNotesText(opts.lang);
+  const paragraphs = text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+  return paragraphs.length > 0 ? paragraphs : null;
+}
