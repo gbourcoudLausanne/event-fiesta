@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { DEVIS_I18N, type DevisLang, resolveNotes, formatSignedAt } from "@/lib/devis-i18n";
 import SignaturePadClient from "./signature-pad-client";
+import PaymentTracker from "./payment-tracker";
+import { PAYMENT_COLUMNS, type QuotePayment } from "@/lib/quote-payments";
 
 function chf(n: number) {
   const [intPart, decPart] = n.toFixed(2).split(".");
@@ -48,7 +50,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
     supabase
       .from("quotes")
       .select(
-        "reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, show_notes, notes_text, clients(full_name, email, phone, address)",
+        "id, reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, show_notes, notes_text, clients(full_name, email, phone, address)",
       )
       .eq("public_token", token)
       .single(),
@@ -56,6 +58,13 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
   ]);
 
   if (!quote) notFound();
+
+  const { data: paymentRows } = await supabase
+    .from("quote_payments")
+    .select(PAYMENT_COLUMNS)
+    .eq("quote_id", quote.id)
+    .order("position");
+  const payments = (paymentRows ?? []) as QuotePayment[];
 
   const lang = ((quote.client_language as DevisLang | null) ?? "fr") as DevisLang;
   const t = DEVIS_I18N[lang];
@@ -344,6 +353,22 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
         </div>
       ) : (
         <SignaturePadClient token={token} lang={lang} />
+      )}
+
+      {isSigned && (
+        <PaymentTracker
+          lang={lang}
+          locale={t.locale}
+          reference={quote.reference}
+          signedAt={quote.signed_at as string}
+          eventDate={quote.event_date}
+          payments={payments}
+          balanceTerms={displayBalanceDueTerms ?? null}
+          twintPhone={settings?.twint_phone ?? null}
+          showTransfer={(quote.payment_methods ?? []).includes("iban")}
+          iban={settings?.iban ?? null}
+          creditorName={settings?.creditor_name ?? null}
+        />
       )}
     </div>
   );

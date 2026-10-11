@@ -8,6 +8,8 @@ import { renderQuoteSignedEmail, renderQuoteConfirmedClientEmail } from "@/lib/e
 import { buildQuotePdf } from "@/lib/pdf/build-quote-pdf";
 import { shareCopy, firstNameOf, type ShareLang } from "@/lib/quote-share";
 import { DEVIS_I18N, formatSignedAt } from "@/lib/devis-i18n";
+import { ensurePaymentSchedule, PAYMENT_COLUMNS, type QuotePayment } from "@/lib/quote-payments";
+import { PAY_I18N, paymentLabel, twintReference } from "@/lib/payments-i18n";
 
 const NOTIFY_TO = "contact@eventfiesta.ch";
 const NOTIFY_FROM = "Event Fiesta <notifications@eventfiesta.ch>";
@@ -61,13 +63,23 @@ async function sendSignedEmails(quoteId: string, signerName: string) {
       const translatedTitle = (q.translated_content as { title?: string | null } | null)?.title;
       const title = (lang !== "fr" && translatedTitle) || q.title || "Event Fiesta";
       const { date, time } = formatSignedAt(q.signed_at ?? new Date().toISOString(), DEVIS_I18N[lang].locale);
+      const [{ data: firstDue }, { data: settings }] = await Promise.all([
+        supabase.from("quote_payments").select(PAYMENT_COLUMNS).eq("quote_id", q.id).eq("status", "a_payer").order("position").limit(1).maybeSingle(),
+        supabase.from("settings").select("twint_phone").eq("id", true).single(),
+      ]);
+      const due = firstDue as QuotePayment | null;
+      const pt = PAY_I18N[lang];
+      const depositNote =
+        due && due.kind === "acompte" && settings?.twint_phone
+          ? { title: pt.depositMailTitle, body: pt.depositMailBody(chf(Number(due.amount)), settings.twint_phone, twintReference(q.reference, paymentLabel(due, pt))) }
+          : null;
       const { error } = await resend.emails.send({
         from: NOTIFY_FROM,
         to: client.email,
         replyTo: NOTIFY_TO,
         subject: c.confirmSubject(title),
-        html: renderQuoteConfirmedClientEmail({ lang, firstName: firstNameOf(clientName), title, date, time, link }),
-        text: `${c.greeting(firstNameOf(clientName))}\n\n${c.confirmIntro(date, time)}\n\n${c.confirmBody}\n${link}\n\n${c.closing}`,
+        html: renderQuoteConfirmedClientEmail({ lang, firstName: firstNameOf(clientName), title, date, time, link, depositNote }),
+        text: `${c.greeting(firstNameOf(clientName))}\n\n${c.confirmIntro(date, time)}\n\n${depositNote ? `${depositNote.title}\n${depositNote.body}\n\n` : ""}${c.confirmBody}\n${link}\n\n${c.closing}`,
         attachments,
       });
       if (error) console.error("signQuote: erreur Resend (client)", error);
@@ -129,6 +141,9 @@ export async function signQuote(
   if (error) {
     return { error: "Impossible d'enregistrer la signature." };
   }
+
+  // Étapes de paiement (acompte / solde) visibles tout de suite sur la page client
+  await ensurePaymentSchedule(supabase, quote.id);
 
   // E-mails envoyés une seule fois par devis, même si la page est re-signée
   // Envoyés après la réponse : la signature s'affiche tout de suite côté client.

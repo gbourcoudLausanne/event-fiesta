@@ -4,6 +4,7 @@
 // une bonne partie du CSS moderne.
 
 import { shareCopy } from "./quote-share";
+import { PAY_I18N } from "./payments-i18n";
 
 const BRAND = {
   pink: "#D9628A",
@@ -272,6 +273,7 @@ export function renderQuoteConfirmedClientEmail(opts: {
   date: string;
   time: string;
   link: string;
+  depositNote?: { title: string; body: string } | null;
 }): string {
   const c = shareCopy(opts.lang);
   const p = (t: string) =>
@@ -283,6 +285,14 @@ export function renderQuoteConfirmedClientEmail(opts: {
       <td style="padding:28px 32px 4px;">
         ${p(esc(c.greeting(opts.firstName)))}
         ${p(`<strong>${esc(c.confirmIntro(opts.date, opts.time))}</strong>`)}
+        ${
+          opts.depositNote
+            ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0 18px;background:#FBEFF2;border-radius:12px;"><tr><td style="padding:14px 16px;">
+                <p style="margin:0 0 6px;color:${BRAND.pinkDark};font-size:13px;font-weight:700;font-family:${SANS};">${esc(opts.depositNote.title)}</p>
+                <p style="margin:0;color:${BRAND.ink};font-size:14px;line-height:1.55;font-family:${SANS};">${esc(opts.depositNote.body)}</p>
+              </td></tr></table>`
+            : ""
+        }
         ${p(esc(c.confirmBody))}
       </td>
     </tr>
@@ -294,6 +304,45 @@ export function renderQuoteConfirmedClientEmail(opts: {
     <tr>
       <td style="padding:0 32px 26px;">
         ${p(esc(c.cta))}
+        ${p(esc(c.closing).replace(/\n/g, "<br/>"))}
+      </td>
+    </tr>
+  `);
+}
+
+// ─── E-mail au client : paiement reçu (+ prochaine étape) ────────────────
+
+export function renderPaymentReceivedEmail(opts: {
+  lang: "fr" | "es" | "en";
+  firstName: string;
+  title: string;
+  receivedLine: string;
+  nextLine: string | null;
+  allPaidLine: string | null;
+  buttonLabel: string;
+  link: string;
+}): string {
+  const c = shareCopy(opts.lang);
+  const p = (t: string) =>
+    `<p style="margin:0 0 14px;color:${BRAND.ink};font-size:14.5px;line-height:1.6;font-family:${SANS};">${t}</p>`;
+
+  return wrapper(`
+    ${header(esc(PAY_I18N[opts.lang].receivedTitle), esc(opts.title))}
+    <tr>
+      <td style="padding:28px 32px 4px;">
+        ${p(esc(c.greeting(opts.firstName)))}
+        ${p(`<strong>${esc(opts.receivedLine)}</strong>`)}
+        ${opts.nextLine ? p(esc(opts.nextLine)) : ""}
+        ${opts.allPaidLine ? p(esc(opts.allPaidLine)) : ""}
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:6px 32px 22px;">
+        <a href="${opts.link}" style="display:inline-block;background:${BRAND.pink};color:#ffffff;text-decoration:none;font-size:14.5px;font-weight:600;padding:14px 26px;border-radius:12px;font-family:${SANS};">${esc(opts.buttonLabel)}</a>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 26px;">
         ${p(esc(c.closing).replace(/\n/g, "<br/>"))}
       </td>
     </tr>

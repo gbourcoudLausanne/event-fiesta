@@ -4,6 +4,8 @@ import { FilePdf } from "@phosphor-icons/react/dist/ssr";
 import QuoteForm from "../quote-form";
 import StatusControls from "./status-controls";
 import SendControls from "./send-controls";
+import PaymentsPanel from "./payments-panel";
+import { PAYMENT_COLUMNS, type QuotePayment } from "@/lib/quote-payments";
 import type { ShareLang } from "@/lib/quote-share";
 import LanguageControls from "./language-controls";
 
@@ -26,12 +28,34 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
   const { data: quote } = await supabase
     .from("quotes")
     .select(
-      "id, reference, title, event_type, event_date, venue, tax_rate, items, status, client_id, public_token, signed_by, signed_at, signature_data, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, show_notes, notes_text, clients(full_name, email, phone)",
+      "id, reference, title, event_type, event_date, venue, tax_rate, items, status, client_id, public_token, signed_by, signed_at, signature_data, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, show_notes, notes_text, created_at, sent_at, clients(full_name, email, phone)",
     )
     .eq("id", id)
     .single();
 
   if (!quote) notFound();
+
+  const { data: paymentRows } = await supabase
+    .from("quote_payments")
+    .select(PAYMENT_COLUMNS)
+    .eq("quote_id", quote.id)
+    .order("position");
+  const payments = (paymentRows ?? []) as QuotePayment[];
+
+  // Historique : chaque étape datée, du plus ancien au plus récent
+  const history = [
+    { at: quote.created_at as string, label: "Devis créé" },
+    quote.sent_at && { at: quote.sent_at as string, label: "Envoyé au client" },
+    quote.signed_at && { at: quote.signed_at as string, label: `Signé par ${quote.signed_by ?? "le client"}` },
+    ...payments
+      .filter((p) => p.status === "paye" && p.paid_at)
+      .map((p) => ({
+        at: p.paid_at as string,
+        label: `${p.label?.trim() || (p.kind === "acompte" ? "Acompte" : p.kind === "solde" ? "Solde" : "Paiement")} reçu`,
+      })),
+  ]
+    .filter((h): h is { at: string; label: string } => Boolean(h))
+    .sort((a, b) => a.at.localeCompare(b.at));
 
   const clientRow = quote.clients as unknown as { full_name: string; email: string | null; phone: string | null } | null;
   const clientName = clientRow?.full_name ?? "—";
@@ -96,6 +120,31 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
           />
         )}
       </div>
+
+      {(quote.signed_at || quote.status === "accepte") && (
+        <PaymentsPanel
+          quoteId={quote.id}
+          payments={payments}
+          balanceTerms={quote.balance_due_terms}
+          hasClientEmail={!!clientRow?.email}
+        />
+      )}
+
+      <details className="mb-6 rounded-2xl bg-white px-4 py-3 md:px-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+        <summary className="cursor-pointer font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>
+          Historique
+        </summary>
+        <ol className="mt-3 flex flex-col gap-2 pb-1">
+          {history.map((h, i) => (
+            <li key={i} className="flex items-baseline justify-between gap-3 font-sans text-[12.5px]">
+              <span style={{ color: "var(--noir)" }}>{h.label}</span>
+              <span className="shrink-0" style={{ color: "rgba(13,11,8,0.45)" }}>
+                {new Date(h.at).toLocaleString("fr-CH", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Zurich" })}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </details>
 
       <QuoteForm
         clientId={quote.client_id}

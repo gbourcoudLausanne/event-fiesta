@@ -14,6 +14,7 @@ const REPLY_TO = "contact@eventfiesta.ch";
 export async function markQuoteSent(quoteId: string) {
   const supabase = await createClient();
   await supabase.from("quotes").update({ status: "envoye" }).eq("id", quoteId).eq("status", "brouillon");
+  await supabase.from("quotes").update({ sent_at: new Date().toISOString() }).eq("id", quoteId).is("sent_at", null);
   revalidatePath(`/admin/devis/${quoteId}`);
   revalidatePath("/admin/devis");
 }
