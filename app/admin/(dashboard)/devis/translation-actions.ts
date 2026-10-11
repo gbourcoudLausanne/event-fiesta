@@ -3,6 +3,8 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { allSupplements } from "@/lib/quote-supplements";
+import { translateTexts } from "@/lib/translate-text";
 
 const LANG_NAMES: Record<string, string> = { fr: "français", es: "español", en: "English" };
 
@@ -10,7 +12,7 @@ export async function translateQuote(quoteId: string, targetLang: "fr" | "es" | 
   const supabase = await createClient();
   const { data: quote } = await supabase
     .from("quotes")
-    .select("title, event_type, venue, balance_due_terms, items, notes_text")
+    .select("title, event_type, venue, balance_due_terms, items, notes_text, supplements")
     .eq("id", quoteId)
     .single();
 
@@ -66,9 +68,17 @@ export async function translateQuote(quoteId: string, targetLang: "fr" | "es" | 
     return { error: "Impossible d'analyser la traduction." };
   }
 
+  // Ajouts après signature : traduits aussi dans la langue choisie
+  const supplements = allSupplements(quote.supplements);
+  let updatedSupplements = supplements;
+  if (supplements.length > 0 && targetLang !== "fr") {
+    const out = await translateTexts(supplements.map((s) => s.description), targetLang);
+    if (out) updatedSupplements = supplements.map((s, i) => ({ ...s, translated: out[i], translated_lang: targetLang }));
+  }
+
   await supabase
     .from("quotes")
-    .update({ client_language: targetLang, translated_content: translated })
+    .update({ client_language: targetLang, translated_content: translated, supplements: updatedSupplements })
     .eq("id", quoteId);
 
   revalidatePath(`/admin/devis/${quoteId}`);

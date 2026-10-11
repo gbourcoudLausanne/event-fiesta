@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { allSupplements, type Supplement } from "@/lib/quote-supplements";
+import { translateTexts } from "@/lib/translate-text";
 
 async function revalidateAll(quoteId: string, token: string | null) {
   revalidatePath(`/admin/devis/${quoteId}`);
@@ -25,8 +26,12 @@ export async function addSupplement(quoteId: string, input: { description: strin
   if (!(amount > 0)) return { error: "Indique un montant." };
 
   const supabase = await createClient();
-  const { data: q } = await supabase.from("quotes").select("id, public_token, supplements").eq("id", quoteId).single();
+  const { data: q } = await supabase.from("quotes").select("id, public_token, supplements, client_language").eq("id", quoteId).single();
   if (!q) return { error: "Devis introuvable." };
+
+  // Client hispanophone / anglophone : l'ajout est traduit dans sa langue
+  const lang = q.client_language as "fr" | "es" | "en" | null;
+  const translated = lang && lang !== "fr" ? ((await translateTexts([description], lang))?.[0] ?? null) : null;
 
   let paymentId: string | null = null;
   let paymentMode: Supplement["payment_mode"] = null;
@@ -71,6 +76,8 @@ export async function addSupplement(quoteId: string, input: { description: strin
     removed_at: null,
     payment_id: paymentId,
     payment_mode: paymentMode,
+    translated,
+    translated_lang: translated ? lang : null,
   };
   const { error } = await supabase
     .from("quotes")

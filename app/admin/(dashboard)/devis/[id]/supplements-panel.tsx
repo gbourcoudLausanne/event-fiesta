@@ -120,6 +120,11 @@ export default function SupplementsPanel({
             <div key={s.id} className="flex items-start justify-between gap-3 py-2.5" style={{ borderTop: "1px solid rgba(13,11,8,0.06)" }}>
               <div className="min-w-0">
                 <p className="font-sans text-[13.5px] font-medium" style={{ color: "var(--noir)" }}>{s.description}</p>
+                {s.translated && s.translated_lang && (
+                  <p className="font-sans text-[12px] italic" style={{ color: "rgba(13,11,8,0.5)" }}>
+                    {s.translated_lang.toUpperCase()} : {s.translated}
+                  </p>
+                )}
                 <p className="flex items-center gap-1 font-sans text-[11.5px]" style={{ color: s.accepted_at ? "#3B7D55" : "rgba(13,11,8,0.5)" }}>
                   {s.accepted_at ? <CheckCircle size={12} weight="fill" /> : <Clock size={12} />}
                   Ajouté le {fmt(s.added_at)} · {s.accepted_at ? `confirmé par le client le ${fmt(s.accepted_at)}` : "en attente de confirmation du client"}

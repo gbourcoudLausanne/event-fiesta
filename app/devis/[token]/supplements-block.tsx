@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { SUPP_I18N, type PayLang } from "@/lib/payments-i18n";
-import type { Supplement } from "@/lib/quote-supplements";
+import { supplementText, type Supplement } from "@/lib/quote-supplements";
 import { acceptSupplements } from "./actions";
 
 function chf(n: number) {
@@ -42,7 +42,7 @@ export default function SupplementsBlock({
       {supplements.map((s) => (
         <div key={s.id} className="flex items-start justify-between gap-3 py-2.5" style={{ borderTop: "1px solid rgba(13,11,8,0.06)" }}>
           <div className="min-w-0">
-            <p className="font-sans text-[14px] font-medium" style={{ color: "var(--noir)" }}>{s.description}</p>
+            <p className="font-sans text-[14px] font-medium" style={{ color: "var(--noir)" }}>{supplementText(s, lang)}</p>
             <p className="font-sans text-[12px]" style={{ color: s.accepted_at ? "#3B7D55" : "var(--rose-deep)" }}>
               {t.addedOn(fmt(s.added_at))} · {s.accepted_at ? t.confirmedOn(fmt(s.accepted_at)) : t.pending}
             </p>

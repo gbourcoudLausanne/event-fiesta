@@ -10,7 +10,15 @@ export type Supplement = {
   // Étape de paiement ajustée : montant ajouté au solde, ou nouvelle étape créée
   payment_id: string | null;
   payment_mode: "added_to" | "created" | null;
+  // Traduction pour le client (langue du devis), générée automatiquement
+  translated?: string | null;
+  translated_lang?: string | null;
 };
+
+// Texte à montrer au client : la traduction si elle correspond à sa langue
+export function supplementText(s: Supplement, lang: string) {
+  return lang !== "fr" && s.translated_lang === lang && s.translated?.trim() ? s.translated : s.description;
+}
 
 export function allSupplements(raw: unknown): Supplement[] {
   return Array.isArray(raw) ? (raw as Supplement[]) : [];

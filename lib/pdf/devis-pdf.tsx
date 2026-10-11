@@ -2,7 +2,7 @@ import { Document, Page, View, Text, Image, Font, StyleSheet, Svg, Path, Ellipse
 import path from "path";
 import { DEVIS_I18N, type DevisLang, resolveNotes, formatSignedAt } from "@/lib/devis-i18n";
 import { SUPP_I18N } from "@/lib/payments-i18n";
-import { activeSupplements } from "@/lib/quote-supplements";
+import { activeSupplements, supplementText } from "@/lib/quote-supplements";
 
 const FONTS = path.join(process.cwd(), "lib/pdf/fonts");
 
@@ -447,7 +447,7 @@ export function DevisPdfDocument({
               {activeSupplements(supplements).map((sup) => (
                 <View key={sup.id} style={styles.suppRow}>
                   <Text style={styles.suppDesc}>
-                    {sup.description}
+                    {supplementText(sup, lang)}
                     <Text style={styles.suppMeta}>
                       {"  "}
                       {SUPP_I18N[lang].addedOn(formatSignedAt(sup.added_at, t.locale).date)}
