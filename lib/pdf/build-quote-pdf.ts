@@ -11,7 +11,7 @@ export async function buildQuotePdf(
   const query = supabase
     .from("quotes")
     .select(
-      "reference, title, event_type, event_date, venue, tax_rate, items, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, client_language, translated_content, show_notes, notes_text, signed_by, signed_at, signature_data, clients(full_name, email, phone, address)",
+      "reference, title, event_type, event_date, venue, tax_rate, items, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, client_language, translated_content, show_notes, notes_text, signed_by, signed_at, signature_data, supplements, clients(full_name, email, phone, address)",
     );
   const [{ data: quote }, { data: settings }] = await Promise.all([
     "id" in filter ? query.eq("id", filter.id).single() : query.eq("public_token", filter.token).single(),
@@ -50,6 +50,7 @@ export async function buildQuotePdf(
       signedBy: quote.signed_by,
       signedAt: quote.signed_at,
       signatureData: quote.signature_data,
+      supplements: quote.supplements,
       settings,
     }),
   );

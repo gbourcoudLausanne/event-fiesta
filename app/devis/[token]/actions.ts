@@ -9,6 +9,7 @@ import { buildQuotePdf } from "@/lib/pdf/build-quote-pdf";
 import { shareCopy, firstNameOf, type ShareLang } from "@/lib/quote-share";
 import { DEVIS_I18N, formatSignedAt } from "@/lib/devis-i18n";
 import { ensurePaymentSchedule, PAYMENT_COLUMNS, type QuotePayment } from "@/lib/quote-payments";
+import { allSupplements } from "@/lib/quote-supplements";
 import { PAY_I18N, paymentLabel, twintReference } from "@/lib/payments-i18n";
 
 const NOTIFY_TO = "contact@eventfiesta.ch";
@@ -153,5 +154,46 @@ export async function signQuote(
   }
 
   revalidatePath(`/devis/${token}`);
+  return { ok: true };
+}
+
+// Le client confirme les ajouts après signature (un clic, sans nouvelle signature).
+export async function acceptSupplements(token: string): Promise<{ ok?: boolean; error?: string }> {
+  const supabase = createAdminClient();
+  const { data: q } = await supabase
+    .from("quotes")
+    .select("id, reference, supplements, clients(full_name)")
+    .eq("public_token", token)
+    .single();
+  if (!q) return { error: "Devis introuvable." };
+
+  const now = new Date().toISOString();
+  const list = allSupplements(q.supplements);
+  const pending = list.filter((s) => !s.removed_at && !s.accepted_at);
+  if (pending.length === 0) return { ok: true };
+
+  const { error } = await supabase
+    .from("quotes")
+    .update({ supplements: list.map((s) => (!s.removed_at && !s.accepted_at ? { ...s, accepted_at: now } : s)) })
+    .eq("id", q.id);
+  if (error) return { error: "La confirmation n'a pas pu être enregistrée." };
+
+  revalidatePath(`/devis/${token}`);
+  revalidatePath(`/admin/devis/${q.id}`);
+
+  // Prévenir Event Fiesta (non bloquant)
+  const clientName = (q.clients as unknown as { full_name: string } | null)?.full_name ?? "Le client";
+  const apiKey = process.env.RESEND_API_KEY;
+  if (apiKey) {
+    after(async () => {
+      const { error: mailError } = await new Resend(apiKey).emails.send({
+        from: NOTIFY_FROM,
+        to: NOTIFY_TO,
+        subject: `✓ Ajouts confirmés — ${clientName} (${q.reference})`,
+        text: `${clientName} a confirmé les ajouts sur le devis ${q.reference} :\n${pending.map((s) => `- ${s.description} : CHF ${Number(s.amount).toFixed(2)}`).join("\n")}\n\nhttps://eventfiesta.ch/admin/devis/${q.id}`,
+      });
+      if (mailError) console.error("acceptSupplements: erreur Resend", mailError);
+    });
+  }
   return { ok: true };
 }

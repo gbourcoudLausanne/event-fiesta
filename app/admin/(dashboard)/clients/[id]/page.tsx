@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { supplementsTotal } from "@/lib/quote-supplements";
 import { FileText, Receipt, Plus, EnvelopeSimple, Phone, MapPin, NotePencil } from "@phosphor-icons/react/dist/ssr";
 
 const STATUS_LABELS: Record<string, string> = {
@@ -35,7 +36,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
   const [{ data: quotes }, { data: invoices }] = await Promise.all([
     supabase
       .from("quotes")
-      .select("id, reference, title, status, tax_rate, items, pricing_mode, package_total, created_at")
+      .select("id, reference, title, status, tax_rate, items, pricing_mode, package_total, supplements, created_at")
       .eq("client_id", id)
       .order("created_at", { ascending: false }),
     supabase
@@ -129,7 +130,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                     <p className="truncate font-sans text-[13.5px] font-medium" style={{ color: "var(--noir)" }}>{q.title || q.reference}</p>
                     <p className="font-sans text-[11.5px]" style={{ color: "rgba(13,11,8,0.45)" }}>{q.reference} · {STATUS_LABELS[q.status]}</p>
                   </div>
-                  <p className="shrink-0 whitespace-nowrap font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>{chf(quoteTotal(q.items, q.tax_rate, q.pricing_mode, q.package_total))}</p>
+                  <p className="shrink-0 whitespace-nowrap font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>{chf(quoteTotal(q.items, q.tax_rate, q.pricing_mode, q.package_total) + supplementsTotal(q.supplements))}</p>
                 </Link>
               ))
             )}

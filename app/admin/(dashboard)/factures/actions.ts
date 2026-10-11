@@ -6,6 +6,7 @@ import { Resend } from "resend";
 import { createClient } from "@/lib/supabase/server";
 import { buildInvoicePdf } from "@/lib/pdf/build-invoice-pdf";
 import { renderInvoiceEmail } from "@/lib/email-templates";
+import { activeSupplements } from "@/lib/quote-supplements";
 
 export type InvoiceItem = {
   description: string;
@@ -91,7 +92,7 @@ export async function createInvoiceFromQuote(quoteId: string) {
   const supabase = await createClient();
   const { data: q } = await supabase
     .from("quotes")
-    .select("id, client_id, reference, title, items, tax_rate, pricing_mode, package_total")
+    .select("id, client_id, reference, title, items, tax_rate, pricing_mode, package_total, supplements")
     .eq("id", quoteId)
     .single();
   if (!q) return { error: "Devis introuvable." };
@@ -115,6 +116,11 @@ export async function createInvoiceFromQuote(quoteId: string) {
           unit: it.unit,
           unit_price: it.unit_price,
         }));
+
+  // Ajouts après signature : une ligne chacun (montant final, TTC)
+  for (const sup of activeSupplements(q.supplements)) {
+    items.push({ description: `Ajout : ${sup.description}`, quantity: 1, unit: "forfait", unit_price: Number(sup.amount) });
+  }
 
   const due = new Date(Date.now() + 10 * 86400000).toISOString().slice(0, 10);
   const { data, error } = await supabase

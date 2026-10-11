@@ -6,6 +6,9 @@ import StatusControls from "./status-controls";
 import SendControls from "./send-controls";
 import PaymentsPanel from "./payments-panel";
 import QuoteInvoices from "./quote-invoices";
+import SupplementsPanel from "./supplements-panel";
+import { allSupplements } from "@/lib/quote-supplements";
+import { baseQuoteTotal } from "@/lib/quote-payments";
 import { PAYMENT_COLUMNS, type QuotePayment } from "@/lib/quote-payments";
 import type { ShareLang } from "@/lib/quote-share";
 import LanguageControls from "./language-controls";
@@ -29,7 +32,7 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
   const { data: quote } = await supabase
     .from("quotes")
     .select(
-      "id, reference, title, event_type, event_date, venue, tax_rate, items, status, client_id, public_token, signed_by, signed_at, signature_data, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, show_notes, notes_text, created_at, sent_at, clients(full_name, email, phone)",
+      "id, reference, title, event_type, event_date, venue, tax_rate, items, status, client_id, public_token, signed_by, signed_at, signature_data, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, show_notes, notes_text, created_at, sent_at, supplements, clients(full_name, email, phone)",
     )
     .eq("id", id)
     .single();
@@ -60,6 +63,11 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
         at: p.paid_at as string,
         label: `${p.label?.trim() || (p.kind === "acompte" ? "Acompte" : p.kind === "solde" ? "Solde" : "Paiement")} reçu`,
       })),
+    ...allSupplements(quote.supplements).flatMap((sup) => [
+      { at: sup.added_at, label: `Ajout : ${sup.description} (+ CHF ${Number(sup.amount).toFixed(2)})` },
+      ...(sup.accepted_at ? [{ at: sup.accepted_at, label: `Ajout confirmé par le client : ${sup.description}` }] : []),
+      ...(sup.removed_at ? [{ at: sup.removed_at, label: `Ajout retiré : ${sup.description}` }] : []),
+    ]),
   ]
     .filter((h): h is { at: string; label: string } => Boolean(h))
     .sort((a, b) => a.at.localeCompare(b.at));
@@ -137,6 +145,10 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
         />
       )}
 
+      {quote.signed_at && (
+        <SupplementsPanel quoteId={quote.id} supplements={allSupplements(quote.supplements)} baseTotal={baseQuoteTotal(quote)} />
+      )}
+
       {(quote.signed_at || quote.status === "accepte") && (
         <QuoteInvoices quoteId={quote.id} invoices={invoiceRows ?? []} />
       )}
@@ -156,6 +168,13 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
           ))}
         </ol>
       </details>
+
+      {quote.signed_at && (
+        <div className="mb-4 rounded-2xl px-4 py-3 font-sans text-[12.5px] leading-relaxed" style={{ background: "#FFF6E5", color: "#7A5A12", border: "1px solid #F1DDB0" }}>
+          <strong>Devis signé.</strong> Pour un ajout demandé par le client, utilise plutôt « Ajouts après signature » ci-dessus :
+          le devis signé reste intact et l&apos;ajout apparaît en plus. Ici, ne corrige que des détails (faute de frappe, lieu…).
+        </div>
+      )}
 
       <QuoteForm
         clientId={quote.client_id}

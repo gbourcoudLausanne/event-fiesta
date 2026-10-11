@@ -212,3 +212,59 @@ export const REMINDER_I18N: Record<PayLang, {
     ignoreIfPaid: "If you've already paid, please disregard this message.",
   },
 };
+
+// ─── Ajouts après signature ──────────────────────────────────────────────
+
+export const SUPP_I18N: Record<PayLang, {
+  title: string;
+  subtitle: string;
+  addedOn: (date: string) => string;
+  confirmedOn: (date: string) => string;
+  pending: string;
+  signedTotal: string;
+  extras: string;
+  newTotal: string;
+  confirmButton: string;
+  confirming: string;
+  thanks: string;
+}> = {
+  fr: {
+    title: "Ajouts après signature",
+    subtitle: "Éléments ajoutés à votre demande, en plus du devis signé.",
+    addedOn: (d) => `Ajouté le ${d}`,
+    confirmedOn: (d) => `Confirmé le ${d}`,
+    pending: "À confirmer",
+    signedTotal: "Devis signé",
+    extras: "Ajouts",
+    newTotal: "Nouveau total",
+    confirmButton: "Je confirme ces ajouts",
+    confirming: "Confirmation…",
+    thanks: "Merci, c'est confirmé !",
+  },
+  es: {
+    title: "Añadidos después de la firma",
+    subtitle: "Elementos añadidos a tu pedido, además del presupuesto firmado.",
+    addedOn: (d) => `Añadido el ${d}`,
+    confirmedOn: (d) => `Confirmado el ${d}`,
+    pending: "Por confirmar",
+    signedTotal: "Presupuesto firmado",
+    extras: "Añadidos",
+    newTotal: "Nuevo total",
+    confirmButton: "Confirmo estos añadidos",
+    confirming: "Confirmando…",
+    thanks: "¡Gracias, está confirmado!",
+  },
+  en: {
+    title: "Additions after signing",
+    subtitle: "Items added at your request, on top of the signed quote.",
+    addedOn: (d) => `Added on ${d}`,
+    confirmedOn: (d) => `Confirmed on ${d}`,
+    pending: "To confirm",
+    signedTotal: "Signed quote",
+    extras: "Additions",
+    newTotal: "New total",
+    confirmButton: "I confirm these additions",
+    confirming: "Confirming…",
+    thanks: "Thank you, it's confirmed!",
+  },
+};

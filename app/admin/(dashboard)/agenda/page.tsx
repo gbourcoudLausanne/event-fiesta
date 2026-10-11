@@ -17,6 +17,7 @@ type EventRow = {
   package_total: number | null;
   deposit_percent: number | null;
   deposit_amount: number | null;
+  supplements: unknown;
   clients: { full_name: string } | null;
   quote_payments: { amount: number; status: string }[];
 };
@@ -89,7 +90,7 @@ export default async function AgendaPage({ searchParams }: { searchParams: Promi
     supabase
       .from("quotes")
       .select(
-        "id, title, event_date, venue, status, items, tax_rate, pricing_mode, package_total, deposit_percent, deposit_amount, clients(full_name), quote_payments(amount, status)",
+        "id, title, event_date, venue, status, items, tax_rate, pricing_mode, package_total, deposit_percent, deposit_amount, supplements, clients(full_name), quote_payments(amount, status)",
       )
       .neq("status", "refuse")
       .gte("event_date", first)

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { supplementsTotal } from "@/lib/quote-supplements";
 import { Plus } from "@phosphor-icons/react/dist/ssr";
 
 const STATUS_LABELS: Record<string, string> = {
@@ -25,7 +26,7 @@ export default async function DevisListPage() {
   const supabase = await createClient();
   const { data: quotes } = await supabase
     .from("quotes")
-    .select("id, reference, title, status, tax_rate, items, pricing_mode, package_total, created_at, clients(full_name)")
+    .select("id, reference, title, status, tax_rate, items, pricing_mode, package_total, supplements, created_at, clients(full_name)")
     .order("created_at", { ascending: false });
 
   return (
@@ -64,7 +65,7 @@ export default async function DevisListPage() {
                 </p>
               </div>
               <p className="shrink-0 whitespace-nowrap font-sans text-[13.5px] font-semibold md:text-[14px]" style={{ color: "var(--noir)" }}>
-                {chf(total(q.items, q.tax_rate, q.pricing_mode, q.package_total))}
+                {chf(total(q.items, q.tax_rate, q.pricing_mode, q.package_total) + supplementsTotal(q.supplements))}
               </p>
             </Link>
           ))

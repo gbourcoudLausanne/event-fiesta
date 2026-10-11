@@ -48,7 +48,7 @@ export default function StatusControls({
       <ConfirmDeleteButton
         onConfirm={handleDelete}
         title="Supprimer ce devis ?"
-        message="Le devis, sa signature éventuelle et ses images seront définitivement supprimés. Le lien client ne fonctionnera plus."
+        message="Le devis, sa signature, ses images et son suivi des paiements (y compris les paiements déjà encaissés) seront définitivement supprimés, et le lien client ne fonctionnera plus. Les factures liées sont conservées. Pour un devis abandonné, préfère le statut « Refusé »."
       />
     </div>
   );

@@ -1,6 +1,8 @@
 import { Document, Page, View, Text, Image, Font, StyleSheet, Svg, Path, Ellipse, Defs, LinearGradient, Stop } from "@react-pdf/renderer";
 import path from "path";
 import { DEVIS_I18N, type DevisLang, resolveNotes, formatSignedAt } from "@/lib/devis-i18n";
+import { SUPP_I18N } from "@/lib/payments-i18n";
+import { activeSupplements } from "@/lib/quote-supplements";
 
 const FONTS = path.join(process.cwd(), "lib/pdf/fonts");
 
@@ -147,6 +149,16 @@ const styles = StyleSheet.create({
 
   validity: { fontSize: 7.5, color: MUTED_LIGHT, marginTop: 6, textAlign: "center" },
 
+  suppBlock: { marginTop: 10, padding: 9, borderRadius: 8, borderWidth: 1, borderColor: PINK },
+  suppTitle: { fontSize: 7, letterSpacing: 1.2, color: PINK_DEEP, fontWeight: 600, marginBottom: 5 },
+  suppRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 2.5 },
+  suppDesc: { fontSize: 8.5, color: INK, flex: 1, paddingRight: 8 },
+  suppMeta: { fontSize: 7, color: MUTED },
+  suppAmount: { fontSize: 8.5, color: INK, fontWeight: 600 },
+  suppTotalRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 5, paddingTop: 5, borderTopWidth: 0.5, borderTopColor: BORDER },
+  suppTotalLabel: { fontFamily: "DM Serif Display", fontSize: 12, color: INK },
+  suppTotalValue: { fontFamily: "DM Serif Display", fontSize: 12, color: PINK },
+
   paymentBlock: { marginTop: 10, paddingTop: 9, borderTopWidth: 0.5, borderTopColor: BORDER },
   paymentTitle: { fontSize: 7, letterSpacing: 1.2, color: MUTED_LIGHT, marginBottom: 5 },
   paymentRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 1.5 },
@@ -261,6 +273,7 @@ export type DevisPdfProps = {
   signedBy?: string | null;
   signedAt?: string | null;
   signatureData?: string | null;
+  supplements?: unknown;
 };
 
 export function DevisPdfDocument({
@@ -287,6 +300,7 @@ export function DevisPdfDocument({
   signedBy,
   signedAt,
   signatureData,
+  supplements,
 }: DevisPdfProps) {
   const t = DEVIS_I18N[lang];
   const tc = translatedContent ?? null;
@@ -310,7 +324,8 @@ export function DevisPdfDocument({
   const hasPercentDeposit = !hasFixedDeposit && !!depositPercent && depositPercent > 0;
   const hasDeposit = hasFixedDeposit || hasPercentDeposit;
   const depositAmount = hasFixedDeposit ? (depositAmountFixed as number) : hasPercentDeposit ? total * ((depositPercent as number) / 100) : 0;
-  const balanceAmount = total - depositAmount;
+  // Les ajouts après signature s'ajoutent au solde
+  const balanceAmount = total - depositAmount + (signedAt ? activeSupplements(supplements).reduce((sum, sup) => sum + Number(sup.amount), 0) : 0);
   const showPaymentBlock = hasDeposit || !!displayBalanceDueTerms || paymentMethods.length > 0;
   const firstName = client.full_name.split(" ")[0];
   const eventLabel = displayTitle || displayEventType || t.event;
@@ -424,6 +439,31 @@ export function DevisPdfDocument({
                 </View>
               </View>
             </>
+          )}
+
+          {signedAt && activeSupplements(supplements).length > 0 && (
+            <View style={styles.suppBlock} wrap={false}>
+              <Text style={styles.suppTitle}>{SUPP_I18N[lang].title.toUpperCase()}</Text>
+              {activeSupplements(supplements).map((sup) => (
+                <View key={sup.id} style={styles.suppRow}>
+                  <Text style={styles.suppDesc}>
+                    {sup.description}
+                    <Text style={styles.suppMeta}>
+                      {"  "}
+                      {SUPP_I18N[lang].addedOn(formatSignedAt(sup.added_at, t.locale).date)}
+                      {sup.accepted_at ? ` · ${SUPP_I18N[lang].confirmedOn(formatSignedAt(sup.accepted_at, t.locale).date)}` : ""}
+                    </Text>
+                  </Text>
+                  <Text style={styles.suppAmount}>+ {chf(Number(sup.amount))}</Text>
+                </View>
+              ))}
+              <View style={styles.suppTotalRow}>
+                <Text style={styles.suppTotalLabel}>{SUPP_I18N[lang].newTotal}</Text>
+                <Text style={styles.suppTotalValue}>
+                  {chf(total + activeSupplements(supplements).reduce((sum, sup) => sum + Number(sup.amount), 0))}
+                </Text>
+              </View>
+            </View>
           )}
 
           {showPaymentBlock && (

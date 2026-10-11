@@ -3,6 +3,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { DEVIS_I18N, type DevisLang, resolveNotes, formatSignedAt } from "@/lib/devis-i18n";
 import SignaturePadClient from "./signature-pad-client";
 import PaymentTracker from "./payment-tracker";
+import SupplementsBlock from "./supplements-block";
+import { activeSupplements, supplementsTotal } from "@/lib/quote-supplements";
 import { PAYMENT_COLUMNS, type QuotePayment } from "@/lib/quote-payments";
 
 function chf(n: number) {
@@ -50,7 +52,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
     supabase
       .from("quotes")
       .select(
-        "id, reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, show_notes, notes_text, clients(full_name, email, phone, address)",
+        "id, reference, title, event_type, event_date, venue, tax_rate, items, status, signed_by, signed_at, signature_data, created_at, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, show_notes, notes_text, supplements, clients(full_name, email, phone, address)",
       )
       .eq("public_token", token)
       .single(),
@@ -110,7 +112,8 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
     : hasPercentDeposit
       ? total * ((depositPercent as number) / 100)
       : 0;
-  const balanceAmount = total - depositAmount;
+  // Les ajouts après signature s'ajoutent au solde
+  const balanceAmount = total - depositAmount + (quote.signed_at ? supplementsTotal(quote.supplements) : 0);
   const paymentMethods = quote.payment_methods ?? [];
   const showPaymentBlock = hasDeposit || !!displayBalanceDueTerms || paymentMethods.length > 0;
 
@@ -359,6 +362,16 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
         </div>
       ) : (
         <SignaturePadClient token={token} lang={lang} />
+      )}
+
+      {isSigned && activeSupplements(quote.supplements).length > 0 && (
+        <SupplementsBlock
+          token={token}
+          lang={lang}
+          locale={t.locale}
+          supplements={activeSupplements(quote.supplements)}
+          baseTotal={total}
+        />
       )}
 
       {isSigned && (
