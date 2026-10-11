@@ -177,3 +177,51 @@ export function renderClientConfirmationEmail(opts: {
     ${footer(opts.ref)}
   `);
 }
+
+// ─── E-mail interne : un client vient de signer un devis ─────────────────
+
+export function renderQuoteSignedEmail(opts: {
+  reference: string;
+  title: string;
+  clientName: string;
+  signerName: string;
+  eventDate: string | null;
+  total: string;
+  adminUrl: string;
+}): string {
+  const rows = [
+    { label: "Client", value: opts.clientName },
+    { label: "Signé par", value: opts.signerName },
+    { label: "Devis", value: `${opts.title} (${opts.reference})` },
+    opts.eventDate && { label: "Événement", value: opts.eventDate },
+    { label: "Montant", value: opts.total },
+  ]
+    .filter((r): r is { label: string; value: string } => Boolean(r))
+    .map(
+      (f) => `
+    <tr>
+      <td style="padding:10px 0;border-bottom:1px solid rgba(42,35,32,0.07);width:36%;vertical-align:top;">
+        <span style="font-size:10.5px;letter-spacing:0.07em;text-transform:uppercase;color:${BRAND.muted};font-family:${SANS};">${esc(f.label)}</span>
+      </td>
+      <td style="padding:10px 0;border-bottom:1px solid rgba(42,35,32,0.07);vertical-align:top;">
+        <span style="font-size:14px;color:${BRAND.ink};font-family:${SANS};">${esc(f.value)}</span>
+      </td>
+    </tr>`,
+    )
+    .join("");
+
+  return wrapper(`
+    ${header("✓ Devis signé", `${esc(opts.clientName)} vient d'accepter et de signer le devis`)}
+    <tr>
+      <td style="padding:26px 32px 6px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rows}</table>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:20px 32px 28px;">
+        <a href="${opts.adminUrl}" style="display:inline-block;background:${BRAND.pink};color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:13px 24px;border-radius:12px;font-family:${SANS};">Ouvrir le devis</a>
+      </td>
+    </tr>
+    ${footer(opts.reference)}
+  `);
+}
