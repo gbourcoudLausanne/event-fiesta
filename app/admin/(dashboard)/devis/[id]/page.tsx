@@ -3,7 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { FilePdf } from "@phosphor-icons/react/dist/ssr";
 import QuoteForm from "../quote-form";
 import StatusControls from "./status-controls";
-import CopyLinkButton from "./copy-link-button";
+import SendControls from "./send-controls";
+import type { ShareLang } from "@/lib/quote-share";
 import LanguageControls from "./language-controls";
 
 function fmtDate(d: string | null) {
@@ -25,14 +26,18 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
   const { data: quote } = await supabase
     .from("quotes")
     .select(
-      "id, reference, title, event_type, event_date, venue, tax_rate, items, status, client_id, public_token, signed_by, signed_at, signature_data, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, clients(full_name)",
+      "id, reference, title, event_type, event_date, venue, tax_rate, items, status, client_id, public_token, signed_by, signed_at, signature_data, deposit_percent, deposit_amount, balance_due_terms, payment_methods, pricing_mode, package_total, reference_images, client_language, translated_content, clients(full_name, email, phone)",
     )
     .eq("id", id)
     .single();
 
   if (!quote) notFound();
 
-  const clientName = (quote.clients as unknown as { full_name: string } | null)?.full_name ?? "—";
+  const clientRow = quote.clients as unknown as { full_name: string; email: string | null; phone: string | null } | null;
+  const clientName = clientRow?.full_name ?? "—";
+  const shareLang = ((quote.client_language as ShareLang | null) ?? "fr") as ShareLang;
+  const translatedTitle = (quote.translated_content as { title?: string | null } | null)?.title;
+  const shareTitle = (shareLang !== "fr" && translatedTitle) || quote.title || "Event Fiesta";
 
   return (
     <div>
@@ -80,17 +85,15 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
             )}
           </div>
         ) : (
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-            <div>
-              <p className="font-sans text-[13.5px] font-semibold" style={{ color: "var(--noir)" }}>
-                Lien de signature client
-              </p>
-              <p className="font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.5)" }}>
-                Envoie ce lien pour que le client consulte et signe le devis en ligne.
-              </p>
-            </div>
-            <CopyLinkButton link={`https://eventfiesta.ch/devis/${quote.public_token}`} />
-          </div>
+          <SendControls
+            quoteId={quote.id}
+            link={`https://eventfiesta.ch/devis/${quote.public_token}`}
+            title={shareTitle}
+            lang={shareLang}
+            clientName={clientName}
+            clientEmail={clientRow?.email ?? null}
+            clientPhone={clientRow?.phone ?? null}
+          />
         )}
       </div>
 
