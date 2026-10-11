@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { WhatsappLogo, EnvelopeSimple, CheckCircle } from "@phosphor-icons/react";
+import { WhatsappLogo, EnvelopeSimple, CheckCircle, ArrowSquareOut } from "@phosphor-icons/react";
 import { quoteMessage, whatsappUrl, type ShareLang } from "@/lib/quote-share";
 import { markQuoteSent, sendQuoteByEmail } from "../send-actions";
 import CopyLinkButton from "./copy-link-button";
@@ -58,10 +58,28 @@ export default function SendControls({
   return (
     <div>
       <p className="font-sans text-[13.5px] font-semibold" style={{ color: "var(--noir)" }}>
-        Envoyer au client
+        Lien de signature client
       </p>
-      <p className="mb-3 font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.5)" }}>
-        Le client reçoit le lien pour consulter et signer le devis en ligne. Message en {LANG_LABEL[lang]}.
+      <p className="mb-2 font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.5)" }}>
+        Le client consulte et signe le devis en ligne via ce lien.
+      </p>
+      <div className="mb-4 flex items-center gap-2">
+        <a
+          href={link}
+          target="_blank"
+          rel="noreferrer"
+          className="flex min-w-0 flex-1 items-center gap-1.5 rounded-xl px-3 py-2.5 font-sans text-[12.5px] transition-colors hover:bg-black/[0.03]"
+          style={{ background: "var(--creme-2)", color: "var(--noir)" }}
+          title="Ouvrir la page client"
+        >
+          <span className="truncate">{link.replace(/^https:\/\//, "")}</span>
+          <ArrowSquareOut size={14} className="shrink-0" style={{ color: "rgba(13,11,8,0.45)" }} />
+        </a>
+        <CopyLinkButton link={link} />
+      </div>
+
+      <p className="mb-2 font-sans text-[11px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+        Envoyer au client · message en {LANG_LABEL[lang]}
       </p>
 
       {error && (
@@ -97,7 +115,7 @@ export default function SendControls({
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
           <a
             href={waHref}
             target="_blank"
@@ -119,7 +137,6 @@ export default function SendControls({
             {emailSent ? <CheckCircle size={16} weight="fill" style={{ color: "#4C9A6A" }} /> : <EnvelopeSimple size={16} />}
             {emailSent ? "E-mail envoyé" : clientEmail ? "E-mail" : "E-mail (pas d'adresse)"}
           </button>
-          <CopyLinkButton link={link} />
         </div>
       )}
     </div>
