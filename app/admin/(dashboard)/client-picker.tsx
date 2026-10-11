@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { MagnifyingGlass, CaretRight, UserPlus, Users } from "@phosphor-icons/react";
-import { createClientForQuote } from "../../clients/actions";
+import { createClientFromPicker } from "./clients/actions";
 
 const inputCls = "w-full rounded-xl bg-white px-3.5 py-2.5 font-sans text-[13.5px] outline-none";
 const inputStyle = { border: "1px solid rgba(13,11,8,0.14)", color: "var(--noir)" } as const;
@@ -16,7 +16,8 @@ function normalize(s: string) {
   return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 }
 
-export default function ClientPicker({ clients }: { clients: ClientRow[] }) {
+// `nextPath` : page de création à ouvrir avec ?client=<id> (devis ou facture).
+export default function ClientPicker({ clients, nextPath, docLabel }: { clients: ClientRow[]; nextPath: string; docLabel: string }) {
   const router = useRouter();
   const [mode, setMode] = useState<"existant" | "nouveau">(clients.length > 0 ? "existant" : "nouveau");
   const [query, setQuery] = useState("");
@@ -33,14 +34,14 @@ export default function ClientPicker({ clients }: { clients: ClientRow[] }) {
   }, [clients, query]);
 
   function pick(id: string) {
-    router.push(`/admin/devis/nouveau?client=${id}`);
+    router.push(`${nextPath}?client=${id}`);
   }
 
   function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     startTransition(async () => {
-      const res = await createClientForQuote(form);
+      const res = await createClientFromPicker(form);
       if (res.error || !res.id) {
         setError(res.error ?? "Impossible de créer le client.");
         return;
@@ -187,7 +188,7 @@ export default function ClientPicker({ clients }: { clients: ClientRow[] }) {
             />
           </div>
           <p className="font-sans text-[12px] sm:col-span-2" style={{ color: "rgba(13,11,8,0.5)" }}>
-            Le client est enregistré dans le CRM, puis tu passes directement au devis.
+            Le client est enregistré dans le CRM, puis tu passes directement {docLabel}.
           </p>
           <button
             type="submit"

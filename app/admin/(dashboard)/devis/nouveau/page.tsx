@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import QuoteForm from "../quote-form";
-import ClientPicker from "./client-picker";
+import ClientPicker from "../../client-picker";
 
 export default async function NewQuotePage({
   searchParams,
@@ -30,7 +30,7 @@ export default async function NewQuotePage({
         <h1 className="mb-5 font-display text-[23px] md:mb-6 md:text-[26px]" style={{ color: "var(--noir)" }}>
           Nouveau devis
         </h1>
-        <ClientPicker clients={clients ?? []} />
+        <ClientPicker clients={clients ?? []} nextPath="/admin/devis/nouveau" docLabel="au devis" />
       </div>
     );
   }

@@ -22,8 +22,8 @@ export async function deleteClientRecord(id: string) {
   revalidatePath("/admin/clients");
 }
 
-// Création depuis le parcours "Nouveau devis" : renvoie l'id pour enchaîner sur le devis.
-export async function createClientForQuote(input: {
+// Création depuis "Nouveau devis" / "Nouvelle facture" : renvoie l'id pour enchaîner.
+export async function createClientFromPicker(input: {
   full_name: string;
   email: string;
   phone: string;
