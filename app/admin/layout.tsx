@@ -26,6 +26,10 @@ const dmSerif = DM_Serif_Display({
 export const metadata: Metadata = {
   title: "Admin — Event Fiesta",
   robots: { index: false, follow: false },
+  // Icône "écran d'accueil" : s'ouvre toujours sur la Vue d'ensemble (start_url /admin)
+  manifest: "/admin.webmanifest",
+  appleWebApp: { capable: true, title: "EF Admin", statusBarStyle: "black-translucent" },
+  icons: { apple: "/admin-icons/icon-180.png" },
 };
 
 export const viewport: Viewport = {
