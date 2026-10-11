@@ -228,7 +228,7 @@ export default function QuoteForm({
                 border: pricingMode === "detaille" ? "1px solid var(--rose-deep)" : "1px solid rgba(13,11,8,0.14)",
               }}
             >
-              Détaillé (prix par ligne)
+              Détaillé<span className="hidden sm:inline"> (prix par ligne)</span>
             </button>
             <button
               type="button"
@@ -240,7 +240,7 @@ export default function QuoteForm({
                 border: pricingMode === "forfait" ? "1px solid var(--rose-deep)" : "1px solid rgba(13,11,8,0.14)",
               }}
             >
-              Forfait global (un seul prix)
+              Forfait global<span className="hidden sm:inline"> (un seul prix)</span>
             </button>
           </div>
         </div>

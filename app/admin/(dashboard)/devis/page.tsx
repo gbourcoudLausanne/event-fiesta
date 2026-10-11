@@ -45,7 +45,7 @@ export default async function DevisListPage() {
       <div className="rounded-2xl bg-white" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
         {!quotes || quotes.length === 0 ? (
           <p className="px-5 py-8 text-center font-sans text-[13.5px]" style={{ color: "rgba(13,11,8,0.4)" }}>
-            Aucun devis pour l&apos;instant — appuie sur « Nouveau devis ».
+            Aucun devis pour l&apos;instant — appuie sur « Nouveau devis ».
           </p>
         ) : (
           quotes.map((q, i) => (

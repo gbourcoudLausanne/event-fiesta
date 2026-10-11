@@ -316,6 +316,10 @@ body {
 
 /* Admin mobile : 16px minimum sur les champs, sinon iOS zoome à la saisie */
 @media (max-width: 767px) {
+  /* Barre du haut collante : les défilements automatiques s'arrêtent sous elle */
+  html:has(.admin-root) {
+    scroll-padding-top: 72px;
+  }
   .admin-root input,
   .admin-root textarea,
   .admin-root select {

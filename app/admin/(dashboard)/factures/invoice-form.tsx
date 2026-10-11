@@ -102,7 +102,7 @@ export default function InvoiceForm({
         <p className="mb-3 font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>Prestations</p>
         <div className="flex flex-col gap-2">
           {items.map((item, i) => (
-            <div key={i} className="grid grid-cols-[1fr_1fr_1.3fr_40px] items-center gap-2 rounded-xl p-2.5 sm:grid-cols-[1fr_70px_90px_110px_28px] sm:rounded-none sm:p-0 max-sm:border max-sm:border-black/10">
+            <div key={i} className="grid grid-cols-[64px_1fr_1fr_40px] items-center gap-2 rounded-xl p-2.5 sm:grid-cols-[1fr_70px_90px_110px_28px] sm:rounded-none sm:p-0 max-sm:border max-sm:border-black/10">
               <input
                 value={item.description}
                 onChange={(e) => updateItem(i, "description", e.target.value)}

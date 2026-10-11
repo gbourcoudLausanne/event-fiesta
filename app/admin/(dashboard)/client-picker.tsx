@@ -93,7 +93,7 @@ export default function ClientPicker({ clients, nextPath, docLabel }: { clients:
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Rechercher par nom, email ou téléphone…"
+              placeholder="Rechercher un client…"
               className={inputCls + " pl-9"}
               style={inputStyle}
             />

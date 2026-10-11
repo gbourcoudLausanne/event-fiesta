@@ -43,7 +43,7 @@ export default async function FacturesListPage() {
       <div className="rounded-2xl bg-white" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
         {!invoices || invoices.length === 0 ? (
           <p className="px-5 py-8 text-center font-sans text-[13.5px]" style={{ color: "rgba(13,11,8,0.4)" }}>
-            Aucune facture pour l&apos;instant — appuie sur « Nouvelle facture ».
+            Aucune facture pour l&apos;instant — appuie sur « Nouvelle facture ».
           </p>
         ) : (
           invoices.map((inv, i) => (
