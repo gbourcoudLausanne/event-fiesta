@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Montserrat, DM_Serif_Display } from "next/font/google";
 import "../globals.css";
 
@@ -28,10 +28,17 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#0D0B08",
+};
+
 export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" className={`${cormorant.variable} ${montserrat.variable} ${dmSerif.variable} antialiased`}>
-      <body className="min-h-screen font-sans" style={{ background: "var(--creme)", color: "var(--noir)" }}>
+      <body className="admin-root min-h-screen font-sans" style={{ background: "var(--creme)", color: "var(--noir)" }}>
         {children}
       </body>
     </html>

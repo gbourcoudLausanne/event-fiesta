@@ -36,20 +36,20 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
 
   return (
     <div>
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex md:justify-end">
         <LanguageControls quoteId={quote.id} clientLanguage={quote.client_language} />
       </div>
 
-      <div className="mb-6 flex items-start justify-between">
-        <div>
+      <div className="mb-5 flex flex-col gap-3 md:mb-6 md:flex-row md:items-start md:justify-between">
+        <div className="min-w-0">
           <p className="mb-1 font-sans text-[11px] uppercase tracking-[0.12em]" style={{ color: "rgba(13,11,8,0.45)" }}>
             {quote.reference} · {clientName}
           </p>
-          <h1 className="font-display text-[26px]" style={{ color: "var(--noir)" }}>
+          <h1 className="break-words font-display text-[23px] leading-tight md:text-[26px]" style={{ color: "var(--noir)" }}>
             {quote.title || "Devis sans titre"}
           </h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           <a
             href={`/api/devis/${quote.id}/pdf`}
             target="_blank"
@@ -63,9 +63,9 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
         </div>
       </div>
 
-      <div className="mb-6 rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+      <div className="mb-6 rounded-2xl bg-white p-4 md:p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
         {quote.signed_at ? (
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="font-sans text-[13.5px] font-semibold" style={{ color: "var(--noir)" }}>
                 ✓ Accepté et signé
@@ -80,7 +80,7 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
             )}
           </div>
         ) : (
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
             <div>
               <p className="font-sans text-[13.5px] font-semibold" style={{ color: "var(--noir)" }}>
                 Lien de signature client

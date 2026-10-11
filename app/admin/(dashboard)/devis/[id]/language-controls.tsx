@@ -38,7 +38,7 @@ export default function LanguageControls({
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       <span className="font-sans text-[11px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.45)" }}>
         Langue client
       </span>
@@ -51,7 +51,7 @@ export default function LanguageControls({
               type="button"
               onClick={() => translate(l.code)}
               disabled={isPending}
-              className="rounded-lg px-2.5 py-1.5 font-sans text-[12px] font-medium disabled:opacity-60"
+              className="rounded-lg px-3 py-2 font-sans text-[12px] font-medium disabled:opacity-60 md:px-2.5 md:py-1.5"
               style={{
                 background: active ? "var(--rose-deep)" : "transparent",
                 color: active ? "var(--creme)" : "rgba(13,11,8,0.6)",
@@ -67,7 +67,7 @@ export default function LanguageControls({
             type="button"
             onClick={reset}
             disabled={isPending}
-            className="rounded-lg px-2.5 py-1.5 font-sans text-[12px] underline"
+            className="rounded-lg px-2.5 py-2 font-sans text-[12px] underline md:py-1.5"
             style={{ color: "rgba(13,11,8,0.4)" }}
           >
             Original

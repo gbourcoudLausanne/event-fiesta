@@ -186,8 +186,8 @@ export default function QuoteForm({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4 rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
-        <div className="col-span-2">
+      <div className="grid grid-cols-1 gap-3 rounded-2xl bg-white p-4 sm:grid-cols-2 md:gap-4 md:p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+        <div className="sm:col-span-2">
           <label className={labelCls} style={labelStyle}>Intitulé</label>
           <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="ex: Décoration 40e anniversaire" className={inputCls} style={inputStyle} />
         </div>
@@ -205,18 +205,18 @@ export default function QuoteForm({
         </div>
         <div>
           <label className={labelCls} style={labelStyle}>TVA %</label>
-          <input type="number" min={0} step={0.1} value={taxRate} onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)} className={inputCls} style={inputStyle} />
+          <input type="number" inputMode="decimal" min={0} step={0.1} value={taxRate} onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)} className={inputCls} style={inputStyle} />
         </div>
       </div>
 
-      <div className="rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
-        <div className="mb-3 flex items-center justify-between">
+      <div className="rounded-2xl bg-white p-4 md:p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <p className="font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>Prestations</p>
-          <div className="flex gap-1">
+          <div className="flex w-full gap-1 sm:w-auto">
             <button
               type="button"
               onClick={() => setPricingMode("detaille")}
-              className="rounded-lg px-2.5 py-1 font-sans text-[11.5px] font-medium"
+              className="flex-1 rounded-lg px-2.5 py-2 font-sans text-[11.5px] font-medium sm:flex-none sm:py-1"
               style={{
                 background: pricingMode === "detaille" ? "var(--rose-deep)" : "transparent",
                 color: pricingMode === "detaille" ? "var(--creme)" : "rgba(13,11,8,0.5)",
@@ -228,7 +228,7 @@ export default function QuoteForm({
             <button
               type="button"
               onClick={() => setPricingMode("forfait")}
-              className="rounded-lg px-2.5 py-1 font-sans text-[11.5px] font-medium"
+              className="flex-1 rounded-lg px-2.5 py-2 font-sans text-[11.5px] font-medium sm:flex-none sm:py-1"
               style={{
                 background: pricingMode === "forfait" ? "var(--rose-deep)" : "transparent",
                 color: pricingMode === "forfait" ? "var(--creme)" : "rgba(13,11,8,0.5)",
@@ -271,13 +271,14 @@ export default function QuoteForm({
                 style={{ border: "1px solid rgba(13,11,8,0.12)", color: "var(--noir)" }}
               />
               {pricingMode === "detaille" ? (
-                <div className="mt-2 flex items-end gap-2">
-                  <div className="w-[72px]">
+                <div className="mt-2 grid grid-cols-[1fr_1fr_1.3fr] items-end gap-2 sm:flex">
+                  <div className="sm:w-[72px]">
                     <label className="mb-1 block font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
                       Qté
                     </label>
                     <input
                       type="number"
+                      inputMode="decimal"
                       min={0}
                       value={item.quantity}
                       onChange={(e) => updateItem(i, "quantity", parseFloat(e.target.value) || 0)}
@@ -285,7 +286,7 @@ export default function QuoteForm({
                       style={inputStyle}
                     />
                   </div>
-                  <div className="w-[100px]">
+                  <div className="sm:w-[100px]">
                     <label className="mb-1 block font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
                       Unité
                     </label>
@@ -297,12 +298,13 @@ export default function QuoteForm({
                       style={inputStyle}
                     />
                   </div>
-                  <div className="w-[120px]">
+                  <div className="sm:w-[120px]">
                     <label className="mb-1 block font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
                       Prix unitaire
                     </label>
                     <input
                       type="number"
+                      inputMode="decimal"
                       min={0}
                       value={item.unit_price}
                       onChange={(e) => updateItem(i, "unit_price", parseFloat(e.target.value) || 0)}
@@ -310,7 +312,7 @@ export default function QuoteForm({
                       style={inputStyle}
                     />
                   </div>
-                  <div className="flex-1 text-right">
+                  <div className="col-span-2 sm:flex-1 sm:text-right">
                     <p className="mb-1 font-sans text-[9.5px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>
                       Total ligne
                     </p>
@@ -321,8 +323,9 @@ export default function QuoteForm({
                   <button
                     type="button"
                     onClick={() => removeItem(i)}
-                    className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:bg-black/5"
+                    className="flex h-10 w-10 items-center justify-center justify-self-end rounded-lg transition-colors hover:bg-black/5 sm:h-9 sm:w-9"
                     style={{ color: "rgba(13,11,8,0.35)" }}
+                    aria-label="Supprimer la ligne"
                   >
                     <Trash size={14} />
                   </button>
@@ -332,8 +335,9 @@ export default function QuoteForm({
                   <button
                     type="button"
                     onClick={() => removeItem(i)}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-black/5"
+                    className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-black/5 sm:h-8 sm:w-8"
                     style={{ color: "rgba(13,11,8,0.35)" }}
+                    aria-label="Supprimer le service"
                   >
                     <Trash size={14} />
                   </button>
@@ -345,7 +349,7 @@ export default function QuoteForm({
         <button
           type="button"
           onClick={addItem}
-          className="mt-3 flex items-center gap-1.5 rounded-xl px-3 py-2 font-sans text-[12.5px] font-medium"
+          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 font-sans text-[12.5px] font-medium sm:w-auto sm:justify-start sm:py-2"
           style={{ border: "1px dashed rgba(13,11,8,0.2)", color: "rgba(13,11,8,0.6)" }}
         >
           <Plus size={13} /> {pricingMode === "forfait" ? "Ajouter un service" : "Ajouter une ligne"}
@@ -353,22 +357,23 @@ export default function QuoteForm({
 
         {pricingMode === "detaille" ? (
           <div className="mt-5 flex flex-col items-end gap-1 border-t pt-4 font-sans text-[13.5px]" style={{ borderColor: "rgba(13,11,8,0.08)" }}>
-            <div className="flex w-56 justify-between" style={{ color: "rgba(13,11,8,0.6)" }}>
+            <div className="flex w-full justify-between sm:w-56" style={{ color: "rgba(13,11,8,0.6)" }}>
               <span>Sous-total</span><span>{chf(subtotal)}</span>
             </div>
-            <div className="flex w-56 justify-between" style={{ color: "rgba(13,11,8,0.6)" }}>
+            <div className="flex w-full justify-between sm:w-56" style={{ color: "rgba(13,11,8,0.6)" }}>
               <span>TVA ({taxRate}%)</span><span>{chf(tax)}</span>
             </div>
-            <div className="flex w-56 justify-between font-semibold" style={{ color: "var(--noir)" }}>
+            <div className="flex w-full justify-between font-semibold sm:w-56" style={{ color: "var(--noir)" }}>
               <span>Total</span><span>{chf(total)}</span>
             </div>
           </div>
         ) : (
-          <div className="mt-5 flex items-center justify-end gap-3 border-t pt-4" style={{ borderColor: "rgba(13,11,8,0.08)" }}>
+          <div className="mt-5 flex flex-wrap items-center justify-end gap-x-3 gap-y-2 border-t pt-4" style={{ borderColor: "rgba(13,11,8,0.08)" }}>
             <label className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.6)" }}>Prix total du forfait</label>
             <span className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.5)" }}>CHF</span>
             <input
               type="number"
+              inputMode="decimal"
               min={0}
               step={0.05}
               value={packageTotal ?? ""}
@@ -381,11 +386,11 @@ export default function QuoteForm({
         )}
       </div>
 
-      <div className="rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+      <div className="rounded-2xl bg-white p-4 md:p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
         <p className="mb-3 font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>Conditions de paiement</p>
 
         <div className="mb-4">
-          <div className="mb-2 flex items-center justify-between">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
             <label className={labelCls} style={{ ...labelStyle, marginBottom: 0 }}>Acompte à la commande</label>
             <div className="flex gap-1">
               <button
@@ -416,9 +421,10 @@ export default function QuoteForm({
           </div>
 
           {depositMode === "percent" ? (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <input
                 type="number"
+                inputMode="decimal"
                 min={0}
                 max={100}
                 value={depositPercent ?? ""}
@@ -428,13 +434,13 @@ export default function QuoteForm({
                 style={inputStyle}
               />
               <span className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.5)" }}>%</span>
-              <div className="ml-2 flex gap-1.5">
+              <div className="flex gap-1.5 sm:ml-2">
                 {DEPOSIT_PRESETS.map((p) => (
                   <button
                     key={p}
                     type="button"
                     onClick={() => setDepositPercent(p)}
-                    className="rounded-lg px-2.5 py-1 font-sans text-[12px]"
+                    className="rounded-lg px-2.5 py-1.5 font-sans text-[12px] sm:py-1"
                     style={{
                       background: depositPercent === p ? "var(--blush)" : "transparent",
                       color: depositPercent === p ? "var(--rose-deep)" : "rgba(13,11,8,0.5)",
@@ -456,6 +462,7 @@ export default function QuoteForm({
               <span className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.5)" }}>CHF</span>
               <input
                 type="number"
+                inputMode="decimal"
                 min={0}
                 step={0.05}
                 value={depositAmount ?? ""}
@@ -483,7 +490,7 @@ export default function QuoteForm({
                 key={p}
                 type="button"
                 onClick={() => setBalanceDueTerms(p)}
-                className="rounded-lg px-2.5 py-1 font-sans text-[12px]"
+                className="rounded-lg px-2.5 py-1.5 font-sans text-[12px] sm:py-1"
                 style={{
                   background: balanceDueTerms === p ? "var(--blush)" : "transparent",
                   color: balanceDueTerms === p ? "var(--rose-deep)" : "rgba(13,11,8,0.5)",
@@ -521,7 +528,7 @@ export default function QuoteForm({
         </div>
       </div>
 
-      <div className="rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+      <div className="rounded-2xl bg-white p-4 md:p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
         <p className="mb-1 font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>
           Images de référence
         </p>
@@ -550,7 +557,8 @@ export default function QuoteForm({
                     <button
                       type="button"
                       onClick={() => handleImageRemove(url)}
-                      className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-lg opacity-0 transition-opacity group-hover:opacity-100"
+                      className="absolute right-1.5 top-1.5 flex h-8 w-8 items-center justify-center rounded-lg transition-opacity md:h-7 md:w-7 md:opacity-0 md:group-hover:opacity-100"
+                      aria-label="Retirer l'image"
                       style={{ background: "rgba(13,11,8,0.6)", color: "var(--creme)" }}
                     >
                       <Trash size={13} />
@@ -561,7 +569,7 @@ export default function QuoteForm({
             )}
 
             <label
-              className="flex cursor-pointer items-center gap-1.5 rounded-xl px-3 py-2 font-sans text-[12.5px] font-medium"
+              className="flex cursor-pointer items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 font-sans text-[12.5px] font-medium sm:inline-flex sm:justify-start sm:py-2"
               style={{ border: "1px dashed rgba(13,11,8,0.2)", color: "rgba(13,11,8,0.6)" }}
             >
               <ImageSquare size={15} />
@@ -585,7 +593,7 @@ export default function QuoteForm({
       <button
         type="submit"
         disabled={isPending}
-        className="flex items-center gap-2 self-start rounded-2xl px-6 py-3 font-sans text-[13.5px] font-medium transition-colors duration-300 disabled:opacity-60"
+        className="sticky bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-20 w-full justify-center shadow-[0_8px_24px_rgba(13,11,8,0.18)] md:static md:w-auto md:self-start md:shadow-none flex items-center gap-2 rounded-2xl px-6 py-3.5 font-sans text-[13.5px] font-medium transition-colors duration-300 disabled:opacity-60 md:py-3"
         style={{ background: justSaved ? "#4C9A6A" : "var(--rose-deep)", color: "var(--creme)" }}
       >
         {justSaved && <CheckCircle size={17} weight="fill" />}

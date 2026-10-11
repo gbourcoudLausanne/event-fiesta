@@ -25,12 +25,12 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div>
-      <div className="mb-6 flex items-start justify-between">
-        <div>
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between md:mb-6">
+        <div className="min-w-0">
           <p className="mb-1 font-sans text-[11px] uppercase tracking-[0.12em]" style={{ color: "rgba(13,11,8,0.45)" }}>
             {clientName}
           </p>
-          <h1 className="font-display text-[26px]" style={{ color: "var(--noir)" }}>
+          <h1 className="font-display text-[23px] md:text-[26px]" style={{ color: "var(--noir)" }}>
             {invoice.reference}
           </h1>
         </div>

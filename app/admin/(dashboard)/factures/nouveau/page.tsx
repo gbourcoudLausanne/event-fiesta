@@ -21,7 +21,7 @@ export default async function NewInvoicePage({
 
   return (
     <div>
-      <h1 className="mb-1 font-display text-[26px]" style={{ color: "var(--noir)" }}>
+      <h1 className="mb-1 font-display text-[23px] md:text-[26px]" style={{ color: "var(--noir)" }}>
         Nouvelle facture
       </h1>
       <p className="mb-6 font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.5)" }}>

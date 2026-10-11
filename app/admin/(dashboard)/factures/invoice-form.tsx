@@ -80,31 +80,32 @@ export default function InvoiceForm({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4 rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+      <div className="grid grid-cols-2 gap-3 rounded-2xl bg-white p-4 md:gap-4 md:p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
         <div>
           <label className={labelCls} style={labelStyle}>Échéance</label>
           <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} className={inputCls} style={inputStyle} />
         </div>
         <div>
           <label className={labelCls} style={labelStyle}>TVA %</label>
-          <input type="number" min={0} step={0.1} value={taxRate} onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)} className={inputCls} style={inputStyle} />
+          <input type="number" inputMode="decimal" min={0} step={0.1} value={taxRate} onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)} className={inputCls} style={inputStyle} />
         </div>
       </div>
 
-      <div className="rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+      <div className="rounded-2xl bg-white p-4 md:p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
         <p className="mb-3 font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>Prestations</p>
         <div className="flex flex-col gap-2">
           {items.map((item, i) => (
-            <div key={i} className="grid grid-cols-[1fr_70px_90px_110px_28px] items-center gap-2">
+            <div key={i} className="grid grid-cols-[1fr_1fr_1.3fr_40px] items-center gap-2 rounded-xl p-2.5 sm:grid-cols-[1fr_70px_90px_110px_28px] sm:rounded-none sm:p-0 max-sm:border max-sm:border-black/10">
               <input
                 value={item.description}
                 onChange={(e) => updateItem(i, "description", e.target.value)}
                 placeholder="Description de la prestation…"
-                className={inputCls}
+                className={inputCls + " col-span-4 sm:col-span-1"}
                 style={inputStyle}
               />
               <input
                 type="number"
+                inputMode="decimal"
                 min={0}
                 value={item.quantity}
                 onChange={(e) => updateItem(i, "quantity", parseFloat(e.target.value) || 0)}
@@ -120,6 +121,7 @@ export default function InvoiceForm({
               />
               <input
                 type="number"
+                inputMode="decimal"
                 min={0}
                 value={item.unit_price}
                 onChange={(e) => updateItem(i, "unit_price", parseFloat(e.target.value) || 0)}
@@ -129,8 +131,9 @@ export default function InvoiceForm({
               <button
                 type="button"
                 onClick={() => removeItem(i)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-black/5"
+                className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-black/5 sm:h-8 sm:w-8"
                 style={{ color: "rgba(13,11,8,0.35)" }}
+                aria-label="Supprimer la ligne"
               >
                 <Trash size={14} />
               </button>
@@ -140,20 +143,20 @@ export default function InvoiceForm({
         <button
           type="button"
           onClick={addItem}
-          className="mt-3 flex items-center gap-1.5 rounded-xl px-3 py-2 font-sans text-[12.5px] font-medium"
+          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 font-sans text-[12.5px] font-medium sm:w-auto sm:justify-start sm:py-2"
           style={{ border: "1px dashed rgba(13,11,8,0.2)", color: "rgba(13,11,8,0.6)" }}
         >
           <Plus size={13} /> Ajouter une ligne
         </button>
 
         <div className="mt-5 flex flex-col items-end gap-1 border-t pt-4 font-sans text-[13.5px]" style={{ borderColor: "rgba(13,11,8,0.08)" }}>
-          <div className="flex w-56 justify-between" style={{ color: "rgba(13,11,8,0.6)" }}>
+          <div className="flex w-full justify-between sm:w-56" style={{ color: "rgba(13,11,8,0.6)" }}>
             <span>Sous-total</span><span>{chf(subtotal)}</span>
           </div>
-          <div className="flex w-56 justify-between" style={{ color: "rgba(13,11,8,0.6)" }}>
+          <div className="flex w-full justify-between sm:w-56" style={{ color: "rgba(13,11,8,0.6)" }}>
             <span>TVA ({taxRate}%)</span><span>{chf(tax)}</span>
           </div>
-          <div className="flex w-56 justify-between font-semibold" style={{ color: "var(--noir)" }}>
+          <div className="flex w-full justify-between font-semibold sm:w-56" style={{ color: "var(--noir)" }}>
             <span>Total</span><span>{chf(total)}</span>
           </div>
         </div>
@@ -162,7 +165,7 @@ export default function InvoiceForm({
       <button
         type="submit"
         disabled={isPending}
-        className="self-start rounded-2xl px-6 py-3 font-sans text-[13.5px] font-medium disabled:opacity-60"
+        className="sticky bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-20 w-full justify-center shadow-[0_8px_24px_rgba(13,11,8,0.18)] md:static md:w-auto md:self-start md:shadow-none flex rounded-2xl px-6 py-3.5 font-sans text-[13.5px] font-medium disabled:opacity-60 md:py-3"
         style={{ background: "var(--rose-deep)", color: "var(--creme)" }}
       >
         {isPending ? "Enregistrement…" : invoiceId ? "Enregistrer" : "Créer la facture"}

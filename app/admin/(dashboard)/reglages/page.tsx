@@ -16,7 +16,7 @@ export default async function ReglagesPage() {
 
   return (
     <div>
-      <h1 className="mb-1 font-display text-[26px]" style={{ color: "var(--noir)" }}>
+      <h1 className="mb-1 font-display text-[23px] md:text-[26px]" style={{ color: "var(--noir)" }}>
         Réglages
       </h1>
       <p className="mb-6 font-sans text-[13.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>
@@ -25,7 +25,7 @@ export default async function ReglagesPage() {
 
       <form
         action={updateSettings}
-        className="grid grid-cols-2 gap-4 rounded-2xl bg-white p-5"
+        className="grid grid-cols-2 gap-3 rounded-2xl bg-white p-4 md:gap-4 md:p-5"
         style={{ border: "1px solid rgba(13,11,8,0.08)" }}
       >
         <div className="col-span-2">
@@ -50,12 +50,12 @@ export default async function ReglagesPage() {
         </div>
         <div className="col-span-2">
           <label className={labelCls} style={labelStyle}>Numéro Twint</label>
-          <input name="twint_phone" defaultValue={settings?.twint_phone ?? ""} placeholder="+41 77 914 38 55" className={inputCls} style={inputStyle} />
+          <input name="twint_phone" type="tel" defaultValue={settings?.twint_phone ?? ""} placeholder="+41 77 914 38 55" className={inputCls} style={inputStyle} />
         </div>
 
         <button
           type="submit"
-          className="col-span-2 mt-1 justify-self-start rounded-xl px-5 py-2.5 font-sans text-[13px] font-medium"
+          className="col-span-2 mt-1 rounded-xl px-5 py-3 font-sans text-[13px] font-medium sm:justify-self-start sm:py-2.5"
           style={{ background: "var(--rose-deep)", color: "var(--creme)" }}
         >
           Enregistrer

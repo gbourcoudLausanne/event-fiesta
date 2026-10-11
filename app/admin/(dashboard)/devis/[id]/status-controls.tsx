@@ -40,7 +40,7 @@ export default function StatusControls({
         value={status}
         onChange={(e) => handleStatusChange(e.target.value)}
         disabled={isPending}
-        className="rounded-xl bg-white px-3 py-2 font-sans text-[13px] outline-none"
+        className="rounded-xl bg-white px-3 py-2 font-sans text-[13px] outline-none max-md:py-1.5"
         style={{ border: "1px solid rgba(13,11,8,0.14)", color: "var(--noir)" }}
       >
         {STATUS_ORDER.map((s) => (
@@ -54,6 +54,7 @@ export default function StatusControls({
         className="flex h-9 w-9 items-center justify-center rounded-xl transition-colors hover:bg-black/5"
         style={{ color: "rgba(13,11,8,0.4)" }}
         title="Supprimer"
+        aria-label="Supprimer"
       >
         <Trash size={15} />
       </button>

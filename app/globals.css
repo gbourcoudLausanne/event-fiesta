@@ -313,3 +313,12 @@ body {
 .star-animated {
   animation: star-pop 0.4s ease forwards;
 }
+
+/* Admin mobile : 16px minimum sur les champs, sinon iOS zoome à la saisie */
+@media (max-width: 767px) {
+  .admin-root input,
+  .admin-root textarea,
+  .admin-root select {
+    font-size: 16px !important;
+  }
+}

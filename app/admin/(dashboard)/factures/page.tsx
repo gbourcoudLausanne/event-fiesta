@@ -27,7 +27,7 @@ export default async function FacturesListPage() {
 
   return (
     <div>
-      <h1 className="mb-6 font-display text-[26px]" style={{ color: "var(--noir)" }}>
+      <h1 className="mb-6 font-display text-[23px] md:text-[26px]" style={{ color: "var(--noir)" }}>
         Factures
       </h1>
       <div className="rounded-2xl bg-white" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
@@ -40,18 +40,18 @@ export default async function FacturesListPage() {
             <Link
               key={inv.id}
               href={`/admin/factures/${inv.id}`}
-              className="flex items-center justify-between px-5 py-4 transition-colors hover:bg-black/[0.02]"
+              className="flex items-center justify-between gap-3 px-4 py-3.5 transition-colors hover:bg-black/[0.02] md:px-5 md:py-4"
               style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}
             >
-              <div>
-                <p className="font-sans text-[14px] font-semibold" style={{ color: "var(--noir)" }}>
+              <div className="min-w-0">
+                <p className="truncate font-sans text-[14px] font-semibold" style={{ color: "var(--noir)" }}>
                   {inv.reference}
                 </p>
-                <p className="font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>
+                <p className="truncate font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>
                   {(inv.clients as unknown as { full_name: string } | null)?.full_name ?? "—"} · {STATUS_LABELS[inv.status]}
                 </p>
               </div>
-              <p className="font-sans text-[14px] font-semibold" style={{ color: "var(--noir)" }}>
+              <p className="shrink-0 whitespace-nowrap font-sans text-[13.5px] font-semibold md:text-[14px]" style={{ color: "var(--noir)" }}>
                 {chf(total(inv.items, inv.tax_rate))}
               </p>
             </Link>

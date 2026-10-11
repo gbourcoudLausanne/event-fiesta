@@ -32,7 +32,7 @@ async function getCounts() {
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
     <div
-      className="rounded-2xl bg-white px-6 py-5"
+      className="rounded-2xl bg-white px-4 py-4 md:px-6 md:py-5"
       style={{ border: "1px solid rgba(13,11,8,0.08)" }}
     >
       <p
@@ -41,7 +41,7 @@ function StatCard({ label, value }: { label: string; value: number }) {
       >
         {label}
       </p>
-      <p className="font-display text-[32px]" style={{ color: "var(--noir)" }}>
+      <p className="font-display text-[28px] md:text-[32px]" style={{ color: "var(--noir)" }}>
         {value}
       </p>
     </div>
@@ -53,10 +53,10 @@ export default async function AdminOverviewPage() {
 
   return (
     <div>
-      <h1 className="mb-6 font-display text-[26px]" style={{ color: "var(--noir)" }}>
+      <h1 className="mb-6 font-display text-[23px] md:text-[26px]" style={{ color: "var(--noir)" }}>
         Vue d&apos;ensemble
       </h1>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
         <StatCard label="Nouvelles demandes" value={counts.newRequests} />
         <StatCard label="Clients" value={counts.clients} />
         <StatCard label="Devis en attente" value={counts.quotesPending} />

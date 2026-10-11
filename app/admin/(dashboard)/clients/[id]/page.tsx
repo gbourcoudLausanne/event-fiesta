@@ -50,29 +50,37 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
         ← Clients
       </Link>
 
-      <div className="mb-8 rounded-2xl bg-white p-6" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
-        <h1 className="mb-4 font-display text-[26px]" style={{ color: "var(--noir)" }}>
+      <div className="mb-6 rounded-2xl bg-white p-4 md:mb-8 md:p-6" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+        <h1 className="mb-4 font-display text-[23px] md:text-[26px]" style={{ color: "var(--noir)" }}>
           {client.full_name}
         </h1>
 
-        <div className="grid grid-cols-3 gap-4 border-t pt-4" style={{ borderColor: "rgba(13,11,8,0.08)" }}>
+        <div className="grid grid-cols-1 gap-3.5 border-t pt-4 sm:grid-cols-3 sm:gap-4" style={{ borderColor: "rgba(13,11,8,0.08)" }}>
           <div className="flex items-start gap-2.5">
             <EnvelopeSimple size={16} className="mt-0.5 shrink-0" style={{ color: "var(--or)" }} />
-            <div>
+            <div className="min-w-0">
               <p className="font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.4)" }}>Email</p>
-              <p className="font-sans text-[13.5px]" style={{ color: "var(--noir)" }}>{client.email || "—"}</p>
+              {client.email ? (
+                <a href={`mailto:${client.email}`} className="break-all font-sans text-[13.5px]" style={{ color: "var(--noir)" }}>{client.email}</a>
+              ) : (
+                <p className="font-sans text-[13.5px]" style={{ color: "var(--noir)" }}>—</p>
+              )}
             </div>
           </div>
           <div className="flex items-start gap-2.5">
             <Phone size={16} className="mt-0.5 shrink-0" style={{ color: "var(--or)" }} />
-            <div>
+            <div className="min-w-0">
               <p className="font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.4)" }}>Téléphone</p>
-              <p className="font-sans text-[13.5px]" style={{ color: "var(--noir)" }}>{client.phone || "—"}</p>
+              {client.phone ? (
+                <a href={`tel:${client.phone.replace(/\s/g, "")}`} className="font-sans text-[13.5px]" style={{ color: "var(--noir)" }}>{client.phone}</a>
+              ) : (
+                <p className="font-sans text-[13.5px]" style={{ color: "var(--noir)" }}>—</p>
+              )}
             </div>
           </div>
           <div className="flex items-start gap-2.5">
             <MapPin size={16} className="mt-0.5 shrink-0" style={{ color: "var(--or)" }} />
-            <div>
+            <div className="min-w-0">
               <p className="font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.4)" }}>Adresse</p>
               <p className="font-sans text-[13.5px]" style={{ color: "var(--noir)" }}>{client.address || "—"}</p>
             </div>
@@ -84,14 +92,14 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
             <p className="mb-1.5 flex items-center gap-1.5 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.45)" }}>
               <NotePencil size={13} /> Notes
             </p>
-            <p className="font-sans text-[13.5px] leading-relaxed" style={{ color: "rgba(13,11,8,0.7)" }}>
+            <p className="whitespace-pre-line font-sans text-[13.5px] leading-relaxed" style={{ color: "rgba(13,11,8,0.7)" }}>
               {client.notes}
             </p>
           </div>
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <section>
           <div className="mb-3 flex items-center justify-between">
             <h2 className="flex items-center gap-2 font-sans text-[13.5px] font-semibold" style={{ color: "var(--noir)" }}>
@@ -99,7 +107,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
             </h2>
             <Link
               href={`/admin/devis/nouveau?client=${client.id}`}
-              className="flex items-center gap-1 rounded-lg px-3 py-1.5 font-sans text-[12px] font-medium"
+              className="flex items-center gap-1 rounded-lg px-3 py-2 font-sans text-[12px] font-medium md:py-1.5"
               style={{ background: "var(--rose-deep)", color: "var(--creme)" }}
             >
               <Plus size={12} /> Nouveau
@@ -113,14 +121,14 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                 <Link
                   key={q.id}
                   href={`/admin/devis/${q.id}`}
-                  className="flex items-center justify-between px-4 py-3 transition-colors hover:bg-black/[0.02]"
+                  className="flex items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-black/[0.02]"
                   style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}
                 >
-                  <div>
-                    <p className="font-sans text-[13.5px] font-medium" style={{ color: "var(--noir)" }}>{q.title || q.reference}</p>
+                  <div className="min-w-0">
+                    <p className="truncate font-sans text-[13.5px] font-medium" style={{ color: "var(--noir)" }}>{q.title || q.reference}</p>
                     <p className="font-sans text-[11.5px]" style={{ color: "rgba(13,11,8,0.45)" }}>{q.reference} · {STATUS_LABELS[q.status]}</p>
                   </div>
-                  <p className="font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>{chf(quoteTotal(q.items, q.tax_rate))}</p>
+                  <p className="shrink-0 whitespace-nowrap font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>{chf(quoteTotal(q.items, q.tax_rate))}</p>
                 </Link>
               ))
             )}
@@ -134,7 +142,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
             </h2>
             <Link
               href={`/admin/factures/nouveau?client=${client.id}`}
-              className="flex items-center gap-1 rounded-lg px-3 py-1.5 font-sans text-[12px] font-medium"
+              className="flex items-center gap-1 rounded-lg px-3 py-2 font-sans text-[12px] font-medium md:py-1.5"
               style={{ background: "var(--rose-deep)", color: "var(--creme)" }}
             >
               <Plus size={12} /> Nouvelle
@@ -148,14 +156,14 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                 <Link
                   key={inv.id}
                   href={`/admin/factures/${inv.id}`}
-                  className="flex items-center justify-between px-4 py-3 transition-colors hover:bg-black/[0.02]"
+                  className="flex items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-black/[0.02]"
                   style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}
                 >
-                  <div>
-                    <p className="font-sans text-[13.5px] font-medium" style={{ color: "var(--noir)" }}>{inv.reference}</p>
+                  <div className="min-w-0">
+                    <p className="truncate font-sans text-[13.5px] font-medium" style={{ color: "var(--noir)" }}>{inv.reference}</p>
                     <p className="font-sans text-[11.5px]" style={{ color: "rgba(13,11,8,0.45)" }}>{STATUS_LABELS[inv.status]}</p>
                   </div>
-                  <p className="font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>{chf(quoteTotal(inv.items, inv.tax_rate))}</p>
+                  <p className="shrink-0 whitespace-nowrap font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>{chf(quoteTotal(inv.items, inv.tax_rate))}</p>
                 </Link>
               ))
             )}
