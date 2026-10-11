@@ -82,7 +82,7 @@ export async function updateQuote(
   },
 ) {
   const supabase = await createClient();
-  await supabase
+  const { error } = await supabase
     .from("quotes")
     .update({
       title: input.title || null,
@@ -105,8 +105,11 @@ export async function updateQuote(
     })
     .eq("id", id);
 
+  if (error) return { error: "L'enregistrement a échoué. Réessaie." };
+
   revalidatePath(`/admin/devis/${id}`);
   revalidatePath("/admin/devis");
+  return {};
 }
 
 export async function updateQuoteStatus(id: string, status: string) {

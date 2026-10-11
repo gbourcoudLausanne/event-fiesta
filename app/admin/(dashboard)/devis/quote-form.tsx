@@ -23,7 +23,8 @@ async function compressImage(file: File, maxDim = 1600, quality = 0.82): Promise
   });
 }
 
-const inputCls = "w-full rounded-xl bg-white px-3.5 py-2.5 font-sans text-[13.5px] outline-none";
+const fieldCls = "rounded-xl bg-white px-3.5 py-2.5 font-sans text-[13.5px] outline-none";
+const inputCls = "w-full " + fieldCls;
 const inputStyle = { border: "1px solid rgba(13,11,8,0.14)", color: "var(--noir)" } as const;
 const labelCls = "mb-1 block font-sans text-[11px] uppercase tracking-[0.1em]";
 const labelStyle = { color: "rgba(13,11,8,0.5)" };
@@ -168,7 +169,11 @@ export default function QuoteForm({
     };
     startTransition(async () => {
       if (quoteId) {
-        await updateQuote(quoteId, payload);
+        const res = await updateQuote(quoteId, payload);
+        if (res?.error) {
+          setError(res.error);
+          return;
+        }
         setJustSaved(true);
         setTimeout(() => setJustSaved(false), 2200);
       } else {
@@ -379,7 +384,7 @@ export default function QuoteForm({
               value={packageTotal ?? ""}
               onChange={(e) => setPackageTotal(e.target.value === "" ? null : parseFloat(e.target.value) || 0)}
               placeholder="0.00"
-              className={inputCls + " w-32 text-right font-semibold"}
+              className={fieldCls + " w-32 text-right font-semibold"}
               style={inputStyle}
             />
           </div>
@@ -430,7 +435,7 @@ export default function QuoteForm({
                 value={depositPercent ?? ""}
                 onChange={(e) => setDepositPercent(e.target.value === "" ? null : parseFloat(e.target.value) || 0)}
                 placeholder="0"
-                className={inputCls + " w-24"}
+                className={fieldCls + " w-24"}
                 style={inputStyle}
               />
               <span className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.5)" }}>%</span>
@@ -468,7 +473,7 @@ export default function QuoteForm({
                 value={depositAmount ?? ""}
                 onChange={(e) => setDepositAmount(e.target.value === "" ? null : parseFloat(e.target.value) || 0)}
                 placeholder="0.00"
-                className={inputCls + " w-32"}
+                className={fieldCls + " w-32"}
                 style={inputStyle}
               />
             </div>

@@ -32,7 +32,7 @@ async function getCounts() {
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
     <div
-      className="rounded-2xl bg-white px-4 py-4 md:px-6 md:py-5"
+      className="flex flex-col justify-between rounded-2xl bg-white px-4 py-4 md:px-6 md:py-5"
       style={{ border: "1px solid rgba(13,11,8,0.08)" }}
     >
       <p

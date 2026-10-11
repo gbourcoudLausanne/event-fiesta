@@ -50,7 +50,7 @@ export async function updateInvoice(
   input: { tax_rate: number; due_date: string | null; items: InvoiceItem[] },
 ) {
   const supabase = await createClient();
-  await supabase
+  const { error } = await supabase
     .from("invoices")
     .update({
       tax_rate: input.tax_rate,
@@ -60,8 +60,11 @@ export async function updateInvoice(
     })
     .eq("id", id);
 
+  if (error) return { error: "L'enregistrement a échoué. Réessaie." };
+
   revalidatePath(`/admin/factures/${id}`);
   revalidatePath("/admin/factures");
+  return {};
 }
 
 export async function updateInvoiceStatus(id: string, status: string) {

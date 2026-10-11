@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Plus, Trash } from "@phosphor-icons/react";
+import { Plus, Trash, CheckCircle } from "@phosphor-icons/react";
 import { createInvoice, updateInvoice, type InvoiceItem } from "./actions";
 
 const inputCls = "w-full rounded-xl bg-white px-3.5 py-2.5 font-sans text-[13.5px] outline-none";
@@ -35,6 +35,7 @@ export default function InvoiceForm({
   const [dueDate, setDueDate] = useState(initial?.due_date ?? "");
   const [items, setItems] = useState<InvoiceItem[]>(initial?.items?.length ? initial.items : [{ ...EMPTY_ITEM }]);
   const [error, setError] = useState<string | null>(null);
+  const [justSaved, setJustSaved] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   function updateItem(index: number, field: keyof InvoiceItem, value: string | number) {
@@ -64,7 +65,13 @@ export default function InvoiceForm({
     const payload = { tax_rate: taxRate, due_date: dueDate || null, items: cleanItems };
     startTransition(async () => {
       if (invoiceId) {
-        await updateInvoice(invoiceId, payload);
+        const res = await updateInvoice(invoiceId, payload);
+        if (res?.error) {
+          setError(res.error);
+          return;
+        }
+        setJustSaved(true);
+        setTimeout(() => setJustSaved(false), 2200);
       } else {
         const res = await createInvoice({ client_id: clientId, ...payload });
         if (res?.error) setError(res.error);
@@ -165,10 +172,11 @@ export default function InvoiceForm({
       <button
         type="submit"
         disabled={isPending}
-        className="sticky bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-20 w-full justify-center shadow-[0_8px_24px_rgba(13,11,8,0.18)] md:static md:w-auto md:self-start md:shadow-none flex rounded-2xl px-6 py-3.5 font-sans text-[13.5px] font-medium disabled:opacity-60 md:py-3"
-        style={{ background: "var(--rose-deep)", color: "var(--creme)" }}
+        className="sticky bottom-[calc(4.25rem+env(safe-area-inset-bottom))] z-20 w-full justify-center shadow-[0_8px_24px_rgba(13,11,8,0.18)] md:static md:w-auto md:self-start md:shadow-none flex items-center gap-2 rounded-2xl px-6 py-3.5 font-sans text-[13.5px] font-medium transition-colors duration-300 disabled:opacity-60 md:py-3"
+        style={{ background: justSaved ? "#4C9A6A" : "var(--rose-deep)", color: "var(--creme)" }}
       >
-        {isPending ? "Enregistrement…" : invoiceId ? "Enregistrer" : "Créer la facture"}
+        {justSaved && <CheckCircle size={17} weight="fill" />}
+        {justSaved ? "Enregistré" : isPending ? "Enregistrement…" : invoiceId ? "Enregistrer" : "Créer la facture"}
       </button>
     </form>
   );

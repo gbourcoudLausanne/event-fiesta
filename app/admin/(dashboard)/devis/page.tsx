@@ -13,7 +13,8 @@ function chf(n: number) {
   return `CHF ${intPart.replace(/\B(?=(\d{3})+(?!\d))/g, "'")},${decPart}`;
 }
 
-function total(items: unknown, taxRate: number) {
+function total(items: unknown, taxRate: number, pricingMode: string | null, packageTotal: number | null) {
+  if (pricingMode === "forfait") return packageTotal ?? 0;
   const list = (items as { quantity: number; unit_price: number }[]) ?? [];
   const subtotal = list.reduce((s, it) => s + it.quantity * it.unit_price, 0);
   return subtotal * (1 + taxRate / 100);
@@ -23,7 +24,7 @@ export default async function DevisListPage() {
   const supabase = await createClient();
   const { data: quotes } = await supabase
     .from("quotes")
-    .select("id, reference, title, status, tax_rate, items, created_at, clients(full_name)")
+    .select("id, reference, title, status, tax_rate, items, pricing_mode, package_total, created_at, clients(full_name)")
     .order("created_at", { ascending: false });
 
   return (
@@ -53,7 +54,7 @@ export default async function DevisListPage() {
                 </p>
               </div>
               <p className="shrink-0 whitespace-nowrap font-sans text-[13.5px] font-semibold md:text-[14px]" style={{ color: "var(--noir)" }}>
-                {chf(total(q.items, q.tax_rate))}
+                {chf(total(q.items, q.tax_rate, q.pricing_mode, q.package_total))}
               </p>
             </Link>
           ))
