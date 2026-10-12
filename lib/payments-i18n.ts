@@ -32,6 +32,8 @@ type PayDict = {
   viewTracking: string;
 };
 
+const lowerFirst = (s: string) => (s ? s.charAt(0).toLowerCase() + s.slice(1) : s);
+
 export const PAY_I18N: Record<PayLang, PayDict> = {
   fr: {
     trackTitle: "Suivi de votre événement",
@@ -58,7 +60,7 @@ export const PAY_I18N: Record<PayLang, PayDict> = {
     receivedSubject: (l) => `Paiement reçu — ${l}`,
     receivedTitle: "Paiement bien reçu, merci !",
     receivedBody: (l, a) => `Nous avons bien reçu votre ${l.toLowerCase()} de ${a}.`,
-    nextStep: (l, a, d) => `Prochaine étape : ${l.toLowerCase()} de ${a} — ${d}.`,
+    nextStep: (l, a, d) => `Prochaine étape : ${l.toLowerCase()} de ${a} — ${lowerFirst(d)}.`,
     allPaidMail: "Tout est réglé. Il ne reste plus qu'à profiter de votre événement !",
     viewTracking: "Voir le suivi en ligne",
   },
@@ -87,7 +89,7 @@ export const PAY_I18N: Record<PayLang, PayDict> = {
     receivedSubject: (l) => `Pago recibido — ${l}`,
     receivedTitle: "¡Pago recibido, gracias!",
     receivedBody: (l, a) => `Hemos recibido tu ${l.toLowerCase()} de ${a}.`,
-    nextStep: (l, a, d) => `Siguiente paso: ${l.toLowerCase()} de ${a} — ${d}.`,
+    nextStep: (l, a, d) => `Siguiente paso: ${l.toLowerCase()} de ${a} — ${lowerFirst(d)}.`,
     allPaidMail: "Todo está pagado. ¡Solo queda disfrutar de tu evento!",
     viewTracking: "Ver el seguimiento en línea",
   },
@@ -116,7 +118,7 @@ export const PAY_I18N: Record<PayLang, PayDict> = {
     receivedSubject: (l) => `Payment received — ${l}`,
     receivedTitle: "Payment received, thank you!",
     receivedBody: (l, a) => `We have received your ${l.toLowerCase()} of ${a}.`,
-    nextStep: (l, a, d) => `Next step: ${l.toLowerCase()} of ${a} — ${d}.`,
+    nextStep: (l, a, d) => `Next step: ${l.toLowerCase()} of ${a} — ${lowerFirst(d)}.`,
     allPaidMail: "Everything is paid. All that's left is to enjoy your event!",
     viewTracking: "View the tracker online",
   },

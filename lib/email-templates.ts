@@ -20,6 +20,11 @@ const SERIF = "Georgia, 'Times New Roman', serif";
 function wrapper(inner: string): string {
   return `<!DOCTYPE html>
 <html>
+  <head>
+    <meta name="color-scheme" content="light only">
+    <meta name="supported-color-schemes" content="light">
+    <style>:root { color-scheme: light only; }</style>
+  </head>
   <body style="margin:0;padding:0;background:${BRAND.cream};">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND.cream};padding:32px 16px;">
       <tr>
@@ -54,8 +59,15 @@ function footer(ref: string): string {
   </tr>`;
 }
 
+// Échappe le HTML et pose les espaces insécables de la typographie française
+// (« merci ! » ne laisse plus le point d'exclamation seul en début de ligne).
 function esc(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/ ([!?:;»])/g, "&nbsp;$1")
+    .replace(/« /g, "«&nbsp;");
 }
 
 // ─── E-mail interne (reçu par Event Fiesta) ──────────────────────────────
