@@ -309,14 +309,23 @@ export default async function AdminOverviewPage() {
 
       {/* Chiffres clés */}
       <div className="mb-5 grid grid-cols-2 gap-2.5 md:mb-6 md:grid-cols-4 md:gap-4">
-        <Link href="/admin/paiements" className="flex flex-col justify-between rounded-2xl p-4 md:p-5" style={{ background: "var(--noir)", color: "var(--creme)" }}>
-          <p className="font-sans text-[10.5px] uppercase tracking-[0.12em]" style={{ color: "var(--or-light)" }}>Encaissé ce mois</p>
-          <p className="mt-2 font-display text-[24px] leading-none md:text-[30px]">{chfShort(paidThisMonth)}</p>
-          <p className="mt-2 font-sans text-[11.5px]" style={{ color: "rgba(250,247,242,0.6)" }}>
-            {paidPrevMonth === 0 && paidThisMonth === 0
-              ? "Aucun encaissement"
-              : `${delta >= 0 ? "+" : "−"} ${chfShort(Math.abs(delta)).replace("CHF ", "")} vs mois dernier`}
-          </p>
+        <Link
+          href="/admin/paiements"
+          className="flex flex-col justify-between rounded-2xl p-4 md:p-5"
+          style={{ background: "linear-gradient(135deg, #F7E3E9 0%, #F5E6E0 100%)", border: "1px solid rgba(176,84,111,0.15)" }}
+        >
+          <p className="font-sans text-[10.5px] font-semibold uppercase tracking-[0.12em]" style={{ color: "var(--rose-deep)" }}>Encaissé ce mois</p>
+          <p className="mt-2 font-display text-[24px] leading-none md:text-[30px]" style={{ color: "var(--noir)" }}>{chfShort(paidThisMonth)}</p>
+          {paidPrevMonth === 0 && paidThisMonth === 0 ? (
+            <p className="mt-2 font-sans text-[11.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>Aucun encaissement</p>
+          ) : (
+            <span
+              className="mt-2 inline-flex w-fit items-center rounded-full px-2 py-0.5 font-sans text-[11px] font-semibold"
+              style={delta >= 0 ? { background: "rgba(76,154,106,0.14)", color: "#3B7D55" } : { background: "rgba(176,84,111,0.12)", color: "#B0546F" }}
+            >
+              {delta >= 0 ? "▲" : "▼"} {chfShort(Math.abs(delta)).replace("CHF ", "")} vs mois dernier
+            </span>
+          )}
         </Link>
         <Link href="/admin/paiements" className="flex flex-col justify-between rounded-2xl bg-white p-4 md:p-5" style={card}>
           <p className="font-sans text-[10.5px] uppercase tracking-[0.12em]" style={{ color: "rgba(13,11,8,0.45)" }}>À encaisser</p>
