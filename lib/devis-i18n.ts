@@ -87,7 +87,7 @@ export const DEVIS_I18N: Record<DevisLang, DevisDict> = {
     notesP2:
       "Les images sont des références visuelles créées avec l'IA pour représenter le style, les couleurs et la proposition générale. La décoration finale suivra cette inspiration et pourra présenter de légères variations selon l'espace et les matériaux disponibles.",
     thankYou: "Merci de votre confiance — j'ai hâte de donner vie à votre événement.",
-    ctaQuestion: "Une question sur ce devis ?",
+    ctaQuestion: "Une question sur ce devis\u00a0?",
     validity: "Devis valable 30 jours à compter de la date d'émission.",
     intro: (firstName, eventLabel, venue) =>
       `Bonjour ${firstName}, c'est avec plaisir que je vous propose cette offre sur mesure pour ${eventLabel.toLowerCase()}` +
