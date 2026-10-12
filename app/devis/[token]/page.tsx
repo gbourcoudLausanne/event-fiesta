@@ -139,6 +139,76 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
         <p className="font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.5)" }}>{fmtDate(quote.created_at, t.locale)}</p>
       </div>
 
+      {/* Devis signé : le suivi passe en premier, le détail du devis suit */}
+      {isSigned && (
+        <div className="mb-10">
+        <div className="rounded-2xl p-6" style={{ background: "var(--blush)" }}>
+          <p className="font-display text-[19px]" style={{ color: "var(--noir)" }}>{t.signedTitle}</p>
+          <p className="mt-1 font-sans text-[14px]" style={{ color: "var(--noir)" }}>
+            {t.acceptedOn(formatSignedAt(quote.signed_at as string, t.locale).date, formatSignedAt(quote.signed_at as string, t.locale).time)}
+          </p>
+          <p className="mt-0.5 font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.55)" }}>
+            {t.signedBy(quote.signed_by ?? "", fmtDate(quote.signed_at, t.locale))}
+          </p>
+          {quote.signature_data && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={quote.signature_data} alt={t.signatureLabel} className="mt-3 h-20 rounded-lg bg-white p-2" />
+          )}
+        </div>
+
+
+      {activeSupplements(quote.supplements).length > 0 && (
+        <SupplementsBlock
+          token={token}
+          lang={lang}
+          locale={t.locale}
+          supplements={activeSupplements(quote.supplements)}
+          baseTotal={total}
+        />
+      )}
+
+      {(
+        <PaymentTracker
+          lang={lang}
+          locale={t.locale}
+          reference={quote.reference}
+          signedAt={quote.signed_at as string}
+          eventDate={quote.event_date}
+          payments={payments}
+          balanceTerms={displayBalanceDueTerms ?? null}
+          twintPhone={settings?.twint_phone ?? null}
+          showTransfer={(quote.payment_methods ?? []).includes("iban")}
+          iban={settings?.iban ?? null}
+          creditorName={settings?.creditor_name ?? null}
+        />
+      )}
+
+      {(invoiceRows ?? []).length > 0 && (
+        <div className="mt-4 rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
+          <p className="mb-2 font-sans text-[12px] font-semibold uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.5)" }}>
+            {{ fr: "Vos factures", es: "Tus facturas", en: "Your invoices" }[lang]}
+          </p>
+          {(invoiceRows ?? []).map((inv) => (
+            <a
+              key={inv.public_token}
+              href={`/facture/${inv.public_token}/pdf`}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center justify-between gap-3 py-2 font-sans text-[13.5px]"
+              style={{ color: "var(--noir)" }}
+            >
+              <span className="font-medium">{inv.reference}</span>
+              <span style={{ color: "var(--rose-deep)" }}>PDF ↓</span>
+            </a>
+          ))}
+        </div>
+      )}
+          <p className="mt-10 font-sans text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: "rgba(13,11,8,0.45)" }}>
+            {{ fr: "Détail de votre devis", es: "Detalle de tu presupuesto", en: "Your quote in detail" }[lang]}
+          </p>
+        </div>
+      )}
+
       <div className="mb-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div className="border-l-2 pl-3" style={{ borderColor: "var(--rose-deep)" }}>
           <p className="mb-1 font-sans text-[10px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.4)" }}>{t.client}</p>
@@ -349,70 +419,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
         {t.downloadPdf}
       </a>
 
-      {isSigned ? (
-        <div className="rounded-2xl p-6" style={{ background: "var(--blush)" }}>
-          <p className="font-display text-[19px]" style={{ color: "var(--noir)" }}>{t.signedTitle}</p>
-          <p className="mt-1 font-sans text-[14px]" style={{ color: "var(--noir)" }}>
-            {t.acceptedOn(formatSignedAt(quote.signed_at as string, t.locale).date, formatSignedAt(quote.signed_at as string, t.locale).time)}
-          </p>
-          <p className="mt-0.5 font-sans text-[12.5px]" style={{ color: "rgba(13,11,8,0.55)" }}>
-            {t.signedBy(quote.signed_by ?? "", fmtDate(quote.signed_at, t.locale))}
-          </p>
-          {quote.signature_data && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={quote.signature_data} alt={t.signatureLabel} className="mt-3 h-20 rounded-lg bg-white p-2" />
-          )}
-        </div>
-      ) : (
-        <SignaturePadClient token={token} lang={lang} />
-      )}
-
-      {isSigned && activeSupplements(quote.supplements).length > 0 && (
-        <SupplementsBlock
-          token={token}
-          lang={lang}
-          locale={t.locale}
-          supplements={activeSupplements(quote.supplements)}
-          baseTotal={total}
-        />
-      )}
-
-      {isSigned && (
-        <PaymentTracker
-          lang={lang}
-          locale={t.locale}
-          reference={quote.reference}
-          signedAt={quote.signed_at as string}
-          eventDate={quote.event_date}
-          payments={payments}
-          balanceTerms={displayBalanceDueTerms ?? null}
-          twintPhone={settings?.twint_phone ?? null}
-          showTransfer={(quote.payment_methods ?? []).includes("iban")}
-          iban={settings?.iban ?? null}
-          creditorName={settings?.creditor_name ?? null}
-        />
-      )}
-
-      {isSigned && (invoiceRows ?? []).length > 0 && (
-        <div className="mt-4 rounded-2xl bg-white p-5" style={{ border: "1px solid rgba(13,11,8,0.08)" }}>
-          <p className="mb-2 font-sans text-[12px] font-semibold uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.5)" }}>
-            {{ fr: "Vos factures", es: "Tus facturas", en: "Your invoices" }[lang]}
-          </p>
-          {(invoiceRows ?? []).map((inv) => (
-            <a
-              key={inv.public_token}
-              href={`/facture/${inv.public_token}/pdf`}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center justify-between gap-3 py-2 font-sans text-[13.5px]"
-              style={{ color: "var(--noir)" }}
-            >
-              <span className="font-medium">{inv.reference}</span>
-              <span style={{ color: "var(--rose-deep)" }}>PDF ↓</span>
-            </a>
-          ))}
-        </div>
-      )}
+      {!isSigned && <SignaturePadClient token={token} lang={lang} />}
     </div>
   );
 }
