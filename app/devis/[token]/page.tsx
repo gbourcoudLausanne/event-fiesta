@@ -390,12 +390,12 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
         href="https://wa.me/41779143855"
         target="_blank"
         rel="noreferrer"
-        className="mb-2 flex flex-col items-start gap-3 rounded-2xl px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-3"
+        className="mb-2 flex flex-col items-center gap-2.5 rounded-2xl px-3.5 py-3.5 text-center sm:flex-row sm:justify-between sm:px-5 sm:py-3 sm:text-left"
         style={{ background: "var(--rose-deep)" }}
       >
         <span className="font-sans text-[13.5px]" style={{ color: "var(--creme)" }}>{t.ctaQuestion}</span>
         <span
-          className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-xl px-3.5 py-2 font-sans text-[13px] font-semibold"
+          className="inline-flex w-full shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl px-3.5 py-2.5 font-sans text-[13px] font-semibold sm:w-auto sm:py-2"
           style={{ background: "var(--creme)", color: "var(--rose-deep)" }}
         >
           <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
