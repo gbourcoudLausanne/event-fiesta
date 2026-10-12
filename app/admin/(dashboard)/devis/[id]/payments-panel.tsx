@@ -11,6 +11,7 @@ import {
   markPaymentPaid,
   markPaymentUnpaid,
   updatePayment,
+  updatePaymentDate,
 } from "../payment-actions";
 
 const KIND_LABEL: Record<string, string> = { acompte: "Acompte", solde: "Solde", autre: "Paiement" };
@@ -30,6 +31,10 @@ function chf(n: number) {
   return `CHF ${intPart.replace(/\B(?=(\d{3})+(?!\d))/g, "'")},${decPart}`;
 }
 
+function todayZurich() {
+  return new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Zurich" });
+}
+
 function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString("fr-CH", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Zurich" });
 }
@@ -46,7 +51,8 @@ export function PaymentRow({
   noBorder?: boolean;
 }) {
   const router = useRouter();
-  const [mode, setMode] = useState<"view" | "pay" | "edit">("view");
+  const [mode, setMode] = useState<"view" | "pay" | "edit" | "date">("view");
+  const [paidOn, setPaidOn] = useState(p.paid_at ? new Date(p.paid_at).toLocaleDateString("sv-SE", { timeZone: "Europe/Zurich" }) : todayZurich());
   const [method, setMethod] = useState<Method>("twint");
   const [notify, setNotify] = useState(hasClientEmail);
   const [label, setLabel] = useState(p.label ?? "");
@@ -113,11 +119,47 @@ export function PaymentRow({
               <p className="font-sans text-[14px] font-semibold" style={{ color: "var(--noir)" }}>
                 {title} · {chf(Number(p.amount))}
               </p>
-              <p className="font-sans text-[12px]" style={{ color: paid ? "#3B7D55" : "rgba(13,11,8,0.5)" }}>
-                {paid && p.paid_at
-                  ? `Payé le ${fmtDate(p.paid_at)}${p.method ? ` · ${METHODS.find((m) => m.value === p.method)?.label}` : ""}`
-                  : dueText}
-              </p>
+              {paid && p.paid_at ? (
+                mode === "date" ? (
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    <input
+                      type="date"
+                      value={paidOn}
+                      max={todayZurich()}
+                      onChange={(e) => setPaidOn(e.target.value)}
+                      className="rounded-lg bg-white px-2.5 py-1.5 font-sans text-[13px] outline-none"
+                      style={inputStyle}
+                    />
+                    <button
+                      type="button"
+                      disabled={isPending}
+                      onClick={() => run(() => updatePaymentDate(p.id, paidOn), () => setMode("view"))}
+                      className="rounded-lg px-3 py-1.5 font-sans text-[12px] font-medium disabled:opacity-60"
+                      style={{ background: "#4C9A6A", color: "#fff" }}
+                    >
+                      OK
+                    </button>
+                    <button type="button" onClick={() => setMode("view")} className="font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.5)" }}>
+                      Annuler
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setMode("date")}
+                    title="Modifier la date de paiement"
+                    className="font-sans text-[12px] underline decoration-dotted underline-offset-2"
+                    style={{ color: "#3B7D55" }}
+                  >
+                    Payé le {fmtDate(p.paid_at)}
+                    {p.method ? ` · ${METHODS.find((m) => m.value === p.method)?.label}` : ""}
+                  </button>
+                )
+              ) : (
+                <p className="font-sans text-[12px]" style={{ color: "rgba(13,11,8,0.5)" }}>
+                  {dueText}
+                </p>
+              )}
             </div>
             <div className="flex shrink-0 items-center gap-1">
               {paid ? (
@@ -179,6 +221,24 @@ export function PaymentRow({
                   </button>
                 ))}
               </div>
+              <label className="mb-3 flex flex-wrap items-center gap-2 font-sans text-[12.5px]" style={{ color: "var(--noir)" }}>
+                <span className="font-sans text-[11px] uppercase tracking-[0.1em]" style={{ color: "rgba(13,11,8,0.5)" }}>
+                  Reçu le
+                </span>
+                <input
+                  type="date"
+                  value={paidOn}
+                  max={todayZurich()}
+                  onChange={(e) => setPaidOn(e.target.value)}
+                  className="rounded-lg bg-white px-2.5 py-1.5 font-sans text-[13px] outline-none"
+                  style={inputStyle}
+                />
+                {paidOn !== todayZurich() && (
+                  <button type="button" onClick={() => setPaidOn(todayZurich())} className="font-sans text-[12px] underline" style={{ color: "rgba(13,11,8,0.5)" }}>
+                    aujourd&apos;hui
+                  </button>
+                )}
+              </label>
               <label className={`mb-3 flex items-center gap-2 font-sans text-[12.5px] ${hasClientEmail ? "" : "opacity-50"}`} style={{ color: "var(--noir)" }}>
                 <input type="checkbox" checked={notify} disabled={!hasClientEmail} onChange={(e) => setNotify(e.target.checked)} className="h-4 w-4 accent-[#B0546F]" />
                 {hasClientEmail ? "Prévenir le client par e-mail (avec la prochaine étape)" : "Pas d'e-mail sur la fiche client"}
@@ -192,7 +252,7 @@ export function PaymentRow({
                   disabled={isPending}
                   onClick={() =>
                     run(
-                      () => markPaymentPaid(p.id, method, notify),
+                      () => markPaymentPaid(p.id, method, notify, paidOn),
                       (r) => {
                         const res = r as { error?: string; emailed?: boolean };
                         setMode("view");

@@ -83,15 +83,38 @@ export async function markPaymentUnpaid(paymentId: string) {
   if (data) await revalidateQuote(data.quote_id);
 }
 
+// Date choisie (AAAA-MM-JJ, heure suisse) → horodatage : maintenant si c'est aujourd'hui,
+// sinon midi ce jour-là. Jamais dans le futur.
+function paidAtFrom(day: string | null | undefined) {
+  const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Zurich" });
+  if (!day || !/^\d{4}-\d{2}-\d{2}$/.test(day) || day >= today) return new Date().toISOString();
+  return new Date(`${day}T12:00:00+02:00`).toISOString();
+}
+
+export async function updatePaymentDate(paymentId: string, day: string): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("quote_payments")
+    .update({ paid_at: paidAtFrom(day) })
+    .eq("id", paymentId)
+    .eq("status", "paye")
+    .select("quote_id")
+    .single();
+  if (error || !data) return { error: "La date n'a pas pu être enregistrée." };
+  await revalidateQuote(data.quote_id);
+  return {};
+}
+
 export async function markPaymentPaid(
   paymentId: string,
   method: "twint" | "virement" | "especes" | "carte",
   notifyClient: boolean,
+  paidOn?: string,
 ): Promise<{ error?: string; emailed?: boolean }> {
   const supabase = await createClient();
   const { data: paid, error } = await supabase
     .from("quote_payments")
-    .update({ status: "paye", paid_at: new Date().toISOString(), method })
+    .update({ status: "paye", paid_at: paidAtFrom(paidOn), method })
     .eq("id", paymentId)
     .select(PAYMENT_COLUMNS)
     .single();
