@@ -123,7 +123,7 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
   const introText = t.intro(firstName, eventLabel, displayVenue ?? null);
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-14">
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-14">
       <div className="mb-8 rounded-2xl p-7" style={{ background: "var(--blush)" }}>
         <div className="flex items-center gap-2">
           <BalloonIcon />
@@ -164,13 +164,13 @@ export default async function PublicDevisPage({ params }: { params: Promise<{ to
       {isPackageMode ? (
         <>
           <div className="mb-6 overflow-hidden rounded-2xl bg-white" style={{ border: "1px solid rgba(13,11,8,0.1)" }}>
-            <div className="flex px-4 py-2.5" style={{ background: "var(--creme-2)" }}>
+            <div className="hidden px-4 py-2.5 sm:flex" style={{ background: "var(--creme-2)" }}>
               <p className="w-40 shrink-0 font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>{t.service}</p>
               <p className="font-sans text-[10px] uppercase tracking-[0.08em]" style={{ color: "rgba(13,11,8,0.45)" }}>{t.description}</p>
             </div>
             {displayItems.map((item, i) => (
-              <div key={i} className="flex gap-3 px-4 py-3" style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}>
-                <p className="w-40 shrink-0 font-sans text-[13px] font-semibold" style={{ color: "var(--noir)" }}>{item.title || "—"}</p>
+              <div key={i} className="flex flex-col gap-0.5 px-4 py-3 sm:flex-row sm:gap-3" style={{ borderTop: i > 0 ? "1px solid rgba(13,11,8,0.06)" : undefined }}>
+                <p className="font-sans text-[13.5px] font-semibold sm:w-40 sm:shrink-0 sm:text-[13px]" style={{ color: "var(--noir)" }}>{item.title || "—"}</p>
                 <p className="font-sans text-[13px]" style={{ color: "rgba(13,11,8,0.7)" }}>{item.description}</p>
               </div>
             ))}
