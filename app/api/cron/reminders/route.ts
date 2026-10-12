@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { renderReminderEmail, renderRemindersDigestEmail } from "@/lib/email-templates";
 import { REMINDER_I18N, PAY_I18N, paymentLabel, twintReference, type PayLang } from "@/lib/payments-i18n";
 import { firstNameOf } from "@/lib/quote-share";
+import { notifyAdmin } from "@/lib/push";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -56,6 +57,10 @@ export async function GET(req: NextRequest) {
   if (!apiKey) return NextResponse.json({ error: "RESEND_API_KEY manquante" }, { status: 500 });
 
   const supabase = createAdminClient();
+
+  // Récap du matin sur le téléphone de l'admin (indépendant des relances clients)
+  await morningRecap(supabase);
+
   const { data: settings } = await supabase.from("settings").select("auto_reminders, twint_phone").eq("id", true).single();
   if (settings && settings.auto_reminders === false) return NextResponse.json({ skipped: "désactivé dans Réglages" });
 
@@ -157,4 +162,41 @@ export async function GET(req: NextRequest) {
   }
 
   return NextResponse.json({ sent: digest.length });
+}
+
+// Ce qui attend l'admin aujourd'hui, résumé en une notification (rien si tout est à jour).
+async function morningRecap(supabase: ReturnType<typeof createAdminClient>) {
+  const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Zurich" });
+  const in7 = new Date(Date.parse(`${today}T12:00:00Z`) + 7 * 86400000).toISOString().slice(0, 10);
+  const twoDaysAgo = new Date(Date.now() - 2 * 86400000).toISOString();
+  const fiveDaysAgo = new Date(Date.now() - 5 * 86400000).toISOString();
+
+  const [{ data: payments }, { data: noReply }, { data: webClients }, { data: quoted }] = await Promise.all([
+    supabase.from("quote_payments").select("kind, amount, quotes(signed_at, event_date)").eq("status", "a_payer").gt("amount", 0),
+    supabase.from("quotes").select("id").eq("status", "envoye").is("signed_at", null).lte("sent_at", fiveDaysAgo),
+    supabase.from("clients").select("id").eq("source", "site_web"),
+    supabase.from("quotes").select("client_id"),
+  ]);
+
+  const rows = (payments ?? []) as unknown as { kind: string; amount: number; quotes: { signed_at: string | null; event_date: string | null } | null }[];
+  const deposits = rows.filter((p) => p.kind === "acompte" && p.quotes?.signed_at && p.quotes.signed_at <= twoDaysAgo && (!p.quotes.event_date || p.quotes.event_date >= today));
+  const balances = rows.filter((p) => p.kind !== "acompte" && p.quotes?.event_date && p.quotes.event_date >= today && p.quotes.event_date <= in7);
+  const quotedIds = new Set((quoted ?? []).map((q) => q.client_id));
+  const newLeads = (webClients ?? []).filter((c) => !quotedIds.has(c.id));
+
+  const lines = [
+    newLeads.length && `${newLeads.length} nouvelle${newLeads.length > 1 ? "s" : ""} demande${newLeads.length > 1 ? "s" : ""}`,
+    deposits.length && `${deposits.length} acompte${deposits.length > 1 ? "s" : ""} en attente`,
+    balances.length && `${balances.length} solde${balances.length > 1 ? "s" : ""} avant un événement cette semaine`,
+    (noReply ?? []).length && `${(noReply ?? []).length} devis sans réponse`,
+  ].filter(Boolean) as string[];
+  const total = newLeads.length + deposits.length + balances.length + (noReply ?? []).length;
+  if (total === 0) return;
+
+  await notifyAdmin({
+    title: `${total} chose${total > 1 ? "s" : ""} à regarder aujourd'hui`,
+    body: lines.join(" · "),
+    url: "/admin",
+    tag: `recap-${today}`,
+  });
 }

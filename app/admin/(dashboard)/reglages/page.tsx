@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import SettingsForm from "./settings-form";
+import PushSettings from "./push-settings";
 
 export default async function ReglagesPage() {
   const supabase = await createClient();
@@ -18,6 +19,7 @@ export default async function ReglagesPage() {
         Coordonnées de paiement affichées sur les devis (virement et Twint).
       </p>
       <SettingsForm settings={settings} />
+      <PushSettings />
     </div>
   );
 }

@@ -10,6 +10,7 @@ import { shareCopy, firstNameOf, type ShareLang } from "@/lib/quote-share";
 import { DEVIS_I18N, formatSignedAt } from "@/lib/devis-i18n";
 import { ensurePaymentSchedule, PAYMENT_COLUMNS, type QuotePayment } from "@/lib/quote-payments";
 import { allSupplements } from "@/lib/quote-supplements";
+import { notifyAdmin } from "@/lib/push";
 import { PAY_I18N, paymentLabel, twintReference } from "@/lib/payments-i18n";
 
 const NOTIFY_TO = "contact@eventfiesta.ch";
@@ -86,7 +87,13 @@ async function sendSignedEmails(quoteId: string, signerName: string) {
       if (error) console.error("signQuote: erreur Resend (client)", error);
     }
 
-    // 2) Event Fiesta
+    // 2) Event Fiesta : notification push + e-mail
+    await notifyAdmin({
+      title: "✓ Devis signé",
+      body: `${clientName} a signé ${q.title ? `« ${q.title} »` : `le devis ${q.reference}`} · ${chf(total)}`,
+      url: `/admin/devis/${q.id}`,
+      tag: `signed-${q.id}`,
+    });
     const { error } = await resend.emails.send({
       from: NOTIFY_FROM,
       to: NOTIFY_TO,
@@ -183,6 +190,15 @@ export async function acceptSupplements(token: string): Promise<{ ok?: boolean; 
 
   // Prévenir Event Fiesta (non bloquant)
   const clientName = (q.clients as unknown as { full_name: string } | null)?.full_name ?? "Le client";
+  const extra = pending.reduce((s, x) => s + Number(x.amount), 0);
+  after(() =>
+    notifyAdmin({
+      title: "✓ Ajouts confirmés",
+      body: `${clientName} a confirmé ${pending.length > 1 ? `${pending.length} ajouts` : "l'ajout"} · + ${chf(extra)}`,
+      url: `/admin/devis/${q.id}`,
+      tag: `supp-${q.id}`,
+    }),
+  );
   const apiKey = process.env.RESEND_API_KEY;
   if (apiKey) {
     after(async () => {

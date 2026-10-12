@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { renderLeadEmail, renderClientConfirmationEmail } from "@/lib/email-templates";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { notifyAdmin } from "@/lib/push";
 
 export const runtime = "nodejs";
 
@@ -162,6 +163,14 @@ export async function POST(req: NextRequest) {
     } catch (err) {
       console.error("contact: erreur upsert client CRM (non bloquant)", err);
     }
+
+    // Notification sur le téléphone de l'admin — best effort
+    await notifyAdmin({
+      title: urgent ? "⚡ Nouvelle demande urgente" : "Nouvelle demande",
+      body: [nom, eventType, date && `le ${date}`].filter(Boolean).join(" · "),
+      url: "/admin",
+      tag: `lead-${ref || nom}`,
+    });
 
     return NextResponse.json({ ok: true });
   } catch (err) {
